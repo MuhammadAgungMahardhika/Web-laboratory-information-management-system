@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -40,6 +41,14 @@ class SuperadminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Master')
+                    ->icon('heroicon-s-folder')->collapsed(),
+                NavigationGroup::make()
+                    ->label('Transaksi')
+                    ->icon('heroicon-s-folder')->collapsed(),
+            ])->sidebarCollapsibleOnDesktop(true)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

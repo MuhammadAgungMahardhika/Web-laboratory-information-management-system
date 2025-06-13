@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pelanggan extends Model
+class Regulation extends Model
 {
-    /** @use HasFactory<\Database\Factories\PelangganFactory> */
+    /** @use HasFactory<\Database\Factories\RegulationFactory> */
     use HasFactory;
+    use Blameable;
 }

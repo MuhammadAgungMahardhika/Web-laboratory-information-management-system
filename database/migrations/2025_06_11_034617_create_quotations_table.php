@@ -1,0 +1,54 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('quotations', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('request_id');
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('personnel_id');
+
+            // Quotation details
+            $table->string('quotation_name', 50);
+            $table->string('quotation_number', 50)->unique();
+            $table->date('quotation_date');
+            $table->decimal('discount_percentage', 5, 2)->default(0.00);
+            $table->decimal('ppn_percentage', 5, 2)->default(0.00);
+            $table->decimal('pph_percentage', 5, 2)->default(0.00);
+            $table->decimal('total_amount', 15, 2); // 'total_amount' is gross as per previous discussion
+            $table->text('payment_terms')->nullable();
+
+            // Using enum string values directly since Laravel migrations don't automatically recognize PHP Enums
+            $table->enum('quotation_status', ['pending_response', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('pending_response');
+
+            // Approval details
+            $table->string('approved_by_user_id', 255)->nullable();
+            $table->timestamp('approved_at')->nullable();
+
+            // Auditing columns
+            $table->string('created_by', 255)->nullable();
+            $table->string('updated_by', 255)->nullable();
+            $table->timestamps();
+
+            $table->index('quotation_number');
+            $table->index('quotation_status');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('quotations');
+    }
+};
