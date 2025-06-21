@@ -12,16 +12,5 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
-    {
-        DB::table('users')->insert([
-            'name' => 'superadmin',
-            'email' => 'superadmin@example.com', // Anda bisa ganti email ini
-            'password' => Hash::make('123456'), // Password default yang di-hash
-            // 'is_active' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
-
-        ]);
-    }
+    public function run(): void {}
 }
