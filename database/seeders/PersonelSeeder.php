@@ -21,6 +21,7 @@ class PersonelSeeder extends Seeder
         // create product
         $adminUser =   User::factory()->create([
             'name' => 'superadmin',
+            'username' => 'superadmin',
             'email' => 'superadmin@example.com', // Anda bisa ganti email ini
             'password' => Hash::make('123456'), // Password default yang di-hash
             // 'is_active' => true,

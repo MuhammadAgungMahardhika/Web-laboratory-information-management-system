@@ -26,6 +26,11 @@ class SampleTypeResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns([
+                'sm' => 2,
+                'md' => 3,
+                'xl' => 4,
+            ])
             ->schema([
                 Forms\Components\TextInput::make('code')
                     ->label('Kode')
