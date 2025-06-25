@@ -32,10 +32,6 @@ class SampleTypeResource extends Resource
                 'xl' => 4,
             ])
             ->schema([
-                Forms\Components\TextInput::make('code')
-                    ->label('Kode')
-                    ->required()
-                    ->maxLength(10),
                 Forms\Components\TextInput::make('name')
                     ->label('Jenis Sampel')
                     ->required()
@@ -47,12 +43,10 @@ class SampleTypeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
-                    ->label('Kode')
-                    ->sortable()
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Jenis sampel')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_by')
                     ->searchable(),

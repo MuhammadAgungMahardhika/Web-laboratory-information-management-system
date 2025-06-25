@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('sample_types', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 10)->unique();
             $table->string('name', 100)->unique();
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
-            $table->index('code');
             $table->index('name');
         });
     }

@@ -15,7 +15,7 @@ return new class extends Migration
 
             $table->foreignId('regulation_id')->constrained('regulations')->onDelete('restrict')->onUpdate('cascade');
             $table->text('description')->nullable();
-            $table->decimal('price', 19, 4);
+            $table->decimal('price');
             $table->boolean('is_active')->default(true);
 
             $table->string('created_by', 255)->nullable();

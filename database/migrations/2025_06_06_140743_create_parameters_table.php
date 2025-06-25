@@ -10,12 +10,13 @@ return new class extends Migration
     {
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('test_method_id');
             $table->string('name', 255)->unique();
             $table->string('unit', 50);
-            $table->unsignedBigInteger('test_method_id');
 
             $table->text('description')->nullable();
-            $table->enum('status', ['accredited', 'unaccredited']);
+            $table->decimal('default_price');
+            $table->enum('status', ['accredited', 'unaccredited'])->default('accredited');
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();

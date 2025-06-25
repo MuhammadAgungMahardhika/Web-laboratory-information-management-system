@@ -12,6 +12,7 @@ use Closure;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -66,7 +67,8 @@ class TestPackageResource extends Resource
                         Forms\Components\Textarea::make('description')
                             ->label('Keterangan')
                             ->columnSpanFull(),
-                    ])->createOptionModalHeading('Buat Matrix Sampel')
+                    ])
+                    ->createOptionModalHeading('Buat Matrix Sampel')
                     ->preload(),
                 Forms\Components\Select::make('regulation_id')
                     ->label('Regulasi')
@@ -81,6 +83,7 @@ class TestPackageResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
+                    ->default(0)
                     ->label('Harga')
                     ->prefix('Rp. '),
                 Forms\Components\Textarea::make('description')
@@ -94,6 +97,15 @@ class TestPackageResource extends Resource
                     ->multiple()
                     ->relationship('parameters', 'name')
                     ->searchable()
+                    ->reactive()
+                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                        // Ambil ID parameter yang dipilih
+                        $parameterIds = $state;
+                        // Ambil total harga dari parameter
+                        $totalParameterPrice = \App\Models\Parameter::whereIn('id', $parameterIds)->sum('default_price');
+                        // Set harga baru = harga awal + total harga dari parameter
+                        $set('price', $totalParameterPrice);
+                    })
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')
                             ->required()
@@ -104,6 +116,10 @@ class TestPackageResource extends Resource
                             ->required()
                             ->label('Satuan')
                             ->maxLength(50),
+                        Forms\Components\TextInput::make('default_price')
+                            ->required()
+                            ->label('Harga standar')
+                            ->numeric(),
                         Forms\Components\Select::make('test_method_id')
                             ->label('Metode uji')
                             ->relationship('testMethod', 'name')
@@ -120,7 +136,7 @@ class TestPackageResource extends Resource
                                 Forms\Components\Textarea::make('description')
                                     ->label('Keterangan')
                                     ->columnSpanFull(),
-                            ])->createOptionModalHeading('Buat Regulasi'),
+                            ])->createOptionModalHeading('Buat Metode uji'),
                         Forms\Components\Textarea::make('description')
                             ->label('Keterangan')
                             ->columnSpanFull(),

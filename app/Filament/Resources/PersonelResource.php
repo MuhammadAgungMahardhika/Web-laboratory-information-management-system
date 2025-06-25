@@ -4,11 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PersonelResource\Pages;
 use App\Filament\Resources\PersonelResource\RelationManagers;
+use App\Models\Enums\RoleStatusEnum;
+use App\Models\Enums\UserStatusEnum;
 use App\Models\Personel;
 use App\Traits\HasAuthorization;
+use Closure;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -36,6 +41,107 @@ class PersonelResource extends Resource
                     ->required()
                     ->relationship('user', 'name')
                     ->searchable()
+                    ->createOptionForm(function (Get $get) {
+                        return [
+                            Forms\Components\TextInput::make('name')
+                                ->label('Nama pengguna')
+                                ->required()
+                                ->default($get('name'))
+                                ->autocomplete(false),
+                            Forms\Components\TextInput::make('username')
+                                ->label('Nip')
+                                ->required()
+                                ->default($get('nip'))
+                                ->unique()
+                                ->autocomplete(false),
+                            Forms\Components\TextInput::make('email')
+                                ->label('Email')
+                                ->default($get('email'))
+                                ->email()
+                                ->unique()
+                                ->autocomplete(false),
+                            Select::make('roles')
+                                ->label('Peran')
+                                ->multiple()
+                                ->rules([
+                                    fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                        if (!is_array($value) || !in_array(3, $value)) {
+                                            $fail('Setiap pengguna harus memiliki peran employe.');
+                                        }
+                                    }
+                                ])
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('name', RoleStatusEnum::Customer->value))
+                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                                ->searchable()
+                                ->required()
+                                ->preload(),
+
+                            Forms\Components\TextInput::make('password')
+                                ->label('Kata sandi')
+                                ->password()
+                                ->revealable()
+                                ->required()
+                                ->autocomplete(false),
+
+                            FileUpload::make('profile_photo_path')
+                                ->label('Foto profil')
+                                ->image()
+                                ->maxSize(2048)
+                                ->directory('profile-photos')
+                                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
+                                ->label('Profile Photo')
+                                ->visibility('public'),
+                            Select::make('status')
+                                ->options(UserStatusEnum::labels())
+                                ->default(UserStatusEnum::default()),
+                        ];
+                    })->editOptionForm(function (Get $get) {
+                        return [
+                            Forms\Components\TextInput::make('name')
+                                ->label('Nama pengguna')
+                                ->required()
+                                ->default($get('name'))
+                                ->autocomplete(false),
+                            Forms\Components\TextInput::make('username')
+                                ->label('Nip')
+                                ->required()
+                                ->default($get('nip'))
+                                ->unique(ignoreRecord: true)
+                                ->autocomplete(false),
+                            Forms\Components\TextInput::make('email')
+                                ->label('Email')
+                                ->default($get('email'))
+                                ->unique(ignoreRecord: true)
+                                ->email()
+                                ->autocomplete(false),
+                            Select::make('roles')
+                                ->label('Peran')
+                                ->multiple()
+                                ->required()
+                                ->rules([
+                                    fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                        if (!is_array($value) || !in_array(3, $value)) {
+                                            $fail('Setiap pengguna harus memiliki peran employe.');
+                                        }
+                                    }
+                                ])
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('name', RoleStatusEnum::Admin->value))
+                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                                ->searchable()
+                                ->preload(),
+                            FileUpload::make('profile_photo_path')
+                                ->label('Foto profil')
+                                ->image()
+                                ->maxSize(2048)
+                                ->directory('profile-photos')
+                                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
+                                ->label('Profile Photo')
+                                ->visibility('public'),
+                            Select::make('status')
+                                ->options(UserStatusEnum::labels())
+                                ->default(UserStatusEnum::default()),
+                        ];
+                    })
                     ->preload(),
                 Forms\Components\TextInput::make('fullname')
                     ->label('Nama personel')
@@ -66,10 +172,7 @@ class PersonelResource extends Resource
                     )
                     ->label('Akun')
                     ->preload(),
-                Forms\Components\TextInput::make('created_by')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('updated_by')
-                    ->maxLength(255),
+
             ]);
     }
 

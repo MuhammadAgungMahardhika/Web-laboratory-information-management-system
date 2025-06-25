@@ -43,6 +43,12 @@ class ParameterResource extends Resource
                     ->required()
                     ->label('Satuan')
                     ->maxLength(50),
+                Forms\Components\TextInput::make('default_price')
+                    ->label('Harga standar')
+                    ->required()
+                    ->numeric()
+                    ->label('Harga')
+                    ->prefix('Rp. '),
                 Forms\Components\Select::make('test_method_id')
                     ->label('Metode uji')
                     ->relationship('testMethod', 'name')
@@ -81,6 +87,12 @@ class ParameterResource extends Resource
                 Tables\Columns\TextColumn::make('unit')
                     ->label('Satuan')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('default_price')
+                    ->label('Satuan')
+                    ->searchable()
+                    ->money('IDR')
+
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('testMethod.name')
                     ->label('Metode uji')
                     ->sortable(),
