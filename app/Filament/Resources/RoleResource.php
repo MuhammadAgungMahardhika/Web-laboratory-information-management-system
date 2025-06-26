@@ -22,7 +22,7 @@ class RoleResource extends Resource
     protected static ?string $label = 'Hak Akses';
     protected static ?string $navigationLabel = 'Hak Akses';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Master";
+    protected static ?string $navigationGroup = "Master Pengguna";
 
     public static function form(Form $form): Form
     {

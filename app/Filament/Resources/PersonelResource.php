@@ -27,7 +27,7 @@ class PersonelResource extends Resource
     protected static ?string $label = 'Personel';
     protected static ?string $navigationLabel = 'Personel';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Master";
+    protected static ?string $navigationGroup = "Master Pengguna";
     public static function form(Form $form): Form
     {
         return $form

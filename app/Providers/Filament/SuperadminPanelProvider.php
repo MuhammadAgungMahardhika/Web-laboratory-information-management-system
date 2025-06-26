@@ -46,6 +46,12 @@ class SuperadminPanelProvider extends PanelProvider
                     ->label('Master')
                     ->icon('heroicon-s-folder')->collapsed(),
                 NavigationGroup::make()
+                    ->label('Master Pengguna')
+                    ->icon('heroicon-s-folder')->collapsed(),
+                NavigationGroup::make()
+                    ->label('Master Lokasi')
+                    ->icon('heroicon-s-folder')->collapsed(),
+                NavigationGroup::make()
                     ->label('Transaksi')
                     ->icon('heroicon-s-folder')->collapsed(),
             ])->sidebarCollapsibleOnDesktop(true)
