@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             PersonelSeeder::class,
             SampleTypeSeeder::class,
             ProvinceSeeder::class,
-            CitySeeder::class
+            CitySeeder::class,
+            CustomerTypeSeeder::class
         ]);
     }
 }

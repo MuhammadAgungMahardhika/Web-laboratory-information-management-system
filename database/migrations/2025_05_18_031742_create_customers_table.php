@@ -16,20 +16,21 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('province_id')->nullable();
             $table->unsignedBigInteger('city_id')->nullable();
+            $table->unsignedBigInteger('customer_type_id');
+
             $table->string('code', 50)->unique();
             $table->string('name');
-            $table->string('type')->nullable();
             $table->string('full_address')->nullable();
 
             $table->string('postal_code')->nullable();
             // contact person
-            $table->string('contact_person_name')->nullable();
+            $table->string('contact_person_name');
             $table->string('contact_person_title')->nullable();
-            $table->string('contact_phone_number')->nullable();
+            $table->string('contact_phone_number');
             $table->string('contact_email')->nullable();
             $table->string('npwp')->nullable();
 
-            $table->date('registration_date')->nullable();
+            $table->date('registration_date');
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->string('created_by', 255)->nullable();

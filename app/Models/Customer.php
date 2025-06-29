@@ -11,6 +11,11 @@ class Customer extends Model
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
     use HasFactory;
     use Blameable;
+
+    public function customerType()
+    {
+        return $this->belongsTo(CustomerType::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::class);
