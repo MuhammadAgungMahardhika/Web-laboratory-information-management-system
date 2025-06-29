@@ -31,6 +31,7 @@ class ProvinceResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Nama')
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
 
@@ -40,6 +41,7 @@ class ProvinceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')

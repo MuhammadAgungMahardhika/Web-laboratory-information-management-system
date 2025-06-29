@@ -21,8 +21,8 @@ class CityResource extends Resource
 {
     use HasAuthorization;
     protected static ?string $model = City::class;
-    protected static ?string $label = 'Kota';
-    protected static ?string $navigationLabel = 'Kota';
+    protected static ?string $label = 'Kota / Kabupaten';
+    protected static ?string $navigationLabel = 'Kota / Kabupaten';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "Master Lokasi";
     protected static ?int $navigationSort = 2;
@@ -38,6 +38,7 @@ class CityResource extends Resource
                     ->preload(),
                 Forms\Components\TextInput::make('name')
                     ->label('Nama')
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
 
@@ -47,6 +48,7 @@ class CityResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
             ->columns([
                 Tables\Columns\TextColumn::make('province.name')
                     ->label('Provinsi')
