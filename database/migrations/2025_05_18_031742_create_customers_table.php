@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('province_id')->nullable();
+            $table->unsignedBigInteger('city_id')->nullable();
             $table->string('code', 50)->unique();
             $table->string('name');
             $table->string('type')->nullable();
             $table->string('full_address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('province')->nullable();
+
             $table->string('postal_code')->nullable();
             // contact person
             $table->string('contact_person_name')->nullable();

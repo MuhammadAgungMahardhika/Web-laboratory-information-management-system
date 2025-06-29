@@ -31,6 +31,22 @@ class PermissionAndRoleSeeder extends Seeder
             'delete-role',
         ];
 
+        $provincePermissions = [
+            'view-any-province',
+            'view-province',
+            'create-province',
+            'update-province',
+            'delete-province',
+        ];
+
+        $cityPermissions = [
+            'view-any-city',
+            'view-city',
+            'create-city',
+            'update-city',
+            'delete-city',
+        ];
+
         $customerPermissions = [
             'view-any-customer',
             'view-customer',
@@ -105,6 +121,8 @@ class PermissionAndRoleSeeder extends Seeder
         $allPermissions = array_merge(
             $userPermissions,
             $personelPermissions,
+            $provincePermissions,
+            $cityPermissions,
             $customerPermissions,
             $rolePermissions,
             $parameterPermissions,

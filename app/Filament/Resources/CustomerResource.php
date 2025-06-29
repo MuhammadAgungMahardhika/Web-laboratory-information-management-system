@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\Customer;
+use App\Models\Enums\CustomerStatusEnum;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
@@ -23,7 +24,7 @@ class CustomerResource extends Resource
     protected static ?string $label = 'Data pelanggan';
     protected static ?string $navigationLabel = 'Data pelanggan';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Master";
+    protected static ?string $navigationGroup = "Master Pengguna";
 
 
     public static function form(Form $form): Form
@@ -35,9 +36,19 @@ class CustomerResource extends Resource
                 'xl' => 4,
             ])
             ->schema([
-                Select::make('user.name')
+                Select::make('user_id')
                     ->label('Akun pelanggan')
                     ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload(),
+                Select::make('province_id')
+                    ->label('Provinsi')
+                    ->relationship('province', 'name')
+                    ->searchable()
+                    ->preload(),
+                Select::make('city_id')
+                    ->label('Kota')
+                    ->relationship('city', 'name')
                     ->searchable()
                     ->preload(),
                 Forms\Components\TextInput::make('code')
@@ -85,11 +96,8 @@ class CustomerResource extends Resource
                     ->default(now()),
                 Select::make('status')
                     ->label('Status')
-                    ->options([
-                        'active' => 'aktif',
-                        'inactive' => 'tidak aktif'
-                    ])
-                    ->default('active')
+                    ->options(CustomerStatusEnum::labels())
+                    ->default(CustomerStatusEnum::default())
                     ->required(),
 
             ]);
