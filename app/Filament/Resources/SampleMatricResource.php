@@ -49,6 +49,7 @@ class SampleMatricResource extends Resource
                 Forms\Components\Select::make('environment_type')
                     ->label('Jenis lingkungan')
                     ->options(EnvironmentTypeEnum::labels())
+                    ->getOptionLabelFromRecordUsing(fn($record) => EnvironmentTypeEnum::labels()[$record->name] ?? $record->name)
                     ->required(),
                 Forms\Components\Textarea::make('description')
                     ->label('Keterangan')
@@ -73,7 +74,10 @@ class SampleMatricResource extends Resource
                     ->label('Nama matrix')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('environment_type')->label('Jenis lingkungan')->sortable(),
+                Tables\Columns\TextColumn::make('environment_type')
+                    ->formatStateUsing(fn($state) => EnvironmentTypeEnum::labels()[$state])
+                    ->label('Jenis lingkungan')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_by')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('updated_by')
