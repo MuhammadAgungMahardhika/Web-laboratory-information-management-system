@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('test_methods', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 100)->unique();
             $table->string('name', 255)->nullable();
             $table->text('description')->nullable();
 
@@ -18,7 +17,7 @@ return new class extends Migration
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
-            $table->index('code');
+
             $table->index('name');
         });
     }

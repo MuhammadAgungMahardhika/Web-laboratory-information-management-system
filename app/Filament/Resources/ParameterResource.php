@@ -88,10 +88,10 @@ class ParameterResource extends Resource
                     ->label('Satuan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('default_price')
-                    ->label('Satuan')
+                    ->label('Harga standar')
+                    ->alignEnd()
                     ->searchable()
                     ->money('IDR')
-
                     ->sortable(),
                 Tables\Columns\TextColumn::make('testMethod.name')
                     ->label('Metode uji')

@@ -23,7 +23,8 @@ class SampleTypeSeeder extends Seeder
             $csvData = array_map('str_getcsv', file($csvFile));
             foreach ($csvData as $row) {
                 DB::table('sample_types')->insert([
-                    'name' => $row[0],
+                    'id' => $row[0],
+                    'name' => $row[1],
                 ]);
             }
         }

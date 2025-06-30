@@ -1,0 +1,20 @@
+1,Gravimetri,Penentuan kadar total padatan dengan metode pengeringan dan penimbangan
+2,Spektrofotometri,Analisis logam berat dengan spektrofotometer serapan atom (AAS)
+3,Titrimetri,Penentuan kadar asam atau basa dengan titrasi
+4,Kromatografi,Identifikasi senyawa dengan kromatografi gas (GC)
+5,Mikrobiologi,Penghitungan koloni mikroorganisme dalam air
+6,FTIR,Identifikasi gugus fungsi senyawa dengan Fourier Transform Infrared
+7,ICP-OES,Penentuan elemen logam menggunakan ICP Optical Emission Spectroscopy
+8,TOC Analyzer,Analisis karbon organik total
+9,UV-Vis,Analisis zat warna menggunakan UV-Visible
+10,Potensiometri,Pengukuran pH menggunakan elektroda pH
+11,Konduktometri,Pengukuran konduktivitas listrik
+12,Flame Photometry,Analisis natrium dan kalium
+13,Colorimetri,Pengukuran konsentrasi berdasarkan intensitas warna
+14,XRF,Analisis unsur logam dalam padatan menggunakan sinar-X
+15,TLC,Kromatografi Lapis Tipis untuk identifikasi senyawa
+16,Voltametri,Analisis elektrokimia untuk logam berat
+17,Gravimetri Filter,Pengukuran debu total dengan filter dan penimbangan
+18,PCR,Deteksi DNA mikroorganisme spesifik
+19,Elisa,Pengujian antigen/antibodi berbasis immunoassay
+20,Penetrometer,Pengujian kekerasan atau penetrasi sampel padat

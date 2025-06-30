@@ -37,7 +37,7 @@ return new class extends Migration
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
-            $table->index('code');
+
             $table->index('status');
         });
     }

@@ -33,9 +33,7 @@ class TestMethodResource extends Resource
                 'xl' => 4,
             ])
             ->schema([
-                Forms\Components\TextInput::make('code')
-                    ->label('Kode')
-                    ->required(),
+
                 Forms\Components\TextInput::make('name')
                     ->label('Nama metode uji')
                     ->required(),
@@ -50,9 +48,6 @@ class TestMethodResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
-                    ->label('Kode')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama metode uji')
                     ->searchable(),

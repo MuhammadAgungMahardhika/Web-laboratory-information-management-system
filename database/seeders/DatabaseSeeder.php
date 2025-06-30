@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
             PermissionAndRoleSeeder::class,
             PersonelSeeder::class,
             SampleTypeSeeder::class,
+            SampleMatricSeeder::class,
+            RegulationSeeder::class,
+            TestMethodSeeder::class,
+            ParameterSeeder::class,
             ProvinceSeeder::class,
             CitySeeder::class,
             CustomerTypeSeeder::class

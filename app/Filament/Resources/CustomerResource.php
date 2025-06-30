@@ -254,6 +254,7 @@ class CustomerResource extends Resource
                     ->label('Narahubung')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contact_person_title')
+                    ->label('Jabatan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contact_phone_number')
                     ->label('Nomor hp')
