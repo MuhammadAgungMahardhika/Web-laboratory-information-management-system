@@ -12,6 +12,7 @@ use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -37,112 +38,7 @@ class PersonelResource extends Resource
                 'xl' => 4,
             ])
             ->schema([
-                Select::make('user_id')
-                    ->required()
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->createOptionForm(function (Get $get) {
-                        return [
-                            Forms\Components\TextInput::make('name')
-                                ->label('Nama pengguna')
-                                ->required()
-                                ->default($get('name'))
-                                ->autocomplete(false),
-                            Forms\Components\TextInput::make('username')
-                                ->label('Nip')
-                                ->required()
-                                ->default($get('nip'))
-                                ->unique()
-                                ->autocomplete(false),
-                            Forms\Components\TextInput::make('email')
-                                ->label('Email')
-                                ->default($get('email'))
-                                ->email()
-                                ->unique()
-                                ->autocomplete(false),
-                            Select::make('roles')
-                                ->label('Peran')
-                                ->multiple()
-                                ->rules([
-                                    fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                                        if (!is_array($value) || !in_array(3, $value)) {
-                                            $fail('Setiap pengguna harus memiliki peran employe.');
-                                        }
-                                    }
-                                ])
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('name', RoleStatusEnum::Customer->value))
-                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
-                                ->searchable()
-                                ->required()
-                                ->preload(),
 
-                            Forms\Components\TextInput::make('password')
-                                ->label('Kata sandi')
-                                ->password()
-                                ->revealable()
-                                ->required()
-                                ->autocomplete(false),
-
-                            FileUpload::make('profile_photo_path')
-                                ->label('Foto profil')
-                                ->image()
-                                ->maxSize(2048)
-                                ->directory('profile-photos')
-                                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
-                                ->label('Profile Photo')
-                                ->visibility('public'),
-                            Select::make('status')
-                                ->options(UserStatusEnum::labels())
-                                ->default(UserStatusEnum::default()),
-                        ];
-                    })->editOptionForm(function (Get $get) {
-                        return [
-                            Forms\Components\TextInput::make('name')
-                                ->label('Nama pengguna')
-                                ->required()
-                                ->default($get('name'))
-                                ->autocomplete(false),
-                            Forms\Components\TextInput::make('username')
-                                ->label('Nip')
-                                ->required()
-                                ->default($get('nip'))
-                                ->unique(ignoreRecord: true)
-                                ->autocomplete(false),
-                            Forms\Components\TextInput::make('email')
-                                ->label('Email')
-                                ->default($get('email'))
-                                ->unique(ignoreRecord: true)
-                                ->email()
-                                ->autocomplete(false),
-                            Select::make('roles')
-                                ->label('Peran')
-                                ->multiple()
-                                ->required()
-                                ->rules([
-                                    fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                                        if (!is_array($value) || !in_array(3, $value)) {
-                                            $fail('Setiap pengguna harus memiliki peran employe.');
-                                        }
-                                    }
-                                ])
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('name', RoleStatusEnum::Admin->value))
-                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
-                                ->searchable()
-                                ->preload(),
-                            FileUpload::make('profile_photo_path')
-                                ->label('Foto profil')
-                                ->image()
-                                ->maxSize(2048)
-                                ->directory('profile-photos')
-                                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
-                                ->label('Profile Photo')
-                                ->visibility('public'),
-                            Select::make('status')
-                                ->options(UserStatusEnum::labels())
-                                ->default(UserStatusEnum::default()),
-                        ];
-                    })
-                    ->preload(),
                 Forms\Components\TextInput::make('fullname')
                     ->label('Nama personel')
                     ->required()
@@ -155,24 +51,99 @@ class PersonelResource extends Resource
                     ->tel()
                     ->maxLength(50),
                 Forms\Components\Textarea::make('address')
-                    ->label('Alamat')
-                    ->columnSpanFull(),
+                    ->label('Alamat'),
                 Forms\Components\TextInput::make('position')
                     ->label('Jabatan / Posisi'),
                 Forms\Components\Textarea::make('certification_details')
-                    ->label('Sertifikasi')
-                    ->columnSpanFull(),
+                    ->label('Sertifikasi'),
                 Select::make('user_id')
-                    ->searchable()
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->relationship(
-                        'user',
-                        'name'
-                    )
-                    ->label('Akun')
-                    ->preload(),
+                    ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
+                        $query->where(function ($query) use ($get) {
+                            $query->whereDoesntHave('personel')
+                                ->whereDoesntHave('personel')
+                                ->orWhereHas('personel', function ($subQuery) use ($get) {
+                                    $subQuery->where('id', '=', $get('id'));
+                                });
+                        });
+                    })
+                    ->searchable()
+                    ->createOptionForm(function (Get $get) {
+                        return [
+                            TextInput::make('name')
+                                ->label('Nama pengguna')
+                                ->default($get('fullname'))
+                                ->required()
+                                ->autocomplete(false),
+                            TextInput::make('username')
+                                ->label('Username')
+                                ->default($get('fullname'))
+                                ->unique(ignoreRecord: true)
+                                ->required()
+                                ->autocomplete(false),
+                            TextInput::make('email')
+                                ->label('Email')
+                                ->email()
+                                ->unique(ignoreRecord: true)
+                                ->autocomplete(false),
+                            Select::make('roles')
+                                ->label('Peran')
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleStatusEnum::Customer->value))
+                                ->searchable()
+                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                                ->preload()
+                                ->dehydrated(false),
 
+                            TextInput::make('password')
+                                ->label('Kata sandi')
+                                ->password()
+                                ->revealable()
+                                ->required()
+                                ->default('123456')
+                                ->autocomplete(false),
+                            Select::make('status')
+                                ->required()
+                                ->default(UserStatusEnum::default())
+                                ->options(UserStatusEnum::labels()),
+                        ];
+                    })->editOptionForm(function (Get $get) {
+                        return [
+                            TextInput::make('name')
+                                ->label('Nama pengguna')
+                                ->required()
+                                ->autocomplete(false),
+                            TextInput::make('username')
+                                ->label('Username')
+                                ->unique(ignoreRecord: true)
+                                ->required()
+                                ->autocomplete(false),
+                            TextInput::make('email')
+                                ->label('Email')
+                                ->email()
+                                ->unique(ignoreRecord: true)
+                                ->autocomplete(false),
+                            Select::make('roles')
+                                ->label('Peran')
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleStatusEnum::Customer->value))
+                                ->searchable()
+                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                                ->preload()
+                                ->dehydrated(false),
+
+                            TextInput::make('password')
+                                ->label('Kata sandi')
+                                ->password()
+                                ->revealable()
+                                ->required()
+                                ->visible(fn(string $context) => $context === 'create')
+                                ->autocomplete(false),
+                            Select::make('status')
+                                ->required()
+                                ->options(UserStatusEnum::labels()),
+                        ];
+                    })
+                    ->preload(),
             ]);
     }
 

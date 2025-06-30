@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Enums\RoleStatusEnum;
 use App\Models\Enums\UserStatusEnum;
 use App\Models\User;
 use App\Traits\HasAuthorization;
@@ -36,6 +37,11 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns([
+                'sm' => 2,
+                'md' => 3,
+                'xl' => 4,
+            ])
             ->schema([
                 TextInput::make('name')
                     ->label('Nama pengguna')
@@ -56,7 +62,7 @@ class UserResource extends Resource
                     ->multiple()
                     ->relationship('roles', 'name')
                     ->searchable()
-                    // ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                    ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
                     ->preload()
                     ->dehydrated(false),
 
