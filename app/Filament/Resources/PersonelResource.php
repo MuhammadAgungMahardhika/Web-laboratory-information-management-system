@@ -61,8 +61,7 @@ class PersonelResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
                         $query->where(function ($query) use ($get) {
-                            $query->whereDoesntHave('personel')
-                                ->whereDoesntHave('personel')
+                            $query->whereDoesntHave('customer')
                                 ->orWhereHas('personel', function ($subQuery) use ($get) {
                                     $subQuery->where('id', '=', $get('id'));
                                 });
