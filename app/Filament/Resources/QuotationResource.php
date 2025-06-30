@@ -4,8 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\QuotationResource\Pages;
 use App\Models\Quotation;
+use App\Services\QuotationService;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,56 +26,65 @@ class QuotationResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $quoatationService = app(QuotationService::class);
+
         return $form
+            ->columns([
+                'sm' => 2,
+                'md' => 3,
+                'xl' => 4,
+            ])
             ->schema([
                 Select::make('request_id')
-                    ->label('Permohonan')
+                    ->label('Nomor permohonan')
                     ->relationship('request', 'request_number')
                     ->helperText('Kosongkan jika bukan dari permohonan'),
-                Select::make('customer.name')
+                Select::make('customer_id')
                     ->label('Pelanggan')
                     ->required()
                     ->relationship('customer', 'name'),
-                Hidden::make('personnel_id')
+                Hidden::make('personel_id')
                     ->required()
                     ->default(Auth::user()->id),
-                Forms\Components\TextInput::make('quotation_number')
-                    ->label('Nomor penawaran')
-                    ->required()
-                    ->maxLength(50),
-                Forms\Components\TextInput::make('quotation_name')
-                    ->label('Judul penawaran')
-                    ->required()
-                    ->maxLength(50),
-                Forms\Components\DatePicker::make('quotation_date')
-                    ->label('Tanggal penawaran')
-                    ->default(now())
-                    ->required(),
-                Forms\Components\TextInput::make('discount_percentage')
-                    ->label('Diskon (persentase)')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('ppn_percentage')
-                    ->label('Ppn')
-                    ->required()
-                    ->numeric()
-                    ->default(11),
-                Forms\Components\TextInput::make('pph_percentage')
-                    ->label('Pph')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('total_amount')
-                    ->label('Jumlah total')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Textarea::make('payment_terms')
-                    ->label('Kebijakan pembayaran')
+                Section::make([
+                    Forms\Components\DatePicker::make('quotation_date')
+                        ->label('Tanggal penawaran')
+                        ->default(now())
+                        ->required(),
+                    Forms\Components\TextInput::make('quotation_number')
+                        ->label('Nomor penawaran')
+                        ->required()
+                        ->default($quoatationService->generateQuotationNumber())
+                        ->maxLength(50),
+                    Forms\Components\TextInput::make('quotation_name')
+                        ->label('Judul penawaran')
+                        ->required()
+                        ->maxLength(50),
+
+                ])->columns(4)->heading('Penawaran')->iconColor('primary')->icon('heroicon-s-user'),
+                Section::make([
+                    Forms\Components\TextInput::make('discount_percentage')
+                        ->label('Diskon (persen)')
+                        ->required()
+                        ->numeric()
+                        ->default(0),
+                    Forms\Components\TextInput::make('ppn_percentage')
+                        ->label('Ppn')
+                        ->required()
+                        ->numeric()
+                        ->default(11),
+                    Forms\Components\TextInput::make('pph_percentage')
+                        ->label('Pph')
+                        ->required()
+                        ->numeric()
+                        ->default(0),
+                ])->columns(4)->heading('Potongan')->iconColor('primary')->icon('heroicon-s-user'),
+
+                RichEditor::make('additional_description')
+                    ->label('Keterangan tambahan')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('quotation_status')
-                    ->label('Status penawaran')
-                    ->required(),
+
+
             ]);
     }
 
@@ -81,20 +93,22 @@ class QuotationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('request.code')
-                    ->numeric()
+                    ->label('Nomor permohonan')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('customer.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('personnel.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('quotation_name')
-                    ->label('Judul penawaran')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('quotation_number')
                     ->label('Kode penawaran')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('quotation_name')
+                    ->label('Judul penawaran')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('customer.name')
+                    ->label('Nama pelanggan')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('personel.name')
+                    ->label('Petugas pembuat')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('quotation_date')
                     ->label('Tanggal penawaran')
                     ->date()

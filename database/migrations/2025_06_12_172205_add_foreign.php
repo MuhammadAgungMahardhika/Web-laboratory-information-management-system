@@ -117,7 +117,7 @@ return new class extends Migration
                 ->on('customers')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
-            $table->foreign('personnel_id', 'fk_quotations_personnel')
+            $table->foreign('personel_id', 'fk_quotations_personel')
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')

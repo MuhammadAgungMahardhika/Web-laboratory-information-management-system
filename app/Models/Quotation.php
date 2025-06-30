@@ -25,4 +25,8 @@ class Quotation extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+    public function personel()
+    {
+        return $this->belongsTo(Personel::class);
+    }
 }

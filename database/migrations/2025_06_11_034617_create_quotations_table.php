@@ -13,22 +13,22 @@ return new class extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('request_id');
+            $table->unsignedBigInteger('request_id')->nullable();
             $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('personnel_id');
+            $table->unsignedBigInteger('personel_id');
 
             // Quotation details
             $table->string('quotation_name', 50);
             $table->string('quotation_number', 50)->unique();
             $table->date('quotation_date');
-            $table->decimal('discount_percentage', 5, 2)->default(0.00);
-            $table->decimal('ppn_percentage', 5, 2)->default(0.00);
-            $table->decimal('pph_percentage', 5, 2)->default(0.00);
-            $table->decimal('total_amount', 15, 2); // 'total_amount' is gross as per previous discussion
-            $table->text('payment_terms')->nullable();
+            $table->decimal('discount_percentage', 5, 2)->default(0);
+            $table->decimal('ppn_percentage', 5, 2)->default(0);
+            $table->decimal('pph_percentage', 5, 2)->default(0);
+            $table->decimal('total_amount', 15, 2)->default(0); // 'total_amount' is gross as per previous discussion
+            $table->text('additional_description')->nullable();
 
             // Using enum string values directly since Laravel migrations don't automatically recognize PHP Enums
-            $table->enum('quotation_status', ['pending_response', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('pending_response');
+            $table->enum('quotation_status', ['draft', 'pending_response', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('pending_response');
 
             // Approval details
             $table->string('approved_by_user_id', 255)->nullable();
