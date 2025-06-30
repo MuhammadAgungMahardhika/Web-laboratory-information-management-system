@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('city_id')->nullable();
             $table->unsignedBigInteger('customer_type_id');
 
-            $table->string('code', 50)->unique();
-            $table->string('name');
+
+            $table->string('name')->unique();
             $table->string('full_address')->nullable();
 
             $table->string('postal_code')->nullable();

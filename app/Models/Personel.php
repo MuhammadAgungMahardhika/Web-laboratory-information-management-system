@@ -15,4 +15,9 @@ class Personel extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\QuotationResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -12,12 +13,17 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class QuotationItemRelationManager extends RelationManager
 {
-    protected static string $relationship = 'quotationItem';
+    protected static string $relationship = 'quotationItems';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
+                Select::make('test_package_id')
+                    ->label('Paket pengujian')
+                    ->relationship('testPackage', 'name')
+                    ->preload()
+                    ->searchable(),
                 Forms\Components\TextInput::make('description')
                     ->required()
                     ->maxLength(255),

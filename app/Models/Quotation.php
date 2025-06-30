@@ -12,9 +12,9 @@ class Quotation extends Model
     use Blameable;
     use HasFactory;
 
-    public function quotationItem()
+    public function quotationItems()
     {
-        return $this->hasMany(QuoatationItem::class);
+        return $this->hasMany(QuotationItem::class);
     }
     public function request()
     {

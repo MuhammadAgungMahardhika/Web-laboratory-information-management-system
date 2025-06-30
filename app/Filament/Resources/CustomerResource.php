@@ -47,12 +47,10 @@ class CustomerResource extends Resource
                 'xl' => 4,
             ])
             ->schema([
-                Forms\Components\TextInput::make('code')
-                    ->label('Kode perusahaan / pelanggan')
-                    ->required()
-                    ->maxLength(50),
+
                 Forms\Components\TextInput::make('name')
                     ->label('Nama perusahaan / pelanggan')
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
                 Hidden::make('registration_date')
@@ -234,11 +232,6 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-
-                Tables\Columns\TextColumn::make('code')
-                    ->label('Kode pelanggan')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama perusahaan / pelanggan')
                     ->searchable(),
@@ -258,7 +251,7 @@ class CustomerResource extends Resource
                     ->label('Kode pos')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contact_person_name')
-                    ->label('Naarahubung')
+                    ->label('Narahubung')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contact_person_title')
                     ->searchable(),

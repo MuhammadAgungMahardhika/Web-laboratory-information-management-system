@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\QuotationResource\Pages;
+use App\Filament\Resources\QuotationResource\RelationManagers\QuotationItemRelationManager;
 use App\Models\Quotation;
 use App\Services\QuotationService;
 use Filament\Forms;
@@ -79,12 +80,9 @@ class QuotationResource extends Resource
                         ->numeric()
                         ->default(0),
                 ])->columns(4)->heading('Potongan')->iconColor('primary')->icon('heroicon-s-user'),
-
                 RichEditor::make('additional_description')
                     ->label('Keterangan tambahan')
                     ->columnSpanFull(),
-
-
             ]);
     }
 
@@ -97,7 +95,8 @@ class QuotationResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quotation_number')
                     ->label('Kode penawaran')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('quotation_name')
                     ->label('Judul penawaran')
                     ->searchable(),
@@ -105,7 +104,7 @@ class QuotationResource extends Resource
                     ->label('Nama pelanggan')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('personel.name')
+                Tables\Columns\TextColumn::make('personel.fullname')
                     ->label('Petugas pembuat')
                     ->searchable()
                     ->sortable(),
@@ -161,7 +160,7 @@ class QuotationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            QuotationItemRelationManager::class
         ];
     }
 
