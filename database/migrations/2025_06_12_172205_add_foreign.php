@@ -142,6 +142,20 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
         });
+
+        Schema::table('quotation_item_parameters', function (Blueprint $table) {
+            $table->foreign('quotation_item_id', 'fk_quotation_item_parameters_quotations')
+                ->references('id')
+                ->on('quotation_items')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+
+            $table->foreign('parameter_id', 'fk_quotation_item_parameters_parameters')
+                ->references('id')
+                ->on('parameters')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+        });
     }
 
     /**

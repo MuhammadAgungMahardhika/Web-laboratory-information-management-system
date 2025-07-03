@@ -21,4 +21,13 @@ class QuotationItem extends Model
     {
         return $this->belongsTo(TestPackage::class);
     }
+
+    public function regulation()
+    {
+        return $this->belongsTo(Regulation::class);
+    }
+    public function quotationItemParameters()
+    {
+        return $this->hasMany(QuotationItemParameter::class);
+    }
 }

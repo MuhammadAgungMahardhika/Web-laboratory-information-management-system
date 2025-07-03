@@ -20,4 +20,9 @@ class Parameter extends Model
     {
         return $this->belongsToMany(TestPackage::class);
     }
+
+    public function quotationItemParameter()
+    {
+        return $this->hasMany(QuotationItemParameter::class);
+    }
 }

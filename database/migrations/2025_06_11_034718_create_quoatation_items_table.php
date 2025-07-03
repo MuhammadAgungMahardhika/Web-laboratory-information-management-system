@@ -12,14 +12,16 @@ return new class extends Migration
             $table->id();
 
             $table->bigInteger('quotation_id')->unsigned();
-            $table->bigInteger('test_package_id')->unsigned();
-            $table->bigInteger('regulation_id')->unsigned();
+            $table->bigInteger('test_package_id')->unsigned()->nullable();
+            $table->bigInteger('regulation_id')->unsigned()->nullable();
 
+            // duplikat data from test package
             $table->string('description', 255);
-            $table->string('regulation_name', 255);
+            $table->string('regulation_name', 255)->nullable();
+            $table->decimal('price', 15, 2);
+
             $table->integer('quantity');
             $table->string('unit', 50);
-            $table->decimal('price', 15, 2);
             $table->string('location', 100)->nullable();
 
             $table->timestamps();

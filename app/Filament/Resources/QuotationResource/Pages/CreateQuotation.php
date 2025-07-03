@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateQuotation extends CreateRecord
 {
     protected static string $resource = QuotationResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('edit', ['record' => $this->record->id]);
+    }
 }
