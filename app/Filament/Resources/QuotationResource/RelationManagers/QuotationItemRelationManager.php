@@ -101,6 +101,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->maxLength(100)
                         ->nullable(),
                 ])->columns(2),
+                Select::make('parameters')->searchable()->multiple()->relationship('parameters', 'name')->preload(),
 
             ]);
     }
@@ -155,6 +156,10 @@ class QuotationItemRelationManager extends RelationManager
                             })
                     ),
 
+                Tables\Columns\TextColumn::make('quotationItemParameters.parameter_name')
+                    ->badge()
+                    ->size(TextColumnSize::Small)
+                    ->label('Parameter'),
             ])
             ->filters([
                 //
@@ -162,27 +167,20 @@ class QuotationItemRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->after(function (QuotationItem $record, array $data) {
-                        // Ambil test_package_id dari data form
-                        $testPackageId = $data['test_package_id'] ?? null;
-                        if ($testPackageId) {
-                            $testPackage = TestPackage::find($testPackageId);
-                            if ($testPackage) {
-                                // Ambil semua parameter yang terkait dengan test_package ini
-                                $parameters = $testPackage->parameters;
-
-                                foreach ($parameters as $parameter) {
-                                    // Buat entri baru di quotation_item_parameters
-                                    QuotationItemParameter::create([
-                                        'quotation_item_id' => $record->id,
-                                        'parameter_id' => $parameter->id,
-                                        'parameter_name' => $parameter->name,
-                                        'parameter_unit' => $parameter->unit,
-                                        'parameter_default_test_method_name' => $parameter->testMethod->name,
-                                        'parameter_description' => $parameter->description,
-                                        'parameter_status' => $parameter->status,
-                                        // Anda bisa menambahkan created_by/updated_by jika perlu dari auth() user
-                                    ]);
-                                }
+                        $parameterIds = $record->parameters()->allRelatedIds() ?? [];
+                        if (!empty($parameterIds)) {
+                            $record->parameters()->detach(); // Hapus relasi pivot standar
+                            $parameters = \App\Models\Parameter::whereIn('id', $parameterIds)->with('testMethod')->get();
+                            foreach ($parameters as $parameter) {
+                                QuotationItemParameter::create([
+                                    'quotation_item_id' => $record->id,
+                                    'parameter_id' => $parameter->id,
+                                    'parameter_name' => $parameter->name,
+                                    'parameter_unit' => $parameter->unit,
+                                    'parameter_default_test_method_name' => $parameter->testMethod?->name,
+                                    'parameter_description' => $parameter->description,
+                                    'parameter_status' => $parameter->status,
+                                ]);
                             }
                         }
                     }),
