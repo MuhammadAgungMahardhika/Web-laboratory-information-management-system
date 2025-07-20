@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PersonelResource\Pages;
 use App\Filament\Resources\PersonelResource\RelationManagers;
-use App\Models\Enums\RoleStatusEnum;
+use App\Models\Enums\RoleEnum;
 use App\Models\Enums\UserStatusEnum;
 use App\Models\Personel;
 use App\Traits\HasAuthorization;
@@ -88,9 +88,9 @@ class PersonelResource extends Resource
                                 ->autocomplete(false),
                             Select::make('roles')
                                 ->label('Peran')
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleStatusEnum::Customer->value))
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
                                 ->searchable()
-                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                                ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
                                 ->preload()
                                 ->dehydrated(false),
 
@@ -124,9 +124,9 @@ class PersonelResource extends Resource
                                 ->autocomplete(false),
                             Select::make('roles')
                                 ->label('Peran')
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleStatusEnum::Customer->value))
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
                                 ->searchable()
-                                ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                                ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
                                 ->preload()
                                 ->dehydrated(false),
 

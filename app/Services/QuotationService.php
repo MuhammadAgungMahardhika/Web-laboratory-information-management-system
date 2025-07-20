@@ -38,4 +38,15 @@ class QuotationService
         // Gabungkan menjadi format akhir
         return "{$number}/Jalint-Lab/{$monthRoman[$currentMonth - 1]}/{$currentYear}";
     }
+
+    public function createQuotationItemParameters(): array
+    {
+        return [
+            'name' => 'Nama',
+            'description' => 'Keterangan',
+            'quantity' => 'Jumlah',
+            'unit_price' => 'Harga Satuan',
+            'total_price' => 'Total Harga',
+        ];
+    }
 }

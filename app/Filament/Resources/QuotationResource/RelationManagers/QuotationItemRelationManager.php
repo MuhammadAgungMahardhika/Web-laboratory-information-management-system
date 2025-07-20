@@ -15,6 +15,7 @@ use App\Models\Regulation;
 use App\Models\QuotationItem; // Import model QuotationItem
 use App\Models\QuotationItemParameter; // Import model QuotationItemParameter
 use App\Models\Parameter; // Import model Parameter
+use App\Services\QuotationItemService;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Get;
@@ -33,6 +34,7 @@ class QuotationItemRelationManager extends RelationManager
     protected static ?string $title = "Detail penawaran";
     public function form(Form $form): Form
     {
+
         return $form
             ->schema([
                 Select::make('test_package_id')
@@ -167,26 +169,18 @@ class QuotationItemRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->after(function (QuotationItem $record, array $data) {
-                        $parameterIds = $record->parameters()->allRelatedIds() ?? [];
-                        if (!empty($parameterIds)) {
-                            $record->parameters()->detach(); // Hapus relasi pivot standar
-                            $parameters = \App\Models\Parameter::whereIn('id', $parameterIds)->with('testMethod')->get();
-                            foreach ($parameters as $parameter) {
-                                QuotationItemParameter::create([
-                                    'quotation_item_id' => $record->id,
-                                    'parameter_id' => $parameter->id,
-                                    'parameter_name' => $parameter->name,
-                                    'parameter_unit' => $parameter->unit,
-                                    'parameter_default_test_method_name' => $parameter->testMethod?->name,
-                                    'parameter_description' => $parameter->description,
-                                    'parameter_status' => $parameter->status,
-                                ]);
-                            }
-                        }
+                        // Inisialisasi service
+                        $quotationItemService = new QuotationItemService();
+                        $quotationItemService->syncQuotationItemParameters($record);
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function (QuotationItem $record, array $data) {
+                        // Inisialisasi service
+                        $quotationItemService = new QuotationItemService();
+                        $quotationItemService->syncQuotationItemParameters($record);
+                    }),
                 Tables\Actions\DeleteAction::make()
                     ->using(function (Tables\Actions\DeleteAction $action, QuotationItem $record) {
                         return DB::transaction(function () use ($action, $record) {

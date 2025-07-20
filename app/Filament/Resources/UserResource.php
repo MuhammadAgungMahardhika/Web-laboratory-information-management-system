@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\Enums\RoleStatusEnum;
+use App\Models\Enums\RoleEnum;
 use App\Models\Enums\UserStatusEnum;
 use App\Models\User;
 use App\Traits\HasAuthorization;
@@ -58,11 +58,11 @@ class UserResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->autocomplete(false),
                 Select::make('roles')
-                    ->label('Peran')
+                    ->label('Hak akses')
                     ->multiple()
                     ->relationship('roles', 'name')
                     ->searchable()
-                    ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                    ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
                     ->preload()
                     ->dehydrated(false),
 
@@ -105,20 +105,20 @@ class UserResource extends Resource
                     ->iconColor('primary')
                     ->searchable(),
                 TextColumn::make('roles')
-                    ->label('Peran')
-                    ->getStateUsing(function ($record) {
-                        return $record->roles->pluck('name')->join(', ');
+                    ->label('Hak akses')
+                    ->formatStateUsing(function ($record) {
+                        return RoleEnum::labels()[$record->roles->pluck('name')->join(', ')] ?? 'Tidak ada';
                     }),
             ])
             ->filters([
                 SelectFilter::make('roles')
-                    ->label('Peran')
+                    ->label('Hak akses')
                     ->searchable()
                     ->relationship(
                         'roles',
                         'name',
                     )
-                    // ->getOptionLabelFromRecordUsing(fn($record) => RoleStatusEnum::labels()[$record->name] ?? $record->name)
+                    // ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
                     ->preload(),
             ], layout: FiltersLayout::AboveContent)
             ->actions([

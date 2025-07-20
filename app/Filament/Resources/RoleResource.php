@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Models\Enums\RoleEnum;
 use App\Models\Role;
 use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
@@ -29,6 +30,8 @@ class RoleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
+                    ->formatStateUsing(fn($state) => RoleEnum::labels()[$state] ?? $state)
                     ->required()
                     ->maxLength(255),
                 Hidden::make('guard_name')->default('web'),
@@ -48,6 +51,7 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->formatStateUsing(fn($state) => RoleEnum::labels()[$state])
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
