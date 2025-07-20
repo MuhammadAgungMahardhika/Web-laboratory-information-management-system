@@ -32,8 +32,8 @@ class CustomerResource extends Resource
 {
     use HasAuthorization;
     protected static ?string $model = Customer::class;
-    protected static ?string $label = 'Data pelanggan';
-    protected static ?string $navigationLabel = 'Data pelanggan';
+    protected static ?string $label = 'Data klien';
+    protected static ?string $navigationLabel = 'Data klien';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "Master Pengguna";
 
@@ -47,46 +47,47 @@ class CustomerResource extends Resource
                 'xl' => 4,
             ])
             ->schema([
+                Section::make([
+                    Forms\Components\TextInput::make('name')
+                        ->label('Nama klien')
+                        ->unique(ignoreRecord: true)
+                        ->required()
+                        ->maxLength(255),
+                    Hidden::make('registration_date')
+                        ->label('Tanggal didaftarkan')
+                        ->default(now()),
 
-                Forms\Components\TextInput::make('name')
-                    ->label('Nama perusahaan / pelanggan')
-                    ->unique(ignoreRecord: true)
-                    ->required()
-                    ->maxLength(255),
-                Hidden::make('registration_date')
-                    ->label('Tanggal didaftarkan')
-                    ->default(now()),
+                    Select::make('customer_type_id')
+                        ->required()
+                        ->label('Jenis klien')
+                        ->relationship('customerType', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->createOptionForm(function (Get $get) {
+                            return [
+                                TextInput::make('name')
+                                    ->label('Nama')
+                                    ->unique(ignoreRecord: true)
+                                    ->required()
+                                    ->autocomplete(false),
+                            ];
+                        })->createOptionModalHeading('Buat Jenis Klien Baru')
+                        ->editOptionForm(function (Get $get) {
+                            return [
+                                TextInput::make('name')
+                                    ->label('Nama')
+                                    ->unique(ignoreRecord: true)
+                                    ->required()
+                                    ->autocomplete(false),
+                            ];
+                        })->editOptionModalHeading('Ubah Jenis Klien'),
 
-                Select::make('customer_type_id')
-                    ->required()
-                    ->label('Jenis pelanggan')
-                    ->relationship('customerType', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->createOptionForm(function (Get $get) {
-                        return [
-                            TextInput::make('name')
-                                ->label('Nama')
-                                ->unique(ignoreRecord: true)
-                                ->required()
-                                ->autocomplete(false),
-                        ];
-                    })->createOptionModalHeading('Buat Jenis Pelanggan Baru')
-                    ->editOptionForm(function (Get $get) {
-                        return [
-                            TextInput::make('name')
-                                ->label('Nama')
-                                ->unique(ignoreRecord: true)
-                                ->required()
-                                ->autocomplete(false),
-                        ];
-                    })->editOptionModalHeading('Ubah Jenis Pelanggan'),
-
-                Select::make('status')
-                    ->label('Status')
-                    ->options(CustomerStatusEnum::labels())
-                    ->default(CustomerStatusEnum::default())
-                    ->required(),
+                    Select::make('status')
+                        ->label('Status')
+                        ->options(CustomerStatusEnum::labels())
+                        ->default(CustomerStatusEnum::default())
+                        ->required(),
+                ])->columns(3)->heading('Identitas')->iconColor('primary')->icon('heroicon-s-building-office'),
                 //
                 Section::make([
                     Select::make('province_id')
@@ -134,7 +135,7 @@ class CustomerResource extends Resource
                         ->label('Npwp')
                         ->maxLength(255),
                     Select::make('user_id')
-                        ->label('Akun pelanggan')
+                        ->label('Akun klien')
                         ->unique(ignoreRecord: true)
                         ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
                             $query->where(function ($query) use ($get) {
@@ -233,10 +234,10 @@ class CustomerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nama perusahaan / pelanggan')
+                    ->label('Nama klien')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('customerType.name')
-                    ->label('Jenis pelanggan')
+                    ->label('Jenis klien')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('province.name')
                     ->label('Provinsi')
@@ -272,7 +273,7 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status'),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('Akun pelanggan')
+                    ->label('Akun klien')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_by')
@@ -290,7 +291,7 @@ class CustomerResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('customer_type')
-                    ->label('Jenis pelanggan')
+                    ->label('Jenis klien')
                     ->relationship('customerType', 'name')
                     ->preload()
                     ->searchable(),

@@ -44,16 +44,16 @@ class SuperadminPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Master')
-                    ->icon('heroicon-s-folder')->collapsed(),
+                    ->icon('heroicon-o-folder')->collapsed(),
                 NavigationGroup::make()
                     ->label('Master Pengguna')
-                    ->icon('heroicon-s-folder')->collapsed(),
+                    ->icon('heroicon-o-users')->collapsed(),
                 NavigationGroup::make()
                     ->label('Master Lokasi')
-                    ->icon('heroicon-s-folder')->collapsed(),
+                    ->icon('heroicon-o-map-pin')->collapsed(),
                 NavigationGroup::make()
                     ->label('Transaksi')
-                    ->icon('heroicon-s-folder')->collapsed(),
+                    ->icon('heroicon-o-arrows-right-left')->collapsed(),
             ])->sidebarCollapsibleOnDesktop(true)
             ->middleware([
                 EncryptCookies::class,

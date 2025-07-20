@@ -107,7 +107,32 @@ class UserResource extends Resource
                 TextColumn::make('roles')
                     ->label('Hak akses')
                     ->formatStateUsing(function ($record) {
-                        return RoleEnum::labels()[$record->roles->pluck('name')->join(', ')] ?? 'Tidak ada';
+                        // Ambil semua nama role dari record user
+                        $roleNames = $record->roles->pluck('name');
+
+                        // Buat array kosong untuk menyimpan label role yang ditemukan
+                        $displayLabels = [];
+
+                        // Iterasi setiap nama role
+                        foreach ($roleNames as $roleName) {
+                            // Coba konversi nama role (string) ke enum case
+                            $enumCase = RoleEnum::tryFrom($roleName);
+
+                            // Jika enum case ditemukan, ambil labelnya
+                            if ($enumCase) {
+                                $displayLabels[] = $enumCase->label();
+                            } else {
+                                // Jika nama role tidak ditemukan di enum, tampilkan nama aslinya atau default
+                                $displayLabels[] = ucfirst($roleName); // Mengkapitalisasi nama role jika tidak ada di enum
+                            }
+                        }
+
+                        // Gabungkan semua label yang ditemukan dengan koma
+                        if (empty($displayLabels)) {
+                            return 'Tidak ada'; // Jika tidak ada role sama sekali
+                        }
+
+                        return implode(', ', $displayLabels);
                     }),
             ])
             ->filters([
