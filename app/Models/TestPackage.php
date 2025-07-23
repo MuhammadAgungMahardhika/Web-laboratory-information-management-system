@@ -27,6 +27,6 @@ class TestPackage extends Model
     }
     public function parameters()
     {
-        return $this->belongsToMany(Parameter::class);
+        return $this->belongsToMany(Parameter::class, 'parameter_test_packages');
     }
 }

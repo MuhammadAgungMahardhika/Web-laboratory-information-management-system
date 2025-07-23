@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parameter_test_package', function (Blueprint $table) {
+        Schema::create('parameter_test_packages', function (Blueprint $table) {
             $table->id(); // Primary Key, auto-increment
             $table->unsignedBigInteger('test_package_id');
             $table->unsignedBigInteger('parameter_id');
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('parameter_test_package');
+        Schema::dropIfExists('parameter_test_packages');
     }
 };

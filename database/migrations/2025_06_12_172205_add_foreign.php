@@ -71,13 +71,13 @@ return new class extends Migration
                 ->onDelete('restrict');
         });
 
-        Schema::table('parameter_test_package', function (Blueprint $table) {
-            $table->foreign('test_package_id', 'fk_parameter_test_package_test_packages')
+        Schema::table('parameter_test_packages', function (Blueprint $table) {
+            $table->foreign('test_package_id', 'fk_parameter_test_packages_test_packages')
                 ->references('id')
                 ->on('test_packages')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
-            $table->foreign('parameter_id', 'fk_parameter_test_package_parameters')
+            $table->foreign('parameter_id', 'fk_parameter_test_packages_parameters')
                 ->references('id')
                 ->on('parameters')
                 ->onUpdate('cascade')
