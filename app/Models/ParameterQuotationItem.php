@@ -6,9 +6,9 @@ use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QuotationItemParameter extends Model
+class ParameterQuotationItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\QuotationItemParameterFactory> */
+    /** @use HasFactory<\Database\Factories\ParameterQuotationItemFactory> */
     use HasFactory;
     use Blameable;
 

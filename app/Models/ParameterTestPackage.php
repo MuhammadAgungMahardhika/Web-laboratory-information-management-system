@@ -11,4 +11,14 @@ class ParameterTestPackage extends Model
     /** @use HasFactory<\Database\Factories\ParameterTestPackageFactory> */
     use HasFactory;
     use Blameable;
+
+    public function testPackage()
+    {
+        return $this->belongsTo(TestPackage::class);
+    }
+
+    public function parameter()
+    {
+        return $this->belongsTo(Parameter::class);
+    }
 }

@@ -11,17 +11,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\TestPackage;
-use App\Models\Regulation;
 use App\Models\QuotationItem; // Import model QuotationItem
-use App\Models\QuotationItemParameter; // Import model QuotationItemParameter
-use App\Models\Parameter; // Import model Parameter
+
 use App\Services\QuotationItemService;
-use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Get;
 use Filament\Notifications\Notification;
-use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +43,7 @@ class QuotationItemRelationManager extends RelationManager
                         $set('price', null);
                         $set('regulation_id', null);
                         $set('regulation_name', null);
-
+                        $set('parameters', []);
                         if ($state) {
                             $testPackage = TestPackage::find($state);
                             if ($testPackage) {
@@ -58,6 +52,9 @@ class QuotationItemRelationManager extends RelationManager
                                 if ($testPackage->regulation) {
                                     $set('regulation_id', $testPackage->regulation->id);
                                     $set('regulation_name', $testPackage->regulation->name);
+                                }
+                                if ($testPackage->parameters) {
+                                    $set('parameters', $testPackage->parameters->pluck('id')->toArray());
                                 }
                             }
                         }
@@ -158,7 +155,7 @@ class QuotationItemRelationManager extends RelationManager
                             })
                     ),
 
-                Tables\Columns\TextColumn::make('quotationItemParameters.parameter_name')
+                Tables\Columns\TextColumn::make('parameterQuotationItems.parameter_name')
                     ->badge()
                     ->size(TextColumnSize::Small)
                     ->label('Parameter'),
@@ -171,7 +168,7 @@ class QuotationItemRelationManager extends RelationManager
                     ->after(function (QuotationItem $record, array $data) {
                         // Inisialisasi service
                         $quotationItemService = new QuotationItemService();
-                        $quotationItemService->syncQuotationItemParameters($record);
+                        $quotationItemService->syncParameterQuotationItems($record);
                     }),
             ])
             ->actions([
@@ -179,14 +176,14 @@ class QuotationItemRelationManager extends RelationManager
                     ->after(function (QuotationItem $record, array $data) {
                         // Inisialisasi service
                         $quotationItemService = new QuotationItemService();
-                        $quotationItemService->syncQuotationItemParameters($record);
+                        $quotationItemService->syncParameterQuotationItems($record);
                     }),
                 Tables\Actions\DeleteAction::make()
                     ->using(function (Tables\Actions\DeleteAction $action, QuotationItem $record) {
                         return DB::transaction(function () use ($action, $record) {
                             try {
-                                // Hapus QuotationItemParameter terkait terlebih dahulu
-                                $record->quotationItemParameters()->delete(); // Menggunakan relasi hasMany
+                                // Hapus parameterQuotationItems terkait terlebih dahulu
+                                $record->parameterQuotationItems()->delete(); // Menggunakan relasi hasMany
 
                                 // Kemudian hapus QuotationItem itu sendiri
                                 // Jika onDelete('cascade') di FK quotation_items, ini akan otomatis
@@ -212,7 +209,7 @@ class QuotationItemRelationManager extends RelationManager
                                 try {
                                     foreach ($records as $record) {
                                         // Hapus parameter terkait untuk setiap QuotationItem
-                                        $record->quotationItemParameters()->delete();
+                                        $record->parameterQuotationItems()->delete();
                                         // Kemudian hapus QuotationItem itu sendiri
                                         $record->delete();
                                     }

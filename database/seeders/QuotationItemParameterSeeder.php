@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class QuotationItemParameterSeeder extends Seeder
+class ParameterQuotationItemSeeder extends Seeder
 {
     /**
      * Run the database seeds.

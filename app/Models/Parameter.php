@@ -23,10 +23,10 @@ class Parameter extends Model
 
     public function quotationItems()
     {
-        return $this->belongsToMany(QuotationItem::class, 'quotation_item_parameters');
+        return $this->belongsToMany(QuotationItem::class);
     }
-    public function quotationItemParameter()
+    public function parameterQuotationItems()
     {
-        return $this->hasMany(QuotationItemParameter::class);
+        return $this->hasMany(ParameterQuotationItem::class);
     }
 }

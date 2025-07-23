@@ -39,7 +39,7 @@ class QuotationService
         return "{$number}/Jalint-Lab/{$monthRoman[$currentMonth - 1]}/{$currentYear}";
     }
 
-    public function createQuotationItemParameters(): array
+    public function createParameterQuotationItems(): array
     {
         return [
             'name' => 'Nama',

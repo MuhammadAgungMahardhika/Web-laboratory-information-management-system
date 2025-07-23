@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quotation_item_parameters', function (Blueprint $table) {
+        Schema::create('parameter_quotation_item', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('quotation_item_id');
             $table->unsignedBigInteger('parameter_id');
 
             // Snapshot data dari master parameter
-            $table->string('parameter_name', 255)->nullable();
-            $table->string('parameter_unit', 50)->nullable();
+            $table->string('parameter_name', 255);
+            $table->string('parameter_unit', 50);
+            $table->decimal('parameter_default_price');
             $table->string('parameter_default_test_method_name', 50)->nullable();
             $table->text('parameter_description')->nullable();
             $table->enum('parameter_status', ["accredited", "unaccredited"])->nullable();
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quotation_item_parameters');
+        Schema::dropIfExists('parameter_quotation_item');
     }
 };

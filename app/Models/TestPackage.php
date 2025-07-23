@@ -21,7 +21,7 @@ class TestPackage extends Model
     {
         return $this->belongsTo(Regulation::class);
     }
-    public function packageParameters()
+    public function parameterTestPackages()
     {
         return $this->hasMany(ParameterTestPackage::class);
     }
