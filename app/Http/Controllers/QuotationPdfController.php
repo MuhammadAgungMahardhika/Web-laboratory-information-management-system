@@ -11,8 +11,8 @@ class QuotationPdfController extends Controller
     public function generate(Quotation $quotation)
     {
         // Muat relasi yang dibutuhkan agar data tersedia di Blade view
-        $quotation->load(['customer', 'personel', 'quotationItems.parameterQuotationItems']);
-        // Perhatikan: 'items' diganti 'quotationItems', dan 'parameters' diganti 'parameterQuotationItems'
+        $quotation->load(['customer', 'personel', 'quotationItems.parameterQuotationItem']);
+        // Perhatikan: 'items' diganti 'quotationItems', dan 'parameters' diganti 'parameterQuotationItem'
 
         // Kirim data quotation ke Blade view
         $pdf = Pdf::loadView('pdfs.quotation', compact('quotation'));

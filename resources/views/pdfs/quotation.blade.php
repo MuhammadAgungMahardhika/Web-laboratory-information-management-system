@@ -260,10 +260,10 @@
                             @if($item->location)
                                 <small>Lokasi: {{ $item->location }}</small><br>
                             @endif
-                            @if($item->parameterQuotationItems->isNotEmpty())
+                            @if($item->parameterQuotationItem->isNotEmpty())
                                 <ul class="parameters-list">
                                     <small><strong>Parameter:</strong></small>
-                                    @foreach($item->parameterQuotationItems as $param_snapshot)
+                                    @foreach($item->parameterQuotationItem as $param_snapshot)
                                         <li>- {{ $param_snapshot->parameter_name ?? '-' }} ({{ $param_snapshot->parameter_unit ?? '-' }}) @if($param_snapshot->parameter_default_test_method_name) [Metode: {{ $param_snapshot->parameter_default_test_method_name }}]@endif</li>
                                     @endforeach
                                 </ul>

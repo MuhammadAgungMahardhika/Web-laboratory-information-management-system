@@ -28,7 +28,7 @@ class QuotationItem extends Model
     }
     public function parameters()
     {
-        return $this->belongsToMany(Parameter::class);
+        return $this->belongsToMany(Parameter::class, 'parameter_quotation_items');
     }
     public function parameterQuotationItems()
     {

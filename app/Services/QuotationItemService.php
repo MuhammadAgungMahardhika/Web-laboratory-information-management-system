@@ -28,6 +28,7 @@ class QuotationItemService
 
         $parameters = Parameter::whereIn('id', $parameterIds)->with('testMethod')->get();
 
+
         foreach ($parameters as $parameter) {
             ParameterQuotationItem::create([
                 'quotation_item_id' => $quotationItem->id,

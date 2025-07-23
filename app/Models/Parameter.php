@@ -18,14 +18,19 @@ class Parameter extends Model
 
     public function testPackages()
     {
-        return $this->belongsToMany(TestPackage::class);
+        return $this->belongsToMany(TestPackage::class); // butuh perbaikan 
+    }
+
+    public function parameterTestPackages()
+    {
+        return $this->hasMany(ParameterTestPackage::class);
     }
 
     public function quotationItems()
     {
-        return $this->belongsToMany(QuotationItem::class);
+        return $this->belongsToMany(QuotationItem::class, 'parameter_quotation_items');
     }
-    public function parameterQuotationItems()
+    public function parameterQuotationItem()
     {
         return $this->hasMany(ParameterQuotationItem::class);
     }

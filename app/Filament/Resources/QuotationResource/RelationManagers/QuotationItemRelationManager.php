@@ -182,7 +182,7 @@ class QuotationItemRelationManager extends RelationManager
                     ->using(function (Tables\Actions\DeleteAction $action, QuotationItem $record) {
                         return DB::transaction(function () use ($action, $record) {
                             try {
-                                // Hapus parameterQuotationItems terkait terlebih dahulu
+                                // Hapus parameterQuotationItem terkait terlebih dahulu
                                 $record->parameterQuotationItems()->delete(); // Menggunakan relasi hasMany
 
                                 // Kemudian hapus QuotationItem itu sendiri
