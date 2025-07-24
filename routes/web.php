@@ -15,3 +15,6 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('/quotations/generate_pdf/{quotation}', [App\Http\Controllers\QuotationPdfController::class, 'generate'])
+    ->name('quotations.generate_pdf');

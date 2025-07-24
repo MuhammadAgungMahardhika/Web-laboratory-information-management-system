@@ -10,18 +10,26 @@ class QuotationPdfController extends Controller
 {
     public function generate(Quotation $quotation)
     {
-        // Muat relasi yang dibutuhkan agar data tersedia di Blade view
-        $quotation->load(['customer', 'personel', 'quotationItems.parameterQuotationItem']);
-        // Perhatikan: 'items' diganti 'quotationItems', dan 'parameters' diganti 'parameterQuotationItem'
+        // Muat relasi yang dibutuhkan
+        $quotation->load(['customer', 'personel', 'quotationItems.parameterQuotationItems']);
 
-        // Kirim data quotation ke Blade view
+        // Buat PDF dari Blade view
         $pdf = Pdf::loadView('pdfs.quotation', compact('quotation'));
 
-        // Anda bisa memilih salah satu:
-        // 1. Mendownload PDF langsung
-        return $pdf->download('Penawaran-' . $quotation->quotation_number . '.pdf');
+        // --- PERBAIKAN DI SINI: Sanitasi Nama File ---
+        // Ganti karakter-karakter yang tidak diizinkan dalam nama file dengan tanda hubung (-)
+        // Karakter umum yang tidak diizinkan: / \ : * ? " < > |
+        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->quotation_number);
 
-        // 2. Menampilkan PDF di browser (stream)
-        // return $pdf->stream('Penawaran-' . $quotation->quotation_number . '.pdf');
+        // Opsi yang lebih agresif: Hapus semua karakter yang bukan alfanumerik atau tanda hubung/spasi,
+        // lalu ganti spasi dengan underscore (jika diinginkan)
+        // $safeFileName = preg_replace('/[^a-zA-Z0-9\s-]/', '', $quotation->quotation_number);
+        // $safeFileName = str_replace(' ', '_', $safeFileName);
+
+        // Unduh PDF dengan nama file yang sudah disanitasi
+        return $pdf->download('Penawaran-' . $safeFileName . '.pdf');
+
+        // Atau untuk menampilkan di browser:
+        // return $pdf->stream('Penawaran-' . $safeFileName . '.pdf');
     }
 }

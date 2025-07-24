@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Penawaran - {{ $quotation->quotation_number }}</title>
     <style>
         /* CSS Umum untuk dokumen */
         body {
-            font-family: 'DejaVu Sans', sans-serif; /* Font umum untuk mendukung berbagai karakter non-Latin */
+            font-family: 'DejaVu Sans', sans-serif;
+            /* Font umum untuk mendukung berbagai karakter non-Latin */
             font-size: 10pt;
             line-height: 1.6;
             color: #333;
         }
+
         .container {
             width: 100%;
             margin: 0 auto;
@@ -24,18 +27,22 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
+
         .header h1 {
             margin: 0;
             color: #0056b3;
             font-size: 18pt;
         }
+
         .header p {
             font-size: 9pt;
             color: #666;
             margin: 2px 0;
         }
+
         .header img {
-            max-height: 60px; /* Tinggi maksimum logo */
+            max-height: 60px;
+            /* Tinggi maksimum logo */
             margin-bottom: 10px;
         }
 
@@ -49,30 +56,40 @@
 
         /* Detail Penawaran & Pelanggan */
         .details-section {
-            display: block; /* Menggunakan display:block untuk wrapping pada DOMPDF */
+            display: block;
+            /* Menggunakan display:block untuk wrapping pada DOMPDF */
             width: 100%;
             margin-bottom: 20px;
         }
-        .details-section > div {
-            width: 48%; /* Hampir setengah, sisakan sedikit margin */
-            display: inline-block; /* Untuk menempatkan di samping satu sama lain */
+
+        .details-section>div {
+            width: 48%;
+            /* Hampir setengah, sisakan sedikit margin */
+            display: inline-block;
+            /* Untuk menempatkan di samping satu sama lain */
             vertical-align: top;
-            box-sizing: border-box; /* Pastikan padding dihitung dalam lebar */
+            box-sizing: border-box;
+            /* Pastikan padding dihitung dalam lebar */
             padding-right: 1%;
-            padding-left: 1%; /* Untuk spacing */
+            padding-left: 1%;
+            /* Untuk spacing */
         }
+
         .details-table {
             width: 100%;
             border-collapse: collapse;
         }
+
         .details-table td {
             padding: 2px 0;
             vertical-align: top;
             text-align: left;
             font-size: 9pt;
         }
+
         .details-table .label-col {
-            width: 35%; /* Lebar untuk label */
+            width: 35%;
+            /* Lebar untuk label */
             font-weight: bold;
             color: #555;
         }
@@ -90,23 +107,33 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
-        .items-table th, .items-table td {
+
+        .items-table th,
+        .items-table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
             font-size: 9pt;
             vertical-align: top;
         }
+
         .items-table th {
             background-color: #f2f2f2;
             font-weight: bold;
             color: #333;
         }
+
         .items-table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-        .items-table .text-right { text-align: right; }
-        .items-table .text-center { text-align: center; }
+
+        .items-table .text-right {
+            text-align: right;
+        }
+
+        .items-table .text-center {
+            text-align: center;
+        }
 
         /* Tabel Parameter (nested dalam item) */
         .parameters-list {
@@ -116,6 +143,7 @@
             margin-bottom: 0;
             font-size: 8pt;
         }
+
         .parameters-list li {
             padding: 1px 0;
             color: #555;
@@ -124,29 +152,37 @@
         /* Ringkasan Biaya */
         .summary-wrapper {
             width: 100%;
-            overflow: hidden; /* Clearfix */
+            overflow: hidden;
+            /* Clearfix */
         }
+
         .summary-table {
-            width: 50%; /* Lebar tabel summary */
-            float: right; /* Agar tabel ada di kanan */
+            width: 50%;
+            /* Lebar tabel summary */
+            float: right;
+            /* Agar tabel ada di kanan */
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         .summary-table td {
             padding: 8px;
             border: 1px solid #ddd;
             font-size: 9pt;
         }
+
         .summary-table .label {
             text-align: left;
             font-weight: normal;
             width: 60%;
             background-color: #f2f2f2;
         }
+
         .summary-table .value {
             text-align: right;
             font-weight: bold;
         }
+
         .summary-table .total-row td {
             background-color: #e6f7ff;
             font-weight: bold;
@@ -162,6 +198,7 @@
             border-top: 1px solid #eee;
             padding-top: 15px;
         }
+
         .terms h4 {
             color: #333;
             margin-bottom: 10px;
@@ -173,20 +210,24 @@
             overflow: hidden;
             font-size: 9pt;
         }
+
         .signature-section .left-col {
             float: left;
             width: 48%;
         }
+
         .signature-section .right-col {
             float: right;
             width: 48%;
             text-align: right;
         }
+
         .signature-box {
             margin-top: 50px;
             border-top: 1px solid #333;
             padding-top: 5px;
-            width: 60%; /* Lebar garis tanda tangan */
+            width: 60%;
+            /* Lebar garis tanda tangan */
             margin-left: 0;
             margin-right: auto;
         }
@@ -203,6 +244,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -219,18 +261,42 @@
         <div class="details-section">
             <div class="left-details">
                 <table class="details-table">
-                    <tr><td class="label-col">Nomor Penawaran</td><td>: {{ $quotation->quotation_number ?? '-' }}</td></tr>
-                    <tr><td class="label-col">Nama Penawaran</td><td>: {{ $quotation->quotation_name ?? '-' }}</td></tr>
-                    <tr><td class="label-col">Tanggal Penawaran</td><td>: {{ \Carbon\Carbon::parse($quotation->quotation_date)->format('d F Y') ?? '-' }}</td></tr>
-                    <tr><td class="label-col">Berlaku Hingga</td><td>: {{ \Carbon\Carbon::parse($quotation->valid_until_date)->format('d F Y') ?? '-' }}</td></tr>
+                    <tr>
+                        <td class="label-col">Nomor Penawaran</td>
+                        <td>: {{ $quotation->quotation_number ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Nama Penawaran</td>
+                        <td>: {{ $quotation->quotation_name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Tanggal Penawaran</td>
+                        <td>: {{ \Carbon\Carbon::parse($quotation->quotation_date)->format('d F Y') ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Berlaku Hingga</td>
+                        <td>: {{ \Carbon\Carbon::parse($quotation->valid_until_date)->format('d F Y') ?? '-' }}</td>
+                    </tr>
                 </table>
             </div>
             <div class="right-details">
                 <table class="details-table">
-                    <tr><td class="label-col">Kepada Yth.</td><td>: **{{ $quotation->customer->customer_name ?? '-' }}**</td></tr>
-                    <tr><td class="label-col">Alamat</td><td>: {{ $quotation->customer->full_address ?? '-' }}</td></tr>
-                    <tr><td class="label-col">Kontak Personil</td><td>: {{ $quotation->customer->contact_person_name ?? '-' }}</td></tr>
-                    <tr><td class="label-col">Telp. Kontak</td><td>: {{ $quotation->customer->contact_phone_number ?? '-' }}</td></tr>
+                    <tr>
+                        <td class="label-col">Kepada Yth.</td>
+                        <td>: **{{ $quotation->customer->customer_name ?? '-' }}**</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Alamat</td>
+                        <td>: {{ $quotation->customer->full_address ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Kontak Personil</td>
+                        <td>: {{ $quotation->customer->contact_person_name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Telp. Kontak</td>
+                        <td>: {{ $quotation->customer->contact_phone_number ?? '-' }}</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -257,14 +323,19 @@
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>
                             <strong>{{ $item->description ?? '-' }}</strong><br>
-                            @if($item->location)
+                            @if ($item->location)
                                 <small>Lokasi: {{ $item->location }}</small><br>
                             @endif
-                            @if($item->parameterQuotationItem->isNotEmpty())
+                            @if ($item->parameterQuotationItems->isNotEmpty())
                                 <ul class="parameters-list">
                                     <small><strong>Parameter:</strong></small>
-                                    @foreach($item->parameterQuotationItem as $param_snapshot)
-                                        <li>- {{ $param_snapshot->parameter_name ?? '-' }} ({{ $param_snapshot->parameter_unit ?? '-' }}) @if($param_snapshot->parameter_default_test_method_name) [Metode: {{ $param_snapshot->parameter_default_test_method_name }}]@endif</li>
+                                    @foreach ($item->parameterQuotationItems as $param_snapshot)
+                                        <li>- {{ $param_snapshot->parameter_name ?? '-' }}
+                                            ({{ $param_snapshot->parameter_unit ?? '-' }})
+                                            @if ($param_snapshot->parameter_default_test_method_name)
+                                                [Metode: {{ $param_snapshot->parameter_default_test_method_name }}]
+                                            @endif
+                                        </li>
                                     @endforeach
                                 </ul>
                             @endif
@@ -290,33 +361,41 @@
                     <td class="label">Subtotal</td>
                     <td class="value">Rp {{ number_format($grandSubtotal, 2, ',', '.') }}</td>
                 </tr>
-                @if($quotation->discount_percentage > 0)
-                <tr>
-                    <td class="label">Diskon ({{ number_format($quotation->discount_percentage, 2, ',', '.') }}%)</td>
-                    <td class="value">Rp {{ number_format($grandSubtotal * ($quotation->discount_percentage / 100), 2, ',', '.') }}</td>
-                </tr>
+                @if ($quotation->discount_percentage > 0)
+                    <tr>
+                        <td class="label">Diskon ({{ number_format($quotation->discount_percentage, 2, ',', '.') }}%)
+                        </td>
+                        <td class="value">Rp
+                            {{ number_format($grandSubtotal * ($quotation->discount_percentage / 100), 2, ',', '.') }}
+                        </td>
+                    </tr>
                 @endif
-                @if($quotation->ppn_percentage > 0)
-                <tr>
-                    <td class="label">PPN ({{ number_format($quotation->ppn_percentage, 2, ',', '.') }}%)</td>
-                    <td class="value">Rp {{ number_format($grandSubtotal * ($quotation->ppn_percentage / 100), 2, ',', '.') }}</td>
-                </tr>
+                @if ($quotation->ppn_percentage > 0)
+                    <tr>
+                        <td class="label">PPN ({{ number_format($quotation->ppn_percentage, 2, ',', '.') }}%)</td>
+                        <td class="value">Rp
+                            {{ number_format($grandSubtotal * ($quotation->ppn_percentage / 100), 2, ',', '.') }}</td>
+                    </tr>
                 @endif
-                @if($quotation->pph_percentage > 0)
-                <tr>
-                    <td class="label">PPH ({{ number_format($quotation->pph_percentage, 2, ',', '.') }}%)</td>
-                    <td class="value">Rp {{ number_format($grandSubtotal * ($quotation->pph_percentage / 100), 2, ',', '.') }}</td>
-                </tr>
+                @if ($quotation->pph_percentage > 0)
+                    <tr>
+                        <td class="label">PPH ({{ number_format($quotation->pph_percentage, 2, ',', '.') }}%)</td>
+                        <td class="value">Rp
+                            {{ number_format($grandSubtotal * ($quotation->pph_percentage / 100), 2, ',', '.') }}</td>
+                    </tr>
                 @endif
                 <tr class="total-row">
                     <td class="label">TOTAL AKHIR</td>
                     <td class="value">
-                        Rp {{ number_format(
-                            $grandSubtotal
-                            - ($grandSubtotal * ($quotation->discount_percentage / 100))
-                            + ($grandSubtotal * ($quotation->ppn_percentage / 100))
-                            - ($grandSubtotal * ($quotation->pph_percentage / 100)),
-                            2, ',', '.'
+                        Rp
+                        {{ number_format(
+                            $grandSubtotal -
+                                $grandSubtotal * ($quotation->discount_percentage / 100) +
+                                $grandSubtotal * ($quotation->ppn_percentage / 100) -
+                                $grandSubtotal * ($quotation->pph_percentage / 100),
+                            2,
+                            ',',
+                            '.',
                         ) }}
                     </td>
                 </tr>
@@ -331,7 +410,10 @@
         <div class="signature-section">
             <div class="left-col">
                 <p>Hormat kami,</p>
-                <div class="signature-box"></div> <p style="margin-top: 5px;"><strong>{{ $quotation->personel->full_name ?? 'Nama Personil Lab' }}</strong></p>
+                <div class="signature-box"></div>
+                <p style="margin-top: 5px;">
+                    <strong>{{ $quotation->personel->full_name ?? 'Nama Personil Lab' }}</strong>
+                </p>
                 <p>Posisi: {{ $quotation->personel->position ?? 'Posisi Personil Lab' }}</p>
             </div>
             {{-- Anda bisa menambahkan kolom kanan jika ada tanda tangan lain --}}
@@ -345,4 +427,5 @@
     </div>
 
 </body>
+
 </html>
