@@ -27,6 +27,7 @@ class SuperadminPanelProvider extends PanelProvider
             ->default()
             ->id('superadmin')
             ->path('superadmin')
+            ->profile(isSimple: false)
             ->login()
             ->colors([
                 'primary' => Color::Green,

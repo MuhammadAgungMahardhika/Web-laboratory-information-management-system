@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\QuotationResource\RelationManagers;
 
+use App\Models\Enums\ParameterStatusEnum;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -21,8 +22,12 @@ use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 
+use function Filament\Support\format_money;
+
 class QuotationItemRelationManager extends RelationManager
 {
+    protected static bool $isLazy = false;
+    protected  bool $isCachingForms = true;
     protected static string $relationship = 'quotationItems';
     protected static ?string $label = 'Detail penawaran';
     protected static ?string $title = "Detail penawaran";
@@ -100,15 +105,23 @@ class QuotationItemRelationManager extends RelationManager
                         ->maxLength(100)
                         ->nullable(),
                 ])->columns(2),
-                Select::make('parameters')->searchable()->multiple()->relationship('parameters', 'name')->preload(),
+                Select::make('parameters')
+                    ->searchable()
+                    ->multiple()
+                    ->relationship('parameters', 'name')
 
+                    ->preload(),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->with('parameterQuotationItems');
+            })
             ->recordTitleAttribute('description')
+            ->paginated(false)
             ->columns([
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi')
@@ -155,8 +168,10 @@ class QuotationItemRelationManager extends RelationManager
                             })
                     ),
 
-                Tables\Columns\TextColumn::make('parameterQuotationItems.parameter_name')
+                Tables\Columns\TextColumn::make('parameterQuotationItems')
                     ->badge()
+                    ->formatStateUsing(fn($state) => $state->parameter_name . " " . Number::currency($state->parameter_default_price, 'RP.'))
+                    ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
                     ->size(TextColumnSize::Small)
                     ->label('Parameter'),
             ])
@@ -169,7 +184,7 @@ class QuotationItemRelationManager extends RelationManager
                         // Inisialisasi service
                         $quotationItemService = new QuotationItemService();
                         $quotationItemService->syncParameterQuotationItems($record);
-                    }),
+                    })->databaseTransaction(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -177,17 +192,13 @@ class QuotationItemRelationManager extends RelationManager
                         // Inisialisasi service
                         $quotationItemService = new QuotationItemService();
                         $quotationItemService->syncParameterQuotationItems($record);
-                    }),
+                    })->databaseTransaction(),
                 Tables\Actions\DeleteAction::make()
                     ->using(function (Tables\Actions\DeleteAction $action, QuotationItem $record) {
                         return DB::transaction(function () use ($action, $record) {
                             try {
                                 // Hapus parameterQuotationItem terkait terlebih dahulu
                                 $record->parameterQuotationItems()->delete(); // Menggunakan relasi hasMany
-
-                                // Kemudian hapus QuotationItem itu sendiri
-                                // Jika onDelete('cascade') di FK quotation_items, ini akan otomatis
-                                // Jika tidak, Anda perlu memastikan ini dihapus juga.
                                 $record->delete();
                                 return true; // Beri tahu Filament bahwa penghapusan berhasil
                             } catch (\Exception $e) {
