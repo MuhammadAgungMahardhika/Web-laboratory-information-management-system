@@ -80,15 +80,10 @@ class TestPackageResource extends Resource
                             ->required(),
                     ])->createOptionModalHeading('Buat Regulasi')
                     ->preload(),
-                Forms\Components\TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->default(0)
-                    ->label('Harga')
-                    ->prefix('Rp. '),
-                Forms\Components\Textarea::make('description')
-                    ->label('Keterangan'),
-
+                Forms\Components\Toggle::make('is_active')
+                    ->label('Aktif ?')
+                    ->default(true)
+                    ->required(),
                 Forms\Components\Select::make('parameters')
                     ->label('Parameter')
                     ->multiple()
@@ -144,10 +139,15 @@ class TestPackageResource extends Resource
                     ])
                     ->required()
                     ->preload(),
-                Forms\Components\Toggle::make('is_active')
-                    ->label('Aktif ?')
-                    ->default(true)
-                    ->required(),
+                Forms\Components\Textarea::make('description')
+                    ->label('Keterangan'),
+                Forms\Components\TextInput::make('price')
+                    ->required()
+                    ->numeric()
+                    ->default(0)
+                    ->label('Harga')
+                    ->prefix('Rp. '),
+
             ]);
     }
 

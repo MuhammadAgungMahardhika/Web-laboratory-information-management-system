@@ -55,7 +55,7 @@
         .document-title {
             text-align: center;
             color: #000000;
-            font-size: 14pt;
+            font-size: 12pt;
             margin-bottom: 20px;
             margin-top: 0;
             /* Ensure no margin collapse */
@@ -259,12 +259,12 @@
                 <tr>
                     <th class="text-center" style="width: 5%;">No.</th>
                     <th style="width: 20%;">Deskripsi Item & Lokasi</th>
-                    <th style="width: 15%;">Regulasi</th>
+                    <th style="width: 14%;">Regulasi</th>
                     <th style="width: 20%;">Parameter</th>
-                    <th class="text-right" style="width: 10%">Jumlah</th>
+                    <th style="width: 7%; text-align: right;">Jumlah</th>
                     <th style="width: 9%;">Satuan</th>
-                    <th class="text-right" style="width: 17%;">Harga (Rp)</th>
-                    <th class="text-right" style="width: 17%;">Total (Rp)</th>
+                    <th style="width: 12%; text-align: right;">Harga (Rp)</th>
+                    <th style="width: 13%; text-align: right;">Total (Rp)</th>
                 </tr>
             </thead>
             <tbody>
@@ -285,10 +285,11 @@
                                 - {{-- Tampilkan tanda hubung jika tidak ada parameter --}}
                             @endif
                         </td>
-                        <td class="text-center">{{ $item->quantity ?? 0 }}</td>
+                        <td class="text-center" style="text-align: right;">{{ $item->quantity ?? 0 }}</td>
                         <td>{{ $item->unit ?? '-' }}</td>
-                        <td class="text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
-                        <td class="text-right">
+                        <td class="text-right" style="text-align: right;">
+                            {{ number_format($item->price, 2, ',', '.') }}</td>
+                        <td class="text-right" style="text-align: right;">
                             {{ number_format(($item->quantity ?? 0) * $item->price, 2, ',', '.') }}</td>
                     </tr>
                     @php $grandSubtotal += (($item->quantity ?? 0) * $item->price); @endphp

@@ -26,6 +26,7 @@ class QuotationItem extends Model
     {
         return $this->belongsTo(Regulation::class);
     }
+
     public function parameters()
     {
         return $this->belongsToMany(Parameter::class, 'parameter_quotation_items');

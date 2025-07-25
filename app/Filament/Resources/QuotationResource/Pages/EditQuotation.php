@@ -22,13 +22,15 @@ class EditQuotation extends EditRecord
             Actions\DeleteAction::make()->using(function () {
                 return DB::transaction(function () {
                     try {
-                        // Hapus semua data terkait dalam satu transaksi
-                        $this->record->quotationItems()->delete();
+                        foreach ($this->record->quotationItems as $quotationItem) {
+                            $quotationItem->parameterQuotationItems()->delete();
+                            $quotationItem->delete();
+                        }
                         return $this->record->delete();
                     } catch (\Exception $e) {
                         Notification::make()
                             ->danger()
-                            ->title('Gagal menghapus lembur')
+                            ->title('Gagal menghapus penawaran')
                             ->body('Terjadi kesalahan: ' . $e->getMessage())
                             ->send();
                         return false;
@@ -42,23 +44,26 @@ class EditQuotation extends EditRecord
                 ->modalHeading('Pratinjau Penawaran PDF') // Judul modal
                 ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
                 ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
-                ->modalWidth('7xl') // Atur lebar modal (misal: '7xl' atau 'full')
+                ->modalWidth('6xl') // Atur lebar modal (misal: '7xl' atau 'full')
                 ->modalContent(function (Quotation $record) {
                     // Ini adalah cara untuk me-render Blade view di dalam modal
                     // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
                     $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);
-                    $pdfUrl = route('quotations.preview_pdf', $record); // Atau 'quotations.preview_pdf' jika Anda memisahkannya
+                    $pdfUrl = route('quotations.preview_pdf', $record);
+                    $downloadUrl = route('quotations.download_pdf', $record);
 
                     return view('pdfs.preview', [
                         'pdfUrl' => $pdfUrl,
                         'safeFileName' => $safeFileName, // Opsional, jika perlu di view modal
+                        'downloadUrl' => $downloadUrl, // Opsional, jika perlu di view modal
                     ]);
-                }),
-
-            Action::make('Download Penawaran')
-                ->url(fn(Quotation $record): string => route('quotations.download_pdf', $record))
-                ->icon('heroicon-o-document-arrow-down')
-                ->color('primary'),
+                })->modalFooterActions([
+                    Action::make('Download')
+                        ->url(fn(Quotation $record): string => route('quotations.download_pdf', $record))
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('primary')
+                        ->openUrlInNewTab(), // Buka di tab baru agar tidak mengganggu modal
+                ])->modalFooterActionsAlignment('right'), // Atur footer actions ke kanan
         ];
     }
 }

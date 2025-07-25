@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\QuotationResource\Pages;
 use App\Filament\Resources\QuotationResource\RelationManagers\QuotationItemRelationManager;
 use App\Models\Enums\CustomerStatusEnum;
+use App\Models\Enums\QuotationStatusEnum;
 use App\Models\Enums\RoleEnum;
 use App\Models\Quotation;
 use App\Services\QuotationService;
@@ -21,6 +22,7 @@ use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class QuotationResource extends Resource
@@ -86,7 +88,7 @@ class QuotationResource extends Resource
                                         ->default(now()),
 
                                     Hidden::make('status')
-                                        ->default(CustomerStatusEnum::default()),
+                                        ->default(QuotationStatusEnum::default()),
                                 ])->columns(2)->collapsible()->heading('Identitas')->iconColor('primary')->icon('heroicon-s-building-office'),
                                 Section::make([
                                     Select::make('province_id')
@@ -234,7 +236,7 @@ class QuotationResource extends Resource
                 Tables\Columns\TextColumn::make('total_amount')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quotation_status'),
+                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('approved_by_user_id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('approved_at')
@@ -276,6 +278,24 @@ class QuotationResource extends Resource
             ]);
     }
 
+
+    public static function canEdit(Model $record): bool
+    {
+        return in_array($record->status, [
+            QuotationStatusEnum::Draft->value,
+            QuotationStatusEnum::PendingResponse->value,
+            QuotationStatusEnum::Revised->value,
+        ]);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return in_array($record->status, [
+            QuotationStatusEnum::Draft->value,
+            QuotationStatusEnum::PendingResponse->value,
+            QuotationStatusEnum::Revised->value,
+        ]);
+    }
     public static function getRelations(): array
     {
         return [

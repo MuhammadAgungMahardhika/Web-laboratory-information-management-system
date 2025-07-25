@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('additional_description')->nullable();
 
             // Using enum string values directly since Laravel migrations don't automatically recognize PHP Enums
-            $table->enum('quotation_status', ['draft', 'pending_response', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('pending_response');
+            $table->enum('status', ['draft', 'pending_response', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('draft');
 
             // Approval details
             $table->string('approved_by_user_id', 255)->nullable();
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('quotation_number');
-            $table->index('quotation_status');
+            $table->index('status');
         });
     }
 

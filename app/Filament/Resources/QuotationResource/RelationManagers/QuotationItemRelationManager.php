@@ -87,6 +87,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->default(1),
                     Forms\Components\TextInput::make('unit')
                         ->label('Satuan')
+                        ->default('persampel')
                         ->datalist([
                             'persampel',
                         ])
