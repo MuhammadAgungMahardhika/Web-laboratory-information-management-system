@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuotationPdfController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,5 +17,5 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/quotations/generate_pdf/{quotation}', [App\Http\Controllers\QuotationPdfController::class, 'generate'])
-    ->name('quotations.generate_pdf');
+Route::get('/quotations/{quotation}/preview', [QuotationPdfController::class, 'preview'])->name('quotations.preview_pdf');
+Route::get('/quotations/{quotation}/download', [QuotationPdfController::class, 'download'])->name('quotations.download_pdf');

@@ -88,8 +88,7 @@ class QuotationItemRelationManager extends RelationManager
                     Forms\Components\TextInput::make('unit')
                         ->label('Satuan')
                         ->datalist([
-                            'Sampel',
-                            'Ls'
+                            'persampel',
                         ])
                         ->required()
                         ->autocomplete(false)
@@ -125,15 +124,17 @@ class QuotationItemRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi')
-                    ->size(TextColumnSize::Small)
-                    ->searchable(),
+                    ->size(TextColumnSize::Small),
                 Tables\Columns\TextColumn::make('regulation_name')
                     ->label('Regulasi')
+                    ->size(TextColumnSize::Small),
+                Tables\Columns\TextColumn::make('parameterQuotationItems')
+                    ->badge()
+                    ->formatStateUsing(fn($state) => $state->parameter_name . " " . Number::currency($state->parameter_default_price, 'RP.'))
+                    ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
                     ->size(TextColumnSize::Small)
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('location')
-                    ->size(TextColumnSize::Small)
-                    ->label('Lokasi pengambilan sampel'),
+                    ->label('Parameter'),
+
                 Tables\Columns\TextColumn::make('quantity')
                     ->size(TextColumnSize::Small)
                     ->label('Kuantitas'),
@@ -146,8 +147,6 @@ class QuotationItemRelationManager extends RelationManager
                     ->size(TextColumnSize::Small)
                     ->money('IDR')
                     ->sortable(),
-                // Tambahkan kolom total_price
-                // Kolom total_price
                 Tables\Columns\TextColumn::make('total_price')
                     ->label('Harga Total')
                     ->alignEnd()
@@ -160,20 +159,17 @@ class QuotationItemRelationManager extends RelationManager
                             ->using(function (\Illuminate\Database\Eloquent\Collection $records): string {
                                 $total = 0;
                                 foreach ($records as $record) {
-                                    // Akses langsung properti dari model, memastikan dapat nilai yang sudah di-hydrate
                                     $total += ($record->quantity * $record->price);
                                 }
-
                                 return Number::currency($total, 'IDR');
                             })
                     ),
 
-                Tables\Columns\TextColumn::make('parameterQuotationItems')
-                    ->badge()
-                    ->formatStateUsing(fn($state) => $state->parameter_name . " " . Number::currency($state->parameter_default_price, 'RP.'))
-                    ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
+                Tables\Columns\TextColumn::make('location')
                     ->size(TextColumnSize::Small)
-                    ->label('Parameter'),
+                    ->label('Lokasi pengambilan sampel')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
             ])
             ->filters([
                 //

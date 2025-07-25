@@ -1,0 +1,4 @@
+<div style="width: 100%; height: 80vh;">
+    <iframe src="{{ $pdfUrl }}" style="width: 100%; height: 100%; border: none;"></iframe>
+</div>
+{{-- resources/views/pdfs/preview.blade.php --}}

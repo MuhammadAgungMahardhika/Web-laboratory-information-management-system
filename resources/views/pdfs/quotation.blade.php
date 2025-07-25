@@ -18,7 +18,7 @@
             font-size: 9pt;
             line-height: 1.4;
             color: #333;
-            padding-top: 160px;
+            padding-top: 90px;
             /* Adjust this value if header collision persists */
         }
 
@@ -38,7 +38,7 @@
             /* Adjust this to fit your korp.jpg's actual height if different */
             padding: 10px 20px;
             /* Padding inside the absolute header (for image) */
-            border-bottom: 1px solid #eee;
+            /* border-bottom: 1px solid #eee; */
             text-align: center;
             box-sizing: border-box;
             z-index: 1000;
@@ -54,7 +54,7 @@
 
         .document-title {
             text-align: center;
-            color: #0056b3;
+            color: #000000;
             font-size: 14pt;
             margin-bottom: 20px;
             margin-top: 0;
@@ -97,7 +97,7 @@
             border: 1px solid #ddd;
             padding: 6px;
             text-align: left;
-            font-size: 8.5pt;
+            font-size: 7pt;
             vertical-align: top;
             /* --- PENTING: Pengaturan untuk pembungkus teks --- */
             word-wrap: break-word;
@@ -258,13 +258,13 @@
             <thead>
                 <tr>
                     <th class="text-center" style="width: 5%;">No.</th>
-                    <th style="width: 25%;">Deskripsi Item & Lokasi</th>
+                    <th style="width: 20%;">Deskripsi Item & Lokasi</th>
                     <th style="width: 15%;">Regulasi</th>
-                    <th style="width: 25%;">Parameter</th>
-                    <th class="text-center" style="width: 8%;">Kuantitas</th>
-                    <th style="width: 8%;">Satuan</th>
-                    <th class="text-right" style="width: 12%;">Harga Satuan</th>
-                    <th class="text-right" style="width: 15%;">Subtotal</th>
+                    <th style="width: 20%;">Parameter</th>
+                    <th class="text-right" style="width: 10%">Jumlah</th>
+                    <th style="width: 9%;">Satuan</th>
+                    <th class="text-right" style="width: 17%;">Harga (Rp)</th>
+                    <th class="text-right" style="width: 17%;">Total (Rp)</th>
                 </tr>
             </thead>
             <tbody>
@@ -287,8 +287,8 @@
                         </td>
                         <td class="text-center">{{ $item->quantity ?? 0 }}</td>
                         <td>{{ $item->unit ?? '-' }}</td>
-                        <td class="text-right">Rp {{ number_format($item->price, 2, ',', '.') }}</td>
-                        <td class="text-right">Rp
+                        <td class="text-right">{{ number_format($item->price, 2, ',', '.') }}</td>
+                        <td class="text-right">
                             {{ number_format(($item->quantity ?? 0) * $item->price, 2, ',', '.') }}</td>
                     </tr>
                     @php $grandSubtotal += (($item->quantity ?? 0) * $item->price); @endphp
