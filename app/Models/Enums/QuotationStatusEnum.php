@@ -9,9 +9,9 @@ enum QuotationStatusEnum: string
     case Draft = 'draft';
     case PendingResponse = 'pending_response';
     case Accepted = 'accepted';
-    case Rejected = 'rejected';
-    case Expired = 'expired';
     case Revised = 'revised';
+    case Expired = 'expired';
+    case Rejected = 'rejected';
     case Cancelled = 'cancelled';
 
     /**
@@ -25,9 +25,9 @@ enum QuotationStatusEnum: string
             self::Draft->value => 'Draf',
             self::PendingResponse->value => 'Menunggu Respon',
             self::Accepted->value => 'Diterima',
-            self::Rejected->value => 'Ditolak',
-            self::Expired->value => 'Kadaluarsa',
             self::Revised->value => 'Direvisi',
+            self::Expired->value => 'Kadaluarsa',
+            self::Rejected->value => 'Ditolak',
             self::Cancelled->value => 'Dibatalkan',
         ];
     }
@@ -72,16 +72,41 @@ enum QuotationStatusEnum: string
                 return 'warning'; // Pending needs attention
             case self::Accepted->value:
                 return 'success'; // Successfully accepted
+            case self::Revised->value:
+                return 'info';    // Revised implies ongoing process
             case self::Rejected->value:
                 return 'danger';  // Rejected is a negative outcome
             case self::Expired->value:
                 return 'danger';  // Expired is also a negative/final state
-            case self::Revised->value:
-                return 'info';    // Revised implies ongoing process
             case self::Cancelled->value:
-                return 'gray';    // Cancelled is a neutral/final state
+                return 'danger';    // Cancelled is a neutral/final state
             default:
                 return 'gray'; // Fallback for any unexpected status string
         }
+    }
+
+
+    /**
+     * Provides a CSS hex color code for inline styling.
+     *
+     * @param string|null $status The string value of the status.
+     * @return string The CSS hex color code.
+     */
+    public static function cssColor(?string $status): string
+    {
+        if ($status === null) {
+            return '#6B7280'; // Default gray
+        }
+
+        return match ($status) {
+            self::Draft->value => '#6B7280', // Gray
+            self::Accepted->value => '#F59E0B', // Orange (warning)
+            self::Accepted->value => '#10B981', // Green (success)
+            self::Rejected->value => '#EF4444', // Red (danger)
+            self::Revised->value => '#3B82F6', // Blue (info)
+            self::Expired->value => '#EF4444', // Red (danger)
+            self::Cancelled->value => '#6B7280', // Gray
+            default => '#6B7280', // Fallback
+        };
     }
 }

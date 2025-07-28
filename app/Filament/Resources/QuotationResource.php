@@ -9,19 +9,24 @@ use App\Models\Enums\QuotationStatusEnum;
 use App\Models\Enums\RoleEnum;
 use App\Models\Quotation;
 use App\Services\QuotationService;
+use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,9 +51,33 @@ class QuotationResource extends Resource
             ->schema([
                 Section::make([
                     Forms\Components\DatePicker::make('quotation_date')
-                        ->label('Tanggal penawaran')
+                        ->label('Tanggal Penawaran')
                         ->default(now())
-                        ->required(),
+                        ->displayFormat('d/m/Y')
+                        ->native(false)
+                        ->required()
+                        ->reactive() // <-- Tambahkan ini agar perubahan memicu update field lain
+                        ->afterStateUpdated(function ($state, Forms\Set $set) { // <-- Tambahkan ini
+                            // Jika quotation_date diisi, set valid_until_date menjadi 30 hari setelahnya
+                            if ($state) {
+                                $set('valid_until_date', \Carbon\Carbon::parse($state)->addDays(30));
+                            } else {
+                                // Jika quotation_date dikosongkan, kosongkan juga valid_until_date
+                                $set('valid_until_date', null);
+                            }
+                        }),
+
+                    Forms\Components\DatePicker::make('valid_until_date')
+                        ->label('Tanggal Berakhir Penawaran')
+                        ->default(now()->addDays(30)) // Default awal saat form dibuka
+                        ->displayFormat('d/m/Y')
+                        ->native(false)
+                        ->minDate(function (Forms\Get $get) {
+                            $quotationDate = $get('quotation_date');
+                            return $quotationDate ? \Carbon\Carbon::parse($quotationDate)->addDay() : null;
+                        })
+                        ->required()
+                        ->helperText('Default 30 hari setelah tanggal penawaran'),
                     Forms\Components\TextInput::make('quotation_number')
                         ->label('Nomor penawaran')
                         ->required()
@@ -204,6 +233,14 @@ class QuotationResource extends Resource
                     ->label('Nomor permohonan')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('quotation_date')
+                    ->label('Tanggal penawaran')
+                    ->date('d M Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('valid_until_date')
+                    ->label('Tanggal berakhir penawaran')
+                    ->date('d M Y')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('quotation_number')
                     ->label('Kode penawaran')
                     ->searchable()
@@ -220,21 +257,22 @@ class QuotationResource extends Resource
                     ->label('Petugas pembuat')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quotation_date')
-                    ->label('Tanggal penawaran')
-                    ->date()
-                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('discount_percentage')
                     ->numeric()
-                    ->sortable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('ppn_percentage')
                     ->numeric()
-                    ->sortable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('pph_percentage')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('total_amount')
+                    ->label('Jumlah total')
                     ->numeric()
+                    ->money('IDR', true)
+                    ->alignEnd()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('approved_by_user_id')
@@ -266,6 +304,39 @@ class QuotationResource extends Resource
                     ->relationship('personel', 'fullname')
                     ->searchable()
                     ->preload(),
+                // --- Filter Tanggal Penawaran (quotation_date) ---
+                Filter::make('quotation_date_range')
+                    ->form([
+                        Section::make([
+                            DatePicker::make('from')
+                                ->label('Tanggal Penawaran Mulai')
+                                ->displayFormat('d/m/Y'),
+                            DatePicker::make('until')
+                                ->label('Tanggal Penawaran Sampai')
+                                ->displayFormat('d/m/Y'),
+                        ])->columns(2)
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn(Builder $query, $date) => $query->where('quotation_date', '>=', Carbon::parse($date)->startOfDay()),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn(Builder $query, $date) => $query->where('quotation_date', '<=', Carbon::parse($date)->endOfDay()),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['from'] ?? null) {
+                            $indicators['from'] = 'Penawaran dari ' . Carbon::parse($data['from'])->format('d M Y');
+                        }
+                        if ($data['until'] ?? null) {
+                            $indicators['until'] = 'Penawaran sampai ' . Carbon::parse($data['until'])->format('d M Y');
+                        }
+                        return $indicators;
+                    })->columnSpan(2),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),

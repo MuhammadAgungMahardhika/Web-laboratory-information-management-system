@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('quotation_name', 50);
             $table->string('quotation_number', 50)->unique();
             $table->date('quotation_date');
+            $table->date('valid_until_date');
             $table->decimal('discount_percentage', 5, 2)->default(0);
             $table->decimal('ppn_percentage', 5, 2)->default(0);
             $table->decimal('pph_percentage', 5, 2)->default(0);
