@@ -201,7 +201,7 @@ class QuotationResource extends Resource
                         ->preload(),
                     Section::make([
                         Forms\Components\TextInput::make('discount_percentage')
-                            ->label('Diskon (persen)')
+                            ->label('Diskon (%)')
                             ->required()
                             ->numeric()
                             ->default(0),
