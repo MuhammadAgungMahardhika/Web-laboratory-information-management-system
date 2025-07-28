@@ -345,8 +345,10 @@
         </div>
 
         <div class="terms">
-            <h4>Syarat & Ketentuan Pembayaran:</h4>
-            <p>{{ $quotation->additional_description ?? 'Tidak ada syarat dan ketentuan pembayaran tambahan.' }}</p>
+            <h4>
+                Syarat & Ketentuan Pembayaran:
+            </h4>
+            {!! $quotation->additional_description ?? 'Tidak ada syarat dan ketentuan pembayaran tambahan.' !!}
         </div>
 
         <div class="signature-section">

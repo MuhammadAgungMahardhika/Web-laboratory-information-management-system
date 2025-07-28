@@ -24,10 +24,10 @@ return new class extends Migration
             $table->string('unit', 50);
             $table->string('location', 100)->nullable();
 
-            $table->timestamps();
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
+            $table->timestamps();
         });
     }
 
