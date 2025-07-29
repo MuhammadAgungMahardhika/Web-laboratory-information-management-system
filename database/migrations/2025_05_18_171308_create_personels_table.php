@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('personels', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('company_id'); // Assuming you might want to link personels to a company
             $table->string('fullname', 255);
             $table->string('nip', 50)->unique()->nullable(); // Using 'nip' as per your provided schema
             $table->string('phone_number', 50)->nullable();

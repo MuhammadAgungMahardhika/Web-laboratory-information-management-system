@@ -46,6 +46,12 @@ return new class extends Migration
                 ->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
+
+            $table->foreign('company_id', 'fk_personels_company')
+                ->references('id')
+                ->on('companies')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
         });
 
         Schema::table('sample_matrics', function (Blueprint $table) {
@@ -153,6 +159,19 @@ return new class extends Migration
             $table->foreign('parameter_id', 'fk_parameter_quotation_items_parameters')
                 ->references('id')
                 ->on('parameters')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->foreign('province_id', 'fk_companies_province')
+                ->references('id')
+                ->on('provinces')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('city_id', 'fk_companies_city')
+                ->references('id')
+                ->on('cities')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
         });

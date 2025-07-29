@@ -11,6 +11,11 @@ class Personel extends Model
     /** @use HasFactory<\Database\Factories\PersonelFactory> */
     use HasFactory;
     use Blameable;
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::class);

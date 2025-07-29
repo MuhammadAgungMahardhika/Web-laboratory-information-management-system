@@ -57,6 +57,7 @@ class PersonelResource extends Resource
                 Forms\Components\Textarea::make('certification_details')
                     ->label('Sertifikasi'),
                 Select::make('user_id')
+                    ->label('Akun')
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
@@ -143,6 +144,12 @@ class PersonelResource extends Resource
                         ];
                     })
                     ->preload(),
+                Select::make('company_id')
+                    ->label('Perusahaan')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->relationship('company', 'name')
+                    ->preload()
             ]);
     }
 
@@ -150,9 +157,7 @@ class PersonelResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->searchable()
-                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('fullname')
                     ->label('Nama personel')
                     ->searchable(),
@@ -165,6 +170,16 @@ class PersonelResource extends Resource
                 Tables\Columns\TextColumn::make('position')
                     ->label('Jabatan / posisi')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Akun')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('company.name')
+                    ->label('Perusahaan')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_by')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('updated_by')

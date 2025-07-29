@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -28,15 +29,17 @@ class PersonelSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $mainCompany = Company::where('is_main_company', true)->first();
         DB::table('personels')->insert([
             'user_id' => $adminUser->id,
+            'company_id' => $mainCompany->id, // Assuming the main company has ID 1
             'fullname' => 'superadmin',
             'nip' => '01.01.01',
             'phone_number' => '',
             'position' =>  '',
             'address' =>  '',
             'certification_details' =>  '',
-
         ]);
 
         // asign role
