@@ -77,6 +77,7 @@ class EditQuotation extends EditRecord
                 ->color(Color::Green)
                 ->visible(fn(Quotation $record) => in_array($record->status, [
                     QuotationStatusEnum::Draft->value,
+                    QuotationStatusEnum::PendingResponse->value,
                     QuotationStatusEnum::Accepted->value,
                     QuotationStatusEnum::Revised->value,
                 ]))
@@ -149,6 +150,7 @@ class EditQuotation extends EditRecord
                         }
                         if ($data['send_email']) {
                             try {
+
                                 Mail::to($data['customer_email'])->send(new DocumentMail(
                                     subject: 'Penawaran Harga #' . $record->quotation_number,
                                     markdownView: 'emails.document',
@@ -157,6 +159,7 @@ class EditQuotation extends EditRecord
                                         'customerName' => $record->customer->name ?? 'Pelanggan',
                                         'message' => $data['message'],
                                         'quotationNumber' => $record->quotation_number, // Tambahkan data spesifik untuk template
+                                        'downloadUrl' => route('quotations.download_pdf', $record),
                                     ],
                                     attachmentsData: [
                                         [
@@ -165,6 +168,7 @@ class EditQuotation extends EditRecord
                                             'mime' => 'application/pdf',
                                         ]
                                     ]
+
                                 ));
                                 Notification::make()
                                     ->success()
@@ -185,12 +189,7 @@ class EditQuotation extends EditRecord
                         ->success()
                         ->title('Proses pengiriman penawaran selesai')
                         ->body("Penawaran #{$record->quotation_number} telah diproses untuk pengiriman.")
-                        ->send()
-                        ->sendToDatabase([
-                            'title' => 'Penawaran Dikirim',
-                            'body' => "Penawaran #{$record->quotation_number} telah dikirim.",
-                            'icon' => 'heroicon-o-paper-airplane',
-                        ]);
+                        ->send();
                 })
                 ->modalSubmitActionLabel('Kirim')
                 ->modalCancelActionLabel('Batal')
