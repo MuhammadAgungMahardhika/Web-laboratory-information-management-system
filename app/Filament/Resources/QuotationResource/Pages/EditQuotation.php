@@ -144,8 +144,8 @@ class EditQuotation extends EditRecord
                             // LOGIKA KIRIM VIA WHATSAPP (Integrasi API Pihak Ketiga)
                             Notification::make()
                                 ->success()
-                                ->title('Penawaran dikirim via WhatsApp')
-                                ->body("Penawaran #{$record->quotation_number} berhasil dikirim ke {$data['customer_whatsapp']}.")
+                                ->title('Penawaran  dalam proses pengiriman via WhatsApp')
+                                ->body("Penawaran #{$record->quotation_number}  dalam proses pengiriman  ke {$data['customer_whatsapp']}.")
                                 ->send();
                         }
                         if ($data['send_email']) {
@@ -172,8 +172,8 @@ class EditQuotation extends EditRecord
                                 ));
                                 Notification::make()
                                     ->success()
-                                    ->title('Penawaran dikirim via Email')
-                                    ->body("Penawaran #{$record->quotation_number} berhasil dikirim ke {$data['customer_email']}.")
+                                    ->title('Penawaran dalam proses pengiriman via Email')
+                                    ->body("Penawaran #{$record->quotation_number} dalam proses pengiriman ke {$data['customer_email']}.")
                                     ->send();
                             } catch (\Exception $e) {
                                 Notification::make()

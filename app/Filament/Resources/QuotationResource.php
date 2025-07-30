@@ -199,80 +199,84 @@ class QuotationResource extends Resource
                         ->default(Auth::user()->id)
                         ->searchable()
                         ->preload(),
-                    Section::make([
-                        Forms\Components\TextInput::make('discount_percentage')
-                            ->label('Diskon (%)')
-                            ->required()
-                            ->numeric()
-                            ->default(0),
-                        Forms\Components\TextInput::make('ppn_percentage')
-                            ->label('Ppn')
-                            ->required()
-                            ->numeric()
-                            ->default(11),
-                        Forms\Components\TextInput::make('pph_percentage')
-                            ->label('Pph')
-                            ->required()
-                            ->numeric()
-                            ->default(0),
-                    ])->columns(3)->collapsible()->heading('Potongan')->iconColor('primary')->icon('heroicon-s-receipt-percent')->columnSpan(1)->iconPosition('after'),
+
                 ])->columns(3)->collapsible()->iconColor('primary')->icon('heroicon-s-document-duplicate'),
 
                 Forms\Components\Section::make('Syarat & Ketentuan Pembayaran')
                     ->description('Pilih template atau tulis syarat & ketentuan secara manual.')
                     ->schema([
-                        Select::make('template_selector')
-                            ->label('Pilih Template')
-                            // --- PENTING: Opsi diambil dari database untuk menampilkan NAMA TEMPLATE ---
-                            ->options(function () {
-                                $options = TermTemplate::query()
-                                    ->where('is_active', true)
-                                    ->pluck('name', 'id') // Mengambil 'name' sebagai label dan 'id' sebagai value
-                                    ->toArray();
-                                // Tambahkan opsi "Kosongkan" secara manual
-                                $options['kosong'] = 'Kosongkan';
-                                return $options;
-                            })
-                            ->searchable()
-                            // -------------------------------------------------------------------------
-                            ->placeholder('Atau tulis manual di bawah')
-                            ->reactive()
-                            ->afterStateUpdated(function (?string $state, Get $get, Set $set) {
-                                if ($state === 'kosong') {
-                                    $set('additional_description', ''); // Kosongkan jika 'kosong' dipilih
-                                } elseif ($state) {
-                                    // --- Mengambil KONTEN template dari database berdasarkan ID yang dipilih ---
-                                    $template = TermTemplate::find($state);
-                                    if ($template) {
-                                        $set('additional_description', $template->content);
+                        Section::make([
+                            Select::make('template_selector')
+                                ->label('Pilih Template')
+                                // --- PENTING: Opsi diambil dari database untuk menampilkan NAMA TEMPLATE ---
+                                ->options(function () {
+                                    $options = TermTemplate::query()
+                                        ->where('is_active', true)
+                                        ->pluck('name', 'id') // Mengambil 'name' sebagai label dan 'id' sebagai value
+                                        ->toArray();
+                                    // Tambahkan opsi "Kosongkan" secara manual
+                                    $options['kosong'] = 'Kosongkan';
+                                    return $options;
+                                })
+                                ->searchable()
+                                // -------------------------------------------------------------------------
+                                ->placeholder('Atau tulis manual di bawah')
+                                ->reactive()
+                                ->afterStateUpdated(function (?string $state, Get $get, Set $set) {
+                                    if ($state === 'kosong') {
+                                        $set('additional_description', ''); // Kosongkan jika 'kosong' dipilih
+                                    } elseif ($state) {
+                                        // --- Mengambil KONTEN template dari database berdasarkan ID yang dipilih ---
+                                        $template = TermTemplate::find($state);
+                                        if ($template) {
+                                            $set('additional_description', $template->content);
+                                        } else {
+                                            // Fallback jika template tidak ditemukan (misal: ID tidak valid)
+                                            $set('additional_description', '');
+                                        }
                                     } else {
-                                        // Fallback jika template tidak ditemukan (misal: ID tidak valid)
-                                        $set('additional_description', '');
+                                        // Jika pilihan dikosongkan tanpa memilih 'kosong'
+                                        $set('additional_description', null);
                                     }
-                                } else {
-                                    // Jika pilihan dikosongkan tanpa memilih 'kosong'
-                                    $set('additional_description', null);
-                                }
-                            })
-                            ->dehydrated(false),
+                                })
+                                ->dehydrated(false),
 
-                        RichEditor::make('additional_description')
-                            ->label('')
-                            ->columnSpanFull()
-                            ->toolbarButtons([ // Atur toolbar RichEditor
-                                'blockquote',
-                                'bold',
-                                'bulletList',
-                                'codeBlock',
-                                'h2',
-                                'h3',
-                                'italic',
-                                'link',
-                                'orderedList',
-                                'strike',
-                                'underline',
-                            ]),
-                    ]),
+                            RichEditor::make('additional_description')
+                                ->label('')
+                                ->toolbarButtons([ // Atur toolbar RichEditor
+                                    'blockquote',
+                                    'bold',
+                                    'bulletList',
+                                    'codeBlock',
+                                    'h2',
+                                    'h3',
+                                    'italic',
+                                    'link',
+                                    'orderedList',
+                                    'strike',
+                                    'underline',
+                                ]),
+                        ])->columnSpan(1)->columns(1),
+                        Section::make([
+                            Forms\Components\TextInput::make('discount_percentage')
+                                ->label('Diskon (%)')
+                                ->required()
+                                ->numeric()
+                                ->default(0),
+                            Forms\Components\TextInput::make('ppn_percentage')
+                                ->label('Ppn')
+                                ->required()
+                                ->numeric()
+                                ->default(11),
+                            Forms\Components\TextInput::make('pph_percentage')
+                                ->label('Pph')
+                                ->required()
+                                ->numeric()
+                                ->default(0),
+                        ])->columns(3)->collapsible()->heading('Potongan')->iconColor('primary')->icon('heroicon-s-receipt-percent')->columnSpan(1)->iconPosition('after'),
+
+
+                    ])->columns(2)->collapsible()->iconColor('primary')->icon('heroicon-s-document-text'),
             ]);
     }
 

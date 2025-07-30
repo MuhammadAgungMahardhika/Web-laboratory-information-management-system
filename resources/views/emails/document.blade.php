@@ -23,7 +23,7 @@
     </x-mail::button>
 
     Jika tombol di atas tidak berfungsi, Anda bisa mengunduh dokumen langsung dari:
-    [{{ $mailData['downloadUrl'] ?? '' }}]({{ $mailData['downloadUrl'] ?? '' }})
+    [{{ $mailData['downloadUrl'] ?? '' }}]
 
     Terima kasih atas perhatian Anda.
 
