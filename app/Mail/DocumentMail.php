@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Attachment; // Import Attachment
 use Illuminate\Queue\SerializesModels;
 
-class DocumentMail extends Mailable
+class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -68,7 +68,7 @@ class DocumentMail extends Mailable
     {
         $attachments = [];
         foreach ($this->attachmentsData as $attachment) {
-            $attachments[] = Attachment::fromData(fn() => $attachment['content'], $attachment['name'])
+            $attachments[] = Attachment::fromData(fn() => base64_decode($attachment['content']), $attachment['name'])
                 ->withMime($attachment['mime']);
         }
         return $attachments;

@@ -139,7 +139,7 @@ class EditQuotation extends EditRecord
                         $pdf = Pdf::loadView('pdfs.quotation', ['quotation' => $record]); // Hanya meneruskan quotation
                         $pdfContent = $pdf->output();
                         $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);
-
+                        $base64PdfContent = base64_encode($pdfContent);
                         if ($data['send_whatsapp']) {
                             // LOGIKA KIRIM VIA WHATSAPP (Integrasi API Pihak Ketiga)
                             Notification::make()
@@ -163,7 +163,7 @@ class EditQuotation extends EditRecord
                                     ],
                                     attachmentsData: [
                                         [
-                                            'content' => $pdfContent,
+                                            'content' => $base64PdfContent,
                                             'name' => "Penawaran-{$safeFileName}.pdf",
                                             'mime' => 'application/pdf',
                                         ]
@@ -184,12 +184,6 @@ class EditQuotation extends EditRecord
                             }
                         }
                     });
-
-                    Notification::make()
-                        ->success()
-                        ->title('Proses pengiriman penawaran selesai')
-                        ->body("Penawaran #{$record->quotation_number} telah diproses untuk pengiriman.")
-                        ->send();
                 })
                 ->modalSubmitActionLabel('Kirim')
                 ->modalCancelActionLabel('Batal')
