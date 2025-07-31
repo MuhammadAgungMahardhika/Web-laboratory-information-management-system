@@ -21,11 +21,11 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
     public string $markdownView;
     public array $mailData;
     public array $attachmentsData; // Array for attachments
-    public int $notifierId; // Properti untuk menyimpan ID user yang memicu email
+    public  $notifierId; // Properti untuk menyimpan ID user yang memicu email
 
     // Properti khusus queue jika diperlukan
     public int $tries = 3;    // Coba ulang email hingga 3 kali jika gagal
-    public int $backoff = 30; // Tunggu 30 detik sebelum coba ulang
+    public int $backoff = 10; // Tunggu 10 detik sebelum coba ulang
     /**
      * Create a new message instance.
      *
@@ -41,6 +41,7 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
         array $attachmentsData = [],
         ?int $notifierId = null  // ID user yang memicu email, jika ada
     ) {
+        $this->afterCommit();
         $this->emailSubject = $subject;
         $this->markdownView = $markdownView;
         $this->mailData = $mailData;
@@ -113,13 +114,6 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
      */
     public function failed(\Throwable $exception): void
     {
-        // 1. Hapus file sementara yang gagal dikirim (opsional, mungkin ingin disimpan untuk debug)
-        foreach ($this->attachmentsData as $attachment) {
-            if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
-                Storage::disk('public')->delete($attachment['path']);
-                Log::warning("Deleted temporary attachment file after failed email: " . $attachment['path']);
-            }
-        }
 
         // 2. Kirim notifikasi kegagalan ke user yang memicu aksi
         if ($this->notifierId) {
@@ -129,8 +123,9 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
                     ->danger()
                     ->title('Pengiriman Penawaran Gagal!')
                     ->body('Gagal mengirim penawaran #' . ($this->mailData['quotationNumber'] ?? 'N/A') . ' via email. Pesan error: ' . $exception->getMessage())
+                    ->broadcast($user)
                     ->sendToDatabase($user) // Kirim notifikasi ke database user
-                    ->broadcast($user); // Kirim notifikasi ke frontend jika menggunakan Livewire atau Echo
+                    ->send(); // Kirim notifikasi ke frontend jika menggunakan Livewire atau Echo
             }
         }
 

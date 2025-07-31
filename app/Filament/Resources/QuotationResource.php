@@ -200,7 +200,8 @@ class QuotationResource extends Resource
                         ->searchable()
                         ->preload(),
 
-                ])->columns(3)->collapsible()->iconColor('primary')->icon('heroicon-s-document-duplicate'),
+                ])->columns(3)->heading(fn($record) => $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
+                    ->collapsible()->iconColor('primary')->icon('heroicon-s-document-duplicate'),
 
                 Forms\Components\Section::make('Syarat & Ketentuan Pembayaran')
                     ->description('Pilih template atau tulis syarat & ketentuan secara manual.')

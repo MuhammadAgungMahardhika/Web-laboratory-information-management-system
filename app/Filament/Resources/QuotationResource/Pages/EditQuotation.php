@@ -192,7 +192,7 @@ class EditQuotation extends EditRecord
                                 ));
                                 Notification::make()
                                     ->success()
-                                    ->title('Penawaran dalam proses pengiriman via Email')
+                                    ->title('Proses pengiriman via Email')
                                     ->body("Penawaran #{$record->quotation_number} dalam proses pengiriman ke {$data['customer_email']}.")
                                     ->send();
                             } catch (\Exception $e) {
