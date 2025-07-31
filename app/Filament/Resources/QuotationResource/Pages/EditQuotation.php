@@ -14,10 +14,13 @@ use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Enums\QuotationStatusEnum;
 use App\Mail\DocumentMail;
+use App\Services\WhatsAppService;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 
 class EditQuotation extends EditRecord
 {
@@ -140,14 +143,31 @@ class EditQuotation extends EditRecord
                         $pdfContent = $pdf->output();
                         $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);
                         $base64PdfContent = base64_encode($pdfContent);
+
+                        $publicPdfUrl = route('quotations.download_pdf', $record);
+
                         if ($data['send_whatsapp']) {
-                            // LOGIKA KIRIM VIA WHATSAPP (Integrasi API Pihak Ketiga)
+                            // --- Inisialisasi WhatsApp Service ---
+                            $whatsAppService = new WhatsAppService();
+                            // LOGIKA KIRIM VIA WHATSAPP LANGSUNG (buka link wa.me)
+                            $whatsappMessage = "Yth. Bapak/Ibu {$record->customer->name},\n\nTerlampir adalah Penawaran Harga Nomor: *{$record->quotation_number}* dari kami.";
+                            if (!empty($data['message'])) {
+                                $whatsappMessage .= "\n\nPesan dari pengirim:\n\"{$data['message']}\"";
+                            }
+                            // Generate link wa.me
+                            $directWaLink = $whatsAppService->getWhatsAppDirectLink($data['customer_whatsapp'], $whatsappMessage, $publicPdfUrl);
+
+                            // Notifikasi dengan link WA
                             Notification::make()
                                 ->success()
-                                ->title('Penawaran  dalam proses pengiriman via WhatsApp')
-                                ->body("Penawaran #{$record->quotation_number}  dalam proses pengiriman  ke {$data['customer_whatsapp']}.")
-                                ->send();
+                                ->title('Siap Kirim Penawaran via WhatsApp!')
+                                ->body(new HtmlString("Klik <a href='{$directWaLink}' target='_blank' class='underline font-bold'>link ini</a> untuk mengirim WA ke {$data['customer_whatsapp']}."))
+                                ->duration(10000) // Tampilkan lebih lama
+                                ->send()
+                                ->broadcast(Auth::user())
+                                ->sendToDatabase(Auth::user());
                         }
+
                         if ($data['send_email']) {
                             try {
 
@@ -167,8 +187,8 @@ class EditQuotation extends EditRecord
                                             'name' => "Penawaran-{$safeFileName}.pdf",
                                             'mime' => 'application/pdf',
                                         ]
-                                    ]
-
+                                    ],
+                                    notifierId: Auth::id() // ID user yang mengirim
                                 ));
                                 Notification::make()
                                     ->success()

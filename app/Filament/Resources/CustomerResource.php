@@ -125,6 +125,7 @@ class CustomerResource extends Resource
                         ->maxLength(255),
                     Forms\Components\TextInput::make('contact_phone_number')
                         ->label('Nomor hp')
+                        ->prefix('+62 ')
                         ->required()
                         ->tel()
                         ->maxLength(255),
@@ -259,6 +260,7 @@ class CustomerResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contact_phone_number')
                     ->label('Nomor hp')
+                    ->prefix('+62 ')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contact_email')
                     ->label('Email')

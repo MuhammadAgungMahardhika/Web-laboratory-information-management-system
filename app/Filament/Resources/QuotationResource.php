@@ -331,7 +331,12 @@ class QuotationResource extends Resource
                     ->money('IDR', true)
                     ->alignEnd()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                    ->formatStateUsing(fn($state) => QuotationStatusEnum::from($state)->label())
+                    ->badge()
+                    ->color(fn($state) => QuotationStatusEnum::color($state))
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('approved_by_user_id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('approved_at')

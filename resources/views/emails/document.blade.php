@@ -18,7 +18,7 @@
     Mohon tinjau dokumen terlampir. Jika ada pertanyaan atau Anda memerlukan bantuan lebih lanjut, jangan ragu untuk
     membalas email ini atau menghubungi kami.
 
-    <x-mail::button :url="$mailData['downloadUrl'] ?? ''">
+    <x-mail::button :url="$mailData['downloadUrl'] ?? ''" color="success">
         Download Penawaran PDF
     </x-mail::button>
 
