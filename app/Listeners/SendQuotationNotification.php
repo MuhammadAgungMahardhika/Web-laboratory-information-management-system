@@ -7,7 +7,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Queue\InteractsWithQueue;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class SendQuotationNotification
 {
@@ -32,16 +32,9 @@ class SendQuotationNotification
         $mailDataFromPayload = data_get($eventPayload, 'mailData', []); // Ambil array mailData, default ke array kosong
         $quotationNumber = data_get($mailDataFromPayload, 'quotationNumber');
         $customerName = data_get($mailDataFromPayload, 'customerName');
-        Log::info("Debugging Notification - notifierId: {$notifierId}, quotationNumber: {$quotationNumber}, customerName: {$customerName}");
         if ($notifierId) {
             $user = User::find($notifierId);
             if ($user) {
-                Notification::make()
-                    ->success()
-                    ->title('Pengiriman Penawaran Berhasil!')
-                    ->body('Penawaran #' . ($quotationNumber ?? 'N/A') . ' untuk ' . ($customerName ?? 'pelanggan') . ' berhasil dikirim via email.')
-                    ->sendToDatabase($user);
-
                 // To broadcast, the `broadcast()` method should be chained before `send()`.
                 // Note: `send()` is the final method that dispatches the notification.
                 Notification::make()

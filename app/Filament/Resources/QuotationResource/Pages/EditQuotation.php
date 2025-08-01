@@ -16,6 +16,7 @@ use App\Models\Enums\QuotationStatusEnum;
 use App\Mail\DocumentMail;
 use App\Services\WhatsAppService;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
@@ -86,30 +87,36 @@ class EditQuotation extends EditRecord
                 ]))
                 ->modalHeading('Kirim Penawaran')
                 ->form([
-                    TextInput::make('customer_whatsapp')
-                        ->label('Nomor WhatsApp')
-                        ->prefix('+62')
-                        ->tel()
-                        ->placeholder('8123xxxxxxx')
-                        ->default(fn(Quotation $record) => $record->customer->contact_phone_number ?? '')
-                        ->required(fn(Get $get) => $get('send_whatsapp')),
-                    TextInput::make('customer_email')
-                        ->label('Alamat Email')
-                        ->email()
-                        ->placeholder('customer@example.com')
-                        ->default(fn(Quotation $record) => $record->customer->contact_email ?? '')
-                        ->required(fn(Get $get) => $get('send_email')),
+                    Section::make([
+                        Checkbox::make('send_whatsapp')
+                            ->label('Kirim via WhatsApp ?')
+                            ->default(false)
+                            ->reactive(),
+                        // Input WhatsApp hanya terlihat jika 'send_whatsapp' di-checklist
+                        TextInput::make('customer_whatsapp')
+                            ->label('Nomor WhatsApp')
+                            ->prefix('+62')
+                            ->tel()
+                            ->placeholder('8123xxxxxxx')
+                            ->default(fn(Quotation $record) => $record->customer->contact_phone_number ?? '')
+                            ->required(fn(Get $get) => $get('send_whatsapp'))
+                            ->visible(fn(Get $get) => $get('send_whatsapp')),
+                    ])->columns(2)->heading('Pengiriman Via WhatsApp')->icon('heroicon-o-chat-bubble-left-right'),
+                    Section::make([
+                        // Input Email hanya terlihat jika 'send_email' di-checklist
+                        Checkbox::make('send_email')
+                            ->label('Kirim via Email ?')
+                            ->default(true)
+                            ->reactive(),
+                        TextInput::make('customer_email')
+                            ->label('Alamat Email')
+                            ->email()
+                            ->placeholder('customer@example.com')
+                            ->default(fn(Quotation $record) => $record->customer->contact_email ?? '')
+                            ->required(fn(Get $get) => $get('send_email'))
+                            ->visible(fn(Get $get) => $get('send_email')), // <-- Perubahan di sini
 
-                    Checkbox::make('send_whatsapp')
-                        ->label('Kirim via WhatsApp')
-                        ->default(false)
-                        ->live(),
-
-                    Checkbox::make('send_email')
-                        ->label('Kirim via Email')
-                        ->default(true)
-                        ->live(),
-
+                    ])->columns(2)->heading('Pengiriman Via Email')->icon('heroicon-o-envelope'),
                     Textarea::make('message')
                         ->label('Pesan Tambahan')
                         ->rows(3)
@@ -129,8 +136,12 @@ class EditQuotation extends EditRecord
                     DB::transaction(function () use ($data, $record) {
                         $customer = $record->customer;
                         if ($customer) {
-                            $customer->contact_phone_number = $data['customer_whatsapp'];
-                            $customer->contact_email = $data['customer_email'];
+                            if (isset($data['customer_whatsapp']) && $data['customer_whatsapp']) {
+                                $customer->contact_phone_number = $data['customer_whatsapp'];
+                            }
+                            if (isset($data['customer_email']) && $data['customer_email']) {
+                                $customer->contact_email = $data['customer_email'];
+                            }
                             $customer->save();
                         }
 
@@ -161,21 +172,21 @@ class EditQuotation extends EditRecord
                             Notification::make()
                                 ->success()
                                 ->title('Siap Kirim Penawaran via WhatsApp!')
-                                ->body(new HtmlString("Klik <a href='{$directWaLink}' target='_blank' class='underline font-bold'>link ini</a> untuk mengirim WA ke {$data['customer_whatsapp']}."))
+                                ->body(new HtmlString("Klik <a href='{$directWaLink}' target='_blank' class='underline font-bold'>link ini</a> untuk mengirim Penawaran #{$record->quotation_number} melalui Wa ke nomor {$data['customer_whatsapp']}."))
                                 ->duration(10000) // Tampilkan lebih lama
-                                ->send()
                                 ->broadcast(Auth::user())
-                                ->sendToDatabase(Auth::user());
+                                ->sendToDatabase(Auth::user())
+                                ->send();
                         }
 
                         if ($data['send_email']) {
                             try {
-
+                                $quotationName = ucfirst($record->quotation_name);
                                 Mail::to($data['customer_email'])->send(new DocumentMail(
                                     subject: 'Penawaran Harga #' . $record->quotation_number,
                                     markdownView: 'emails.document',
                                     mailData: [
-                                        'title' => 'Penawaran Harga Anda',
+                                        'title' => "Penawaran {$quotationName} untuk {$record->customer->name}",
                                         'customerName' => $record->customer->name ?? 'Pelanggan',
                                         'message' => $data['message'],
                                         'quotationNumber' => $record->quotation_number, // Tambahkan data spesifik untuk template
