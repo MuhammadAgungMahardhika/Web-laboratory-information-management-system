@@ -106,10 +106,6 @@ class CompanyResource extends Resource
                 ])->columns(4)->heading('Pengaturan Email'),
                 Forms\Components\Toggle::make('is_main_company')
                     ->required(),
-                Forms\Components\TextInput::make('created_by')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('updated_by')
-                    ->maxLength(255),
             ]);
     }
 

@@ -51,7 +51,7 @@ class QuotationResource extends Resource
             ->schema([
                 Section::make([
                     Forms\Components\DatePicker::make('quotation_date')
-                        ->label('Tanggal Penawaran')
+                        ->label('Tanggal penawaran')
                         ->default(now())
                         ->displayFormat('d/m/Y')
                         ->native(false)
@@ -68,7 +68,7 @@ class QuotationResource extends Resource
                         }),
 
                     Forms\Components\DatePicker::make('valid_until_date')
-                        ->label('Tanggal Berakhir Penawaran')
+                        ->label('Tanggal berakhir penawaran')
                         ->default(now()->addDays(30)) // Default awal saat form dibuka
                         ->displayFormat('d/m/Y')
                         ->native(false)
