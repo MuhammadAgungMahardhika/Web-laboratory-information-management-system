@@ -43,6 +43,8 @@ class QuotationResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $company  = Auth::user()->personel->company;
+        $defaultQuotationExpiryDays = (int) $company->default_quotation_expiry_days;
         $quoatationService = app(QuotationService::class);
         return $form
             ->columns([
@@ -59,10 +61,10 @@ class QuotationResource extends Resource
                         ->native(false)
                         ->required()
                         ->reactive() // <-- Tambahkan ini agar perubahan memicu update field lain
-                        ->afterStateUpdated(function ($state, Forms\Set $set) { // <-- Tambahkan ini
+                        ->afterStateUpdated(function ($state, Forms\Set $set) use ($defaultQuotationExpiryDays) { // <-- Tambahkan ini
                             // Jika quotation_date diisi, set valid_until_date menjadi 30 hari setelahnya
                             if ($state) {
-                                $set('valid_until_date', \Carbon\Carbon::parse($state)->addDays(30));
+                                $set('valid_until_date', \Carbon\Carbon::parse($state)->addDays($defaultQuotationExpiryDays));
                             } else {
                                 // Jika quotation_date dikosongkan, kosongkan juga valid_until_date
                                 $set('valid_until_date', null);
@@ -79,7 +81,7 @@ class QuotationResource extends Resource
                             return $quotationDate ? \Carbon\Carbon::parse($quotationDate)->addDay() : null;
                         })
                         ->required()
-                        ->helperText('Default 30 hari setelah tanggal penawaran'),
+                        ->helperText(fn() => "Default {$defaultQuotationExpiryDays} hari [ Ubah di menu perusahaan ]"),
                     Forms\Components\TextInput::make('quotation_number')
                         ->label('Nomor penawaran')
                         ->required()
@@ -242,7 +244,23 @@ class QuotationResource extends Resource
                                         $set('additional_description', null);
                                     }
                                 })
-                                ->dehydrated(false),
+                                ->dehydrated(false)
+                                ->createOptionForm(function (Get $get, Set $set) {
+                                    return [
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('Nama Template')
+                                            ->required()
+                                            ->maxLength(255),
+                                        RichEditor::make('content')
+                                            ->label('Isi Template')
+                                            ->required()
+                                            ->columnSpanFull(),
+                                        Hidden::make('is_active')
+                                            ->label('Aktif ?')
+                                            ->required()
+                                            ->default(true),
+                                    ];
+                                }),
 
                             RichEditor::make('additional_description')
                                 ->label('')

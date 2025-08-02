@@ -208,7 +208,7 @@
 <body>
     <div class="header">
         @php
-            $korpPath = public_path('images/korp.jpg');
+            $korpPath = $company->letterhead_path ? public_path("storage/{$company->letterhead_path}") : public_path('images/korp.jpg');
             $korpBase64 = '';
             if (file_exists($korpPath)) {
                 $korpData = file_get_contents($korpPath);
@@ -365,7 +365,7 @@
 
     <div class="footer">
         <p>Dokumen ini dibuat secara otomatis dan berlaku tanpa tanda tangan basah.</p>
-        <p>&copy; {{ date('Y') }} [Nama Perusahaan Anda]. Hak Cipta Dilindungi.</p>
+        <p>&copy; {{ date('Y') }} [{{ $company->name }}]. Hak Cipta Dilindungi.</p>
     </div>
 </body>
 
