@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TermTemplateResource\Pages;
 use App\Filament\Resources\TermTemplateResource\RelationManagers;
 use App\Models\TermTemplate;
+use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Form;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TermTemplateResource extends Resource
 {
+    use HasAuthorization;
     protected static ?string $model = TermTemplate::class;
     protected static ?string $navigationLabel = 'Template syarat & ketentuan';
     protected static ?string $label = 'Template syarat & ketentuan';

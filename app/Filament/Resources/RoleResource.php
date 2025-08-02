@@ -6,6 +6,7 @@ use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\RelationManagers;
 use App\Models\Enums\RoleEnum;
 use App\Models\Role;
+use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
@@ -19,6 +20,7 @@ use Spatie\Permission\Models\Permission;
 
 class RoleResource extends Resource
 {
+    use HasAuthorization;
     protected static ?string $model = Role::class;
     protected static ?string $label = 'Hak Akses';
     protected static ?string $navigationLabel = 'Hak Akses';

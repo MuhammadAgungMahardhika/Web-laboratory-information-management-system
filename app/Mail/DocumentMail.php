@@ -91,7 +91,6 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
     public function tack(): void
     {
         Log::info('DEBUG: TACK method called for ' . ($this->mailData['quotationNumber'] ?? 'N/A'));
-
         // 2. Kirim notifikasi sukses ke user yang memicu aksi
         if ($this->notifierId) {
             $user = User::find($this->notifierId);

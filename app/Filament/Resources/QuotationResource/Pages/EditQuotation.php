@@ -122,7 +122,7 @@ class EditQuotation extends EditRecord
                         RichEditor::make('message')
                             ->label('Pesan Email')
                             ->columnSpanFull()
-                           ->default(function (Quotation $record) {
+                            ->default(function (Quotation $record) {
                                 $customerName = $record->customer->name ?? 'Pelanggan';
                                 $quotationNumber = $record->quotation_number ?? 'N/A';
                                 $quotationName = ucfirst($record->quotation_name) ?? 'N/A';
@@ -222,7 +222,7 @@ class EditQuotation extends EditRecord
                                             'mime' => 'application/pdf',
                                         ]
                                     ],
-                                    notifierId: Auth::id() // ID user yang mengirim
+                                    notifierId: Auth::id()
                                 ));
                                 Notification::make()
                                     ->success()

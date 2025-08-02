@@ -114,6 +114,21 @@ class PermissionAndRoleSeeder extends Seeder
             'delete-quotation',
         ];
 
+        $termTemplatePermissions = [
+            'view-any-term-template',
+            'view-term-template',
+            'create-term-template',
+            'update-term-template',
+            'delete-term-template',
+        ];
+        $companyPermissions = [
+            'view-any-company',
+            'view-company',
+            'create-company',
+            'update-company',
+            'delete-company',
+        ];
+
 
 
 
@@ -131,7 +146,9 @@ class PermissionAndRoleSeeder extends Seeder
             $sampleTypePermissions,
             $testMethodPermissions,
             $testPackagePermissions,
-            $quotationPermissions
+            $quotationPermissions,
+            $termTemplatePermissions,
+            $companyPermissions,
         );
 
         // Membuat semua permissions

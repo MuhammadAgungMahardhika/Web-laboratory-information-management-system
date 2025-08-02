@@ -10,6 +10,7 @@ use App\Models\Enums\RoleEnum;
 use App\Models\Quotation;
 use App\Models\TermTemplate;
 use App\Services\QuotationService;
+use App\Traits\HasAuthorization;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\Auth;
 
 class QuotationResource extends Resource
 {
+    use HasAuthorization;
     protected static ?string $model = Quotation::class;
     protected static ?string $navigationLabel = 'Penawaran';
     protected static ?string $label = 'Penawaran';
@@ -200,7 +202,7 @@ class QuotationResource extends Resource
                         ->searchable()
                         ->preload(),
 
-                ])->columns(3)->heading(fn($record) => $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
+                ])->columns(3)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
                     ->collapsible()->iconColor('primary')->icon('heroicon-s-document-duplicate'),
 
                 Forms\Components\Section::make('Syarat & Ketentuan Pembayaran')

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CustomerTypeResource\Pages;
 use App\Filament\Resources\CustomerTypeResource\RelationManagers;
 use App\Models\CustomerType;
+use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CustomerTypeResource extends Resource
 {
+    use HasAuthorization;
     protected static ?string $model = CustomerType::class;
     protected static ?string $navigationLabel = 'Jenis Pelanggan';
     protected static ?string $label = 'Jenis Pelanggan';

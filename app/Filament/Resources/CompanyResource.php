@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CompanyResource\Pages;
 use App\Filament\Resources\CompanyResource\RelationManagers;
 use App\Models\Company;
+use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -12,12 +13,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CompanyResource extends Resource
 {
+    use HasAuthorization;
     protected static ?string $model = Company::class;
     protected static ?string $navigationLabel = 'Perusahaan';
     protected static ?string $label = 'Perusahaan';
@@ -71,6 +74,7 @@ class CompanyResource extends Resource
                     ->label('Kop Surat')
                     ->image()
                     ->disk('public')
+                    ->previewable()
                     ->directory('company_letterheads')
                     ->visibility('public')
                     ->maxSize(1024)
@@ -114,26 +118,35 @@ class CompanyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama perusahaan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('province.name')
+                    ->label('Provinsi')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('city.name')
+                    ->label('Kota')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('postal_code')
+                    ->label('Kode pos')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label('Nomor hp')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('website')
+                    ->label('Website')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('npwp')
+                    ->label('Npwp')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('letterhead_path')
-                    ->searchable(),
+                ImageColumn::make('letterhead_path')
+                    ->label('Korp surat'),
                 Tables\Columns\TextColumn::make('default_quotation_expiry_days')
+                    ->label('Default masa berlaku penawaran')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('mail_mailer')

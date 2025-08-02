@@ -42,8 +42,8 @@ class SendQuotationNotification
                     ->success()
                     ->title('Pengiriman Penawaran Berhasil!')
                     ->body('Penawaran #' . ($quotationNumber ?? 'N/A') . ' untuk ' . ($customerName ?? 'pelanggan') . ' berhasil dikirim via email.')
-                    ->sendToDatabase($user)
                     ->broadcast($user)
+                    ->sendToDatabase($user)
                     ->send();
             }
         } else {
