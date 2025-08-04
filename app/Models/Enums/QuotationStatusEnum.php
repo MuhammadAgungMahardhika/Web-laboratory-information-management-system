@@ -100,7 +100,7 @@ enum QuotationStatusEnum: string
 
         return match ($status) {
             self::Draft->value => '#6B7280', // Gray
-            self::Accepted->value => '#F59E0B', // Orange (warning)
+            self::PendingResponse->value => '#F59E0B', // Orange (warning)
             self::Accepted->value => '#10B981', // Green (success)
             self::Rejected->value => '#EF4444', // Red (danger)
             self::Revised->value => '#3B82F6', // Blue (info)

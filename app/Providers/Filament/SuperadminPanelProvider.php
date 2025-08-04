@@ -2,6 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\CustomerStatsChart;
+use App\Filament\Widgets\DynamicQuotationStatusChart;
+use App\Filament\Widgets\PersonnelRolesChart;
+use App\Filament\Widgets\QuotationStatusChart;
+use App\Filament\Widgets\TopParametersTable;
+use App\Filament\Widgets\TopTestPackagesTable;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -39,8 +45,11 @@ class SuperadminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                QuotationStatusChart::class,
+                PersonnelRolesChart::class,
+                CustomerStatsChart::class,
+                TopTestPackagesTable::class,
+                TopParametersTable::class
             ])
             ->navigationGroups([
                 NavigationGroup::make()
