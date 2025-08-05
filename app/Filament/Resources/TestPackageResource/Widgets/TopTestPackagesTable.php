@@ -8,13 +8,13 @@ use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Models\QuotationItem;
-use App\Models\TestPackage;
 use Illuminate\Database\Eloquent\Model;
 
 class TopTestPackagesTable extends TableWidget
 {
     protected static ?string $heading = '5 Paket Pengujian Terpopuler';
     // protected static ?int $sort = 2; // Atur urutan setelah widget pertama
+    protected int | string | array $columnSpan = ['xl' => 3, 'lg' => 3, 'md' => 2, 'sm' => 1];
     protected static ?string $pollingInterval = null;
     protected function getTableQuery(): Builder
     {
