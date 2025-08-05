@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('end_date')->nullable(); // Tanggal Job selesai
 
             // Menggunakan enum string values secara langsung
-            $table->enum('job_status', ['pending_start', 'in_progress', 'sampling_completed', 'analysis_completed', 'validation_completed', 'report_generated', 'report_approved', 'invoiced', 'delivered', 'completed', 'cancelled', 'on_hold'])->default('pending_start');
+            $table->enum('status', ['pending_start', 'in_progress', 'sampling_completed', 'analysis_completed', 'validation_completed', 'report_generated', 'report_approved', 'invoiced', 'delivered',  'cancelled', 'on_hold'])->default('pending_start');
 
             // Kolom auditing standar
             $table->string('created_by', 255)->nullable();

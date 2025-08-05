@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Enums\QuotationStatusEnum;
+use App\Models\LabJob;
 use App\Models\Quotation;
+use Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class QuotationService
 {
@@ -48,5 +52,49 @@ class QuotationService
             'unit_price' => 'Harga Satuan',
             'total_price' => 'Total Harga',
         ];
+    }
+
+    /**
+     * Mengubah status penawaran dan memicu aksi terkait.
+     *
+     * @param Quotation $quotation
+     * @param QuotationStatusEnum $newStatus
+     * @return bool
+     */
+    public function updateQuotationStatus(Quotation $quotation, QuotationStatusEnum $newStatus): bool
+    {
+        // 1. Perbarui status penawaran
+        $quotation->status = $newStatus;
+
+        // 2. Lakukan aksi spesifik berdasarkan status baru
+        if ($newStatus === QuotationStatusEnum::Accepted->value) {
+            // Logika untuk membuat Lab Job saat penawaran diterima
+            // $this->createLabJobFromQuotation($quotation);
+        }
+
+        // 3. Simpan perubahan ke database
+        return $quotation->save();
+    }
+
+    /**
+     * Membuat Lab Job baru dari penawaran yang diterima.
+     * Asumsi Anda memiliki tabel 'lab_jobs' dan model 'LabJob'.
+     *
+     * @param Quotation $quotation
+     * @return LabJob
+     */
+    protected function createLabJobFromQuotation(Quotation $quotation): LabJob
+    {
+        // Contoh logika untuk membuat LabJob
+        $labJob = LabJob::create([
+            'quotation_id' => $quotation->id,
+            'job_number' => 'JOB-' . $quotation->quotation_number,
+            'status' => 'pending', // Status awal lab job
+            'created_by' => Auth::user()->id ?? null,
+            'updated_by' => Auth::user()->id ?? null,
+        ]);
+
+        Log::info("Lab Job #{$labJob->job_number} created for Quotation #{$quotation->quotation_number}.");
+        return $labJob;
     }
 }

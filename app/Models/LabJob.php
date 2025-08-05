@@ -11,4 +11,10 @@ class LabJob extends Model
     /** @use HasFactory<\Database\Factories\JobFactory> */
     use HasFactory;
     use Blameable;
+    
+
+    public function quotation(){
+        return $this->belongsTo(Quotation::class);
+    }
+
 }

@@ -14,7 +14,7 @@ class TopTestPackagesTable extends TableWidget
 {
     protected static ?string $heading = '5 Paket Pengujian Terpopuler';
     // protected static ?int $sort = 2; // Atur urutan setelah widget pertama
-    protected int | string | array $columnSpan = ['xl' => 3, 'lg' => 3, 'md' => 2, 'sm' => 1];
+    protected int | string | array $columnSpan = ['xl' => 3,  'md' => 2, 'sm' => 1,'lg' => 3];
     protected static ?string $pollingInterval = null;
     protected function getTableQuery(): Builder
     {

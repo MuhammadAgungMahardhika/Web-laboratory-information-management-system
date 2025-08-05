@@ -113,6 +113,7 @@ class PermissionAndRoleSeeder extends Seeder
             'update-quotation',
             'delete-quotation',
         ];
+        
 
         $termTemplatePermissions = [
             'view-any-term-template',
@@ -127,6 +128,14 @@ class PermissionAndRoleSeeder extends Seeder
             'create-company',
             'update-company',
             'delete-company',
+        ];
+
+          $labJobPermissions = [
+            'view-any-lab-job',
+            'view-lab-job',
+            'create-lab-job',
+            'update-lab-job',
+            'delete-lab-job',
         ];
 
 
@@ -149,6 +158,7 @@ class PermissionAndRoleSeeder extends Seeder
             $quotationPermissions,
             $termTemplatePermissions,
             $companyPermissions,
+            $labJobPermissions
         );
 
         // Membuat semua permissions
