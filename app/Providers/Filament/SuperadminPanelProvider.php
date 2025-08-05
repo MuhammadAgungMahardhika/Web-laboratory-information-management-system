@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Widgets\CustomerStatsChart;
 use App\Filament\Widgets\DynamicQuotationStatusChart;
+use App\Filament\Widgets\ParameterAccreditationChart;
 use App\Filament\Widgets\PersonnelRolesChart;
 use App\Filament\Widgets\QuotationStatusChart;
 use App\Filament\Widgets\TopParametersTable;
@@ -45,6 +46,7 @@ class SuperadminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                ParameterAccreditationChart::class,
                 QuotationStatusChart::class,
                 PersonnelRolesChart::class,
                 CustomerStatsChart::class,

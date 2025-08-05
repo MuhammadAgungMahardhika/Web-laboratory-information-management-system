@@ -57,4 +57,19 @@ enum ParameterStatusEnum: string
                 return 'gray';
         }
     }
+
+    /**
+     * Mendapatkan kode warna CSS (heksadesimal) untuk styling kustom.
+     *
+     * @param string $status
+     * @return string
+     */
+    public static function cssColor(string $status): string
+    {
+        return match ($status) {
+            self::Accredited->value => '#10B981', // Hijau yang sesuai dengan 'success' di Filament
+            self::Unaccredited->value => '#EF4444', // Merah yang sesuai dengan 'danger' di Filament
+            default => '#6B7280', // Abu-abu yang sesuai dengan 'gray' di Filament
+        };
+    }
 }

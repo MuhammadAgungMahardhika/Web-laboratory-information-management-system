@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class TopParametersTable extends TableWidget
 {
     protected static ?string $heading = '5 Parameter Paling Sering Diminta (Penawaran Diterima)';
-  
+    protected static ?string $pollingInterval = null;
 
     protected function getTableQuery(): Builder
     {
@@ -44,7 +44,7 @@ class TopParametersTable extends TableWidget
                 ->alignEnd(),
         ];
     }
-    
+
     public function getTableRecordKey(Model $record): string
     {
         return (string) $record->parameter_id;
@@ -54,7 +54,7 @@ class TopParametersTable extends TableWidget
     {
         return 'Top 5 Parameter Paling Sering Diminta (Penawaran Diterima)';
     }
-    
+
     protected function getTableRecordsPerPageSelectOptions(): array
     {
         return [5];

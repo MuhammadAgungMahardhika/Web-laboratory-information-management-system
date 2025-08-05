@@ -8,8 +8,9 @@ use App\Models\Customer; // Pastikan model Customer diimpor
 
 class CustomerStatsChart extends ChartWidget
 {
-    protected static ?string $heading = 'Statistik Pelanggan Berdasarkan Tipe';
 
+    protected static ?string $heading = 'Statistik Pelanggan Berdasarkan Tipe';
+    protected static ?string $pollingInterval = null;
     protected function getType(): string
     {
         return 'doughnut'; // Menggunakan chart donat

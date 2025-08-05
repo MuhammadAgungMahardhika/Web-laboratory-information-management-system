@@ -14,7 +14,7 @@
 
     <!-- Background Image -->
     <div class="absolute inset-0 bg-cover bg-center z-[-1]"
-        style="background-image: url('images/jli.jpg'); filter: brightness(0.5);">
+        style="background-image: url('images/jli-2.jpeg'); filter: brightness(0.5);">
     </div>
 
     <!-- Logo bagian atas (tetap di sudut kiri atas) -->
@@ -26,7 +26,7 @@
     <!-- Container untuk halaman login -->
     <div class="fixed inset-0 flex items-center justify-center">
         <!-- Wrapper untuk form login -->
-        <div class="w-full max-w-5xl rounded-xl shadow-lg p-8 relative z-10 ">
+        <div class="w-full max-w-5xl rounded-xl  p-8 relative z-10 ">
             <!-- Kolom Kanan: Form Login -->
             <div class="w-full lg:w-1/2 mx-auto">
                 <div class="flex flex-col sm:justify-center items-center">

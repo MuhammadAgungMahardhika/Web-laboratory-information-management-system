@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class PersonnelRolesChart extends ChartWidget
 {
-    protected static ?string $heading = 'Jumlah Personil Berdasarkan Peran';
 
+    protected static ?string $heading = 'Jumlah Personil Berdasarkan Peran';
+    protected static ?string $pollingInterval = null;
     protected function getType(): string
     {
         return 'bar'; // Menggunakan bar chart untuk perbandingan

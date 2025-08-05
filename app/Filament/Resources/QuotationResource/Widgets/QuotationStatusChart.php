@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class QuotationStatusChart extends ChartWidget
 {
     protected static ?string $heading = 'Perbandingan Penawaran Berdasarkan Status';
-
+    protected static ?string $pollingInterval = null;
     protected function getType(): string
     {
         return 'doughnut'; // Menggunakan chart donat untuk proporsi
@@ -32,7 +32,7 @@ class QuotationStatusChart extends ChartWidget
         // 3. Loop melalui data untuk mengisi array
         foreach (QuotationStatusEnum::cases() as $status) {
             $count = $statusCounts->firstWhere('status', $status->value)?->total ?? 0;
-            
+
             $labels[] = strtoupper($status->label()); // Ambil label yang sudah diformat dari Enum
             $data[] = $count;
             $colors[] = QuotationStatusEnum::cssColor($status->value); // Ambil warna CSS dari Enum

@@ -15,7 +15,7 @@ class TopTestPackagesTable extends TableWidget
 {
     protected static ?string $heading = '5 Paket Pengujian Terpopuler';
     // protected static ?int $sort = 2; // Atur urutan setelah widget pertama
-
+    protected static ?string $pollingInterval = null;
     protected function getTableQuery(): Builder
     {
         return QuotationItem::query()
@@ -30,7 +30,7 @@ class TopTestPackagesTable extends TableWidget
 
     public function getTableRecordKey(Model $record): string
     {
-           return (string) $record->test_package_id;
+        return (string) $record->test_package_id;
     }
     protected function getTableColumns(): array
     {
@@ -45,8 +45,8 @@ class TopTestPackagesTable extends TableWidget
                 ->alignEnd(),
         ];
     }
-    
-    
+
+
     protected function getTableHeading(): ?string
     {
         return 'Top 5 Paket Pengujian Terpopuler';
