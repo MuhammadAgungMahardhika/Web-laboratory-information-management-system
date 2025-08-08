@@ -15,10 +15,14 @@ use App\Models\TestPackage;
 use App\Models\QuotationItem; // Import model QuotationItem
 
 use App\Services\QuotationItemService;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn\TextColumnSize;
+use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 
@@ -36,35 +40,48 @@ class QuotationItemRelationManager extends RelationManager
 
         return $form
             ->schema([
-                Select::make('test_package_id')
-                    ->label('Paket Pengujian')
-                    ->relationship('testPackage', 'name')
-                    ->preload()
-                    ->searchable()
-                    ->helperText('Pilih paket pengujian jika item adalah sampel')
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, Forms\Set $set) {
-                        $set('description', null);
-                        $set('price', null);
-                        $set('regulation_id', null);
-                        $set('regulation_name', null);
-                        $set('parameters', []);
-                        if ($state) {
-                            $testPackage = TestPackage::find($state);
-                            if ($testPackage) {
-                                $set('description', $testPackage->name);
-                                $set('price', $testPackage->price);
-                                if ($testPackage->regulation) {
-                                    $set('regulation_id', $testPackage->regulation->id);
-                                    $set('regulation_name', $testPackage->regulation->name);
-                                }
-                                if ($testPackage->parameters) {
-                                    $set('parameters', $testPackage->parameters->pluck('id')->toArray());
+                // --- FIELD PEMILIH JENIS ITEM ---
+                Select::make('group')
+                    ->label('Jenis Item')
+                    ->options([
+                        'A' => 'Paket Pengujian',
+                        'B' => 'Biaya Pengambilan Sampel',
+                        'C' => 'Lainnya',
+                    ])
+                    ->required()
+                    ->default('A')
+                    ->reactive(), // Field ini tidak perlu disimpan ke DB
+                // -------------------------------
+                Section::make([
+                    Select::make('test_package_id')
+                        ->label('Paket Pengujian')
+                        ->relationship('testPackage', 'name')
+                        ->preload()
+                        ->searchable()
+                        ->helperText('Pilih paket pengujian jika item adalah sampel')
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, Forms\Set $set) {
+                            $set('description', null);
+                            $set('price', null);
+                            $set('regulation_id', null);
+                            $set('regulation_name', null);
+                            $set('parameters', []);
+                            if ($state) {
+                                $testPackage = TestPackage::find($state);
+                                if ($testPackage) {
+                                    $set('description', $testPackage->name);
+                                    $set('price', $testPackage->price);
+                                    if ($testPackage->regulation) {
+                                        $set('regulation_id', $testPackage->regulation->id);
+                                        $set('regulation_name', $testPackage->regulation->name);
+                                    }
+                                    if ($testPackage->parameters) {
+                                        $set('parameters', $testPackage->parameters->pluck('id')->toArray());
+                                    }
                                 }
                             }
-                        }
-                    }),
-                Section::make([
+                        }),
+                  
                     Forms\Components\TextInput::make('description')
                         ->label('Keterangan')
                         ->autocomplete(false)
@@ -80,17 +97,68 @@ class QuotationItemRelationManager extends RelationManager
                         ->maxLength(255),
 
                     Forms\Components\Hidden::make('regulation_id'),
+                    Select::make('parameters')
+                        ->searchable()
+                        ->multiple()
+                        ->relationship('parameters', 'name')
+                        ->preload(),
                     Forms\Components\TextInput::make('quantity')
                         ->label('Jumlah')
                         ->numeric()
                         ->required()
                         ->default(1),
+                    Forms\Components\TextInput::make('price')
+                        ->label('Harga')
+                        ->numeric()
+                        ->required()
+                        ->default(0.00)
+                        ->step(0.01),
                     Forms\Components\TextInput::make('unit')
                         ->label('Satuan')
-                        ->default('persampel')
+                        ->required()
+                        ->autocomplete(false)
+                        ->maxLength(50),
+                    Forms\Components\TextInput::make('location')
+                        ->label('Lokasi Pengambilan Sampel')
+                        ->maxLength(100)
+                        ->nullable(),
+                ])->columns(3)->visible(fn(Get $get) => $get('group') === 'A'),
+                Section::make([
+                    Forms\Components\TextInput::make('description')
+                        ->label('Keterangan')
+                        ->autocomplete(false)
                         ->datalist([
-                            'persampel',
+                            'Engineer dan Mobilisasi',
                         ])
+                        ->required()
+                        ->maxLength(255)
+                        ->placeholder(fn(Get $get) => match ($get('group')) {
+                            'B' => 'Deskripsi untuk biaya pengambilan sampel',
+                            'C' => 'Deskripsi untuk item lainnya',
+                            default => ''
+                        }),
+                    Forms\Components\TextInput::make('quantity')
+                        ->label('Jumlah')
+                        ->numeric()
+                        ->autocomplete(false)
+                        ->required()
+                        ->default(1),
+                     Forms\Components\TextInput::make('unit')
+                        ->label('Satuan')
+                        ->datalist(function (Get $get) {
+                            $itemTypeSelector = $get('group');
+                            if ($itemTypeSelector === 'B') {
+                                return [
+                                    'Hari',
+                                    'Jam'
+                                ];
+                            } else {
+                                return [
+                                    'Sampel',
+                                    'Ls'
+                                ];
+                            }
+                        })
                         ->required()
                         ->autocomplete(false)
                         ->maxLength(50),
@@ -100,17 +168,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->required()
                         ->default(0.00)
                         ->step(0.01),
-                    Forms\Components\TextInput::make('location')
-                        ->label('Lokasi Pengambilan Sampel')
-                        ->maxLength(100)
-                        ->nullable(),
-                ])->columns(2),
-                Select::make('parameters')
-                    ->searchable()
-                    ->multiple()
-                    ->relationship('parameters', 'name')
-
-                    ->preload(),
+                ])->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
             ]);
     }
 
@@ -122,6 +180,11 @@ class QuotationItemRelationManager extends RelationManager
             })
             ->recordTitleAttribute('description')
             ->paginated(false)
+            ->groups([
+                Group::make('group')
+                   ->label(''),
+            ])
+            ->defaultGroup('group')
             ->columns([
                 Tables\Columns\TextColumn::make('description')
                     ->label('Deskripsi')
@@ -153,18 +216,7 @@ class QuotationItemRelationManager extends RelationManager
                     ->alignEnd()
                     ->size(TextColumnSize::Small)
                     ->money('IDR')
-                    ->getStateUsing(fn(QuotationItem $record): float => $record->quantity * $record->price)
-                    ->summarize(
-                        Summarizer::make('total_price')
-                            ->label('Total Penawaran')
-                            ->using(function (\Illuminate\Database\Eloquent\Collection $records): string {
-                                $total = 0;
-                                foreach ($records as $record) {
-                                    $total += ($record->quantity * $record->price);
-                                }
-                                return Number::currency($total, 'IDR');
-                            })
-                    ),
+                    ->getStateUsing(fn(QuotationItem $record): float => $record->quantity * $record->price),
 
                 Tables\Columns\TextColumn::make('location')
                     ->size(TextColumnSize::Small)

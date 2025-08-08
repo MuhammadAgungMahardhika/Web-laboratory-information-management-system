@@ -128,6 +128,11 @@ return new class extends Migration
                 ->on('personels')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
+            $table->foreign('approved_by_personel_id', 'fk_quotations_approved_by_personel')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
         });
         Schema::table('quotation_items', function (Blueprint $table) {
             $table->foreign('quotation_id', 'fk_quotation_items_quotations')

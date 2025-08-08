@@ -46,8 +46,9 @@ class QuotationResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['quotation_number', 'quotation_name','customer.name'];
+        return ['quotation_number', 'quotation_name', 'customer.name'];
     }
+
     public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
     {
         return $record->quotation_number;
@@ -382,9 +383,11 @@ class QuotationResource extends Resource
                     ->color(fn($state) => QuotationStatusEnum::color($state))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('approved_by_user_id')
+                Tables\Columns\TextColumn::make('approved_by_personel.fullname')
+                    ->label('Disetujui oleh')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('approved_at')
+                    ->label('Disetujui pada')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_by')

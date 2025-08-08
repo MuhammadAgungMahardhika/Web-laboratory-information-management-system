@@ -274,7 +274,9 @@
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>
                             <strong>{{ $item->description ?? '-' }}</strong><br>
-                            <small>Lokasi: {{ $item->location ?? '-' }}</small>
+                            @if ($item->location)
+                            <small>Lokasi: {{ $item->location }}</small>
+                            @endif
                         </td>
                         <td>{{ $item->regulation_name ?? '-' }}</td>
                         <td>

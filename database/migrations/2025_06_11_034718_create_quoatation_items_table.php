@@ -23,11 +23,13 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('unit', 50);
             $table->string('location', 100)->nullable();
-
+            $table->enum('group', ['A','B','C'])->default('A');
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
+
+            $table->index('group');
         });
     }
 

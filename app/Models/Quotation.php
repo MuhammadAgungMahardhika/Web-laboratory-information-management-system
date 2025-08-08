@@ -29,4 +29,8 @@ class Quotation extends Model
     {
         return $this->belongsTo(Personel::class);
     }
+    public function approvedByPersonel()
+    {
+        return $this->belongsTo(Personel::class, 'approved_by_personel_id');
+    }
 }

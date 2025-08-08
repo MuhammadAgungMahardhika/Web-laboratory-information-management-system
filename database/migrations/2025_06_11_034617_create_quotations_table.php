@@ -32,7 +32,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'pending_response', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('draft');
 
             // Approval details
-            $table->string('approved_by_user_id', 255)->nullable();
+            $table->unsignedBigInteger('approved_by_personel_id')->nullable();
             $table->timestamp('approved_at')->nullable();
 
             // Auditing columns

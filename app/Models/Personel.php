@@ -25,4 +25,8 @@ class Personel extends Model
     {
         return $this->hasMany(Quotation::class);
     }
+    public function approvedQuotations()
+    {
+        return $this->hasMany(Quotation::class, 'approved_by_personel_id');
+    }
 }
