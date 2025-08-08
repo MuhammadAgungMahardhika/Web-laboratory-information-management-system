@@ -275,16 +275,34 @@ class QuotationResource extends Resource
                                         Forms\Components\TextInput::make('name')
                                             ->label('Nama Template')
                                             ->required()
+                                            ->unique(TermTemplate::class)
                                             ->maxLength(255),
                                         RichEditor::make('content')
                                             ->label('Isi Template')
                                             ->required()
-                                            ->columnSpanFull(),
+                                            ->columnSpanFull()
+                                            ->toolbarButtons([ // Atur toolbar RichEditor
+                                                'blockquote',
+                                                'bold',
+                                                'bulletList',
+                                                'codeBlock',
+                                                'h2',
+                                                'h3',
+                                                'italic',
+                                                'link',
+                                                'orderedList',
+                                                'strike',
+                                                'underline',
+                                            ]),
                                         Hidden::make('is_active')
                                             ->label('Aktif ?')
                                             ->required()
                                             ->default(true),
                                     ];
+                                })->createOptionUsing(function (array $data): string {
+                                    // Logika ini akan membuat record baru di database
+                                    $template = TermTemplate::create($data);
+                                    return (string) $template->id; // Mengembalikan ID dari record yang baru dibuat
                                 }),
 
                             RichEditor::make('additional_description')

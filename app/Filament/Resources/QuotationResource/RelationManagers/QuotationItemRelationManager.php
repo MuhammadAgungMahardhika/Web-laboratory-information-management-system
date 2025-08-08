@@ -20,6 +20,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Grouping\Group;
@@ -81,7 +82,7 @@ class QuotationItemRelationManager extends RelationManager
                                 }
                             }
                         }),
-                  
+
                     Forms\Components\TextInput::make('description')
                         ->label('Keterangan')
                         ->autocomplete(false)
@@ -143,7 +144,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->autocomplete(false)
                         ->required()
                         ->default(1),
-                     Forms\Components\TextInput::make('unit')
+                    Forms\Components\TextInput::make('unit')
                         ->label('Satuan')
                         ->datalist(function (Get $get) {
                             $itemTypeSelector = $get('group');
@@ -182,7 +183,7 @@ class QuotationItemRelationManager extends RelationManager
             ->paginated(false)
             ->groups([
                 Group::make('group')
-                   ->label(''),
+                    ->label(''),
             ])
             ->defaultGroup('group')
             ->columns([
@@ -216,8 +217,8 @@ class QuotationItemRelationManager extends RelationManager
                     ->alignEnd()
                     ->size(TextColumnSize::Small)
                     ->money('IDR')
+                    ->sortable()
                     ->getStateUsing(fn(QuotationItem $record): float => $record->quantity * $record->price),
-
                 Tables\Columns\TextColumn::make('location')
                     ->size(TextColumnSize::Small)
                     ->label('Lokasi pengambilan sampel')
