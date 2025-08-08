@@ -212,13 +212,11 @@ class QuotationItemRelationManager extends RelationManager
                     ->size(TextColumnSize::Small)
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total_price')
+                Tables\Columns\TextColumn::make('item_total')
                     ->label('Harga Total')
                     ->alignEnd()
                     ->size(TextColumnSize::Small)
-                    ->money('IDR')
-                    ->sortable()
-                    ->getStateUsing(fn(QuotationItem $record): float => $record->quantity * $record->price),
+                    ->money('IDR'),
                 Tables\Columns\TextColumn::make('location')
                     ->size(TextColumnSize::Small)
                     ->label('Lokasi pengambilan sampel')

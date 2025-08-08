@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Blameable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,5 +33,14 @@ class Quotation extends Model
     public function approvedByPersonel()
     {
         return $this->belongsTo(Personel::class, 'approved_by_personel_id');
+    }
+
+    // --- Aksesor ini sekarang berada di model yang benar ---
+    protected function getTotalPriceAttribute(): float
+    {
+        return (float) $this->quotationItems->sum(function ($item) {
+            // Access the totalPrice accessor from the QuotationItem model
+            return (float) $item->total_price;
+        });
     }
 }
