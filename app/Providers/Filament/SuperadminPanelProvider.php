@@ -2,13 +2,12 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Widgets\CustomerStatsChart;
-use App\Filament\Widgets\DynamicQuotationStatusChart;
-use App\Filament\Widgets\ParameterAccreditationChart;
-use App\Filament\Widgets\PersonnelRolesChart;
-use App\Filament\Widgets\QuotationStatusChart;
-use App\Filament\Widgets\TopParametersTable;
-use App\Filament\Widgets\TopTestPackagesTable;
+use App\Filament\Resources\CustomerResource\Widgets\CustomerStatsChart;
+use App\Filament\Resources\ParameterResource\Widgets\ParameterAccreditationChart;
+use App\Filament\Resources\PersonelResource\Widgets\PersonnelRolesChart;
+use App\Filament\Resources\QuotationResource\Widgets\QuotationStatusChart;
+use App\Filament\Resources\ParameterResource\Widgets\TopParametersTable;
+use App\Filament\Resources\TestPackageResource\Widgets\TopTestPackagesTable;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;

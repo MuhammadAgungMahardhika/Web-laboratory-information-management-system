@@ -111,9 +111,10 @@ class QuotationItemRelationManager extends RelationManager
                     Forms\Components\TextInput::make('price')
                         ->label('Harga')
                         ->numeric()
+                        ->prefix('Rp.')
                         ->required()
-                        ->default(0.00)
-                        ->step(0.01),
+                        ->default(0)
+                        ->step(10000),
                     Forms\Components\TextInput::make('unit')
                         ->label('Satuan')
                         ->required()
@@ -167,8 +168,9 @@ class QuotationItemRelationManager extends RelationManager
                         ->label('Harga')
                         ->numeric()
                         ->required()
-                        ->default(0.00)
-                        ->step(0.01),
+                        ->prefix('Rp.')
+                        ->default(0)
+                        ->step(10000),
                 ])->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
             ]);
     }

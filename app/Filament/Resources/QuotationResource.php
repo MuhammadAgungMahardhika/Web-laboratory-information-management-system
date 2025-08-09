@@ -106,19 +106,19 @@ class QuotationResource extends Resource
                             return $quotationDate ? \Carbon\Carbon::parse($quotationDate)->addDay() : null;
                         })
                         ->required()
-                        ->helperText(fn() => "Default {$defaultQuotationExpiryDays} hari [ Ubah di menu perusahaan ]"),
+                        ->helperText(fn() => "Default {$defaultQuotationExpiryDays} hari"),
                     Forms\Components\TextInput::make('quotation_number')
                         ->label('Nomor penawaran')
                         ->required()
                         ->default($quoatationService->generateQuotationNumber())
                         ->maxLength(50),
                     Select::make('request_id')
-                        ->label('Nomor permohonan')
-                        ->relationship('request', 'request_number')
-                        ->helperText('Kosongkan jika bukan dari permohonan'),
+                        ->label('Nomor permohonan (jika ada)')
+                        ->relationship('request', 'request_number'),
 
                     Forms\Components\TextInput::make('quotation_name')
                         ->label('Judul penawaran')
+                        ->columnSpan(2)
                         ->required(),
 
                     Select::make('customer_id')
@@ -229,7 +229,7 @@ class QuotationResource extends Resource
                         ->searchable()
                         ->preload(),
 
-                ])->columns(3)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
+                ])->columns(4)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
                     ->collapsible()->iconColor('primary')->icon('heroicon-s-document-duplicate'),
 
                 Forms\Components\Section::make('Syarat & Ketentuan Pembayaran')

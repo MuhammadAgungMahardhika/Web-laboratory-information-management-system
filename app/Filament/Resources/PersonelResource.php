@@ -45,6 +45,7 @@ class PersonelResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('nip')
                     ->label('Nip')
+                    ->unique(ignoreRecord:true)
                     ->required(),
                 Forms\Components\TextInput::make('phone_number')
                     ->label('No hp')
@@ -86,10 +87,11 @@ class PersonelResource extends Resource
                                 ->label('Email')
                                 ->email()
                                 ->unique(ignoreRecord: true)
+                                ->required()
                                 ->autocomplete(false),
                             Select::make('roles')
                                 ->label('Peran')
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('name', RoleEnum::Customer->value))
                                 ->searchable()
                                 ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
                                 ->preload()
@@ -147,7 +149,6 @@ class PersonelResource extends Resource
                 Select::make('company_id')
                     ->label('Perusahaan')
                     ->required()
-                    ->unique(ignoreRecord: true)
                     ->relationship('company', 'name')
                     ->preload()
             ]);

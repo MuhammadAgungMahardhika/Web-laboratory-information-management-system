@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Resources\TestPackageResource\Widgets;
 
 use App\Models\Enums\QuotationStatusEnum;
 use Filament\Tables\Columns\TextColumn;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Resources\ParameterResource\Widgets;
 
 use Filament\Tables\Columns\TextColumn;
 use Filament\Widgets\TableWidget;
