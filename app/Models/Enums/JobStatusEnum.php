@@ -23,9 +23,9 @@ enum JobStatusEnum: string
      *
      * @return string
      */
-    public function label(): string
+    public static function label(): array
     {
-        return match ($this) {
+        return [
             self::PendingStart => 'Menunggu Mulai',
             self::InProgress => 'Dalam Proses',
             self::SamplingCompleted => 'Sampling Selesai',
@@ -37,7 +37,7 @@ enum JobStatusEnum: string
             self::Delivered => 'Selesai (Terkirim)',
             self::Cancelled => 'Dibatalkan',
             self::OnHold => 'Ditunda',
-        };
+        ];
     }
 
     /**

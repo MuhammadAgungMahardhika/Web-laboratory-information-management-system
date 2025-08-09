@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\QuotationStatusEnum;
 use App\Models\LabJob;
 use App\Models\Quotation;
@@ -67,9 +68,9 @@ class QuotationService
         $quotation->status = $newStatus->value;
 
         // 2. Lakukan aksi spesifik berdasarkan status baru
-        if ($newStatus === QuotationStatusEnum::Accepted->value) {
+        if ($newStatus->value === QuotationStatusEnum::Accepted->value) {
             // Logika untuk membuat Lab Job saat penawaran diterima
-            // $this->createLabJobFromQuotation($quotation);
+            $this->createLabJobFromQuotation($quotation);
         }
 
         // 3. Simpan perubahan ke database
@@ -89,9 +90,8 @@ class QuotationService
         $labJob = LabJob::create([
             'quotation_id' => $quotation->id,
             'job_number' => 'JOB-' . $quotation->quotation_number,
-            'status' => 'pending', // Status awal lab job
-            'created_by' => Auth::user()->id ?? null,
-            'updated_by' => Auth::user()->id ?? null,
+            'start_date' => now(),
+            'status' => JobStatusEnum::PendingStart->value, // Status awal lab job
         ]);
 
         Log::info("Lab Job #{$labJob->job_number} created for Quotation #{$quotation->quotation_number}.");

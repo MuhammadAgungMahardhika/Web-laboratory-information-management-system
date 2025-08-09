@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ViewRecord;
 use App\Models\Quotation;
 use App\Services\QuotationService;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
 use Filament\Notifications\Notification;
 
 class ViewQuotation extends ViewRecord
@@ -39,9 +40,21 @@ class ViewQuotation extends ViewRecord
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn(Quotation $record): bool => in_array($record->status, [
-                        QuotationStatusEnum::Submitted->value,
+                        QuotationStatusEnum::Submitted,
+                        QuotationStatusEnum::Revised
                     ]))
-                    ->requiresConfirmation()
+                    // Hapus requiresConfirmation() karena kita akan menggunakan form untuk konfirmasi
+                    ->modalHeading('Konfirmasi Persetujuan')
+                    ->modalDescription('Apakah Anda yakin untuk menyetujui penawaran ini? Setelah disetujui, data penawaran tidak dapat diubah lagi dan akan dibuatkan Lab Job.')
+                    ->modalSubmitActionLabel('Ya, Setujui')
+                    ->modalCancelActionLabel('Batal')
+                    // --- Perubahan di sini: Tambahkan form dengan checkbox ---
+                    ->form([
+                        Checkbox::make('acknowledgement')
+                            ->label('Saya memahami bahwa penawaran ini tidak dapat diedit lagi setelah disetujui.')
+                            ->required()
+                    ])
+                    // --------------------------------------------------------
                     ->action(function (Quotation $record, QuotationService $quotationService) {
                         $quotationService->updateQuotationStatus($record, QuotationStatusEnum::Accepted);
                         Notification::make()->title('Status penawaran telah disetujui!')->success()->send();

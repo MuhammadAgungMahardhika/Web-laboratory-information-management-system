@@ -34,7 +34,7 @@ class LabJobResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['job_number', 'quotation.quotation_name','quotation.customer.name'];
+        return ['job_number', 'quotation.quotation_name', 'quotation.customer.name'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
@@ -72,7 +72,7 @@ class LabJobResource extends Resource
                         TextInput::make('job_number')
                             ->label('Nomor Pekerjaan')
                             // Nomor pekerjaan harusnya digenerate, bukan diisi manual
-                            ->default(fn (QuotationService $quotationService) => $quotationService->generateQuotationNumber())
+                            ->default(fn(QuotationService $quotationService) => $quotationService->generateQuotationNumber())
                             ->readOnly() // <-- Jadikan read-only
                             ->maxLength(50),
                         Forms\Components\DatePicker::make('start_date')
@@ -113,9 +113,9 @@ class LabJobResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status Pekerjaan')
                     ->badge()
-                    ->sortable()
-                    ->color(fn (JobStatusEnum $state): string => $state->color($state->value))
-                    ->formatStateUsing(fn (JobStatusEnum $state): string => $state->label()),
+                    ->sortable(),
+                // ->color(fn($state): string => JobStatusEnum::color($state))
+                // ->formatStateUsing(fn($state): string => JobStatusEnum::label()[$state]),
                 Tables\Columns\TextColumn::make('created_by')
                     ->label('Dibuat Oleh')
                     ->searchable(),
