@@ -64,7 +64,7 @@ class QuotationService
     public function updateQuotationStatus(Quotation $quotation, QuotationStatusEnum $newStatus): bool
     {
         // 1. Perbarui status penawaran
-        $quotation->status = $newStatus;
+        $quotation->status = $newStatus->value;
 
         // 2. Lakukan aksi spesifik berdasarkan status baru
         if ($newStatus === QuotationStatusEnum::Accepted->value) {

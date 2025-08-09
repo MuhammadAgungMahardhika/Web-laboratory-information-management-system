@@ -7,7 +7,7 @@ use Filament\Support\Colors\Color; // Assuming you're using Filament's Color cla
 enum QuotationStatusEnum: string
 {
     case Draft = 'draft';
-    case PendingResponse = 'pending_response';
+    case Submitted = 'submitted';
     case Accepted = 'accepted';
     case Revised = 'revised';
     case Expired = 'expired';
@@ -23,8 +23,8 @@ enum QuotationStatusEnum: string
     {
         return [
             self::Draft->value => 'Draf',
-            self::PendingResponse->value => 'Menunggu Respon',
-            self::Accepted->value => 'Diterima',
+            self::Submitted->value => 'Dikirim',
+            self::Accepted->value => 'Disetujui',
             self::Revised->value => 'Direvisi',
             self::Expired->value => 'Kadaluarsa',
             self::Rejected->value => 'Ditolak',
@@ -68,7 +68,7 @@ enum QuotationStatusEnum: string
         switch ($status) {
             case self::Draft->value:
                 return 'gray';    // Drafts are often neutral/gray
-            case self::PendingResponse->value:
+            case self::Submitted->value:
                 return 'warning'; // Pending needs attention
             case self::Accepted->value:
                 return 'success'; // Successfully accepted
@@ -100,7 +100,7 @@ enum QuotationStatusEnum: string
 
         return match ($status) {
             self::Draft->value => '#6B7280', // Gray
-            self::PendingResponse->value => '#F59E0B', // Orange (warning)
+            self::Submitted->value => '#F59E0B', // Orange (warning)
             self::Accepted->value => '#10B981', // Green (success)
             self::Rejected->value => '#EF4444', // Red (danger)
             self::Revised->value => '#3B82F6', // Blue (info)

@@ -230,7 +230,7 @@ class QuotationResource extends Resource
                         ->preload(),
 
                 ])->columns(4)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
-                    ->collapsible()->iconColor('primary')->icon('heroicon-s-document-duplicate'),
+                    ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
 
                 Forms\Components\Section::make('Syarat & Ketentuan Pembayaran')
                     ->description('Pilih template atau tulis syarat & ketentuan secara manual.')
@@ -482,7 +482,7 @@ class QuotationResource extends Resource
     {
         return in_array($record->status, [
             QuotationStatusEnum::Draft->value,
-            QuotationStatusEnum::PendingResponse->value,
+            QuotationStatusEnum::Submitted->value,
             QuotationStatusEnum::Revised->value,
         ]);
     }
@@ -491,7 +491,7 @@ class QuotationResource extends Resource
     {
         return in_array($record->status, [
             QuotationStatusEnum::Draft->value,
-            QuotationStatusEnum::PendingResponse->value,
+            QuotationStatusEnum::Submitted->value,
             QuotationStatusEnum::Revised->value,
         ]);
     }

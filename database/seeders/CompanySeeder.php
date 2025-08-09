@@ -49,7 +49,7 @@ class CompanySeeder extends Seeder
             'website' => 'www.jambilestari.com', // Placeholder
             'npwp' => '01.234.567.8-901.000', // Placeholder
 
-            'letterhead_path' => 'settings/jli_korp.jpg', // Placeholder path for uploaded letterhead
+            'letterhead_path' => null, // Placeholder path for uploaded letterhead
             'default_quotation_expiry_days' => 30, // Default 30 days validity
 
             // --- Use values from .env here ---

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->text('additional_description')->nullable();
 
             // Using enum string values directly since Laravel migrations don't automatically recognize PHP Enums
-            $table->enum('status', ['draft', 'pending_response', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('draft');
+            $table->enum('status', ['draft', 'submitted', 'accepted', 'rejected', 'expired', 'revised', 'cancelled'])->default('draft');
 
             // Approval details
             $table->unsignedBigInteger('approved_by_personel_id')->nullable();

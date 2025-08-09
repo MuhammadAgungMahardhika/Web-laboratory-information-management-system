@@ -131,22 +131,14 @@
             /* Sedikit lebih besar dari 7.5pt */
         }
 
-        .summary-wrapper {
-            width: 100%;
-            overflow: hidden;
-        }
+        /* Ganti dengan kode ini (Flexbox) */
 
-        .summary-table {
-            width: 55%;
-            float: right;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
+
 
         .summary-table td {
             padding: 6px;
             border: 1px solid #ddd;
-            font-size: 9pt;
+            font-size: 7pt;
         }
 
         .summary-table .label {
@@ -208,7 +200,10 @@
 <body>
     <div class="header">
         @php
-            $korpPath = $company->letterhead_path ? public_path("storage/{$company->letterhead_path}") : public_path('images/korp.jpg');
+            $korpPath = $company->letterhead_path
+                ? public_path("storage/{$company->letterhead_path}")
+                : public_path('images/korp.jpg');
+
             $korpBase64 = '';
             if (file_exists($korpPath)) {
                 $korpData = file_get_contents($korpPath);
@@ -260,11 +255,11 @@
                     <th class="text-center" style="width: 5%;">No.</th>
                     <th style="width: 20%;">Deskripsi Item & Lokasi</th>
                     <th style="width: 14%;">Regulasi</th>
-                    <th style="width: 20%;">Parameter</th>
+                    <th style="width: 19%;">Parameter</th>
                     <th style="width: 7%; text-align: right;">Jumlah</th>
                     <th style="width: 9%;">Satuan</th>
                     <th style="width: 12%; text-align: right;">Harga (Rp)</th>
-                    <th style="width: 13%; text-align: right;">Total (Rp)</th>
+                    <th style="width: 14%; text-align: right;">Total (Rp)</th>
                 </tr>
             </thead>
             <tbody>
@@ -275,7 +270,7 @@
                         <td>
                             <strong>{{ $item->description ?? '-' }}</strong><br>
                             @if ($item->location)
-                            <small>Lokasi: {{ $item->location }}</small>
+                                <small>Lokasi: {{ $item->location }}</small>
                             @endif
                         </td>
                         <td>{{ $item->regulation_name ?? '-' }}</td>
@@ -297,17 +292,15 @@
                     @php $grandSubtotal += (($item->quantity ?? 0) * $item->price); @endphp
                 @endforeach
             </tbody>
-        </table>
-
-        <div class="summary-wrapper">
-            <table class="summary-table">
+            <tfoot class="summary-table">
                 <tr>
-                    <td class="label">Subtotal</td>
+                    <td class="label" colspan="7">Subtotal</td>
                     <td class="value">Rp {{ number_format($grandSubtotal, 2, ',', '.') }}</td>
                 </tr>
                 @if ($quotation->discount_percentage > 0)
                     <tr>
-                        <td class="label">Diskon ({{ number_format($quotation->discount_percentage, 2, ',', '.') }}%)
+                        <td class="label" colspan="7">Diskon
+                            ({{ number_format($quotation->discount_percentage, 2, ',', '.') }}%)
                         </td>
                         <td class="value">Rp
                             {{ number_format($grandSubtotal * ($quotation->discount_percentage / 100), 2, ',', '.') }}
@@ -316,21 +309,23 @@
                 @endif
                 @if ($quotation->ppn_percentage > 0)
                     <tr>
-                        <td class="label">PPN ({{ number_format($quotation->ppn_percentage, 2, ',', '.') }}%)</td>
+                        <td class="label" colspan="7">PPN
+                            ({{ number_format($quotation->ppn_percentage, 2, ',', '.') }}%)</td>
                         <td class="value">Rp
                             {{ number_format($grandSubtotal * ($quotation->ppn_percentage / 100), 2, ',', '.') }}</td>
                     </tr>
                 @endif
                 @if ($quotation->pph_percentage > 0)
                     <tr>
-                        <td class="label">PPH ({{ number_format($quotation->pph_percentage, 2, ',', '.') }}%)</td>
+                        <td class="label" colspan="7">PPH
+                            ({{ number_format($quotation->pph_percentage, 2, ',', '.') }}%)</td>
                         <td class="value">Rp
                             {{ number_format($grandSubtotal * ($quotation->pph_percentage / 100), 2, ',', '.') }}</td>
                     </tr>
                 @endif
                 <tr class="total-row">
-                    <td class="label">TOTAL AKHIR</td>
-                    <td class="value">
+                    <td class="label" colspan="7">TOTAL AKHIR</td>
+                    <td class="value" style="">
                         Rp
                         {{ number_format(
                             $grandSubtotal -
@@ -343,8 +338,9 @@
                         ) }}
                     </td>
                 </tr>
-            </table>
-        </div>
+            </tfoot>
+        </table>
+
 
         <div class="terms">
             <h4>
