@@ -8,7 +8,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
-use Filament\Support\Colors\Color; // Jika ingin menggunakan warna Filament
+use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;

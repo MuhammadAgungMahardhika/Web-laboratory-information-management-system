@@ -114,7 +114,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->prefix('Rp.')
                         ->required()
                         ->default(0)
-                        ->step(10000),
+                        ->step(500),
                     Forms\Components\TextInput::make('unit')
                         ->label('Satuan')
                         ->required()
@@ -170,7 +170,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->required()
                         ->prefix('Rp.')
                         ->default(0)
-                        ->step(10000),
+                        ->step(500),
                 ])->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
             ]);
     }

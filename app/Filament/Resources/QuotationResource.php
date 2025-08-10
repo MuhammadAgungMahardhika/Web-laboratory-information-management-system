@@ -351,6 +351,12 @@ class QuotationResource extends Resource
             ->defaultSort('quotation_number', 'desc')
             ->striped()
             ->columns([
+                Tables\Columns\TextColumn::make('status')
+                    ->formatStateUsing(fn($state) => QuotationStatusEnum::from($state)->label())
+                    ->badge()
+                    ->color(fn($state) => QuotationStatusEnum::color($state))
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('request.code')
                     ->label('Nomor permohonan')
                     ->searchable()
@@ -396,12 +402,7 @@ class QuotationResource extends Resource
                     ->money('IDR', true)
                     ->alignEnd()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->formatStateUsing(fn($state) => QuotationStatusEnum::from($state)->label())
-                    ->badge()
-                    ->color(fn($state) => QuotationStatusEnum::color($state))
-                    ->sortable()
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('approved_by_personel.fullname')
                     ->label('Disetujui oleh')
                     ->searchable(),

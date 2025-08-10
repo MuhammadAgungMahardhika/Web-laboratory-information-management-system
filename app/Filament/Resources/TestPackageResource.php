@@ -145,7 +145,7 @@ class TestPackageResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0)
-                    ->step(10000)
+                    ->step(500)
                     ->label('Harga')
                     ->prefix('Rp. '),
 
