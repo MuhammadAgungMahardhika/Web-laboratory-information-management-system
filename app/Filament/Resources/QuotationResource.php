@@ -19,6 +19,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -340,6 +341,7 @@ class QuotationResource extends Resource
                         ])->columns(3)->collapsible()->heading('Potongan')->iconColor('primary')->icon('heroicon-s-receipt-percent')->columnSpan(1)->iconPosition('after'),
 
                     ])->columns(2)->collapsible()->iconColor('primary')->icon('heroicon-s-document-text'),
+
             ]);
     }
 
@@ -388,7 +390,7 @@ class QuotationResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('total_amount')
+                Tables\Columns\TextColumn::make('total_price')
                     ->label('Jumlah total')
                     ->numeric()
                     ->money('IDR', true)

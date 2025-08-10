@@ -40,7 +40,7 @@ class Quotation extends Model
     {
         return (float) $this->quotationItems->sum(function ($item) {
             // Access the totalPrice accessor from the QuotationItem model
-            return (float) $item->total_price;
+            return (float) $item->item_total;
         });
     }
 }

@@ -665,7 +665,7 @@ namespace App\Models{
  * @property int $company_id
  * @property string|null $letterhead_path
  * @property int|null $default_quotation_expiry_days
- * @property int|null $default_term_template_id
+ * @property int|null $term_template_id
  * @property string|null $mail_mailer
  * @property string|null $mail_host
  * @property string|null $mail_port
@@ -689,7 +689,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereDefaultQuotationExpiryDays($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereDefaultTermTemplateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereLetterheadPath($value)
@@ -701,6 +700,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailPassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailPort($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereTermTemplateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereUpdatedBy($value)
  */

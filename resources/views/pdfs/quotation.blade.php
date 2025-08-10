@@ -262,7 +262,7 @@
                 </tr>
             </thead>
             <tbody>
-                @php $grandSubtotal = 0; @endphp
+                @php $grandSubtotal = $quotation->total_price; @endphp
                 @foreach ($quotation->quotationItems as $index => $item)
                     <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
@@ -288,7 +288,6 @@
                         <td class="text-right" style="text-align: right;">
                             {{ number_format(($item->quantity ?? 0) * $item->price, 2, ',', '.') }}</td>
                     </tr>
-                    @php $grandSubtotal += (($item->quantity ?? 0) * $item->price); @endphp
                 @endforeach
             </tbody>
             <tfoot class="summary-table">
