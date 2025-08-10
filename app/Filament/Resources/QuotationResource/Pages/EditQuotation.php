@@ -88,6 +88,10 @@ class EditQuotation extends EditRecord
                         ]))
                         ->modalHeading('Proses pengiriman Penawaran')
                         ->form([
+                            Toggle::make('update_status_to_submitted')
+                                ->label('Update status penawaran menjadi terkirim')
+                                ->reactive()
+                                ->default(true),
                             Section::make([
                                 Toggle::make('send_whatsapp')
                                     ->label('Kirim via WhatsApp')
@@ -167,8 +171,10 @@ class EditQuotation extends EditRecord
                                     $customer->save();
                                 }
 
-                                $record->status = QuotationStatusEnum::Submitted->value;
-                                $record->save();
+                                if ($data['update_status_to_submitted']) {
+                                    $quotationService = new QuotationService();
+                                    $quotationService->updateQuotationStatus($record, QuotationStatusEnum::Submitted);
+                                }
 
                                 $record->load(['customer', 'personel', 'quotationItems.parameterQuotationItems']);
                                 // HAPUS BARIS INI: $settings = \App\Models\Setting::first();
@@ -236,6 +242,14 @@ class EditQuotation extends EditRecord
                                             ->body('Terjadi kesalahan saat mengirim email: ' . $e->getMessage())
                                             ->send();
                                     }
+                                }
+
+                                if ($data['update_status_to_submitted']) {
+                                    Notification::make()
+                                        ->success()
+                                        ->title('Status Penawaran diupdate menjadi Terkirim')
+                                        ->body("Status Penawaran #{$record->quotation_number} berhasil diupdate menjadi Terkirim.")
+                                        ->send();
                                 }
                             });
                         })

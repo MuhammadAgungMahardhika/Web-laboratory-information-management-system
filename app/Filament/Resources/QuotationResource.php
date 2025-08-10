@@ -68,8 +68,8 @@ class QuotationResource extends Resource
     }
     public static function form(Form $form): Form
     {
-        $company  = Auth::user()->personel->company;
-        $defaultQuotationExpiryDays = (int) $company->default_quotation_expiry_days;
+        $setting  = Auth::user()->personel->company->active_setting;
+        $defaultQuotationExpiryDays = (int) $setting->default_quotation_expiry_days;
         $quoatationService = app(QuotationService::class);
         return $form
             ->columns([
@@ -232,7 +232,7 @@ class QuotationResource extends Resource
                 ])->columns(4)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
                     ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
 
-                Forms\Components\Section::make('Syarat & Ketentuan Pembayaran')
+                Section::make('Syarat & Ketentuan Pembayaran')
                     ->description('Pilih template atau tulis syarat & ketentuan secara manual.')
                     ->schema([
                         Section::make([
@@ -338,7 +338,6 @@ class QuotationResource extends Resource
                                 ->numeric()
                                 ->default(0),
                         ])->columns(3)->collapsible()->heading('Potongan')->iconColor('primary')->icon('heroicon-s-receipt-percent')->columnSpan(1)->iconPosition('after'),
-
 
                     ])->columns(2)->collapsible()->iconColor('primary')->icon('heroicon-s-document-text'),
             ]);

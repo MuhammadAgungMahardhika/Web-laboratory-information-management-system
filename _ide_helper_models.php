@@ -50,25 +50,19 @@ namespace App\Models{
  * @property string|null $email
  * @property string|null $website
  * @property string|null $npwp
- * @property string|null $letterhead_path
- * @property int|null $default_quotation_expiry_days
- * @property string|null $mail_mailer
- * @property string|null $mail_host
- * @property string|null $mail_port
- * @property string|null $mail_username
- * @property string|null $mail_password
- * @property string|null $mail_encryption
- * @property string|null $mail_from_address
- * @property string|null $mail_from_name
  * @property int $is_main_company
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\City|null $city
+ * @property-read mixed $active_setting
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Personel> $personnels
  * @property-read int|null $personnels_count
  * @property-read \App\Models\Province|null $province
+ * @property-write mixed $mail_password
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Setting> $settings
+ * @property-read int|null $settings_count
  * @method static \Database\Factories\CompanyFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newQuery()
@@ -77,19 +71,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCreatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereDefaultQuotationExpiryDays($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereIsMainCompany($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereLetterheadPath($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailEncryption($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailFromAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailFromName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailHost($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailMailer($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailPassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailPort($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereMailUsername($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereNpwp($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company wherePhone($value)
@@ -199,9 +183,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereEndDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereJobNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereJobStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereQuotationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereUpdatedBy($value)
  */
@@ -328,6 +312,8 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quotation> $approvedQuotations
+ * @property-read int|null $approved_quotations_count
  * @property-read \App\Models\Company $company
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quotation> $quotations
  * @property-read int|null $quotations_count
@@ -395,13 +381,15 @@ namespace App\Models{
  * @property string $total_amount
  * @property string|null $additional_description
  * @property string $status
- * @property string|null $approved_by_user_id
+ * @property int|null $approved_by_personel_id
  * @property string|null $approved_at
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Personel|null $approvedByPersonel
  * @property-read \App\Models\Customer $customer
+ * @property-read float $total_price
  * @property-read \App\Models\Personel $personel
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuotationItem> $quotationItems
  * @property-read int|null $quotation_items_count
@@ -412,7 +400,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereAdditionalDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereApprovedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereApprovedByUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereApprovedByPersonelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCustomerId($value)
@@ -446,10 +434,12 @@ namespace App\Models{
  * @property int $quantity
  * @property string $unit
  * @property string|null $location
+ * @property string $group
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read float $item_total
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterQuotationItem> $parameterQuotationItems
  * @property-read int|null $parameter_quotation_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
@@ -463,6 +453,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereLocation($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem wherePrice($value)
@@ -671,6 +662,54 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $company_id
+ * @property string|null $letterhead_path
+ * @property int|null $default_quotation_expiry_days
+ * @property int|null $default_term_template_id
+ * @property string|null $mail_mailer
+ * @property string|null $mail_host
+ * @property string|null $mail_port
+ * @property string|null $mail_username
+ * @property string|null $mail_password
+ * @property string|null $mail_encryption
+ * @property string|null $mail_from_address
+ * @property string|null $mail_from_name
+ * @property int $is_active
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Company $company
+ * @property-read \App\Models\TermTemplate|null $termTemplate
+ * @method static \Database\Factories\SettingFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereDefaultQuotationExpiryDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereDefaultTermTemplateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereLetterheadPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailEncryption($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailFromAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailFromName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailHost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailMailer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailPassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailPort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMailUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereUpdatedBy($value)
+ */
+	class Setting extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property string $name
  * @property string $content
  * @property int $is_active
@@ -678,6 +717,8 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Setting> $settings
+ * @property-read int|null $settings_count
  * @method static \Database\Factories\TermTemplateFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TermTemplate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TermTemplate newQuery()

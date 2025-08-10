@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LabJobResource\Pages;
-use App\Filament\Resources\LabJobResource\RelationManagers;
 use App\Models\LabJob;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,12 +10,9 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Enums\JobStatusEnum;
 use Filament\Tables\Filters\SelectFilter;
 use App\Services\QuotationService; // Asumsi Anda punya service untuk generate nomor
-use App\Models\Quotation; // Untuk relasi
-use App\Models\User; // Untuk relasi created_by/updated_by
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Contracts\Support\Htmlable;
@@ -56,6 +52,11 @@ class LabJobResource extends Resource
         return parent::getGlobalSearchEloquentQuery()->with(['quotation.customer']);
     }
 
+
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::count();
+    // }
     public static function form(Form $form): Form
     {
         return $form
@@ -113,9 +114,9 @@ class LabJobResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status Pekerjaan')
                     ->badge()
-                    ->sortable(),
-                // ->color(fn($state): string => JobStatusEnum::color($state))
-                // ->formatStateUsing(fn($state): string => JobStatusEnum::label()[$state]),
+                    ->sortable()
+                    ->color(fn($state) => JobStatusEnum::color($state))
+                    ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
                 Tables\Columns\TextColumn::make('created_by')
                     ->label('Dibuat Oleh')
                     ->searchable(),

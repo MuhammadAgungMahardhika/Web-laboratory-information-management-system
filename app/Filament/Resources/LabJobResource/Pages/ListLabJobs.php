@@ -25,8 +25,7 @@ class ListLabJobs extends ListRecords
     {
         $tabs = [
             'all' => Tab::make('all')
-                ->label('SEMUA')
-                ->badge(LabJob::query()->count()),
+                ->label('SEMUA'),
         ];
 
         foreach (JobStatusEnum::cases() as $status) {
@@ -34,7 +33,7 @@ class ListLabJobs extends ListRecords
                 ->badge(LabJob::query()->where('status', $status->value)->count())
                 ->badgeColor(JobStatusEnum::color($status->value))
                 ->label(strtoupper($status->label()))
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', $status->value));
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', $status->value));
         }
 
         return $tabs;

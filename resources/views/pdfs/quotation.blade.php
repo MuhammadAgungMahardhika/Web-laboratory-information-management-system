@@ -200,9 +200,8 @@
 <body>
     <div class="header">
         @php
-            $korpPath = $company->letterhead_path
-                ? public_path("storage/{$company->letterhead_path}")
-                : public_path('images/korp.jpg');
+            $dynamicKorpPath = $company->active_setting?->letterhead_path;
+            $korpPath = $dynamicKorpPath ? public_path("storage/{$dynamicKorpPath}") : public_path('images/korp.jpg');
 
             $korpBase64 = '';
             if (file_exists($korpPath)) {

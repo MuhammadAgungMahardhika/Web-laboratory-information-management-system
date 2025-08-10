@@ -11,4 +11,9 @@ class TermTemplate extends Model
     /** @use HasFactory<\Database\Factories\TermTemplateFactory> */
     use HasFactory;
     use Blameable;
+
+    public function settings()
+    {
+        return $this->hasMany(Setting::class);
+    }
 }

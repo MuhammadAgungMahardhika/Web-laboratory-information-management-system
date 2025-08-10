@@ -21,25 +21,34 @@ enum JobStatusEnum: string
     /**
      * Menyediakan label yang mudah dibaca untuk setiap status pekerjaan.
      *
-     * @return string
+     * @return array
      */
-    public static function label(): array
+    public static function labels(): array
     {
         return [
-            self::PendingStart => 'Menunggu Mulai',
-            self::InProgress => 'Dalam Proses',
-            self::SamplingCompleted => 'Sampling Selesai',
-            self::AnalysisCompleted => 'Analisis Selesai',
-            self::ValidationCompleted => 'Validasi Selesai',
-            self::ReportGenerated => 'Laporan Dibuat',
-            self::ReportApproved => 'Laporan Disetujui',
-            self::Invoiced => 'Telah Ditagih',
-            self::Delivered => 'Selesai (Terkirim)',
-            self::Cancelled => 'Dibatalkan',
-            self::OnHold => 'Ditunda',
+            self::PendingStart->value => 'Menunggu Mulai',
+            self::InProgress->value => 'Dalam Proses',
+            self::SamplingCompleted->value => 'Sampling Selesai',
+            self::AnalysisCompleted->value => 'Analisis Selesai',
+            self::ValidationCompleted->value => 'Validasi Selesai',
+            self::ReportGenerated->value => 'Laporan Dibuat',
+            self::ReportApproved->value => 'Laporan Disetujui',
+            self::Invoiced->value => 'Telah Ditagih',
+            self::Delivered->value => 'Selesai (Terkirim)',
+            self::Cancelled->value => 'Dibatalkan',
+            self::OnHold->value => 'Ditunda',
         ];
     }
 
+    /**
+     * Gets the human-readable label for the current enum case.
+     *
+     * @return string
+     */
+    public function label(): string
+    {
+        return self::labels()[$this->value];
+    }
     /**
      * Menyediakan warna visual untuk status pekerjaan (untuk Filament).
      *

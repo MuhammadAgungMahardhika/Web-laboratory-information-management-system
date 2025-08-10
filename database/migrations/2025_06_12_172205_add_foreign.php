@@ -173,12 +173,25 @@ return new class extends Migration
                 ->references('id')
                 ->on('provinces')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
             $table->foreign('city_id', 'fk_companies_city')
                 ->references('id')
                 ->on('cities')
                 ->onUpdate('cascade')
+                ->onDelete('set null');
+        });
+
+        Schema::table('settings', function (Blueprint $table) {
+            $table->foreign('company_id', 'fk_settings_company')
+                ->references('id')
+                ->on('companies')
+                ->onUpdate('cascade')
                 ->onDelete('restrict');
+            $table->foreign('term_template_id', 'fk_settings_term_template')
+                ->references('id')
+                ->on('term_templates')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
         });
     }
 

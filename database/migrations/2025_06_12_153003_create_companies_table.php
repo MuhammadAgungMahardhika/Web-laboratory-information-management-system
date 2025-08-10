@@ -24,31 +24,14 @@ return new class extends Migration
             $table->string('website')->nullable(); // Company Website URL
             $table->string('npwp', 50)->nullable(); // Company NPWP
 
-            // Letterhead / Logo Setting
-            $table->string('letterhead_path')->nullable(); // Path to the uploaded letterhead image
-
-            // Default Quotation/Document Settings
-            $table->integer('default_quotation_expiry_days')->default(30)->nullable(); // Default expiry days for quotations
-            // If you later create a terms_templates table, you could add:
-            // $table->unsignedBigInteger('default_terms_template_id')->nullable();
-            // $table->foreign('default_terms_template_id')->references('id')->on('terms_templates')->onDelete('set null');
-
-            // Mail SMTP Settings (for dynamic mail configuration)
-            $table->string('mail_mailer')->default('smtp')->nullable();
-            $table->string('mail_host')->nullable();
-            $table->string('mail_port')->nullable(); // Use string for port as it can be '2525'
-            $table->string('mail_username')->nullable();
-            $table->text('mail_password')->nullable(); // Use TEXT for encrypted password
-            $table->string('mail_encryption')->nullable();
-            $table->string('mail_from_address')->nullable();
-            $table->string('mail_from_name')->nullable();
-
             // To ensure only ONE company record exists for global settings
             $table->boolean('is_main_company')->default(true)->unique();
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
+
+            $table->index('is_main_company');
         });
     }
 

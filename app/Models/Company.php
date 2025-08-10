@@ -13,6 +13,10 @@ class Company extends Model
     use HasFactory;
     use Blameable;
 
+    public function settings()
+    {
+        return $this->hasMany(Setting::class);
+    }
     public function personnels()
     {
         return $this->hasMany(Personel::class);
@@ -26,6 +30,11 @@ class Company extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function getActiveSettingAttribute()
+    {
+        return $this->settings()->where('is_active', true)->latest()->first();
     }
 
     public function setMailPasswordAttribute($value)

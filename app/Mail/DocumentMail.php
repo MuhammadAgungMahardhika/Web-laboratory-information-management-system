@@ -12,6 +12,9 @@ use Illuminate\Mail\Mailables\Attachment; // Import Attachment
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Filament\Notifications\Actions\Action;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\ShouldQueue
 {
@@ -25,7 +28,7 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
 
     // Properti khusus queue jika diperlukan
     public int $tries = 3;    // Coba ulang email hingga 3 kali jika gagal
-    public int $backoff = 10; // Tunggu 10 detik sebelum coba ulang
+    public int $backoff = 1; // Tunggu 10 detik sebelum coba ulang
     /**
      * Create a new message instance.
      *
@@ -41,7 +44,6 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
         array $attachmentsData = [],
         ?int $notifierId = null  // ID user yang memicu email, jika ada
     ) {
-        $this->afterCommit();
         $this->emailSubject = $subject;
         $this->markdownView = $markdownView;
         $this->mailData = $mailData;
@@ -84,28 +86,7 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
         }
         return $attachments;
     }
-    /**
-     * Metode ini dipanggil setelah email berhasil dikirim dari antrean.
-     * Ideal untuk notifikasi sukses dan membersihkan file temporer.
-     */
-    public function tack(): void
-    {
-        Log::info('DEBUG: TACK method called for ' . ($this->mailData['quotationNumber'] ?? 'N/A'));
-        // 2. Kirim notifikasi sukses ke user yang memicu aksi
-        if ($this->notifierId) {
-            $user = User::find($this->notifierId);
-            Log::info('Sending success notification to user ID: ' . $this->notifierId);
-            if ($user) { // Opsional: Cek izin user
-                Notification::make()
-                    ->success()
-                    ->title('Pengiriman Penawaran Berhasil!')
-                    ->body('Penawaran #' . ($this->mailData['quotationNumber'] ?? 'N/A') . ' untuk ' . ($this->mailData['customerName'] ?? 'pelanggan') . ' berhasil dikirim via email.')
-                    ->sendToDatabase($user) // Kirim notifikasi ke database user
-                    // ->broadcast($user)
-                    ->send(); // Kirim notifikasi ke frontend jika menggunakan Livewire atau Echo
-            }
-        }
-    }
+
 
     /**
      * Metode ini dipanggil jika email gagal dikirim setelah semua percobaan ulang.
@@ -114,20 +95,24 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
     public function failed(\Throwable $exception): void
     {
 
-        // 2. Kirim notifikasi kegagalan ke user yang memicu aksi
+        // 1. Kirim notifikasi kegagalan ke user
         if ($this->notifierId) {
             $user = User::find($this->notifierId);
-            if ($user) { // Opsional: cek izin user
+            if ($user) {
+                $quotationNumber = $this->mailData['quotationNumber'] ?? 'N/A';
+                $customerName = $this->mailData['customerName'] ?? 'pelanggan';
+                $message = 'Gagal mengirim penawaran #' . $quotationNumber . ' untuk ' . $customerName . ' via email. Pesan error: ' . $exception->getMessage();
+
                 Notification::make()
                     ->danger()
                     ->title('Pengiriman Penawaran Gagal!')
-                    ->body('Gagal mengirim penawaran #' . ($this->mailData['quotationNumber'] ?? 'N/A') . ' via email. Pesan error: ' . $exception->getMessage())
+                    ->body($message)
                     ->broadcast($user)
                     ->sendToDatabase($user) // Kirim notifikasi ke database user
                     ->send(); // Kirim notifikasi ke frontend jika menggunakan Livewire atau Echo
+
             }
         }
-
         // Opsional: Log error lebih detail
         Log::error('Email delivery failed for quotation ' . ($this->mailData['quotationNumber'] ?? 'N/A') . ': ' . $exception->getMessage());
     }

@@ -37,38 +37,40 @@ class CompanySeeder extends Seeder
         $jambiCity = City::find(97); // ID 97 untuk KOTA JAMBI
         // Encrypt the password if it exists
         $encryptedMailPassword = $mailPassword ? Crypt::encryptString($mailPassword) : null;
-        DB::table('companies')->insert([
-            'id' => 1, // Often helpful to set ID 1 for singleton records
+        $companyId = DB::table('companies')->insertGetId([
+            'id' => 1, // Pastikan ID ini unik atau biarkan auto-increment
             'name' => 'PT. Jambi Lestari International',
             'address' => 'Jl. Lintas Timur KM. 12, Kel. Talang Bakung, Kec. Jambi Selatan',
             'province_id' => $jambiProvince->id, // Assuming you have a Province model and the ID for Jambi Province
             'city_id' => $jambiCity->id, // Assuming you have a City model and the ID for Jambi City
             'postal_code' => '36139',
-            'phone' => '+62-741-234567', // Placeholder
-            'email' => 'info@jambilestari.com', // Placeholder
-            'website' => 'www.jambilestari.com', // Placeholder
-            'npwp' => '01.234.567.8-901.000', // Placeholder
+            'phone' => '+62-741-234567',
+            'email' => 'info@jambilestari.com',
+            'website' => 'www.jambilestari.com',
+            'npwp' => '01.234.567.8-901.000',
 
-            'letterhead_path' => null, // Placeholder path for uploaded letterhead
-            'default_quotation_expiry_days' => 30, // Default 30 days validity
+            'is_main_company' => true,
+            'created_by' => 'system',
+            'updated_by' => 'system',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
 
+        $setting = DB::table('settings')->insert([
+            'company_id' => $companyId, // <-- Gunakan ID yang dikembalikan
+            'letterhead_path' => null,
+            'default_quotation_expiry_days' => 30,
+            'term_template_id' => null,
             // --- Use values from .env here ---
             'mail_mailer' => $mailMailer,
             'mail_host' => $mailHost,
             'mail_port' => $mailPort,
             'mail_username' => $mailUsername,
-            'mail_password' => $encryptedMailPassword, // This is the encrypted value from .env
+            'mail_password' => $encryptedMailPassword,
             'mail_encryption' => $mailEncryption,
             'mail_from_address' => $mailFromAddress,
             'mail_from_name' => $mailFromName,
             // ----------------------------------
-
-            'is_main_company' => true, // Mark this as the main company record
-
-            'created_by' => 'system', // Assuming system user for initial seeding
-            'updated_by' => 'system', // Assuming system user for initial seeding
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
         ]);
 
         $this->command->info('PT. Jambi Lestari International company record seeded successfully!');
