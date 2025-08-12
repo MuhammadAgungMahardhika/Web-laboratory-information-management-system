@@ -103,11 +103,17 @@ class QuotationItemRelationManager extends RelationManager
                         ->multiple()
                         ->relationship('parameters', 'name')
                         ->preload(),
+
                     Forms\Components\TextInput::make('quantity')
                         ->label('Jumlah')
                         ->numeric()
                         ->required()
                         ->default(1),
+                    Forms\Components\TextInput::make('unit')
+                        ->label('Satuan')
+                        ->required()
+                        ->autocomplete(false)
+                        ->maxLength(50),
                     Forms\Components\TextInput::make('price')
                         ->label('Harga')
                         ->numeric()
@@ -115,11 +121,6 @@ class QuotationItemRelationManager extends RelationManager
                         ->required()
                         ->default(0)
                         ->step(500),
-                    Forms\Components\TextInput::make('unit')
-                        ->label('Satuan')
-                        ->required()
-                        ->autocomplete(false)
-                        ->maxLength(50),
                     Forms\Components\TextInput::make('location')
                         ->label('Lokasi Pengambilan Sampel')
                         ->maxLength(100)
@@ -204,6 +205,7 @@ class QuotationItemRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('quantity')
                     ->size(TextColumnSize::Small)
+                    ->alignEnd()
                     ->label('Kuantitas'),
                 Tables\Columns\TextColumn::make('unit')
                     ->size(TextColumnSize::Small)

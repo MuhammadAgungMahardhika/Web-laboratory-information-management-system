@@ -28,8 +28,6 @@ class QuotationService
             'XI',
             'XII'
         ];
-
-
         $currentMonth = Carbon::now()->month; // Ambil bulan saat ini (angka 1-12)
         $currentYear = Carbon::now()->year; // Ambil tahun saat ini
         // Hitung jumlah quotation yang sudah ada di tahun ini (atau sesuaikan per bulan jika ingin reset bulanan)
@@ -42,17 +40,6 @@ class QuotationService
 
         // Gabungkan menjadi format akhir
         return "{$number}/Jalint-Lab/{$monthRoman[$currentMonth - 1]}/{$currentYear}";
-    }
-
-    public function createParameterQuotationItem(): array
-    {
-        return [
-            'name' => 'Nama',
-            'description' => 'Keterangan',
-            'quantity' => 'Jumlah',
-            'unit_price' => 'Harga Satuan',
-            'total_price' => 'Total Harga',
-        ];
     }
 
     /**
@@ -70,31 +57,11 @@ class QuotationService
         // 2. Lakukan aksi spesifik berdasarkan status baru
         if ($newStatus->value === QuotationStatusEnum::Accepted->value) {
             // Logika untuk membuat Lab Job saat penawaran diterima
-            $this->createLabJobFromQuotation($quotation);
+            $labJobService = new LabJobService();
+            $labJobService->createLabJobFromQuotation($quotation);
         }
 
         // 3. Simpan perubahan ke database
         return $quotation->save();
-    }
-
-    /**
-     * Membuat Lab Job baru dari penawaran yang diterima.
-     * Asumsi Anda memiliki tabel 'lab_jobs' dan model 'LabJob'.
-     *
-     * @param Quotation $quotation
-     * @return LabJob
-     */
-    protected function createLabJobFromQuotation(Quotation $quotation): LabJob
-    {
-        // Contoh logika untuk membuat LabJob
-        $labJob = LabJob::create([
-            'quotation_id' => $quotation->id,
-            'job_number' => 'JOB-' . $quotation->quotation_number,
-            'start_date' => now(),
-            'status' => JobStatusEnum::PendingStart->value, // Status awal lab job
-        ]);
-
-        Log::info("Lab Job #{$labJob->job_number} created for Quotation #{$quotation->quotation_number}.");
-        return $labJob;
     }
 }

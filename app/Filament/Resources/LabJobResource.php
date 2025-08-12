@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LabJobResource\Pages;
+use App\Filament\Resources\LabJobResource\RelationManagers\LabJobItemsRelationManager;
 use App\Models\LabJob;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -82,7 +83,7 @@ class LabJobResource extends Resource
                             ->label('Tanggal Selesai'),
                         Select::make('status')
                             ->label('Status Pekerjaan')
-                            ->options(JobStatusEnum::class)
+                            ->options(JobStatusEnum::labels())
                             ->default(JobStatusEnum::PendingStart->value)
                             ->required(),
                     ])->columns(2),
@@ -154,7 +155,7 @@ class LabJobResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            LabJobItemsRelationManager::class
         ];
     }
 

@@ -191,8 +191,11 @@ class EditQuotation extends EditRecord
                                     $whatsAppService = new WhatsAppService();
                                     // LOGIKA KIRIM VIA WHATSAPP LANGSUNG (buka link wa.me)
                                     $whatsappMessage = "Yth. Bapak/Ibu {$record->customer->name},\n\nTerlampir adalah Penawaran Harga Nomor: *{$record->quotation_number}* dari kami.";
-                                    if (!empty($data['message'])) {
-                                        $whatsappMessage .= "\n\nPesan dari pengirim:\n\"{$data['message']}\"";
+                                    // Remove HTML tags from the message
+                                    $cleanedMessage = strip_tags($data['message']);
+
+                                    if (!empty($cleanedMessage)) {
+                                        $whatsappMessage .= "\n\nPesan dari pengirim:\n\"{$cleanedMessage}\"";
                                     }
                                     // Generate link wa.me
                                     $directWaLink = $whatsAppService->getWhatsAppDirectLink($data['customer_whatsapp'], $whatsappMessage, $publicPdfUrl);

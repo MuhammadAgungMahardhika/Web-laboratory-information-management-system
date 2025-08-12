@@ -113,7 +113,7 @@ class PermissionAndRoleSeeder extends Seeder
             'update-quotation',
             'delete-quotation',
         ];
-        
+
 
         $termTemplatePermissions = [
             'view-any-term-template',
@@ -130,14 +130,13 @@ class PermissionAndRoleSeeder extends Seeder
             'delete-company',
         ];
 
-          $labJobPermissions = [
+        $labJobPermissions = [
             'view-any-lab-job',
             'view-lab-job',
             'create-lab-job',
             'update-lab-job',
             'delete-lab-job',
         ];
-
 
 
 
