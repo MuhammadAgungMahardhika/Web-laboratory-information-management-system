@@ -21,6 +21,7 @@ return new class extends Migration
             // Snapshot data dari master parameter
             $table->string('parameter_name', 255)->nullable();
             $table->string('parameter_unit', 50)->nullable();
+            $table->decimal('parameter_default_price')->nullable();
             $table->string('parameter_default_test_method_name', 50)->nullable();
             $table->text('parameter_description')->nullable();
             $table->enum('parameter_status', ["accredited", "unaccredited"])->nullable();

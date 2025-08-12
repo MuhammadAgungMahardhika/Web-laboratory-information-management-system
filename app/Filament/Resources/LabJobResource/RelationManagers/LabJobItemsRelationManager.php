@@ -24,7 +24,7 @@ use Notification;
 
 class LabJobItemsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'lab_job_items';
+    protected static string $relationship = 'labJobItems';
 
     public function form(Form $form): Form
     {

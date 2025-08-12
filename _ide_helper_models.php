@@ -174,6 +174,9 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read float $total_price
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobItem> $labJobItems
+ * @property-read int|null $lab_job_items_count
  * @property-read \App\Models\Quotation $quotation
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newQuery()
@@ -190,6 +193,57 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereUpdatedBy($value)
  */
 	class LabJob extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $lab_job_id
+ * @property int|null $quotation_item_id
+ * @property int|null $test_package_id
+ * @property int|null $regulation_id
+ * @property string $description
+ * @property string $regulation_name
+ * @property int $quantity
+ * @property string $unit
+ * @property string $price
+ * @property string|null $location
+ * @property string $group
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read float $item_total
+ * @property-read \App\Models\LabJob $labJob
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterLabJobItem> $parameterLabJobItems
+ * @property-read int|null $parameter_lab_job_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
+ * @property-read int|null $parameters_count
+ * @property-read \App\Models\QuotationItem|null $quotationItem
+ * @property-read \App\Models\Regulation|null $regulation
+ * @property-read \App\Models\TestPackage|null $testPackage
+ * @method static \Database\Factories\LabJobItemFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereGroup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereLabJobId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereQuotationItemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereRegulationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereRegulationName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereTestPackageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereUpdatedBy($value)
+ */
+	class LabJobItem extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -231,6 +285,44 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereUpdatedBy($value)
  */
 	class Parameter extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $lab_job_item_id
+ * @property int $parameter_id
+ * @property string|null $parameter_name
+ * @property string|null $parameter_unit
+ * @property string|null $parameter_default_test_method_name
+ * @property string|null $parameter_description
+ * @property string|null $parameter_status
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $parameter_default_price
+ * @property-read \App\Models\LabJobItem $labJobItem
+ * @property-read \App\Models\Parameter $parameter
+ * @method static \Database\Factories\ParameterLabJobItemFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereLabJobItemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereParameterDefaultPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereParameterDefaultTestMethodName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereParameterDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereParameterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereParameterName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereParameterStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereParameterUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterLabJobItem whereUpdatedBy($value)
+ */
+	class ParameterLabJobItem extends \Eloquent {}
 }
 
 namespace App\Models{

@@ -12,6 +12,7 @@ class LabJobItem extends Model
     use HasFactory;
     use Blameable;
 
+
     public function labJob()
     {
         return $this->belongsTo(LabJob::class);
@@ -38,5 +39,14 @@ class LabJobItem extends Model
     public function parameterLabJobItems()
     {
         return $this->hasMany(ParameterLabJobItem::class);
+    }
+
+    /**
+     * Dapatkan total harga dari semua item penawaran.
+     * Accessor ini akan secara otomatis diakses saat Anda memanggil $labjob->total_amount.
+     */
+    protected function getItemTotalAttribute(): float
+    {
+        return (float) ($this->quantity ?? 0) * ($this->price ?? 0);
     }
 }

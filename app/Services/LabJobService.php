@@ -27,7 +27,7 @@ class LabJobService
             'quotation_id' => $quotation->id,
             'job_number' => $this->generateLabJobNumber($quotation),
             'start_date' => now(),
-            'job_status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
+            'status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
         ]);
         // 2. Salin rincian item penawaran (snapshot) ke rincian pekerjaan lab
         $quotation->load('quotationItems.parameterQuotationItems'); // Eager load relasi
@@ -65,7 +65,6 @@ class LabJobService
         }
 
         Log::info("Lab Job #{$labJob->job_number} and its items created from Quotation #{$quotation->quotation_number}.");
-
         return $labJob;
     }
 
