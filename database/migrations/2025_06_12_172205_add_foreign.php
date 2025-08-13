@@ -52,6 +52,11 @@ return new class extends Migration
                 ->on('companies')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
+            $table->foreign('position_id', 'fk_personels_position')
+                ->references('id')
+                ->on('positions')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
         });
 
         Schema::table('sample_matrics', function (Blueprint $table) {

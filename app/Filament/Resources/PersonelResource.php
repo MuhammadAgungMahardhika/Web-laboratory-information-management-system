@@ -45,7 +45,7 @@ class PersonelResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('nip')
                     ->label('Nip')
-                    ->unique(ignoreRecord:true)
+                    ->unique(ignoreRecord: true)
                     ->required(),
                 Forms\Components\TextInput::make('phone_number')
                     ->label('No hp')
@@ -53,8 +53,12 @@ class PersonelResource extends Resource
                     ->maxLength(50),
                 Forms\Components\Textarea::make('address')
                     ->label('Alamat'),
-                Forms\Components\TextInput::make('position')
-                    ->label('Jabatan / Posisi'),
+                Forms\Components\Select::make('position')
+                    ->label('Jabatan / Posisi')
+                    ->relationship('position', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
                 Forms\Components\Textarea::make('certification_details')
                     ->label('Sertifikasi'),
                 Select::make('user_id')
@@ -168,7 +172,7 @@ class PersonelResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number')
                     ->label('Nomor hp')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('position')
+                Tables\Columns\TextColumn::make('position.name')
                     ->label('Jabatan / posisi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')

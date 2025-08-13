@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Position;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -34,10 +35,11 @@ class PersonelSeeder extends Seeder
         DB::table('personels')->insert([
             'user_id' => $adminUser->id,
             'company_id' => $mainCompany->id, // Assuming the main company has ID 1
+            'position_id' => Position::where('name', 'ADMINISTRATOR')->first()->id, // Assuming you have a position named 'ADMINISTRATOR'
             'fullname' => 'superadmin',
             'nip' => '01.01.01',
             'phone_number' => '',
-            'position' =>  '',
+
             'address' =>  '',
             'certification_details' =>  '',
         ]);

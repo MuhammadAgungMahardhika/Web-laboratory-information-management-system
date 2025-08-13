@@ -16,6 +16,7 @@ use Filament\Tables\Filters\SelectFilter;
 use App\Services\QuotationService; // Asumsi Anda punya service untuk generate nomor
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,7 +32,7 @@ class LabJobResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['job_number', 'quotation.quotation_name', 'quotation.customer.name'];
+        return ['job_number', 'quotation.quotation_number', 'quotation.quotation_name', 'quotation.customer.name'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
@@ -119,28 +120,37 @@ class LabJobResource extends Resource
                     ->color(fn($state) => JobStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
                 Tables\Columns\TextColumn::make('created_by')
-                    ->label('Dibuat Oleh')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('updated_by')
-                    ->label('Diperbarui Oleh')
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal Dibuat')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Tanggal Diperbarui')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('quotation.quotation_number')
+                    ->label('Nomor Penawaran')
+                    ->relationship('quotation', 'quotation_number')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('customer')
+                    ->label('Klien')
+                    ->relationship('quotation.customer', 'name')
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('status')
                     ->label('Status Pekerjaan')
-                    ->options(JobStatusEnum::class),
-            ])
+                    ->options(JobStatusEnum::labels())
+                    ->default(JobStatusEnum::PendingStart->value)
+                    ->searchable()
+                    ->preload(),
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -152,6 +162,10 @@ class LabJobResource extends Resource
             ]);
     }
 
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()->can('update-lab-job') && $record->status === JobStatusEnum::PendingStart->value;
+    }
     public static function getRelations(): array
     {
         return [

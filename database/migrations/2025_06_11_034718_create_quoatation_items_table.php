@@ -15,15 +15,14 @@ return new class extends Migration
             $table->bigInteger('test_package_id')->unsigned()->nullable();
             $table->bigInteger('regulation_id')->unsigned()->nullable();
 
-            // duplikat data from test package
+            // Snapshot/customizable data
             $table->string('description', 255);
             $table->string('regulation_name', 255)->nullable();
-            $table->decimal('price', 15, 2);
-
             $table->integer('quantity');
             $table->string('unit', 50);
+            $table->decimal('price', 15, 2);
             $table->string('location', 100)->nullable();
-            $table->enum('group', ['A','B','C'])->default('A');
+            $table->enum('group', ['A', 'B', 'C'])->default('A');
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();

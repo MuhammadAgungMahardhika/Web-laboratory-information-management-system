@@ -22,7 +22,7 @@ return new class extends Migration
 
             // Snapshot/customizable data
             $table->string('description', 255);
-            $table->string('regulation_name', 255);
+            $table->string('regulation_name', 255)->nullable();
             $table->integer('quantity');
             $table->string('unit', 50);
             $table->decimal('price', 15, 2);

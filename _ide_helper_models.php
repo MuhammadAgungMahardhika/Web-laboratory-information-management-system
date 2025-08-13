@@ -203,7 +203,7 @@ namespace App\Models{
  * @property int|null $test_package_id
  * @property int|null $regulation_id
  * @property string $description
- * @property string $regulation_name
+ * @property string|null $regulation_name
  * @property int $quantity
  * @property string $unit
  * @property string $price
@@ -244,6 +244,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereUpdatedBy($value)
  */
 	class LabJobItem extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Database\Factories\LabJobPersonelFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel query()
+ */
+	class LabJobPersonel extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -398,7 +408,7 @@ namespace App\Models{
  * @property string|null $nip
  * @property string|null $phone_number
  * @property string|null $address
- * @property string|null $position
+ * @property \App\Models\Position|null $position
  * @property string|null $certification_details
  * @property string|null $created_by
  * @property string|null $updated_by
@@ -429,6 +439,18 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereUserId($value)
  */
 	class Personel extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Personel> $personels
+ * @property-read int|null $personels_count
+ * @method static \Database\Factories\PositionFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Position newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Position newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Position query()
+ */
+	class Position extends \Eloquent {}
 }
 
 namespace App\Models{
