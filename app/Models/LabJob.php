@@ -11,6 +11,7 @@ class LabJob extends Model
     /** @use HasFactory<\Database\Factories\JobFactory> */
     use HasFactory;
     use Blameable;
+
     public function labJobItems()
     {
         return $this->hasMany(LabJobItem::class);
@@ -19,6 +20,11 @@ class LabJob extends Model
     public function quotation()
     {
         return $this->belongsTo(Quotation::class);
+    }
+
+    public function labJobPersonels()
+    {
+        return $this->hasMany(LabJobPersonel::class);
     }
 
     protected function getTotalPriceAttribute(): float

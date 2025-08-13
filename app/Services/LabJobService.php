@@ -56,6 +56,7 @@ class LabJobService
                         'parameter_id' => $paramSnapshot->parameter_id,
                         'parameter_name' => $paramSnapshot->parameter_name,
                         'parameter_unit' => $paramSnapshot->parameter_unit,
+                        'parameter_default_price' => $paramSnapshot->parameter_default_price,
                         'parameter_default_test_method_name' => $paramSnapshot->parameter_default_test_method_name,
                         'parameter_description' => $paramSnapshot->parameter_description,
                         'parameter_status' => $paramSnapshot->parameter_status,

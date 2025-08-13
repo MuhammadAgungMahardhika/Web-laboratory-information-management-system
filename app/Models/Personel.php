@@ -12,6 +12,14 @@ class Personel extends Model
     use HasFactory;
     use Blameable;
 
+    public function labJobPersonels()
+    {
+        return $this->hasMany(LabJobPersonel::class);
+    }
+    public function labJobs()
+    {
+        return $this->hasMany(LabJob::class);
+    }
     public function company()
     {
         return $this->belongsTo(Company::class);

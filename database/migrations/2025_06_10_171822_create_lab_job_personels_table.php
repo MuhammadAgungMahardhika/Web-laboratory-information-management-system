@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('lab_job_id');
             $table->unsignedBigInteger('personel_id');
+            $table->string('created_by', 255)->nullable();
+            $table->string('updated_by', 255)->nullable();
             $table->timestamps();
         });
     }

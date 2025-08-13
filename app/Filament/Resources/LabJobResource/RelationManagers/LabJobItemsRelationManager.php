@@ -26,6 +26,8 @@ class LabJobItemsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
     protected static string $relationship = 'labJobItems';
+    protected static ?string $label = 'DETAIL JOB';
+    protected static ?string $title = "DETAIL JOB";
 
     public function form(Form $form): Form
     {

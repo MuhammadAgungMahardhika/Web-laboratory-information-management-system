@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LabJobResource\Pages;
 use App\Filament\Resources\LabJobResource\RelationManagers\LabJobItemsRelationManager;
+use App\Filament\Resources\LabJobResource\RelationManagers\LabJobPersonelsRelationManager;
 use App\Models\LabJob;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -169,7 +170,8 @@ class LabJobResource extends Resource
     public static function getRelations(): array
     {
         return [
-            LabJobItemsRelationManager::class
+            LabJobItemsRelationManager::class,
+            LabJobPersonelsRelationManager::class, // Asumsi Anda punya relation manager untuk personel
         ];
     }
 

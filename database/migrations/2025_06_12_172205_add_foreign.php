@@ -137,6 +137,20 @@ return new class extends Migration
                 ->onDelete('restrict');
         });
 
+        Schema::table('lab_job_personels', function (Blueprint $table) {
+            $table->foreign('lab_job_id', 'fk_lab_job_personel_lab_jobs')
+                ->references('id')
+                ->on('lab_jobs')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+
+            $table->foreign('personel_id', 'fk_lab_job_personel_personels')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+        });
+
         // akhir labjob
 
         Schema::table('requests', function (Blueprint $table) {
