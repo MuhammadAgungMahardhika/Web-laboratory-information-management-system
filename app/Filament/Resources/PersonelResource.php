@@ -68,9 +68,7 @@ class PersonelResource extends Resource
                     ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
                         $query->where(function ($query) use ($get) {
                             $query->whereDoesntHave('customer')
-                                ->orWhereHas('personel', function ($subQuery) use ($get) {
-                                    $subQuery->where('id', '=', $get('id'));
-                                });
+                                ->whereDoesntHave('personel');
                         });
                     })
                     ->searchable()
@@ -94,7 +92,7 @@ class PersonelResource extends Resource
                                 ->required()
                                 ->autocomplete(false),
                             Select::make('roles')
-                                ->label('Peran')
+                                ->label('Hak akses')
                                 ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('name', RoleEnum::Customer->value))
                                 ->searchable()
                                 ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
@@ -130,7 +128,7 @@ class PersonelResource extends Resource
                                 ->unique(ignoreRecord: true)
                                 ->autocomplete(false),
                             Select::make('roles')
-                                ->label('Peran')
+                                ->label('Hak akses')
                                 ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
                                 ->searchable()
                                 ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)

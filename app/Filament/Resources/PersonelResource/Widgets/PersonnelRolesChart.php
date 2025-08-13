@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class PersonnelRolesChart extends ChartWidget
 {
 
-    protected static ?string $heading = 'Jumlah Personil Berdasarkan Peran';
+    protected static ?string $heading = 'Jumlah Personil Berdasarkan Hak Akses';
     protected static ?string $pollingInterval = null;
     protected function getType(): string
     {

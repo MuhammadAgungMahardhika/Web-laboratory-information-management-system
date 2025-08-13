@@ -29,8 +29,8 @@ class UserResource extends Resource
 {
     use HasAuthorization;
     protected static ?string $model = User::class;
-    protected static ?string $label = 'Pengguna';
-    protected static ?string $navigationLabel = 'Pengguna';
+    protected static ?string $label = 'Akun';
+    protected static ?string $navigationLabel = 'Akun';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "Master Pengguna";
 

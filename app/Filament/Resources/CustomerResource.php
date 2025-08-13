@@ -169,7 +169,7 @@ class CustomerResource extends Resource
                                     ->unique(ignoreRecord: true)
                                     ->autocomplete(false),
                                 Select::make('roles')
-                                    ->label('Peran')
+                                    ->label('Hak akses')
                                     ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
                                     ->searchable()
                                     ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
@@ -205,7 +205,7 @@ class CustomerResource extends Resource
                                     ->unique(ignoreRecord: true)
                                     ->autocomplete(false),
                                 Select::make('roles')
-                                    ->label('Peran')
+                                    ->label('Hak akses')
                                     ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
                                     ->searchable()
                                     ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
