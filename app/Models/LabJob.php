@@ -27,6 +27,10 @@ class LabJob extends Model
         return $this->hasMany(LabJobPersonel::class);
     }
 
+    public function personels()
+    {
+        return $this->belongsToMany(Personel::class, 'lab_job_personels');
+    }
     protected function getTotalPriceAttribute(): float
     {
         return (float) $this->labJobItems()->sum(function ($item) {
