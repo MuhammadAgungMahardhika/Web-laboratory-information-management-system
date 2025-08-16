@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Enums\JobStatusEnum;
+use App\Services\LabJobService;
 use Filament\Tables\Filters\SelectFilter;
 use App\Services\QuotationService; // Asumsi Anda punya service untuk generate nomor
 use Filament\Forms\Components\Select;
@@ -78,7 +79,7 @@ class LabJobResource extends Resource
                         TextInput::make('job_number')
                             ->label('Nomor Job')
                             // Nomor pekerjaan harusnya digenerate, bukan diisi manual
-                            ->default(fn(QuotationService $quotationService) => $quotationService->generateQuotationNumber())
+                            ->default(fn(LabJobService $labJobService) => $labJobService->generateLabJobNumber())
                             ->readOnly() // <-- Jadikan read-only
                             ->maxLength(50),
                         Forms\Components\DatePicker::make('start_date')

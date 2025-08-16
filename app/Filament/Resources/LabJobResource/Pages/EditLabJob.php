@@ -26,7 +26,27 @@ class EditLabJob extends EditRecord
     {
         return [
             Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()->using(function () {
+                return DB::transaction(function () {
+                    try {
+                        foreach ($this->record->labJobItems as $labJobItem) {
+                            $labJobItem->parameterLabJobItems()->delete();
+                            $labJobItem->delete();
+                        }
+                        foreach ($this->record->labJobPersonels as $labJobPersonels) {
+                            $labJobPersonels->delete();
+                        }
+                        return $this->record->delete();
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->danger()
+                            ->title('Gagal menghapus penawaran')
+                            ->body('Terjadi kesalahan: ' . $e->getMessage())
+                            ->send();
+                        return false;
+                    }
+                });
+            }),
             Actions\ActionGroup::make([
                 // Aksi: Tugaskan Tim PPC
                 Action::make('Mulai Pekerjaan')
