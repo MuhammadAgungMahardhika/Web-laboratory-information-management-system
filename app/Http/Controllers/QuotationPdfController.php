@@ -12,7 +12,7 @@ class QuotationPdfController extends Controller
     // ...
     public function preview(Quotation $quotation) // Metode untuk preview
     {
-        $company = Auth::user()->personel->company;
+        $company = Auth::user()?->personel?->company;
         $quotation->load([
             'quotationItems' => function ($query) {
                 $query->orderBy('group', 'asc');
@@ -29,7 +29,7 @@ class QuotationPdfController extends Controller
 
     public function download(Quotation $quotation) // Metode untuk download
     {
-        $company = Auth::user()->personel->company;
+        $company = Auth::user()?->personel?->company;
         $quotation->load([
             'quotationItems' => function ($query) {
                 $query->orderBy('group', 'asc');

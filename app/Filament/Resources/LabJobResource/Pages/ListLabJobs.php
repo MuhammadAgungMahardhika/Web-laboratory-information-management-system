@@ -21,10 +21,10 @@ class ListLabJobs extends ListRecords
         ];
     }
 
-    public function getDefaultActiveTab(): string|int|null
-    {
-        return JobStatusEnum::PendingStart->value; // Menggunakan enum untuk mendapatkan status default
-    }
+    // public function getDefaultActiveTab(): string|int|null
+    // {
+    //     return JobStatusEnum::PendingStart->value; // Menggunakan enum untuk mendapatkan status default
+    // }
     public function getTabs(): array
     {
         $tabs = [

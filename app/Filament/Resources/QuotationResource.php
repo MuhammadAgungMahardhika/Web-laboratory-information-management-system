@@ -348,7 +348,7 @@ class QuotationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('quotation_number', 'desc')
+            ->defaultSort('id', 'desc')
             ->striped()
             ->columns([
                 Tables\Columns\TextColumn::make('status')
@@ -361,6 +361,10 @@ class QuotationResource extends Resource
                     ->label('Nomor permohonan')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('quotation_number')
+                    ->label('Nomor penawaran')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('quotation_date')
                     ->label('Tanggal penawaran')
                     ->date('d M Y')
@@ -369,10 +373,7 @@ class QuotationResource extends Resource
                     ->label('Tanggal berakhir penawaran')
                     ->date('d M Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quotation_number')
-                    ->label('Kode penawaran')
-                    ->searchable()
-                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('quotation_name')
                     ->label('Judul penawaran')
                     ->sortable()

@@ -71,12 +71,13 @@ class EditLabJob extends EditRecord
                         }
                     }),
 
-                // Aksi: Cetak Surat Tugas
-                // Action::make('Cetak Surat Tugas')
-                //     ->icon('heroicon-o-document-arrow-down')
-                //     ->color('primary')
-                //     // Hanya tampil jika PPC sudah ditugaskan
-                //     ->visible(fn(LabJob $record) => $record->personels->isNotEmpty()),
+                Action::make('Cetak Surat Tugas')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('primary')
+                    // Hanya tampil jika pekerjaan sudah dimulai
+                    ->visible(fn(LabJob $record) => $record->job_status === JobStatusEnum::InProgress->value)
+                    ->url(fn(LabJob $record): string => route('lab_jobs.download_task_letter', $record))
+                    ->openUrlInNewTab(),
             ])
                 ->label('Update Job') // Label untuk tombol dropdown utama
                 ->icon('heroicon-o-arrow-path')

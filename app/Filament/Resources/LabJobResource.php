@@ -85,11 +85,7 @@ class LabJobResource extends Resource
                             ->label('Tanggal Mulai'),
                         Forms\Components\DatePicker::make('end_date')
                             ->label('Tanggal Selesai'),
-                        // Select::make('status')
-                        //     ->label('Status Pekerjaan')
-                        //     ->options(JobStatusEnum::labels())
-                        //     ->default(JobStatusEnum::PendingStart->value)
-                        //     ->required(),
+
                     ])->columns(2),
 
 
@@ -99,7 +95,15 @@ class LabJobResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('id', 'desc')
+            ->striped()
             ->columns([
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->sortable()
+                    ->color(fn($state) => JobStatusEnum::color($state))
+                    ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
                 Tables\Columns\TextColumn::make('quotation.quotation_number')
                     ->label('Nomor Penawaran')
                     ->sortable()
@@ -116,12 +120,7 @@ class LabJobResource extends Resource
                     ->label('Tanggal Selesai')
                     ->date('d M Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->label('Status Pekerjaan')
-                    ->badge()
-                    ->sortable()
-                    ->color(fn($state) => JobStatusEnum::color($state))
-                    ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
+
                 Tables\Columns\TextColumn::make('created_by')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('updated_by')
