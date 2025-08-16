@@ -17,6 +17,8 @@ use Filament\Tables\Filters\SelectFilter;
 use App\Services\QuotationService; // Asumsi Anda punya service untuk generate nomor
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Resources\RelationManagers\RelationGroup;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -64,7 +66,7 @@ class LabJobResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Detail Pekerjaan')
+                Forms\Components\Section::make('Job')
                     ->schema([
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
@@ -74,7 +76,7 @@ class LabJobResource extends Resource
                             ->required()
                             ->unique(ignoreRecord: true),
                         TextInput::make('job_number')
-                            ->label('Nomor Pekerjaan')
+                            ->label('Nomor Job')
                             // Nomor pekerjaan harusnya digenerate, bukan diisi manual
                             ->default(fn(QuotationService $quotationService) => $quotationService->generateQuotationNumber())
                             ->readOnly() // <-- Jadikan read-only
@@ -83,11 +85,11 @@ class LabJobResource extends Resource
                             ->label('Tanggal Mulai'),
                         Forms\Components\DatePicker::make('end_date')
                             ->label('Tanggal Selesai'),
-                        Select::make('status')
-                            ->label('Status Pekerjaan')
-                            ->options(JobStatusEnum::labels())
-                            ->default(JobStatusEnum::PendingStart->value)
-                            ->required(),
+                        // Select::make('status')
+                        //     ->label('Status Pekerjaan')
+                        //     ->options(JobStatusEnum::labels())
+                        //     ->default(JobStatusEnum::PendingStart->value)
+                        //     ->required(),
                     ])->columns(2),
 
 
@@ -145,12 +147,12 @@ class LabJobResource extends Resource
                     ->relationship('quotation.customer', 'name')
                     ->searchable()
                     ->preload(),
-                SelectFilter::make('status')
-                    ->label('Status Pekerjaan')
-                    ->options(JobStatusEnum::labels())
-                    ->default(JobStatusEnum::PendingStart->value)
-                    ->searchable()
-                    ->preload(),
+                // SelectFilter::make('status')
+                //     ->label('Status Pekerjaan')
+                //     ->options(JobStatusEnum::labels())
+                //     ->default(JobStatusEnum::PendingStart->value)
+                //     ->searchable()
+                //     ->preload(),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -170,8 +172,12 @@ class LabJobResource extends Resource
     public static function getRelations(): array
     {
         return [
-            LabJobItemsRelationManager::class,
-            LabJobPersonelsRelationManager::class, // Asumsi Anda punya relation manager untuk personel
+            RelationGroup::make('items', [
+                LabJobItemsRelationManager::class,
+                LabJobPersonelsRelationManager::class,
+            ]),
+
+            // Asumsi Anda punya relation manager untuk personel
         ];
     }
 

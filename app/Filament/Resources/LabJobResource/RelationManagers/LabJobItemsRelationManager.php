@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
@@ -26,8 +27,8 @@ class LabJobItemsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
     protected static string $relationship = 'labJobItems';
-    protected static ?string $label = 'DETAIL JOB';
-    protected static ?string $title = "DETAIL JOB";
+    protected static ?string $label = 'Detail Job';
+    protected static ?string $title = "Detail Job";
 
     public function form(Form $form): Form
     {

@@ -53,7 +53,7 @@ class PersonelResource extends Resource
                     ->maxLength(50),
                 Forms\Components\Textarea::make('address')
                     ->label('Alamat'),
-                Forms\Components\Select::make('position')
+                Forms\Components\Select::make('position_id')
                     ->label('Jabatan / Posisi')
                     ->relationship('position', 'name')
                     ->searchable()
