@@ -201,6 +201,7 @@ class LabJobItemsRelationManager extends RelationManager
                     ->size(TextSize::Small),
                 TextColumn::make('parameterLabJobItems')
                     ->badge()
+                    ->listWithLineBreaks()
                     ->formatStateUsing(fn($state) => $state->parameter_name . " " . Number::currency($state->parameter_default_price, 'RP.'))
                     ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
                     ->size(TextSize::Small)

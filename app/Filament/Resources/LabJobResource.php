@@ -90,7 +90,10 @@ class LabJobResource extends Resource
                     ->schema([
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
-                            ->relationship('quotation', 'quotation_number', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value)->whereDoesntHave('labJob'))
+                            ->relationship('quotation', 'quotation_number', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value)->when(
+                                ! $schema->getRecord(), // Hanya terapkan filter ini saat CREATE
+                                fn($q) => $q->whereDoesntHave('labJob')
+                            ))
                             ->searchable()
                             ->preload()
                             ->required()

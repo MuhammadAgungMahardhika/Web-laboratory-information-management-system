@@ -10,16 +10,10 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\CustomerTypeResource\Pages\ManageCustomerTypes;
-use App\Filament\Resources\CustomerTypeResource\Pages;
-use App\Filament\Resources\CustomerTypeResource\RelationManagers;
 use App\Models\CustomerType;
 use App\Traits\HasAuthorization;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CustomerTypeResource extends Resource
 {

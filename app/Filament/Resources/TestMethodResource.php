@@ -41,14 +41,12 @@ class TestMethodResource extends Resource
                 'xl' => 4,
             ])
             ->components([
-
                 TextInput::make('name')
                     ->label('Nama metode uji')
                     ->required(),
                 Textarea::make('description')
                     ->label('Keterangan')
                     ->columnSpanFull(),
-
             ]);
     }
 

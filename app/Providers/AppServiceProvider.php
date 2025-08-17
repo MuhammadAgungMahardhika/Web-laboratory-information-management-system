@@ -6,6 +6,7 @@ use Laravel\Fortify\Contracts\LoginResponse;
 use App\Http\Responses\LogoutResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Filament\Tables\Table;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-          $this->app->singleton(
+        $this->app->singleton(
             LoginResponse::class,
             \App\Http\Responses\LoginResponse::class
         );
@@ -28,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Model::unguard();
+        Table::configureUsing(fn(Table $table) => $table
+            ->deferFilters(false));
     }
 }
