@@ -13,11 +13,13 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Enums\JobStatusEnum;
+use App\Models\Enums\QuotationStatusEnum;
 use App\Services\LabJobService;
 use Filament\Tables\Filters\SelectFilter;
 use App\Services\QuotationService; // Asumsi Anda punya service untuk generate nomor
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Enums\FiltersLayout;
@@ -71,19 +73,30 @@ class LabJobResource extends Resource
                     ->schema([
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
-                            ->relationship('quotation', 'quotation_number')
+                            ->relationship('quotation', 'quotation_number', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value))
                             ->searchable()
                             ->preload()
                             ->required()
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->live()
+                            ->afterStateUpdated(function ($state, Set $set, LabJobService $labJobService) {
+                                // Jika penawaran dipilih, generate nomor job
+                                if ($state) {
+                                    $quotation = \App\Models\Quotation::find($state);
+                                    $job_number = $labJobService->generateLabJobNumber($quotation);
+                                    $set('job_number', $job_number);
+                                } else {
+                                    $set('job_number', null);
+                                }
+                            }),
                         TextInput::make('job_number')
                             ->label('Nomor Job')
-                            // Nomor pekerjaan harusnya digenerate, bukan diisi manual
-                            ->default(fn(LabJobService $labJobService) => $labJobService->generateLabJobNumber())
+                            ->required()
                             ->readOnly() // <-- Jadikan read-only
                             ->maxLength(50),
                         Forms\Components\DatePicker::make('start_date')
-                            ->label('Tanggal Mulai'),
+                            ->label('Tanggal Mulai')
+                            ->default(now()),
                         Forms\Components\DatePicker::make('end_date')
                             ->label('Tanggal Selesai'),
 
