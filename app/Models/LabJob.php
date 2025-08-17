@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Policies\LabJobPolicy;
+use Database\Factories\JobFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[UsePolicy(LabJobPolicy::class)]
 class LabJob extends Model
 {
-    /** @use HasFactory<\Database\Factories\JobFactory> */
+    /** @use HasFactory<JobFactory> */
     use HasFactory;
     use Blameable;
 

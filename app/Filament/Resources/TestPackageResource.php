@@ -2,6 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use App\Models\Parameter;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\TestPackageResource\Pages\ListTestPackages;
+use App\Filament\Resources\TestPackageResource\Pages\CreateTestPackage;
+use App\Filament\Resources\TestPackageResource\Pages\ViewTestPackage;
+use App\Filament\Resources\TestPackageResource\Pages\EditTestPackage;
 use App\Filament\Resources\TestPackageResource\Pages;
 use App\Filament\Resources\TestPackageResource\RelationManagers;
 use App\Models\Enums\EnvironmentTypeEnum;
@@ -10,9 +28,6 @@ use App\Models\TestPackage;
 use App\Traits\HasAuthorization;
 use Closure;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,66 +40,66 @@ class TestPackageResource extends Resource
     protected static ?string $model = TestPackage::class;
     protected static ?string $navigationLabel = 'Paket Pengujian';
     protected static ?string $label = 'Paket Pengujian';
-    protected static ?string $navigationGroup = 'Master';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 6;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
-                Forms\Components\TextInput::make('name')
+            ->components([
+                TextInput::make('name')
                     ->label('Nama paket pengujian')
                     ->required(),
-                Forms\Components\Select::make('sample_matric_id')
+                Select::make('sample_matric_id')
                     ->label('Matrix sampel')
                     ->required()
                     ->relationship('sampleMatric', 'name')
                     ->searchable()
                     ->createOptionForm([
-                        Forms\Components\TextInput::make('code')
+                        TextInput::make('code')
                             ->label('Kode')
                             ->required()
                             ->maxLength(10),
-                        Forms\Components\Select::make('sample_type_id')
+                        Select::make('sample_type_id')
                             ->label('Jenis sampel')
                             ->required()
                             ->relationship('sampleType', 'name')
                             ->preload(),
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Nama')
                             ->required()
                             ->maxLength(100),
-                        Forms\Components\Select::make('environment_type')
+                        Select::make('environment_type')
                             ->label('Jenis lingkungan')
                             ->options(EnvironmentTypeEnum::labels())
                             ->required(),
-                        Forms\Components\Textarea::make('description')
+                        Textarea::make('description')
                             ->label('Keterangan')
                             ->columnSpanFull(),
                     ])
                     ->createOptionModalHeading('Buat Matrix Sampel')
                     ->preload(),
-                Forms\Components\Select::make('regulation_id')
+                Select::make('regulation_id')
                     ->label('Regulasi')
                     ->required()
                     ->relationship('regulation', 'name')
                     ->searchable()
                     ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->required(),
                     ])->createOptionModalHeading('Buat Regulasi')
                     ->preload(),
-                Forms\Components\Toggle::make('is_active')
+                Toggle::make('is_active')
                     ->label('Aktif ?')
                     ->default(true)
                     ->required(),
-                Forms\Components\Select::make('parameters')
+                Select::make('parameters')
                     ->label('Parameter')
                     ->multiple()
                     ->relationship('parameters', 'name')
@@ -94,54 +109,54 @@ class TestPackageResource extends Resource
                         // Ambil ID parameter yang dipilih
                         $parameterIds = $state;
                         // Ambil total harga dari parameter
-                        $totalParameterPrice = \App\Models\Parameter::whereIn('id', $parameterIds)->sum('default_price');
+                        $totalParameterPrice = Parameter::whereIn('id', $parameterIds)->sum('default_price');
                         // Set harga baru = harga awal + total harga dari parameter
                         $set('price', $totalParameterPrice);
                     })
                     ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->required()
                             ->label('Nama parameter uji')
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('unit')
+                        TextInput::make('unit')
                             ->required()
                             ->label('Satuan')
                             ->maxLength(50),
-                        Forms\Components\TextInput::make('default_price')
+                        TextInput::make('default_price')
                             ->required()
                             ->label('Harga standar')
                             ->numeric(),
-                        Forms\Components\Select::make('test_method_id')
+                        Select::make('test_method_id')
                             ->label('Metode uji')
                             ->relationship('testMethod', 'name')
                             ->searchable()
                             ->required()
                             ->preload()
                             ->createOptionForm([
-                                Forms\Components\TextInput::make('code')
+                                TextInput::make('code')
                                     ->label('Kode')
                                     ->required(),
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->label('Nama metode uji')
                                     ->required(),
-                                Forms\Components\Textarea::make('description')
+                                Textarea::make('description')
                                     ->label('Keterangan')
                                     ->columnSpanFull(),
                             ])->createOptionModalHeading('Buat Metode uji'),
-                        Forms\Components\Textarea::make('description')
+                        Textarea::make('description')
                             ->label('Keterangan')
                             ->columnSpanFull(),
-                        Forms\Components\Select::make('status')
+                        Select::make('status')
                             ->options(ParameterStatusEnum::labels())
                             ->default(ParameterStatusEnum::default())
                             ->required(),
                     ])
                     ->required()
                     ->preload(),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->label('Keterangan'),
-                Forms\Components\TextInput::make('price')
+                TextInput::make('price')
                     ->required()
                     ->numeric()
                     ->default(0)
@@ -156,38 +171,38 @@ class TestPackageResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nama paket pengujian')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('sampleMatric.name')
+                TextColumn::make('sampleMatric.name')
                     ->label('Matrix sampel')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('regulation.name')
+                TextColumn::make('regulation.name')
                     ->label('Regulasi')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
                     ->label('Harga')
                     ->money('idr')
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('parameters.name')
+                TextColumn::make('parameters.name')
                     ->label('Parameter')
                     ->listWithLineBreaks()
                     ->searchable()
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -195,13 +210,13 @@ class TestPackageResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -216,10 +231,10 @@ class TestPackageResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTestPackages::route('/'),
-            'create' => Pages\CreateTestPackage::route('/create'),
-            'view' => Pages\ViewTestPackage::route('/{record}'),
-            'edit' => Pages\EditTestPackage::route('/{record}/edit'),
+            'index' => ListTestPackages::route('/'),
+            'create' => CreateTestPackage::route('/create'),
+            'view' => ViewTestPackage::route('/{record}'),
+            'edit' => EditTestPackage::route('/{record}/edit'),
         ];
     }
 }

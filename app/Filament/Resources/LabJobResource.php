@@ -2,12 +2,25 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use App\Models\Quotation;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\LabJobResource\Pages\ListLabJobs;
+use App\Filament\Resources\LabJobResource\Pages\CreateLabJob;
+use App\Filament\Resources\LabJobResource\Pages\ViewLabJob;
+use App\Filament\Resources\LabJobResource\Pages\EditLabJob;
 use App\Filament\Resources\LabJobResource\Pages;
 use App\Filament\Resources\LabJobResource\RelationManagers\LabJobItemsRelationManager;
 use App\Filament\Resources\LabJobResource\RelationManagers\LabJobPersonelsRelationManager;
 use App\Models\LabJob;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,7 +32,6 @@ use Filament\Tables\Filters\SelectFilter;
 use App\Services\QuotationService; // Asumsi Anda punya service untuk generate nomor
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Enums\FiltersLayout;
@@ -31,7 +43,7 @@ class LabJobResource extends Resource
     protected static ?string $model = LabJob::class;
     protected static ?string $navigationLabel = 'Lab Job';
     protected static ?string $label = 'Lab Job';
-    protected static ?string $navigationIcon = 'heroicon-s-document';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-s-document';
     protected static ?int $navigationSort = 2;
     protected static ?string $recordTitleAttribute = 'job_number';
     protected static int $globalSearchResultsLimit = 20;
@@ -65,15 +77,20 @@ class LabJobResource extends Resource
     // {
     //     return static::getModel()::count();
     // }
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Job')
+        return $schema
+            ->columns([
+                'sm' => 2,
+                'md' => 3,
+                'xl' => 4,
+            ])
+            ->components([
+                Section::make('Job')
                     ->schema([
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
-                            ->relationship('quotation', 'quotation_number', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value))
+                            ->relationship('quotation', 'quotation_number', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value)->whereDoesntHave('labJob'))
                             ->searchable()
                             ->preload()
                             ->required()
@@ -82,7 +99,7 @@ class LabJobResource extends Resource
                             ->afterStateUpdated(function ($state, Set $set, LabJobService $labJobService) {
                                 // Jika penawaran dipilih, generate nomor job
                                 if ($state) {
-                                    $quotation = \App\Models\Quotation::find($state);
+                                    $quotation = Quotation::find($state);
                                     $job_number = $labJobService->generateLabJobNumber($quotation);
                                     $set('job_number', $job_number);
                                 } else {
@@ -94,15 +111,13 @@ class LabJobResource extends Resource
                             ->required()
                             ->readOnly() // <-- Jadikan read-only
                             ->maxLength(50),
-                        Forms\Components\DatePicker::make('start_date')
+                        DatePicker::make('start_date')
                             ->label('Tanggal Mulai')
                             ->default(now()),
-                        Forms\Components\DatePicker::make('end_date')
+                        DatePicker::make('end_date')
                             ->label('Tanggal Selesai'),
 
-                    ])->columns(2),
-
-
+                    ])->columnSpanFull()->columns(2),
             ]);
     }
 
@@ -112,39 +127,39 @@ class LabJobResource extends Resource
             ->defaultSort('id', 'desc')
             ->striped()
             ->columns([
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
                     ->badge()
                     ->sortable()
                     ->color(fn($state) => JobStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
-                Tables\Columns\TextColumn::make('quotation.quotation_number')
+                TextColumn::make('quotation.quotation_number')
                     ->label('Nomor Penawaran')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('job_number')
+                TextColumn::make('job_number')
                     ->label('Nomor Pekerjaan')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('start_date')
+                TextColumn::make('start_date')
                     ->label('Tanggal Mulai')
                     ->date('d M Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('end_date')
+                TextColumn::make('end_date')
                     ->label('Tanggal Selesai')
                     ->date('d M Y')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -167,13 +182,13 @@ class LabJobResource extends Resource
                 //     ->searchable()
                 //     ->preload(),
             ], layout: FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -197,10 +212,10 @@ class LabJobResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLabJobs::route('/'),
-            'create' => Pages\CreateLabJob::route('/create'),
-            'view' => Pages\ViewLabJob::route('/{record}'),
-            'edit' => Pages\EditLabJob::route('/{record}/edit'),
+            'index' => ListLabJobs::route('/'),
+            'create' => CreateLabJob::route('/create'),
+            'view' => ViewLabJob::route('/{record}'),
+            'edit' => EditLabJob::route('/{record}/edit'),
         ];
     }
 }

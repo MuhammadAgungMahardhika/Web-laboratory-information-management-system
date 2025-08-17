@@ -2,11 +2,18 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use App\Models\Enums\PositionEnum;
 use App\Models\Position;
 use Filament\Forms;
 use Filament\Forms\Components\Tabs\Tab;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,17 +32,17 @@ class LabJobPersonelsRelationManager extends RelationManager
     {
         return $ownerRecord->labJobPersonels->count();
     }
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('personel_id')
+        return $schema
+            ->components([
+                Select::make('personel_id')
                     ->required()
                     ->searchable()
                     ->relationship('personel', 'fullname',  modifyQueryUsing: fn(Builder $query) => $query->whereHas('position', fn(Builder $query) => $query->whereIn('name', [PositionEnum::Ppc->value, PositionEnum::KepalaPpc->value])))
                     ->label('Personel')
                     ->preload(),
-                Forms\Components\Select::make('position')
+                Select::make('position')
                     ->required()
                     ->options([
                         'ketua' => 'Ketua tim',
@@ -53,14 +60,14 @@ class LabJobPersonelsRelationManager extends RelationManager
         return $table
             ->paginated(false)
             ->columns([
-                Tables\Columns\TextColumn::make('personel.fullname')
+                TextColumn::make('personel.fullname')
                     ->label('Personel'),
-                Tables\Columns\TextColumn::make('position')
+                TextColumn::make('position')
                     ->label('Peran'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -68,15 +75,15 @@ class LabJobPersonelsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

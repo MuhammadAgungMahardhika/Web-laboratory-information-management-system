@@ -2,10 +2,19 @@
 
 namespace App\Filament\Resources\CompanyResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -18,23 +27,23 @@ class SettingsRelationManager extends RelationManager
     protected static bool $isLazy = false;
     protected static string $relationship = 'settings';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
-                Forms\Components\Toggle::make('is_active')
+            ->components([
+                Toggle::make('is_active')
                     ->label('Aktif ?'),
-                Forms\Components\TextInput::make('default_quotation_expiry_days')
+                TextInput::make('default_quotation_expiry_days')
                     ->label('Default Masa berlaku penawaran (hari)')
                     ->numeric()
                     ->default(30),
 
-                Forms\Components\Select::make('term_template_id')
+                Select::make('term_template_id')
                     ->label('Template syarat & ketentuan')
                     ->relationship('termTemplate', 'name')
                     ->searchable()
@@ -50,24 +59,24 @@ class SettingsRelationManager extends RelationManager
                         ->maxSize(1024)
                         ->acceptedFileTypes(['image/jpeg', 'image/png'])
                         ->columnSpanFull(),
-                    Forms\Components\TextInput::make('mail_mailer')
+                    TextInput::make('mail_mailer')
                         ->maxLength(255)
                         ->default('smtp'),
-                    Forms\Components\TextInput::make('mail_host')
+                    TextInput::make('mail_host')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('mail_port')
+                    TextInput::make('mail_port')
                         ->numeric()
                         ->maxLength(255)
                         ->default(587),
-                    Forms\Components\TextInput::make('mail_username')
+                    TextInput::make('mail_username')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('mail_password') // <-- Use TextInput
+                    TextInput::make('mail_password') // <-- Use TextInput
                         ->label('Password SMTP')
                         ->helperText('Pastikan password SMTP baru sudah ada di pengaturan Email ')
                         ->password() // <-- Ini akan menyembunyikan input password dengan titik-titik
                         ->nullable()
                         ->dehydrateStateUsing(fn($state) => filled($state) ? $state : null),
-                    Forms\Components\Select::make('mail_encryption')
+                    Select::make('mail_encryption')
                         ->options([
                             'tls' => 'TLS',
                             'ssl' => 'SSL',
@@ -75,9 +84,9 @@ class SettingsRelationManager extends RelationManager
                         ])
                         ->default('tls')
                         ->label('Enkripsi Email'),
-                    Forms\Components\TextInput::make('mail_from_address')
+                    TextInput::make('mail_from_address')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('mail_from_name')
+                    TextInput::make('mail_from_name')
                         ->default(Config('app.name'))
                         ->maxLength(255),
                 ])->columns(4)->heading('Pengaturan Email'),
@@ -91,46 +100,46 @@ class SettingsRelationManager extends RelationManager
             ->columns([
                 ImageColumn::make('letterhead_path')
                     ->label('Korp surat'),
-                Tables\Columns\TextColumn::make('default_quotation_expiry_days')
+                TextColumn::make('default_quotation_expiry_days')
                     ->label('Default masa berlaku penawaran')
                     ->numeric()
                     ->alignEnd()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('termTemplate.name')
+                TextColumn::make('termTemplate.name')
                     ->label('Template syarat & ketentuan')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('mail_mailer')
+                TextColumn::make('mail_mailer')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mail_host')
+                TextColumn::make('mail_host')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mail_port')
+                TextColumn::make('mail_port')
                     ->alignEnd()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mail_username')
+                TextColumn::make('mail_username')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mail_encryption')
+                TextColumn::make('mail_encryption')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mail_from_address')
+                TextColumn::make('mail_from_address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mail_from_name')
+                TextColumn::make('mail_from_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('is_active')
+                TextColumn::make('is_active')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

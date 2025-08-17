@@ -2,13 +2,25 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\TermTemplateResource\Pages\ListTermTemplates;
+use App\Filament\Resources\TermTemplateResource\Pages\CreateTermTemplate;
+use App\Filament\Resources\TermTemplateResource\Pages\ViewTermTemplate;
+use App\Filament\Resources\TermTemplateResource\Pages\EditTermTemplate;
 use App\Filament\Resources\TermTemplateResource\Pages;
 use App\Filament\Resources\TermTemplateResource\RelationManagers;
 use App\Models\TermTemplate;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,14 +33,14 @@ class TermTemplateResource extends Resource
     protected static ?string $model = TermTemplate::class;
     protected static ?string $navigationLabel = 'Template syarat & ketentuan';
     protected static ?string $label = 'Template syarat & ketentuan';
-    protected static ?string $navigationGroup = 'Master';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 7;
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label('Nama Template')
                     ->required()
                     ->maxLength(255),
@@ -36,7 +48,7 @@ class TermTemplateResource extends Resource
                     ->label('Isi Template')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\Toggle::make('is_active')
+                Toggle::make('is_active')
                     ->label('Aktif ?')
                     ->required()
                     ->default(true),
@@ -48,26 +60,26 @@ class TermTemplateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nama template')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('content')
+                TextColumn::make('content')
                     ->label('Isi template')
                     ->html()
                     ->limit(100) // Limit the content display to 50 characters
                     ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->label('Aktif ?')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -75,13 +87,13 @@ class TermTemplateResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -96,10 +108,10 @@ class TermTemplateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTermTemplates::route('/'),
-            'create' => Pages\CreateTermTemplate::route('/create'),
-            'view' => Pages\ViewTermTemplate::route('/{record}'),
-            'edit' => Pages\EditTermTemplate::route('/{record}/edit'),
+            'index' => ListTermTemplates::route('/'),
+            'create' => CreateTermTemplate::route('/create'),
+            'view' => ViewTermTemplate::route('/{record}'),
+            'edit' => EditTermTemplate::route('/{record}/edit'),
         ];
     }
 }

@@ -2,12 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\RegulationResource\Pages\ManageRegulations;
 use App\Filament\Resources\RegulationResource\Pages;
 use App\Filament\Resources\RegulationResource\RelationManagers;
 use App\Models\Regulation;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -20,19 +27,19 @@ class RegulationResource extends Resource
     protected static ?string $model = Regulation::class;
     protected static ?string $navigationLabel = 'Regulasi';
     protected static ?string $label = 'Regulasi';
-    protected static ?string $navigationGroup = 'Master';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 3;
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
-                Forms\Components\TextInput::make('name')
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->label('Nama regulasi')
                     ->maxLength(255),
@@ -43,18 +50,18 @@ class RegulationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nama regulasi')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -62,13 +69,13 @@ class RegulationResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -76,7 +83,7 @@ class RegulationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageRegulations::route('/'),
+            'index' => ManageRegulations::route('/'),
         ];
     }
 }

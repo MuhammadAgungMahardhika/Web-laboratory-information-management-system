@@ -2,6 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Schemas\Components\Grid;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\CustomerResource\Pages\ListCustomers;
+use App\Filament\Resources\CustomerResource\Pages\CreateCustomer;
+use App\Filament\Resources\CustomerResource\Pages\ViewCustomer;
+use App\Filament\Resources\CustomerResource\Pages\EditCustomer;
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\City;
@@ -12,14 +26,9 @@ use App\Models\Enums\UserStatusEnum;
 use App\Models\Province;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
@@ -34,21 +43,21 @@ class CustomerResource extends Resource
     protected static ?string $model = Customer::class;
     protected static ?string $label = 'Data klien';
     protected static ?string $navigationLabel = 'Data klien';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Master Pengguna";
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
 
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
+            ->components([
                 Section::make([
-                    Forms\Components\TextInput::make('name')
+                    TextInput::make('name')
                         ->label('Nama klien')
                         ->unique(ignoreRecord: true)
                         ->required()
@@ -56,7 +65,6 @@ class CustomerResource extends Resource
                     Hidden::make('registration_date')
                         ->label('Tanggal didaftarkan')
                         ->default(now()),
-
                     Select::make('customer_type_id')
                         ->required()
                         ->label('Jenis klien')
@@ -107,32 +115,32 @@ class CustomerResource extends Resource
                         })
                         ->searchable()
                         ->preload(),
-                    Forms\Components\TextInput::make('full_address')
+                    TextInput::make('full_address')
                         ->label('Alamat lengkap')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('postal_code')
+                    TextInput::make('postal_code')
                         ->label('Kode pos')
                         ->maxLength(255),
                 ])->columns(4)->heading('Alamat')->iconColor('primary')->icon('heroicon-s-map-pin'),
 
                 Section::make([
-                    Forms\Components\TextInput::make('contact_person_name')
+                    TextInput::make('contact_person_name')
                         ->label('Nama')
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('contact_person_title')
+                    TextInput::make('contact_person_title')
                         ->label('Jabatan')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('contact_phone_number')
+                    TextInput::make('contact_phone_number')
                         ->label('Nomor hp')
                         ->prefix('+62 ')
                         ->required()
                         ->tel()
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('contact_email')
+                    TextInput::make('contact_email')
                         ->label('Email')
                         ->email(),
-                    Forms\Components\TextInput::make('npwp')
+                    TextInput::make('npwp')
                         ->label('Npwp')
                         ->maxLength(255),
                     Select::make('user_id')
@@ -234,59 +242,59 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nama klien')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('customerType.name')
+                TextColumn::make('customerType.name')
                     ->label('Jenis klien')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('province.name')
+                TextColumn::make('province.name')
                     ->label('Provinsi')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('city.name')
+                TextColumn::make('city.name')
                     ->label('Kota')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('full_address')
+                TextColumn::make('full_address')
                     ->label('Alamat lengkap')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('postal_code')
+                TextColumn::make('postal_code')
                     ->label('Kode pos')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('contact_person_name')
+                TextColumn::make('contact_person_name')
                     ->label('Narahubung')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('contact_person_title')
+                TextColumn::make('contact_person_title')
                     ->label('Jabatan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('contact_phone_number')
+                TextColumn::make('contact_phone_number')
                     ->label('Nomor hp')
                     ->prefix('+62 ')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('contact_email')
+                TextColumn::make('contact_email')
                     ->label('Email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('npwp')
+                TextColumn::make('npwp')
                     ->label('Npwp')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('registration_date')
+                TextColumn::make('registration_date')
                     ->label('Tanggal terdaftar')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status'),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('Akun klien')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -316,7 +324,7 @@ class CustomerResource extends Resource
 
                         return $indicators;
                     })
-                    ->form([ // Ini adalah definisi form untuk filter saat dibuka
+                    ->schema([ // Ini adalah definisi form untuk filter saat dibuka
                         Grid::make(2) // Kita bisa menggunakan 2 kolom untuk Provinsi dan Kota
                             ->schema([
                                 Select::make('province_id')
@@ -364,13 +372,13 @@ class CustomerResource extends Resource
                             );
                     })->columnSpan(2)
             ], layout: FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -385,10 +393,10 @@ class CustomerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCustomers::route('/'),
-            'create' => Pages\CreateCustomer::route('/create'),
-            'view' => Pages\ViewCustomer::route('/{record}'),
-            'edit' => Pages\EditCustomer::route('/{record}/edit'),
+            'index' => ListCustomers::route('/'),
+            'create' => CreateCustomer::route('/create'),
+            'view' => ViewCustomer::route('/{record}'),
+            'edit' => EditCustomer::route('/{record}/edit'),
         ];
     }
 }

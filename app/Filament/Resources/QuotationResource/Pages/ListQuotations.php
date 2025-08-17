@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\QuotationResource\Pages;
 
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Components\Tabs\Tab;
 use App\Filament\Resources\QuotationResource;
 use App\Models\Enums\QuotationStatusEnum;
 use App\Models\Quotation;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListQuotations extends ListRecords
@@ -17,7 +18,7 @@ class ListQuotations extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

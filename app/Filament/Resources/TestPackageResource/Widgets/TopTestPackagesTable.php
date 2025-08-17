@@ -28,7 +28,7 @@ class TopTestPackagesTable extends TableWidget
             ->with('testPackage'); // Eager load relasi ke TestPackage untuk mendapatkan nama
     }
 
-    public function getTableRecordKey(Model $record): string
+    public function getTableRecordKey(Model|array $record): string
     {
         return (string) $record->test_package_id;
     }

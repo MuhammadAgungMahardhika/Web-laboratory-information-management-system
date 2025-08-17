@@ -45,7 +45,7 @@ class TopParametersTable extends TableWidget
         ];
     }
 
-    public function getTableRecordKey(Model $record): string
+    public function getTableRecordKey(Model|array $record): string
     {
         return (string) $record->parameter_id;
     }

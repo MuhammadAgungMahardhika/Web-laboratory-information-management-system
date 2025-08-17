@@ -2,6 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\CompanyResource\Pages\ListCompanies;
+use App\Filament\Resources\CompanyResource\Pages\CreateCompany;
+use App\Filament\Resources\CompanyResource\Pages\ViewCompany;
+use App\Filament\Resources\CompanyResource\Pages\EditCompany;
 use App\Filament\Resources\CompanyResource\Pages;
 use App\Filament\Resources\CompanyResource\RelationManagers;
 use App\Filament\Resources\CompanyResource\RelationManagers\SettingsRelationManager;
@@ -12,7 +26,6 @@ use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -26,20 +39,20 @@ class CompanyResource extends Resource
     protected static ?string $model = Company::class;
     protected static ?string $navigationLabel = 'Perusahaan';
     protected static ?string $label = 'Perusahaan';
-    protected static ?string $navigationGroup = 'Master';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 8;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
-                Forms\Components\TextInput::make('name')
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Select::make('province_id')
@@ -52,31 +65,31 @@ class CompanyResource extends Resource
                     ->relationship('city', 'name')
                     ->searchable()
                     ->preload(),
-                Forms\Components\TextInput::make('postal_code')
+                TextInput::make('postal_code')
                     ->label('Kode Pos')
                     ->maxLength(20),
-                Forms\Components\Textarea::make('address')
+                Textarea::make('address')
                     ->columnSpanFull(),
 
-                Forms\Components\TextInput::make('phone')
+                TextInput::make('phone')
                     ->label('No Telepon')
                     ->tel()
                     ->prefix('+62')
                     ->maxLength(20),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->label('Email')
                     ->email()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('website')
+                TextInput::make('website')
                     ->label('Website')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('npwp')
+                TextInput::make('npwp')
                     ->label('NPWP')
                     ->maxLength(50),
 
 
 
-                Forms\Components\Toggle::make('is_main_company')
+                Toggle::make('is_main_company')
                     ->required(),
             ]);
     }
@@ -85,44 +98,44 @@ class CompanyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nama perusahaan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('province.name')
+                TextColumn::make('province.name')
                     ->label('Provinsi')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('city.name')
+                TextColumn::make('city.name')
                     ->label('Kota')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('postal_code')
+                TextColumn::make('postal_code')
                     ->label('Kode pos')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->label('Nomor hp')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('website')
+                TextColumn::make('website')
                     ->label('Website')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('npwp')
+                TextColumn::make('npwp')
                     ->label('Npwp')
                     ->searchable(),
 
-                Tables\Columns\IconColumn::make('is_main_company')
+                IconColumn::make('is_main_company')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -130,13 +143,13 @@ class CompanyResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -151,10 +164,10 @@ class CompanyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCompanies::route('/'),
-            'create' => Pages\CreateCompany::route('/create'),
-            'view' => Pages\ViewCompany::route('/{record}'),
-            'edit' => Pages\EditCompany::route('/{record}/edit'),
+            'index' => ListCompanies::route('/'),
+            'create' => CreateCompany::route('/create'),
+            'view' => ViewCompany::route('/{record}'),
+            'edit' => EditCompany::route('/{record}/edit'),
         ];
     }
 }

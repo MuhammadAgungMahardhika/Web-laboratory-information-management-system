@@ -2,13 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\ParameterResource\Pages\ManageParameters;
 use App\Filament\Resources\ParameterResource\Pages;
 use App\Filament\Resources\ParameterResource\RelationManagers;
 use App\Models\Enums\ParameterStatusEnum;
 use App\Models\Parameter;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,56 +30,56 @@ class ParameterResource extends Resource
     protected static ?string $model = Parameter::class;
     protected static ?string $navigationLabel = 'Parameter Uji';
     protected static ?string $label = 'Parameter Uji';
-    protected static ?string $navigationGroup = 'Master';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 6;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
-                Forms\Components\TextInput::make('name')
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->label('Nama parameter uji')
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
-                Forms\Components\TextInput::make('unit')
+                TextInput::make('unit')
                     ->required()
                     ->label('Satuan')
                     ->maxLength(50),
-                Forms\Components\TextInput::make('default_price')
+                TextInput::make('default_price')
                     ->label('Harga standar')
                     ->required()
                     ->numeric()
                     ->step(10000)
                     ->label('Harga')
                     ->prefix('Rp. '),
-                Forms\Components\Select::make('test_method_id')
+                Select::make('test_method_id')
                     ->label('Metode uji')
                     ->relationship('testMethod', 'name')
                     ->searchable()
                     ->required()
                     ->preload()
                     ->createOptionForm([
-                        Forms\Components\TextInput::make('code')
+                        TextInput::make('code')
                             ->label('Kode')
                             ->required(),
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Nama metode uji')
                             ->required(),
-                        Forms\Components\Textarea::make('description')
+                        Textarea::make('description')
                             ->label('Keterangan')
                             ->columnSpanFull(),
                     ])->createOptionModalHeading('Buat Regulasi'),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->label('Keterangan')
                     ->columnSpanFull(),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->options(ParameterStatusEnum::labels())
                     ->default(ParameterStatusEnum::default())
                     ->required(),
@@ -82,34 +91,34 @@ class ParameterResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nama parameter uji')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('unit')
+                TextColumn::make('unit')
                     ->label('Satuan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('default_price')
+                TextColumn::make('default_price')
                     ->label('Harga standar')
                     ->alignEnd()
                     ->searchable()
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('testMethod.name')
+                TextColumn::make('testMethod.name')
                     ->label('Metode uji')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->color(fn($state) => ParameterStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => ParameterStatusEnum::labels()[$state]),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -117,13 +126,13 @@ class ParameterResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -131,7 +140,7 @@ class ParameterResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageParameters::route('/'),
+            'index' => ManageParameters::route('/'),
         ];
     }
 }

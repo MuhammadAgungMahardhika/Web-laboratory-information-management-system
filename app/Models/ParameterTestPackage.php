@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ParameterTestPackageFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ParameterTestPackage extends Model
 {
-    /** @use HasFactory<\Database\Factories\ParameterTestPackageFactory> */
+    /** @use HasFactory<ParameterTestPackageFactory> */
     use HasFactory;
     use Blameable;
 

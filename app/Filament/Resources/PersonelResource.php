@@ -2,6 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\PersonelResource\Pages\ListPersonels;
+use App\Filament\Resources\PersonelResource\Pages\CreatePersonel;
+use App\Filament\Resources\PersonelResource\Pages\ViewPersonel;
+use App\Filament\Resources\PersonelResource\Pages\EditPersonel;
 use App\Filament\Resources\PersonelResource\Pages;
 use App\Filament\Resources\PersonelResource\RelationManagers;
 use App\Models\Enums\RoleEnum;
@@ -13,8 +25,6 @@ use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,39 +37,39 @@ class PersonelResource extends Resource
     protected static ?string $model = Personel::class;
     protected static ?string $label = 'Personel';
     protected static ?string $navigationLabel = 'Personel';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Master Pengguna";
-    public static function form(Form $form): Form
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
+            ->components([
 
-                Forms\Components\TextInput::make('fullname')
+                TextInput::make('fullname')
                     ->label('Nama personel')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('nip')
+                TextInput::make('nip')
                     ->label('Nip')
                     ->unique(ignoreRecord: true)
                     ->required(),
-                Forms\Components\TextInput::make('phone_number')
+                TextInput::make('phone_number')
                     ->label('No hp')
                     ->tel()
                     ->maxLength(50),
-                Forms\Components\Textarea::make('address')
+                Textarea::make('address')
                     ->label('Alamat'),
-                Forms\Components\Select::make('position_id')
+                Select::make('position_id')
                     ->label('Jabatan / Posisi')
                     ->relationship('position', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
-                Forms\Components\Textarea::make('certification_details')
+                Textarea::make('certification_details')
                     ->label('Sertifikasi'),
                 Select::make('user_id')
                     ->label('Akun')
@@ -161,37 +171,37 @@ class PersonelResource extends Resource
         return $table
             ->columns([
 
-                Tables\Columns\TextColumn::make('fullname')
+                TextColumn::make('fullname')
                     ->label('Nama personel')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nip')
+                TextColumn::make('nip')
                     ->label('Nip')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone_number')
+                TextColumn::make('phone_number')
                     ->label('Nomor hp')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('position.name')
+                TextColumn::make('position.name')
                     ->label('Jabatan / posisi')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('Akun')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('company.name')
+                TextColumn::make('company.name')
                     ->label('Perusahaan')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -199,13 +209,13 @@ class PersonelResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -220,10 +230,10 @@ class PersonelResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPersonels::route('/'),
-            'create' => Pages\CreatePersonel::route('/create'),
-            'view' => Pages\ViewPersonel::route('/{record}'),
-            'edit' => Pages\EditPersonel::route('/{record}/edit'),
+            'index' => ListPersonels::route('/'),
+            'create' => CreatePersonel::route('/create'),
+            'view' => ViewPersonel::route('/{record}'),
+            'edit' => EditPersonel::route('/{record}/edit'),
         ];
     }
 }

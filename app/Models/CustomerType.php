@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\CustomerTypeFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomerType extends Model
 {
-    /** @use HasFactory<\Database\Factories\CustomerTypeFactory> */
+    /** @use HasFactory<CustomerTypeFactory> */
     use HasFactory;
     use Blameable;
 

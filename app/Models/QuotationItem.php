@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\QuoatationItemFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuotationItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\QuoatationItemFactory> */
+    /** @use HasFactory<QuoatationItemFactory> */
     use Blameable;
     use HasFactory;
 

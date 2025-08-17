@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class ParameterAccreditationChart extends ChartWidget
 {
-    protected static ?string $heading = 'Perbandingan Parameter Terakreditasi';
-    protected static ?string $pollingInterval = null;
+    protected ?string $heading = 'Perbandingan Parameter Terakreditasi';
+    protected ?string $pollingInterval = null;
     protected function getType(): string
     {
         return 'pie'; // Menggunakan pie chart untuk proporsi

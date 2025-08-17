@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\LabJobResource\Pages;
 
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
+use Exception;
+use Filament\Actions\ActionGroup;
 use App\Filament\Resources\LabJobResource;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\PositionEnum;
@@ -25,8 +29,8 @@ class EditLabJob extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make()->using(function () {
+            ViewAction::make(),
+            DeleteAction::make()->using(function () {
                 return DB::transaction(function () {
                     try {
                         foreach ($this->record->labJobItems as $labJobItem) {
@@ -37,7 +41,7 @@ class EditLabJob extends EditRecord
                             $labJobPersonels->delete();
                         }
                         return $this->record->delete();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         Notification::make()
                             ->danger()
                             ->title('Gagal menghapus penawaran')
@@ -47,7 +51,7 @@ class EditLabJob extends EditRecord
                     }
                 });
             }),
-            Actions\ActionGroup::make([
+            ActionGroup::make([
                 // Aksi: Tugaskan Tim PPC
                 Action::make('Mulai Pekerjaan')
                     ->icon('heroicon-o-play')
@@ -64,7 +68,7 @@ class EditLabJob extends EditRecord
                         }
                         return 'Tim PPC sudah ditugaskan. Apakah Anda yakin ingin memulai pekerjaan?';
                     })
-                    ->form(function (LabJob $record) {
+                    ->schema(function (LabJob $record) {
                         if ($record->labJobPersonels->isEmpty()) {
                             return [
                                 Checkbox::make('skip_assignment_confirmation')
@@ -82,7 +86,7 @@ class EditLabJob extends EditRecord
 
                             Notification::make()->title('Pekerjaan telah dimulai.')->success()->send();
                             return redirect()->to(static::getResource()::getUrl('view', ['record' => $record->id]));
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             Notification::make()
                                 ->title('Gagal memulai pekerjaan')
                                 ->body('Terjadi kesalahan: ' . $e->getMessage())

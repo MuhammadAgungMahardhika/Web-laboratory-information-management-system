@@ -2,6 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\QuotationResource\Pages\ListQuotations;
+use App\Filament\Resources\QuotationResource\Pages\CreateQuotation;
+use App\Filament\Resources\QuotationResource\Pages\ViewQuotation;
+use App\Filament\Resources\QuotationResource\Pages\EditQuotation;
 use App\Filament\Resources\QuotationResource\Pages;
 use App\Filament\Resources\QuotationResource\RelationManagers\QuotationItemRelationManager;
 use App\Models\Enums\CustomerStatusEnum;
@@ -16,13 +27,9 @@ use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
@@ -40,7 +47,7 @@ class QuotationResource extends Resource
     protected static ?string $model = Quotation::class;
     protected static ?string $navigationLabel = 'Penawaran';
     protected static ?string $label = 'Penawaran';
-    protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-duplicate';
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'quotation_number';
     protected static int $globalSearchResultsLimit = 20;
@@ -67,48 +74,48 @@ class QuotationResource extends Resource
     {
         return parent::getGlobalSearchEloquentQuery()->with(['customer']);
     }
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $setting  = Auth::user()->personel->company->active_setting;
         $defaultQuotationExpiryDays = (int) $setting->default_quotation_expiry_days;
         $quoatationService = app(QuotationService::class);
-        return $form
+        return $schema
             ->columns([
                 'sm' => 2,
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->schema([
+            ->components([
                 Section::make([
-                    Forms\Components\DatePicker::make('quotation_date')
+                    DatePicker::make('quotation_date')
                         ->label('Tanggal penawaran')
                         ->default(now())
                         ->displayFormat('d/m/Y')
                         ->native(false)
                         ->required()
                         ->reactive() // <-- Tambahkan ini agar perubahan memicu update field lain
-                        ->afterStateUpdated(function ($state, Forms\Set $set) use ($defaultQuotationExpiryDays) { // <-- Tambahkan ini
+                        ->afterStateUpdated(function ($state, Set $set) use ($defaultQuotationExpiryDays) { // <-- Tambahkan ini
                             // Jika quotation_date diisi, set valid_until_date menjadi 30 hari setelahnya
                             if ($state) {
-                                $set('valid_until_date', \Carbon\Carbon::parse($state)->addDays($defaultQuotationExpiryDays));
+                                $set('valid_until_date', Carbon::parse($state)->addDays($defaultQuotationExpiryDays));
                             } else {
                                 // Jika quotation_date dikosongkan, kosongkan juga valid_until_date
                                 $set('valid_until_date', null);
                             }
                         }),
 
-                    Forms\Components\DatePicker::make('valid_until_date')
+                    DatePicker::make('valid_until_date')
                         ->label('Tanggal berakhir penawaran')
                         ->default(now()->addDays(30)) // Default awal saat form dibuka
                         ->displayFormat('d/m/Y')
                         ->native(false)
-                        ->minDate(function (Forms\Get $get) {
+                        ->minDate(function (Get $get) {
                             $quotationDate = $get('quotation_date');
-                            return $quotationDate ? \Carbon\Carbon::parse($quotationDate)->addDay() : null;
+                            return $quotationDate ? Carbon::parse($quotationDate)->addDay() : null;
                         })
                         ->required()
                         ->helperText(fn() => "Default {$defaultQuotationExpiryDays} hari"),
-                    Forms\Components\TextInput::make('quotation_number')
+                    TextInput::make('quotation_number')
                         ->label('Nomor penawaran')
                         ->required()
                         ->default($quoatationService->generateQuotationNumber())
@@ -117,7 +124,7 @@ class QuotationResource extends Resource
                         ->label('Nomor permohonan (jika ada)')
                         ->relationship('request', 'request_number'),
 
-                    Forms\Components\TextInput::make('quotation_name')
+                    TextInput::make('quotation_name')
                         ->label('Judul penawaran')
                         ->columnSpan(2)
                         ->required(),
@@ -131,7 +138,7 @@ class QuotationResource extends Resource
                         ->createOptionForm(function (Get $get) {
                             return [
                                 Section::make([
-                                    Forms\Components\TextInput::make('name')
+                                    TextInput::make('name')
                                         ->label('Nama klien')
                                         ->unique(ignoreRecord: true)
                                         ->required()
@@ -167,32 +174,32 @@ class QuotationResource extends Resource
                                         })
                                         ->searchable()
                                         ->preload(),
-                                    Forms\Components\TextInput::make('full_address')
+                                    TextInput::make('full_address')
                                         ->label('Alamat lengkap')
                                         ->maxLength(255),
-                                    Forms\Components\TextInput::make('postal_code')
+                                    TextInput::make('postal_code')
                                         ->label('Kode pos')
                                         ->maxLength(255),
                                 ])->columns(4)->collapsible()->heading('Alamat')->iconColor('primary')->icon('heroicon-s-map-pin'),
 
                                 Section::make([
-                                    Forms\Components\TextInput::make('contact_person_name')
+                                    TextInput::make('contact_person_name')
                                         ->label('Nama')
                                         ->required()
                                         ->maxLength(255),
-                                    Forms\Components\TextInput::make('contact_phone_number')
+                                    TextInput::make('contact_phone_number')
                                         ->label('Nomor hp')
                                         ->required()
                                         ->tel()
                                         ->maxLength(255),
-                                    Forms\Components\TextInput::make('contact_person_title')
+                                    TextInput::make('contact_person_title')
                                         ->label('Jabatan')
                                         ->maxLength(255),
 
-                                    Forms\Components\TextInput::make('contact_email')
+                                    TextInput::make('contact_email')
                                         ->label('Email')
                                         ->email(),
-                                    Forms\Components\TextInput::make('npwp')
+                                    TextInput::make('npwp')
                                         ->label('Npwp')
                                         ->maxLength(255),
                                     Select::make('user_id')
@@ -230,7 +237,7 @@ class QuotationResource extends Resource
                         ->searchable()
                         ->preload(),
 
-                ])->columns(4)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
+                ])->columnSpanFull()->columns(4)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
                     ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
 
                 Section::make('Syarat & Ketentuan Pembayaran')
@@ -273,7 +280,7 @@ class QuotationResource extends Resource
                                 ->dehydrated(false)
                                 ->createOptionForm(function (Get $get, Set $set) {
                                     return [
-                                        Forms\Components\TextInput::make('name')
+                                        TextInput::make('name')
                                             ->label('Nama Template')
                                             ->required()
                                             ->unique(TermTemplate::class)
@@ -323,24 +330,24 @@ class QuotationResource extends Resource
                                 ]),
                         ])->columnSpan(1)->columns(1),
                         Section::make([
-                            Forms\Components\TextInput::make('discount_percentage')
+                            TextInput::make('discount_percentage')
                                 ->label('Diskon (%)')
                                 ->required()
                                 ->numeric()
                                 ->default(0),
-                            Forms\Components\TextInput::make('ppn_percentage')
+                            TextInput::make('ppn_percentage')
                                 ->label('Ppn')
                                 ->required()
                                 ->numeric()
                                 ->default(11),
-                            Forms\Components\TextInput::make('pph_percentage')
+                            TextInput::make('pph_percentage')
                                 ->label('Pph')
                                 ->required()
                                 ->numeric()
                                 ->default(0),
-                        ])->columns(3)->collapsible()->heading('Potongan')->iconColor('primary')->icon('heroicon-s-receipt-percent')->columnSpan(1)->iconPosition('after'),
+                        ])->columns(3)->collapsible()->heading('Potongan')->iconColor('primary')->icon('heroicon-s-receipt-percent')->columnSpan(1),
 
-                    ])->columns(2)->collapsible()->iconColor('primary')->icon('heroicon-s-document-text'),
+                    ])->columnSpanFull()->columns(2)->collapsible()->iconColor('primary')->icon('heroicon-s-document-text'),
 
             ]);
     }
@@ -351,75 +358,75 @@ class QuotationResource extends Resource
             ->defaultSort('id', 'desc')
             ->striped()
             ->columns([
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->formatStateUsing(fn($state) => QuotationStatusEnum::from($state)->label())
                     ->badge()
                     ->color(fn($state) => QuotationStatusEnum::color($state))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('request.code')
+                TextColumn::make('request.code')
                     ->label('Nomor permohonan')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quotation_number')
+                TextColumn::make('quotation_number')
                     ->label('Nomor penawaran')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quotation_date')
+                TextColumn::make('quotation_date')
                     ->label('Tanggal penawaran')
                     ->date('d M Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('valid_until_date')
+                TextColumn::make('valid_until_date')
                     ->label('Tanggal berakhir penawaran')
                     ->date('d M Y')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('quotation_name')
+                TextColumn::make('quotation_name')
                     ->label('Judul penawaran')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('customer.name')
+                TextColumn::make('customer.name')
                     ->label('Nama perusahaan')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('personel.fullname')
+                TextColumn::make('personel.fullname')
                     ->label('Petugas pembuat')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('discount_percentage')
+                TextColumn::make('discount_percentage')
                     ->numeric()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('ppn_percentage')
+                TextColumn::make('ppn_percentage')
                     ->numeric()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('pph_percentage')
+                TextColumn::make('pph_percentage')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('total_price')
+                TextColumn::make('total_price')
                     ->label('Jumlah total')
                     ->numeric()
                     ->money('IDR', true)
                     ->alignEnd()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('approved_by_personel.fullname')
+                TextColumn::make('approved_by_personel.fullname')
                     ->label('Disetujui oleh')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('approved_at')
+                TextColumn::make('approved_at')
                     ->label('Disetujui pada')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_by')
+                TextColumn::make('created_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('updated_by')
+                TextColumn::make('updated_by')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -437,7 +444,7 @@ class QuotationResource extends Resource
                     ->preload(),
                 // --- Filter Tanggal Penawaran (quotation_date) ---
                 Filter::make('quotation_date_range')
-                    ->form([
+                    ->schema([
                         Section::make([
                             DatePicker::make('from')
                                 ->label('Tanggal Penawaran Mulai')
@@ -469,11 +476,11 @@ class QuotationResource extends Resource
                         return $indicators;
                     })->columnSpan(2),
             ], layout: FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DeleteBulkAction::make(),
                 // ]),
@@ -508,10 +515,10 @@ class QuotationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListQuotations::route('/'),
-            'create' => Pages\CreateQuotation::route('/create'),
-            'view' => Pages\ViewQuotation::route('/{record}'),
-            'edit' => Pages\EditQuotation::route('/{record}/edit'),
+            'index' => ListQuotations::route('/'),
+            'create' => CreateQuotation::route('/create'),
+            'view' => ViewQuotation::route('/{record}'),
+            'edit' => EditQuotation::route('/{record}/edit'),
         ];
     }
 }

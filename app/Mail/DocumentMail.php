@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Throwable;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Bus\Queueable;
@@ -16,7 +18,7 @@ use Filament\Notifications\Actions\Action;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
-class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\ShouldQueue
+class DocumentMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -75,7 +77,7 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {
@@ -92,7 +94,7 @@ class DocumentMail extends Mailable implements \Illuminate\Contracts\Queue\Shoul
      * Metode ini dipanggil jika email gagal dikirim setelah semua percobaan ulang.
      * Ideal untuk notifikasi kegagalan.
      */
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
 
         // 1. Kirim notifikasi kegagalan ke user

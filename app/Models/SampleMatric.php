@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\SampleMatricFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SampleMatric extends Model
 {
-    /** @use HasFactory<\Database\Factories\SampleMatricFactory> */
+    /** @use HasFactory<SampleMatricFactory> */
     use HasFactory;
 
     use Blameable;

@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\LabJobResource\Pages;
 
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Components\Tabs\Tab;
 use App\Filament\Resources\LabJobResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Components\Tab; // Pastikan ini diimpor
+use Filament\Resources\Pages\ListRecords; // Pastikan ini diimpor
 use Illuminate\Database\Eloquent\Builder; // Pastikan ini diimpor
 use App\Models\Enums\JobStatusEnum; // Pastikan ini diimpor
 use App\Models\LabJob; // Pastikan ini diimpor
@@ -17,7 +18,7 @@ class ListLabJobs extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

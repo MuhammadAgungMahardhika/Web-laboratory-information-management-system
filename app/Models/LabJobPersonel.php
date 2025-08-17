@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\LabJobPersonelFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LabJobPersonel extends Model
 {
-    /** @use HasFactory<\Database\Factories\LabJobPersonelFactory> */
+    /** @use HasFactory<LabJobPersonelFactory> */
     use HasFactory;
     use Blameable;
 

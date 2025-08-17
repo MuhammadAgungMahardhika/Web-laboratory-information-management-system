@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use Throwable;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -51,7 +52,7 @@ class SendQuotationNotification
                 // Log a warning if the notifierId is missing for debugging purposes.
                 Log::warning('MessageSent Event: Could not find notifierId in the event payload. Cannot send user notification.');
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::warning('Failed running send quotation listener');
         }
     }

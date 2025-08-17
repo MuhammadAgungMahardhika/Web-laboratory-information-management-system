@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
 use App\Filament\Resources\CustomerResource\Widgets\CustomerStatsChart;
 use App\Filament\Resources\ParameterResource\Widgets\ParameterAccreditationChart;
 use App\Filament\Resources\PersonelResource\Widgets\PersonnelRolesChart;
@@ -41,17 +42,16 @@ class SuperadminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                TopTestPackagesTable::class,
-                TopParametersTable::class,
+                // TopTestPackagesTable::class,
+                // TopParametersTable::class,
                 ParameterAccreditationChart::class,
                 QuotationStatusChart::class,
                 PersonnelRolesChart::class,
                 CustomerStatsChart::class,
-
             ])
             ->navigationGroups([
                 NavigationGroup::make()

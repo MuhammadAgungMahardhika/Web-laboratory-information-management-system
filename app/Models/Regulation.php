@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\RegulationFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Regulation extends Model
 {
-    /** @use HasFactory<\Database\Factories\RegulationFactory> */
+    /** @use HasFactory<RegulationFactory> */
     use HasFactory;
     use Blameable;
 }

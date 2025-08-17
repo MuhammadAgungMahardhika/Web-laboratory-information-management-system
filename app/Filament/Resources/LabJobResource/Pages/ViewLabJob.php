@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LabJobResource\Pages;
 
+use Filament\Actions\EditAction;
 use App\Filament\Resources\LabJobResource;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\LabJob;
@@ -18,7 +19,7 @@ class ViewLabJob extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
             Action::make('Preview Surat Tugas')
                 ->label(fn($record) => $record->labJobPersonels->isNotEmpty() ? 'Preview Surat Tugas' : 'Tidak Ada Surat Tugas')
                 ->color(Color::Blue) // Menggunakan warna biru Filament

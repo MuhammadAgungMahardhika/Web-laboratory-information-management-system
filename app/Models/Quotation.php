@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\QuotationFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,10 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quotation extends Model
 {
-    /** @use HasFactory<\Database\Factories\QuotationFactory> */
+    /** @use HasFactory<QuotationFactory> */
     use Blameable;
     use HasFactory;
 
+
+    public function labJob()
+    {
+        return $this->hasOne(LabJob::class);
+    }
     public function quotationItems()
     {
         return $this->hasMany(QuotationItem::class);

@@ -179,6 +179,8 @@ namespace App\Models{
  * @property-read int|null $lab_job_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobPersonel> $labJobPersonels
  * @property-read int|null $lab_job_personels_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Personel> $personels
+ * @property-read int|null $personels_count
  * @property-read \App\Models\Quotation $quotation
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newQuery()
@@ -253,6 +255,7 @@ namespace App\Models{
  * @property int $id
  * @property int $lab_job_id
  * @property int $personel_id
+ * @property string $position
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -268,6 +271,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel whereLabJobId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel wherePersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel wherePosition($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobPersonel whereUpdatedBy($value)
  */
@@ -541,6 +545,7 @@ namespace App\Models{
  * @property-read \App\Models\Personel|null $approvedByPersonel
  * @property-read \App\Models\Customer $customer
  * @property-read float $total_price
+ * @property-read \App\Models\LabJob|null $labJob
  * @property-read \App\Models\Personel $personel
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuotationItem> $quotationItems
  * @property-read int|null $quotation_items_count

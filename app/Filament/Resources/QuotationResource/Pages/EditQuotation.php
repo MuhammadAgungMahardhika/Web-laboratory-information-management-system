@@ -2,6 +2,12 @@
 
 namespace App\Filament\Resources\QuotationResource\Pages;
 
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
+use Exception;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\ActionGroup;
 use App\Filament\Resources\QuotationResource;
 use App\Models\Quotation;
 use Filament\Actions;
@@ -18,11 +24,9 @@ use App\Services\QuotationService;
 use App\Services\WhatsAppService;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Get;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 
@@ -33,8 +37,8 @@ class EditQuotation extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make()->using(function () {
+            ViewAction::make(),
+            DeleteAction::make()->using(function () {
                 return DB::transaction(function () {
                     try {
                         foreach ($this->record->quotationItems as $quotationItem) {
@@ -42,7 +46,7 @@ class EditQuotation extends EditRecord
                             $quotationItem->delete();
                         }
                         return $this->record->delete();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         Notification::make()
                             ->danger()
                             ->title('Gagal menghapus penawaran')
@@ -87,7 +91,7 @@ class EditQuotation extends EditRecord
                             QuotationStatusEnum::Revised->value,
                         ]))
                         ->modalHeading('Proses pengiriman Penawaran')
-                        ->form([
+                        ->schema([
                             Toggle::make('update_status_to_submitted')
                                 ->label('Update status penawaran menjadi terkirim')
                                 ->reactive()
@@ -149,7 +153,7 @@ class EditQuotation extends EditRecord
                             ])->columns(2)->heading('Pengiriman Via Email')->icon('heroicon-o-envelope'),
 
                         ])
-                        ->action(function (array $data, Quotation $record, Actions\Action $action) {
+                        ->action(function (array $data, Quotation $record, Action $action) {
                             if (!$data['send_whatsapp'] && !$data['send_email']) {
                                 Notification::make()
                                     ->danger()
@@ -238,7 +242,7 @@ class EditQuotation extends EditRecord
                                             ->title('Proses pengiriman via Email')
                                             ->body("Penawaran #{$record->quotation_number} dalam proses pengiriman ke {$data['customer_email']}.")
                                             ->send();
-                                    } catch (\Exception $e) {
+                                    } catch (Exception $e) {
                                         Notification::make()
                                             ->danger()
                                             ->title('Gagal mengirim email penawaran')
@@ -262,7 +266,7 @@ class EditQuotation extends EditRecord
                 ])->modalFooterActionsAlignment('right'),
 
             // --- GRUP AKSI UNTUK STATUS PENAWARAN ---
-            Actions\ActionGroup::make([
+            ActionGroup::make([
                 // Tombol "Terima Penawaran"
                 Action::make('Penawaran dikirimkan')
                     ->icon('heroicon-o-check-circle')
@@ -282,7 +286,7 @@ class EditQuotation extends EditRecord
                             Notification::make()->title('Status penawaran telah dikirimkan!')->success()->send();
                             return redirect()->to(QuotationResource::getUrl('view', ['record' => $record->refresh()]));
                             // Redirect ke halaman view setelah sukses
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // Tangkap error dan tampilkan notifikasi yang ramah pengguna
                             Notification::make()
                                 ->title('Gagal mengirimkan penawaran')
@@ -304,7 +308,7 @@ class EditQuotation extends EditRecord
                     ->modalSubmitActionLabel('Ya, Setujui')
                     ->modalCancelActionLabel('Batal')
                     // --- Perubahan di sini: Tambahkan form dengan checkbox ---
-                    ->form([
+                    ->schema([
                         Checkbox::make('acknowledgement')
                             ->label(function () {
                                 $personelName = Auth::user()->personel->fullname ?? 'Petugas';
@@ -334,7 +338,7 @@ class EditQuotation extends EditRecord
 
                             // Redirect ke halaman view setelah sukses
                             return redirect()->to(QuotationResource::getUrl('view', ['record' => $record->refresh()]));
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // Tangkap error dan tampilkan notifikasi yang ramah pengguna
                             Notification::make()
                                 ->title('Gagal menyetujui penawaran')
@@ -365,7 +369,7 @@ class EditQuotation extends EditRecord
                             Notification::make()->title('Status penawaran direvisi.')->info()->send();
                             return redirect()->to(QuotationResource::getUrl('view', ['record' => $record->refresh()]));
                             // Redirect ke halaman view setelah sukses
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // Tangkap error dan tampilkan notifikasi yang ramah pengguna
                             Notification::make()
                                 ->title('Gagal revisi penawaran')
@@ -392,7 +396,7 @@ class EditQuotation extends EditRecord
                             Notification::make()->title('Status penawaran ditolak.')->danger()->send();
                             return redirect()->to(QuotationResource::getUrl('view', ['record' => $record->refresh()]));
                             // Redirect ke halaman view setelah sukses
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // Tangkap error dan tampilkan notifikasi yang ramah pengguna
                             Notification::make()
                                 ->title('Gagal membatalkan penawaran')

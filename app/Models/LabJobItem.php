@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\LabJobItemFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LabJobItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\LabJobItemFactory> */
+    /** @use HasFactory<LabJobItemFactory> */
     use HasFactory;
     use Blameable;
 

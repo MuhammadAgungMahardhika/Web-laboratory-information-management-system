@@ -2,18 +2,29 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Hidden;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Support\Enums\TextSize;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Exception;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\Enums\ParameterStatusEnum;
 use App\Models\LabJobItem;
 use App\Models\TestPackage;
 use App\Services\LabJobItemService;
 use Filament\Forms;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,10 +41,10 @@ class LabJobItemsRelationManager extends RelationManager
     protected static ?string $label = 'Detail Job';
     protected static ?string $title = "Detail Job";
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('group')
                     ->label('Jenis Item')
                     ->options([
@@ -53,7 +64,7 @@ class LabJobItemsRelationManager extends RelationManager
                         ->searchable()
                         ->helperText('Pilih paket pengujian jika item adalah sampel')
                         ->reactive()
-                        ->afterStateUpdated(function ($state, Forms\Set $set) {
+                        ->afterStateUpdated(function ($state, Set $set) {
                             $set('description', null);
                             $set('price', null);
                             $set('regulation_id', null);
@@ -75,7 +86,7 @@ class LabJobItemsRelationManager extends RelationManager
                             }
                         }),
 
-                    Forms\Components\TextInput::make('description')
+                    TextInput::make('description')
                         ->label('Keterangan')
                         ->autocomplete(false)
                         ->datalist([
@@ -84,42 +95,42 @@ class LabJobItemsRelationManager extends RelationManager
                         ->required()
                         ->maxLength(255)
                         ->placeholder('Deskripsi akan otomatis terisi dari Paket Pengujian'),
-                    Forms\Components\TextInput::make('regulation_name')
+                    TextInput::make('regulation_name')
                         ->label('Nama Regulasi')
                         ->autocomplete(false)
                         ->maxLength(255),
 
-                    Forms\Components\Hidden::make('regulation_id'),
+                    Hidden::make('regulation_id'),
                     Select::make('parameters')
                         ->searchable()
                         ->multiple()
                         ->relationship('parameters', 'name')
                         ->preload(),
 
-                    Forms\Components\TextInput::make('quantity')
+                    TextInput::make('quantity')
                         ->label('Jumlah')
                         ->numeric()
                         ->required()
                         ->default(1),
-                    Forms\Components\TextInput::make('unit')
+                    TextInput::make('unit')
                         ->label('Satuan')
                         ->required()
                         ->autocomplete(false)
                         ->maxLength(50),
-                    Forms\Components\TextInput::make('price')
+                    TextInput::make('price')
                         ->label('Harga')
                         ->numeric()
                         ->prefix('Rp.')
                         ->required()
                         ->default(0)
                         ->step(500),
-                    Forms\Components\TextInput::make('location')
+                    TextInput::make('location')
                         ->label('Lokasi Pengambilan Sampel')
                         ->maxLength(100)
                         ->nullable(),
-                ])->columns(3)->visible(fn(Get $get) => $get('group') === 'A'),
+                ])->columnSpanFull()->columns(3)->visible(fn(Get $get) => $get('group') === 'A'),
                 Section::make([
-                    Forms\Components\TextInput::make('description')
+                    TextInput::make('description')
                         ->label('Keterangan')
                         ->autocomplete(false)
                         ->datalist([
@@ -132,13 +143,13 @@ class LabJobItemsRelationManager extends RelationManager
                             'C' => 'Deskripsi untuk item lainnya',
                             default => ''
                         }),
-                    Forms\Components\TextInput::make('quantity')
+                    TextInput::make('quantity')
                         ->label('Jumlah')
                         ->numeric()
                         ->autocomplete(false)
                         ->required()
                         ->default(1),
-                    Forms\Components\TextInput::make('unit')
+                    TextInput::make('unit')
                         ->label('Satuan')
                         ->datalist(function (Get $get) {
                             $itemTypeSelector = $get('group');
@@ -157,14 +168,14 @@ class LabJobItemsRelationManager extends RelationManager
                         ->required()
                         ->autocomplete(false)
                         ->maxLength(50),
-                    Forms\Components\TextInput::make('price')
+                    TextInput::make('price')
                         ->label('Harga')
                         ->numeric()
                         ->required()
                         ->prefix('Rp.')
                         ->default(0)
                         ->step(500),
-                ])->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
+                ])->columnSpanFull()->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
             ]);
     }
 
@@ -182,39 +193,39 @@ class LabJobItemsRelationManager extends RelationManager
             ])
             ->defaultGroup('group')
             ->columns([
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label('Deskripsi')
-                    ->size(TextColumnSize::Small),
-                Tables\Columns\TextColumn::make('regulation_name')
+                    ->size(TextSize::Small),
+                TextColumn::make('regulation_name')
                     ->label('Regulasi')
-                    ->size(TextColumnSize::Small),
-                Tables\Columns\TextColumn::make('parameterLabJobItems')
+                    ->size(TextSize::Small),
+                TextColumn::make('parameterLabJobItems')
                     ->badge()
                     ->formatStateUsing(fn($state) => $state->parameter_name . " " . Number::currency($state->parameter_default_price, 'RP.'))
                     ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
-                    ->size(TextColumnSize::Small)
+                    ->size(TextSize::Small)
                     ->label('Parameter'),
 
-                Tables\Columns\TextColumn::make('quantity')
-                    ->size(TextColumnSize::Small)
+                TextColumn::make('quantity')
+                    ->size(TextSize::Small)
                     ->alignEnd()
                     ->label('Kuantitas'),
-                Tables\Columns\TextColumn::make('unit')
-                    ->size(TextColumnSize::Small)
+                TextColumn::make('unit')
+                    ->size(TextSize::Small)
                     ->label('Satuan'),
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
                     ->label('Harga')
                     ->alignEnd()
-                    ->size(TextColumnSize::Small)
+                    ->size(TextSize::Small)
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('item_total')
+                TextColumn::make('item_total')
                     ->label('Harga Total')
                     ->alignEnd()
-                    ->size(TextColumnSize::Small)
+                    ->size(TextSize::Small)
                     ->money('IDR'),
-                Tables\Columns\TextColumn::make('location')
-                    ->size(TextColumnSize::Small)
+                TextColumn::make('location')
+                    ->size(TextSize::Small)
                     ->label('Lokasi pengambilan sampel')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
@@ -223,29 +234,29 @@ class LabJobItemsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->after(function (LabJobItem $record, array $data) {
                         // Inisialisasi service
                         $LabJobItemService = new LabJobItemService();
                         $LabJobItemService->syncParameterLabJobItems($record);
                     })->databaseTransaction(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->after(function (LabJobItem $record, array $data) {
                         // Inisialisasi service
                         $LabJobItemService = new LabJobItemService();
                         $LabJobItemService->syncParameterLabJobItems($record);
                     })->databaseTransaction(),
-                Tables\Actions\DeleteAction::make()
-                    ->using(function (Tables\Actions\DeleteAction $action, LabJobItem $record) {
+                DeleteAction::make()
+                    ->using(function (DeleteAction $action, LabJobItem $record) {
                         return DB::transaction(function () use ($action, $record) {
                             try {
                                 // Hapus parameterLabJobItem terkait terlebih dahulu
                                 $record->parameterLabJobItems()->delete(); // Menggunakan relasi hasMany
                                 $record->delete();
                                 return true; // Beri tahu Filament bahwa penghapusan berhasil
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 Notification::make()
                                     ->danger()
                                     ->title('Gagal menghapus item penawaran')
@@ -256,10 +267,10 @@ class LabJobItemsRelationManager extends RelationManager
                         });
                     }),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->using(function (Tables\Actions\DeleteBulkAction $action, \Illuminate\Database\Eloquent\Collection $records) {
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
+                        ->using(function (DeleteBulkAction $action, Collection $records) {
                             return DB::transaction(function () use ($action, $records) {
                                 try {
                                     foreach ($records as $record) {
@@ -269,7 +280,7 @@ class LabJobItemsRelationManager extends RelationManager
                                         $record->delete();
                                     }
                                     return true; // Beri tahu Filament bahwa penghapusan berhasil
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Notification::make()
                                         ->danger()
                                         ->title('Gagal menghapus item penawaran')
