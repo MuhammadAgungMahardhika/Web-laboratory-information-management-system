@@ -67,6 +67,32 @@ return new class extends Migration
                 ->onDelete('restrict');
         });
 
+        // sample
+
+        Schema::table('samples', function (Blueprint $table) {
+            $table->foreign('lab_job_item_id', 'fk_samples_lab_job_item')
+                ->references('id')
+                ->on('lab_job_items')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('sample_matric_id', 'fk_samples_sample_matric')
+                ->references('id')
+                ->on('sample_matrics')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('collected_by_personel_id', 'fk_samples_collected_by_personel')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('received_by_personel_id', 'fk_samples_received_by_personel')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+        });
+
+
         Schema::table('parameters', function (Blueprint $table) {
             $table->foreign('test_method_id', 'fk_parameters_test_method')
                 ->references('id')

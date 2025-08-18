@@ -237,7 +237,7 @@ class QuotationResource extends Resource
                         ->searchable()
                         ->preload(),
 
-                ])->columnSpanFull()->columns(4)->heading(fn($record) => $record && $record->status ? QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
+                ])->columnSpanFull()->columns(4)->heading(fn($record) => $record && $record->status ?  'Status -> ' . QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
                     ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
 
                 Section::make('Syarat & Ketentuan Pembayaran')

@@ -4,10 +4,12 @@ namespace App\Policies;
 
 use App\Models\LabJob;
 use App\Models\User;
+use App\Traits\HasAuthorization;
 use Illuminate\Auth\Access\Response;
 
 class LabJobPolicy
 {
+
     /**
      * Determine whether the user can view any models.
      */

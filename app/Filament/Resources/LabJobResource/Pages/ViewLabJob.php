@@ -12,7 +12,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\Action;
 use Illuminate\Support\Str;
 use Filament\Support\Colors\Color;
-use Notification;
+use Filament\Notifications\Notification;
 
 class ViewLabJob extends ViewRecord
 {
@@ -133,9 +133,10 @@ class ViewLabJob extends ViewRecord
                         Notification::make()->title('Pekerjaan telah dibatalkan.')->danger()->send();
                     }),
             ])
-                ->label('Aksi Status')
+                ->label('Update Status')
+                ->button()
                 ->icon('heroicon-o-arrow-path')
-                ->color('warning'),
+                ->color('success'),
         ];
     }
 }

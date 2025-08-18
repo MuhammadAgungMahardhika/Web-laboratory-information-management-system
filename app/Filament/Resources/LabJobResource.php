@@ -87,6 +87,9 @@ class LabJobResource extends Resource
             ])
             ->components([
                 Section::make('Job')
+                    ->heading(fn($record) => $record?->status ? 'Status -> ' .  JobStatusEnum::labels()[$record->status] : '')
+                    ->iconColor(fn($record) =>  $record && $record->status ? JobStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate')
+                    ->inlineLabel()
                     ->schema([
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
