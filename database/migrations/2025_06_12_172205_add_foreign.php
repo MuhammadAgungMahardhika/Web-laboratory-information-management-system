@@ -75,11 +75,6 @@ return new class extends Migration
                 ->on('lab_job_items')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
-            $table->foreign('sample_matric_id', 'fk_samples_sample_matric')
-                ->references('id')
-                ->on('sample_matrics')
-                ->onUpdate('cascade')
-                ->onDelete('restrict');
             $table->foreign('collected_by_personel_id', 'fk_samples_collected_by_personel')
                 ->references('id')
                 ->on('personels')

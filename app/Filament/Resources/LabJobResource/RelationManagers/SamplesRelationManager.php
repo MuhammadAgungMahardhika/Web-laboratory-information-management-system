@@ -19,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
@@ -56,83 +57,68 @@ class SamplesRelationManager extends RelationManager
                     ->required()
                     ->searchable()
                     ->preload(),
-                Select::make('sample_matric_id')
-                    ->label('Matric Sampel')
-                    ->relationship('sampleMatric', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
                 Wizard::make([
                     Step::make('Pengumpulan')
                         ->columnSpanFull()
                         ->schema([
-                            Section::make([
-                                Select::make('collected_by_personel_id')
-                                    ->label('Personel Pengumpul')
-                                    ->relationship('collectedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::Ppc->value, PositionEnum::KepalaPpc->value])))
-                                    ->searchable()
-                                    ->required()
-                                    ->preload(),
-                                TextInput::make('sample_code')
-                                    ->label('Kode Sampel')
-                                    ->required(),
-                                DatePicker::make('collection_date')
-                                    ->label('Tanggal Pengambilan')
-                                    ->default(now())
-                                    ->required(),
-                                TimePicker::make('collection_time')
-                                    ->label('Waktu Pengambilan')
-                                    ->default(now()->format('H:i:s'))
-                                    ->required(),
-                                Textarea::make('collection_location_desc')
-                                    ->columnSpanFull(),
-                                TextInput::make('latitude'),
-                                TextInput::make('longitude'),
-                                TextInput::make('container_type')
-                                    ->label('Jenis Wadah')
-                                    ->maxLength(50)
-                                    ->nullable(),
-                                TextInput::make('container_quantity')
-                                    ->label('Jumlah Wadah')
-                                    ->required()
-                                    ->numeric()
-                                    ->default(1),
-                                TextInput::make('sample_volume')
-                                    ->label('Volume Sampel')
-                                    ->maxLength(50)
-                                    ->nullable(),
-                                TextInput::make('preservation_method')
-                                    ->label('Metode Preservasi')
-                                    ->maxLength(255)
-                                    ->nullable(),
-                                Textarea::make('collection_notes')
-                                    ->label('Catatan Pengambilan')
-                                    ->columnSpanFull(),
-                            ])->columnSpanFull()->columns(4),
-                        ]),
+                            Hidden::make('collected_by_personel_id'),
+                            TextInput::make('sample_code')
+                                ->label('Kode Sampel')
+                                ->required(),
+                            DatePicker::make('collection_date')
+                                ->label('Tanggal Pengambilan')
+                                ->default(now())
+                                ->required(),
+                            TimePicker::make('collection_time')
+                                ->label('Waktu Pengambilan')
+                                ->default(now()->format('H:i:s'))
+                                ->required(),
+                            Textarea::make('collection_location_desc'),
+                            TextInput::make('latitude'),
+                            TextInput::make('longitude'),
+                            TextInput::make('container_type')
+                                ->label('Jenis Wadah')
+                                ->maxLength(50)
+                                ->nullable(),
+                            TextInput::make('container_quantity')
+                                ->label('Jumlah Wadah')
+                                ->required()
+                                ->numeric()
+                                ->default(1),
+                            TextInput::make('sample_volume')
+                                ->label('Volume Sampel')
+                                ->maxLength(50)
+                                ->nullable(),
+                            TextInput::make('preservation_method')
+                                ->label('Metode Preservasi')
+                                ->maxLength(255)
+                                ->nullable(),
+                            Textarea::make('collection_notes')
+                                ->label('Catatan Pengambilan')
+                                ->columnSpanFull(),
+                        ])->columns(4),
                     Step::make('Penerimaan')
                         ->columnSpanFull()
                         ->schema([
-                            Section::make([
-                                Select::make('received_by_personel_id')
-                                    ->relationship('receivedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::Administrator->value])))
-                                    ->label('Personel Penerima')
-                                    ->default(Auth::user()->id)
-                                    ->searchable()
-                                    ->preload(),
-                                DatePicker::make('received_date')
-                                    ->label('Tanggal Penerimaan')
-                                    ->default(now())
-                                    ->required(),
-                                TimePicker::make('received_time')
-                                    ->label('Waktu Penerimaan')
-                                    ->default(now()->format('H:i:s'))
-                                    ->required(),
-                                Textarea::make('received_condition_notes')
-                                    ->label('Catatan Kondisi Penerimaan')
-                                    ->columnSpanFull(),
-                            ])->columnSpanFull()->columns(4),
-                        ]),
+
+                            Select::make('received_by_personel_id')
+                                ->relationship('receivedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::Administrator->value])))
+                                ->label('Personel Penerima')
+                                ->default(Auth::user()->id)
+                                ->searchable()
+                                ->preload(),
+                            DatePicker::make('received_date')
+                                ->label('Tanggal Penerimaan')
+                                ->default(now())
+                                ->required(),
+                            TimePicker::make('received_time')
+                                ->label('Waktu Penerimaan')
+                                ->default(now()->format('H:i:s'))
+                                ->required(),
+                            Textarea::make('received_condition_notes')
+                                ->label('Catatan Kondisi Penerimaan')
+                                ->columnSpanFull(),
+                        ])->columns(4),
                 ])->columnSpanFull(),
                 Select::make('status')
                     ->options(SampleStatusEnum::labels())

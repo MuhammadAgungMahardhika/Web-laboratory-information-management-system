@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             // Foreign keys
             $table->unsignedBigInteger('lab_job_item_id');
-            $table->unsignedBigInteger('sample_matric_id');
             $table->unsignedBigInteger('collected_by_personel_id')->nullable();
             $table->unsignedBigInteger('received_by_personel_id')->nullable();
             // Sample details
