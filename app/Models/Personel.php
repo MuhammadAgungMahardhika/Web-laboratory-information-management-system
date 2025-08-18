@@ -13,6 +13,15 @@ class Personel extends Model
     use HasFactory;
     use Blameable;
 
+    public function samplesCollected()
+    {
+        return $this->hasMany(Sample::class, 'collected_by_personel_id');
+    }
+
+    public function samplesReceived()
+    {
+        return $this->hasMany(Sample::class, 'received_by_personel_id');
+    }
     public function labJobPersonels()
     {
         return $this->hasMany(LabJobPersonel::class);

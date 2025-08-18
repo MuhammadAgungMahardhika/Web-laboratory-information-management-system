@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
+use App\Models\Enums\JobStatusEnum;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
@@ -40,6 +41,17 @@ class LabJobItemsRelationManager extends RelationManager
     protected static string $relationship = 'labJobItems';
     protected static ?string $label = 'Detail Job';
     protected static ?string $title = "Detail Job";
+
+
+    public static function canCreateForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return $ownerRecord->status === JobStatusEnum::AnalysisCompleted->value;
+    }
+
+    public static function canUpdateForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return $ownerRecord->status === JobStatusEnum::AnalysisCompleted->value;
+    }
 
     public function form(Schema $schema): Schema
     {

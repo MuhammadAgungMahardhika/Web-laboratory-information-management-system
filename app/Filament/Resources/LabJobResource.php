@@ -19,6 +19,7 @@ use App\Filament\Resources\LabJobResource\Pages\EditLabJob;
 use App\Filament\Resources\LabJobResource\Pages;
 use App\Filament\Resources\LabJobResource\RelationManagers\LabJobItemsRelationManager;
 use App\Filament\Resources\LabJobResource\RelationManagers\LabJobPersonelsRelationManager;
+use App\Filament\Resources\LabJobResource\RelationManagers\SamplesRelationManager;
 use App\Models\LabJob;
 use Filament\Forms;
 use Filament\Resources\Resource;
@@ -27,6 +28,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\QuotationStatusEnum;
+use App\Models\Sample;
 use App\Services\LabJobService;
 use Filament\Tables\Filters\SelectFilter;
 use App\Services\QuotationService; // Asumsi Anda punya service untuk generate nomor
@@ -37,6 +39,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class LabJobResource extends Resource
 {
@@ -201,15 +204,18 @@ class LabJobResource extends Resource
 
     public static function canEdit(Model $record): bool
     {
-        return auth()->user()->can('update-lab-job') && $record->status === JobStatusEnum::PendingStart->value;
+        return Auth::user()->can('update-lab-job') && $record->status === JobStatusEnum::PendingStart->value;
     }
     public static function getRelations(): array
     {
         return [
+
             RelationGroup::make('items', [
+                SamplesRelationManager::class,
                 LabJobItemsRelationManager::class,
                 LabJobPersonelsRelationManager::class,
             ]),
+
 
             // Asumsi Anda punya relation manager untuk personel
         ];

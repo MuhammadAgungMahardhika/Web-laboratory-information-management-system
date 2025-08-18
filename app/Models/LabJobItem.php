@@ -14,6 +14,10 @@ class LabJobItem extends Model
     use Blameable;
 
 
+    public function samples()
+    {
+        return $this->hasMany(Sample::class);
+    }
     public function labJob()
     {
         return $this->belongsTo(LabJob::class);

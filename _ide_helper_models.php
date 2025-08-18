@@ -182,6 +182,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Personel> $personels
  * @property-read int|null $personels_count
  * @property-read \App\Models\Quotation $quotation
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sample> $samples
+ * @property-read int|null $samples_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob query()
@@ -225,6 +227,8 @@ namespace App\Models{
  * @property-read int|null $parameters_count
  * @property-read \App\Models\QuotationItem|null $quotationItem
  * @property-read \App\Models\Regulation|null $regulation
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sample> $samples
+ * @property-read int|null $samples_count
  * @property-read \App\Models\TestPackage|null $testPackage
  * @method static \Database\Factories\LabJobItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem newModelQuery()
@@ -446,6 +450,10 @@ namespace App\Models{
  * @property-read \App\Models\Position|null $position
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quotation> $quotations
  * @property-read int|null $quotations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sample> $samplesCollected
+ * @property-read int|null $samples_collected_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sample> $samplesReceived
+ * @property-read int|null $samples_received_count
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\PersonelFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel newModelQuery()
@@ -763,6 +771,68 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $lab_job_item_id
+ * @property int $sample_matric_id
+ * @property int|null $collected_by_personel_id
+ * @property int|null $received_by_personel_id
+ * @property string $sample_code
+ * @property string $collection_date
+ * @property string $collection_time
+ * @property string|null $collection_location_desc
+ * @property string|null $latitude
+ * @property string|null $longitude
+ * @property string|null $container_type
+ * @property int $container_quantity
+ * @property string|null $sample_volume
+ * @property string|null $preservation_method
+ * @property string|null $collection_notes
+ * @property string $received_date
+ * @property string $received_time
+ * @property string|null $received_condition_notes
+ * @property string $status
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Personel|null $collectedByPersonel
+ * @property-read \App\Models\LabJobItem $labJobItem
+ * @property-read \App\Models\Personel|null $receivedByPersonel
+ * @property-read \App\Models\SampleMatric $sampleMatric
+ * @method static \Database\Factories\SampleFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectedByPersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionLocationDesc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereContainerQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereContainerType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereLabJobItemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample wherePreservationMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedByPersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedConditionNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleMatricId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleVolume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereUpdatedBy($value)
+ */
+	class Sample extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property string $code
  * @property int $sample_type_id
  * @property string $name
@@ -775,6 +845,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestPackage> $sampleMatrics
  * @property-read int|null $sample_matrics_count
  * @property-read \App\Models\SampleType $sampleType
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sample> $samples
+ * @property-read int|null $samples_count
  * @method static \Database\Factories\SampleMatricFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric newQuery()

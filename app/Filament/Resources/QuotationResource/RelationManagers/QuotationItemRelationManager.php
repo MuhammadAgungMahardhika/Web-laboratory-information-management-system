@@ -26,13 +26,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\TestPackage;
 use App\Models\QuotationItem; // Import model QuotationItem
-
+use App\Models\Regulation;
 use App\Services\QuotationItemService;
 use Filament\Forms\Components\Hidden;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Grouping\Group;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 
@@ -65,8 +66,8 @@ class QuotationItemRelationManager extends RelationManager
                 Section::make([
                     Select::make('test_package_id')
                         ->label('Paket Pengujian')
-                        ->relationship('testPackage', 'name')
-                        ->preload()
+                        ->relationship('testPackage', 'name', modifyQueryUsing: fn(Builder $query) => $query->with('regulation'))
+                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} ({$record->regulation->name})")
                         ->searchable()
                         ->helperText('Pilih paket pengujian jika item adalah sampel')
                         ->reactive()
@@ -77,12 +78,12 @@ class QuotationItemRelationManager extends RelationManager
                             $set('regulation_name', null);
                             $set('parameters', []);
                             if ($state) {
-                                $testPackage = TestPackage::find($state);
+                                $testPackage = TestPackage::with('sampleMatric', 'regulation', 'parameters')->find($state);
                                 if ($testPackage) {
-                                    $set('description', $testPackage->name);
+                                    $set('description', $testPackage->sampleMatric->name);
                                     $set('price', $testPackage->price);
                                     if ($testPackage->regulation) {
-                                        $set('regulation_id', $testPackage->regulation->id);
+                                        $set('regulation_id', $testPackage->regulation_id);
                                         $set('regulation_name', $testPackage->regulation->name);
                                     }
                                     if ($testPackage->parameters) {
@@ -90,7 +91,7 @@ class QuotationItemRelationManager extends RelationManager
                                     }
                                 }
                             }
-                        }),
+                        })->preload(),
 
                     TextInput::make('description')
                         ->label('Keterangan')
@@ -106,7 +107,15 @@ class QuotationItemRelationManager extends RelationManager
                         ->autocomplete(false)
                         ->maxLength(255),
 
-                    Hidden::make('regulation_id'),
+                    Hidden::make('regulation_id')->afterStateUpdated(function ($state, Set $set) {
+                        $set('regulation_name', null);
+                        if ($state) {
+                            $regulation = Regulation::find($state);
+                            if ($regulation) {
+                                $set('regulation_name', $regulation->name);
+                            }
+                        }
+                    }),
                     Select::make('parameters')
                         ->searchable()
                         ->multiple()
@@ -134,7 +143,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->label('Lokasi Pengambilan Sampel')
                         ->maxLength(100)
                         ->nullable(),
-                ])->columns(3)->visible(fn(Get $get) => $get('group') === 'A'),
+                ])->columnSpanFull()->columns(3)->visible(fn(Get $get) => $get('group') === 'A'),
                 Section::make([
                     TextInput::make('description')
                         ->label('Keterangan')
@@ -181,7 +190,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->prefix('Rp.')
                         ->default(0)
                         ->step(500),
-                ])->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
+                ])->columnSpanFull()->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
             ]);
     }
 

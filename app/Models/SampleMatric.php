@@ -13,6 +13,11 @@ class SampleMatric extends Model
     use HasFactory;
 
     use Blameable;
+
+    public function samples()
+    {
+        return $this->hasMany(Sample::class);
+    }
     public function sampleType()
     {
         return $this->belongsTo(SampleType::class);

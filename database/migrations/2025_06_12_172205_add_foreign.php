@@ -178,7 +178,6 @@ return new class extends Migration
         });
 
         // akhir labjob
-
         Schema::table('requests', function (Blueprint $table) {
             $table->foreign('customer_id', 'fk_requests_customer')
                 ->references('id')

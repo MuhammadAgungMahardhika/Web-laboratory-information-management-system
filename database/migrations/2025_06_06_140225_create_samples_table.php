@@ -25,11 +25,15 @@ return new class extends Migration
             $table->text('collection_location_desc')->nullable();
             $table->string('latitude', 50)->nullable();
             $table->string('longitude', 50)->nullable();
+
+            // Sample type and container details
             $table->string('container_type', 100)->nullable();
             $table->integer('container_quantity')->default(1);
             $table->string('sample_volume', 50)->nullable();
+            // Sample preservation and notes
             $table->string('preservation_method', 255)->nullable();
             $table->text('collection_notes')->nullable();
+            // Received details
             $table->date('received_date');
             $table->time('received_time');
             $table->text('received_condition_notes')->nullable();

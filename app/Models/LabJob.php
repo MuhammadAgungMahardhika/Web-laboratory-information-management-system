@@ -7,6 +7,7 @@ use Database\Factories\JobFactory;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 #[UsePolicy(LabJobPolicy::class)]
 class LabJob extends Model
@@ -15,6 +16,10 @@ class LabJob extends Model
     use HasFactory;
     use Blameable;
 
+    public function samples(): HasManyThrough
+    {
+        return $this->hasManyThrough(Sample::class, LabJobItem::class);
+    }
     public function labJobItems()
     {
         return $this->hasMany(LabJobItem::class);
