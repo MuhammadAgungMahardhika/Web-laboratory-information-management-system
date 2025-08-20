@@ -30,7 +30,7 @@ class LabJobService
             'status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
         ]);
         // 2. Salin rincian item penawaran (snapshot) ke rincian pekerjaan lab
-        $quotation->load(['quotationItems' => fn($query) => $query->where('group', 'A'), 'parameterQuotationItems']);
+        $quotation->load(['quotationItems' => fn($query) => $query->where('group', 'A'), 'quotationItems.parameterQuotationItems']);
 
         foreach ($quotation->quotationItems as $quotationItem) {
             // Buat item pekerjaan lab baru sebagai snapshot

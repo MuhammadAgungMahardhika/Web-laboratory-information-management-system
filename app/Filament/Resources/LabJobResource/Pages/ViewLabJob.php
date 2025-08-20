@@ -126,7 +126,7 @@ class ViewLabJob extends ViewRecord
                 Action::make('Batalkan Pekerjaan')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
-                    ->visible(fn(LabJob $record) => $record->status !== JobStatusEnum::Delivered->value && $record->status !== JobStatusEnum::Cancelled->value)
+                    ->visible(fn(LabJob $record) =>  $record->status == JobStatusEnum::InProgress->value)
                     ->requiresConfirmation()
                     ->action(function (LabJob $record, LabJobService $labJobService) {
                         $labJobService->updateLabJobStatus($record, JobStatusEnum::Cancelled);

@@ -772,7 +772,6 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $lab_job_item_id
- * @property int $sample_matric_id
  * @property int|null $collected_by_personel_id
  * @property int|null $received_by_personel_id
  * @property string $sample_code
@@ -797,7 +796,7 @@ namespace App\Models{
  * @property-read \App\Models\Personel|null $collectedByPersonel
  * @property-read \App\Models\LabJobItem $labJobItem
  * @property-read \App\Models\Personel|null $receivedByPersonel
- * @property-read \App\Models\SampleMatric $sampleMatric
+ * @property-read \App\Models\SampleMatric|null $sampleMatric
  * @method static \Database\Factories\SampleFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newQuery()
@@ -821,7 +820,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleMatricId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleVolume($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereUpdatedAt($value)

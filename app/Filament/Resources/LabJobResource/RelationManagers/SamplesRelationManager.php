@@ -56,14 +56,31 @@ class SamplesRelationManager extends RelationManager
                     })
                     ->required()
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set) use ($ownerRecord) {
+                        if ($state) {
+                            // Inisialisasi service
+                            $sampleService = new \App\Services\SampleService();
+                            $labJobItem = $ownerRecord->labJobItems()->find($state);
+                            $sampleCode = $sampleService->generateSampleCode($labJobItem);
+                            $set('sample_code', $sampleCode);
+                        } else {
+                            $set('sample_code', null);
+                        }
+                    }),
                 Wizard::make([
                     Step::make('Pengumpulan')
                         ->columnSpanFull()
                         ->schema([
-                            Hidden::make('collected_by_personel_id'),
+                            Select::make('collected_by_personel_id')
+                                ->relationship('collectedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::KepalaPpc->value, PositionEnum::Ppc->value])))
+                                ->label('Personel Pengumpul')
+                                ->searchable()
+                                ->preload(),
                             TextInput::make('sample_code')
                                 ->label('Kode Sampel')
+                                ->readOnly() // Kode sampel tidak bisa diubah manual
                                 ->required(),
                             DatePicker::make('collection_date')
                                 ->label('Tanggal Pengambilan')
@@ -100,9 +117,8 @@ class SamplesRelationManager extends RelationManager
                     Step::make('Penerimaan')
                         ->columnSpanFull()
                         ->schema([
-
                             Select::make('received_by_personel_id')
-                                ->relationship('receivedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::Administrator->value])))
+                                ->relationship('receivedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->where('name', PositionEnum::Administrator->value)))
                                 ->label('Personel Penerima')
                                 ->default(Auth::user()->id)
                                 ->searchable()

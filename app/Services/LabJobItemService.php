@@ -28,7 +28,6 @@ class LabJobItemService
 
         $parameters = Parameter::whereIn('id', $parameterIds)->with('testMethod')->get();
 
-
         foreach ($parameters as $parameter) {
             ParameterLabJobItem::create([
                 'lab_job_item_id' => $labJobItem->id,

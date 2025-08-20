@@ -12,6 +12,15 @@ class Sample extends Model
     use HasFactory;
     use Blameable;
 
+
+    /**
+     * Aksesor untuk mendapatkan pekerjaan lab induk.
+     * Tidak perlu relasi baru, cukup panggil melalui labJobItem.
+     */
+    public function labJob()
+    {
+        return $this->labJobItem->labJob;
+    }
     public function labJobItem()
     {
         return $this->belongsTo(LabJobItem::class);
