@@ -19,9 +19,12 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Enums\ParameterStatusEnum;
+use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\TestPackage;
 use App\Services\LabJobItemService;
+use App\Services\LabJobService;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -32,8 +35,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
-use Notification;
+use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 
 class LabJobItemsRelationManager extends RelationManager
 {
@@ -53,20 +58,17 @@ class LabJobItemsRelationManager extends RelationManager
         return $ownerRecord->status === JobStatusEnum::AnalysisCompleted->value;
     }
 
+    public static function getBadge(Model $ownerRecord, string $pageClass): ?string
+    {
+        return $ownerRecord->labJobItems->where('group', 'A')->count();
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Select::make('group')
-                    ->label('Jenis Item')
-                    ->options([
-                        'A' => 'Paket Pengujian',
-                        'B' => 'Biaya Pengambilan Sampel',
-                        'C' => 'Lainnya',
-                    ])
-                    ->required()
-                    ->default('A')
-                    ->reactive(), // Field ini tidak perlu disimpan ke DB
+                Hidden::make('group')
+                    ->default('A'), // Field ini tidak perlu disimpan ke DB
                 // -------------------------------
                 Section::make([
                     Select::make('test_package_id')
@@ -199,11 +201,6 @@ class LabJobItemsRelationManager extends RelationManager
             })
             ->recordTitleAttribute('description')
             ->paginated(false)
-            ->groups([
-                Group::make('group')
-                    ->label(''),
-            ])
-            ->defaultGroup('group')
             ->columns([
                 TextColumn::make('description')
                     ->label('Deskripsi')
@@ -242,11 +239,37 @@ class LabJobItemsRelationManager extends RelationManager
                     ->label('Lokasi pengambilan sampel')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
+                TextColumn::make('created_by')
+                    ->size(TextSize::Small)
+                    ->toggleable(),
+                TextColumn::make('updated_by')
+                    ->size(TextSize::Small)
+                    ->toggleable(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
+                Action::make('resetToQuotationSnapshot')
+                    ->label('Kembalikan Rincian Pekerjaan')
+                    ->icon(Heroicon::ArrowUturnLeft)
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Kembalikan Rincian Pekerjaan?')
+                    ->modalDescription('Ini akan menghapus semua rincian pekerjaan saat ini dan menggantinya dengan rincian dari penawaran awal.')
+                    ->modalSubmitActionLabel('Ya, Kembalikan')
+                    ->action(function (LabJobService $labJobService) {
+                        try {
+                            $record = $this->ownerRecord; // Ambil record induk
+                            DB::transaction(function () use ($record, $labJobService) {
+                                $labJobService->resetToQuotationSnapshot($record);
+                            });
+                            return Notification::make()->title('Rincian pekerjaan berhasil dikembalikan.')->success()->send();
+                        } catch (\Exception $e) {
+                            Log::error('Gagal mengembalikan rincian pekerjaan: ' . $e->getMessage());
+                            return Notification::make()->title('Gagal mengembalikan rincian pekerjaan.')->danger()->body('Terjadi kesalahan: ' . $e->getMessage())->send();
+                        }
+                    })->visible(fn() => !$this->isReadOnly() && $this->ownerRecord->status === JobStatusEnum::PendingStart->value),
                 CreateAction::make()
                     ->after(function (LabJobItem $record, array $data) {
                         // Inisialisasi service

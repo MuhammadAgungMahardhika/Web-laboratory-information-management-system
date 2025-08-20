@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('lab_job_item_id');
             $table->unsignedBigInteger('collected_by_personel_id')->nullable();
             $table->unsignedBigInteger('received_by_personel_id')->nullable();
-            // Sample details
+            // Sample collection details
             $table->string('sample_code', 50)->unique();
             $table->date('collection_date');
             $table->time('collection_time');

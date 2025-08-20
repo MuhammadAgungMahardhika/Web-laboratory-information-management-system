@@ -30,7 +30,7 @@ class LabJobService
             'status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
         ]);
         // 2. Salin rincian item penawaran (snapshot) ke rincian pekerjaan lab
-        $quotation->load('quotationItems.parameterQuotationItems'); // Eager load relasi
+        $quotation->load(['quotationItems' => fn($query) => $query->where('group', 'A'), 'parameterQuotationItems']);
 
         foreach ($quotation->quotationItems as $quotationItem) {
             // Buat item pekerjaan lab baru sebagai snapshot
@@ -48,8 +48,63 @@ class LabJobService
                 'location' => $quotationItem->location,
             ]);
 
-            // 3. Salin rincian parameter (snapshot) jika grupnya 'A' (Paket Pengujian)
-            if ($quotationItem->group === 'A') {
+            // 3. Salin rincian parameter (snapshot) (Paket Pengujian)
+            foreach ($quotationItem->parameterQuotationItems as $paramSnapshot) {
+                ParameterLabJobItem::create([
+                    'lab_job_item_id' => $labJobItem->id,
+                    'parameter_id' => $paramSnapshot->parameter_id,
+                    'parameter_name' => $paramSnapshot->parameter_name,
+                    'parameter_unit' => $paramSnapshot->parameter_unit,
+                    'parameter_default_price' => $paramSnapshot->parameter_default_price,
+                    'parameter_default_test_method_name' => $paramSnapshot->parameter_default_test_method_name,
+                    'parameter_description' => $paramSnapshot->parameter_description,
+                    'parameter_status' => $paramSnapshot->parameter_status,
+                ]);
+            }
+        }
+
+        Log::info("Lab Job #{$labJob->job_number} and its items created from Quotation #{$quotation->quotation_number}.");
+        return $labJob;
+    }
+
+    /**
+     * Menghapus semua item pekerjaan lab dan menyalin ulang dari penawaran.
+     *
+     * @param LabJob $labJob
+     * @return void
+     */
+    public function resetToQuotationSnapshot(LabJob $labJob): LabJob
+    {
+
+        // 1. Hapus semua item pekerjaan lab dan parameternya
+        $labJob->labJobItems->each(function ($item) {
+            $item->parameterLabJobItems()->delete();
+        });
+        // Hapus item pekerjaan lab itu sendiri 
+        $labJob->labJobItems()->delete();
+
+        // 2. Muat penawaran induk dan itemnya
+        $labJob->load(['quotation.quotationItems' => fn($query) => $query->where('group', 'A'), 'quotation.quotationItems.parameterQuotationItems']);
+        $quotation = $labJob->quotation;
+
+        if ($quotation) {
+            // 3. Salin ulang item dari penawaran
+            foreach ($quotation->quotationItems as $quotationItem) {
+                $labJobItem = LabJobItem::create([
+                    'lab_job_id' => $labJob->id,
+                    'quotation_item_id' => $quotationItem->id,
+                    'test_package_id' => $quotationItem->test_package_id,
+                    'regulation_id' => $quotationItem->regulation_id,
+                    'group' => $quotationItem->group,
+                    'description' => $quotationItem->description,
+                    'regulation_name' => $quotationItem->regulation_name,
+                    'quantity' => $quotationItem->quantity,
+                    'unit' => $quotationItem->unit,
+                    'price' => $quotationItem->price,
+                    'location' => $quotationItem->location,
+                ]);
+
+                // Salin ulang parameter snapshot
                 foreach ($quotationItem->parameterQuotationItems as $paramSnapshot) {
                     ParameterLabJobItem::create([
                         'lab_job_item_id' => $labJobItem->id,
@@ -64,11 +119,9 @@ class LabJobService
                 }
             }
         }
-
-        Log::info("Lab Job #{$labJob->job_number} and its items created from Quotation #{$quotation->quotation_number}.");
+        Log::info("Lab Job #{$labJob->job_number} have been reset from Quotation #{$quotation->quotation_number}.");
         return $labJob;
     }
-
     /**
      * Mengubah status penawaran dan memicu aksi terkait.
      *

@@ -209,15 +209,15 @@ class LabJobResource extends Resource
     public static function getRelations(): array
     {
         return [
+            SamplesRelationManager::class,
+            LabJobPersonelsRelationManager::class,
+            LabJobItemsRelationManager::class,
+            // RelationGroup::make('items', [
+            //     SamplesRelationManager::class,
+            //     LabJobItemsRelationManager::class,
+            //     LabJobPersonelsRelationManager::class,
+            // ]),
 
-            RelationGroup::make('items', [
-                SamplesRelationManager::class,
-                LabJobItemsRelationManager::class,
-                LabJobPersonelsRelationManager::class,
-            ]),
-
-
-            // Asumsi Anda punya relation manager untuk personel
         ];
     }
 
