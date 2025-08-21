@@ -74,10 +74,9 @@ class LabJobItemsRelationManager extends RelationManager
                     Select::make('test_package_id')
                         ->label('Paket Pengujian')
                         ->relationship('testPackage', 'name')
-                        ->preload()
                         ->searchable()
                         ->helperText('Pilih paket pengujian jika item adalah sampel')
-                        ->reactive()
+                        ->live()
                         ->afterStateUpdated(function ($state, Set $set) {
                             $set('description', null);
                             $set('price', null);
@@ -98,7 +97,7 @@ class LabJobItemsRelationManager extends RelationManager
                                     }
                                 }
                             }
-                        }),
+                        })->preload(),
 
                     TextInput::make('description')
                         ->label('Keterangan')

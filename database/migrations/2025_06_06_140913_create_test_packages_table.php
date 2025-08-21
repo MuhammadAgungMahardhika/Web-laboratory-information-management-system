@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('test_packages', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255)->unique();
+            $table->string('name', 255);
             $table->unsignedBigInteger('sample_matric_id');
 
             $table->foreignId('regulation_id')->constrained('regulations')->onDelete('restrict')->onUpdate('cascade');

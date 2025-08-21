@@ -12,4 +12,9 @@ class Regulation extends Model
     /** @use HasFactory<RegulationFactory> */
     use HasFactory;
     use Blameable;
+
+    public function testPackages()
+    {
+        return $this->hasMany(TestPackage::class);
+    }
 }

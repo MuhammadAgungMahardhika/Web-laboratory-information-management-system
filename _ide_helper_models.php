@@ -641,6 +641,8 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestPackage> $testPackages
+ * @property-read int|null $test_packages_count
  * @method static \Database\Factories\RegulationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Regulation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Regulation newQuery()
