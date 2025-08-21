@@ -77,8 +77,7 @@ class PersonelResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
                         $query->where(function ($query) use ($get) {
-                            $query->whereDoesntHave('customer')
-                                ->whereDoesntHave('personel');
+                            $query->whereDoesntHave('customer');
                         });
                     })
                     ->searchable()

@@ -26,6 +26,7 @@ use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
+use Filament\Tables\Grouping\Group;
 
 class SamplesRelationManager extends RelationManager
 {
@@ -44,38 +45,46 @@ class SamplesRelationManager extends RelationManager
     }
     public function form(Schema $schema): Schema
     {
-        $ownerRecord = $this->ownerRecord;
         return  $schema
             ->components([
                 Select::make('lab_job_item_id')
                     ->label('Item Job')
-                    ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) use ($ownerRecord) {
+                    ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) {
                         return $query
                             ->where('group', 'A')
-                            ->where('lab_job_id', $ownerRecord->id);
+                            ->where('lab_job_id', $this->ownerRecord->id);
                     })
                     ->required()
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->afterStateUpdated(function ($state, $set) use ($ownerRecord) {
+                    ->afterStateUpdated(function ($state, $set) {
                         if ($state) {
                             // Inisialisasi service
                             $sampleService = new \App\Services\SampleService();
-                            $labJobItem = $ownerRecord->labJobItems()->find($state);
+                            $labJobItem = $this->ownerRecord->labJobItems()->find($state);
                             $sampleCode = $sampleService->generateSampleCode($labJobItem);
                             $set('sample_code', $sampleCode);
                         } else {
                             $set('sample_code', null);
                         }
                     }),
+                Select::make('status')
+                    ->options(SampleStatusEnum::labels())
+                    ->default(SampleStatusEnum::default())
+                    ->required(),
                 Wizard::make([
-                    Step::make('Pengumpulan')
+                    Step::make('INFORMASI PENGAMBILAN')
                         ->columnSpanFull()
                         ->schema([
                             Select::make('collected_by_personel_id')
-                                ->relationship('collectedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::KepalaPpc->value, PositionEnum::Ppc->value])))
-                                ->label('Personel Pengumpul')
+                                ->relationship(
+                                    'collectedByPersonel',
+                                    'fullname',
+                                    modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::KepalaPpc->value, PositionEnum::Ppc->value]))
+                                        ->whereHas('labJobPersonels', fn($q) => $q->where('lab_job_id', $this->ownerRecord->id))
+                                )
+                                ->label('Ppc')
                                 ->searchable()
                                 ->preload(),
                             TextInput::make('sample_code')
@@ -90,22 +99,10 @@ class SamplesRelationManager extends RelationManager
                                 ->label('Waktu Pengambilan')
                                 ->default(now()->format('H:i:s'))
                                 ->required(),
-                            Textarea::make('collection_location_desc'),
+                            Textarea::make('collection_location_desc')
+                                ->label('Lokasi Pengambilan'),
                             TextInput::make('latitude'),
                             TextInput::make('longitude'),
-                            TextInput::make('container_type')
-                                ->label('Jenis Wadah')
-                                ->maxLength(50)
-                                ->nullable(),
-                            TextInput::make('container_quantity')
-                                ->label('Jumlah Wadah')
-                                ->required()
-                                ->numeric()
-                                ->default(1),
-                            TextInput::make('sample_volume')
-                                ->label('Volume Sampel')
-                                ->maxLength(50)
-                                ->nullable(),
                             TextInput::make('preservation_method')
                                 ->label('Metode Preservasi')
                                 ->maxLength(255)
@@ -113,13 +110,30 @@ class SamplesRelationManager extends RelationManager
                             Textarea::make('collection_notes')
                                 ->label('Catatan Pengambilan')
                                 ->columnSpanFull(),
+                            Section::Make('Wadah dan Volume')
+                                ->columns(3)
+                                ->schema([
+                                    TextInput::make('container_type')
+                                        ->label('Jenis Wadah')
+                                        ->maxLength(50)
+                                        ->nullable(),
+                                    TextInput::make('container_quantity')
+                                        ->label('Jumlah Wadah')
+                                        ->required()
+                                        ->numeric()
+                                        ->default(1),
+                                    TextInput::make('sample_volume')
+                                        ->label('Volume Sampel')
+                                        ->maxLength(50)
+                                        ->nullable(),
+                                ])->columnSpanFull(),
                         ])->columns(4),
-                    Step::make('Penerimaan')
+                    Step::make('INFORMASI PENERIMAAN')
                         ->columnSpanFull()
                         ->schema([
                             Select::make('received_by_personel_id')
                                 ->relationship('receivedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->where('name', PositionEnum::Administrator->value)))
-                                ->label('Personel Penerima')
+                                ->label('Penerima')
                                 ->default(Auth::user()->id)
                                 ->searchable()
                                 ->preload(),
@@ -136,10 +150,7 @@ class SamplesRelationManager extends RelationManager
                                 ->columnSpanFull(),
                         ])->columns(4),
                 ])->columnSpanFull(),
-                Select::make('status')
-                    ->options(SampleStatusEnum::labels())
-                    ->default(SampleStatusEnum::default())
-                    ->required(),
+
 
             ]);
     }
@@ -147,29 +158,30 @@ class SamplesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->groups([
+                Group::make('labJobItem.description')
+                    ->label(''),
+            ])
             ->defaultGroup('labJobItem.description')
+
             ->columns([
-                TextColumn::make('labJobItem.description')
-                    ->label('Deskripsi Item')
-                    ->sortable(),
-                TextColumn::make('sampleMatric.name')
-                    ->label('Matric Sampel')
-                    ->sortable(),
-                TextColumn::make('collectedByPersonel.fullname')
-                    ->label('Personel Pengumpul')
-                    ->sortable(),
-                TextColumn::make('receivedByPersonel.fullname')
-                    ->label('Personel Penerima')
-                    ->sortable(),
                 TextColumn::make('sample_code')
                     ->label('Kode Sampel')
                     ->searchable(),
+
+                TextColumn::make('collectedByPersonel.fullname')
+                    ->label('Ppc')
+                    ->sortable(),
+                TextColumn::make('receivedByPersonel.fullname')
+                    ->label('Penerima')
+                    ->sortable(),
                 TextColumn::make('collection_date')
                     ->label('Tanggal Pengambilan')
                     ->date('d-m-Y')
                     ->sortable(),
                 TextColumn::make('collection_time')
                     ->label('Waktu Pengambilan')
+                    ->alignEnd()
                     ->time('H:i')
                     ->sortable(),
                 TextColumn::make('latitude')
@@ -195,9 +207,11 @@ class SamplesRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('received_time')
                     ->label('Waktu Penerimaan')
+                    ->alignEnd()
                     ->time('H:i')
                     ->sortable(),
-                TextColumn::make('status'),
+                TextColumn::make('status')
+                    ->formatStateUsing(fn($state) => SampleStatusEnum::labels()[$state]),
                 TextColumn::make('created_by')
                     ->searchable(),
                 TextColumn::make('updated_by')
