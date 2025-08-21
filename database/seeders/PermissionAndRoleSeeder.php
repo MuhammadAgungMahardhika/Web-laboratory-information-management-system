@@ -92,6 +92,14 @@ class PermissionAndRoleSeeder extends Seeder
             'update-sample-type',
             'delete-sample-type',
         ];
+
+        $samplePermissions = [
+            'view-any-sample',
+            'view-sample',
+            'create-sample',
+            'update-sample',
+            'delete-sample',
+        ];
         $testMethodPermissions = [
             'view-any-test-method',
             'view-test-method',
@@ -152,6 +160,7 @@ class PermissionAndRoleSeeder extends Seeder
             $regulationPermissions,
             $sampleMatricPermissions,
             $sampleTypePermissions,
+            $samplePermissions,
             $testMethodPermissions,
             $testPackagePermissions,
             $quotationPermissions,
