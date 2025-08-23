@@ -49,13 +49,13 @@ class SampleForm
                     ->columnSpanFull(),
                 Select::make('status')
                     ->options([
-            'received' => 'Received',
-            'prepared' => 'Prepared',
-            'in_analysis' => 'In analysis',
-            'analysis_completed' => 'Analysis completed',
-            'invalid' => 'Invalid',
-            'archived' => 'Archived',
-        ])
+                        'received' => 'Received',
+                        'prepared' => 'Prepared',
+                        'in_analysis' => 'In analysis',
+                        'analysis_completed' => 'Analysis completed',
+                        'invalid' => 'Invalid',
+                        'archived' => 'Archived',
+                    ])
                     ->default('received')
                     ->required(),
                 TextInput::make('created_by'),

@@ -13,6 +13,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -75,7 +76,7 @@ class SamplesRelationManager extends RelationManager
                     ->default(SampleStatusEnum::default())
                     ->required(),
                 Wizard::make([
-                    Step::make('INFORMASI PENGAMBILAN')
+                    Step::make('PENGAMBILAN OLEH PPC')
                         ->columnSpanFull()
                         ->schema([
                             Select::make('collected_by_personel_id')
@@ -129,7 +130,7 @@ class SamplesRelationManager extends RelationManager
                                         ->nullable(),
                                 ])->columnSpanFull(),
                         ])->columns(4),
-                    Step::make('INFORMASI PENERIMAAN')
+                    Step::make('PENERIMAAN OLEH ADMIN')
                         ->columnSpanFull()
                         ->schema([
                             Select::make('received_by_personel_id')
@@ -158,6 +159,13 @@ class SamplesRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return SamplesTable::configure($table);
+        return SamplesTable::configure($table)
+            ->headerActions([
+                CreateAction::make(),
+            ])
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+            ]);
     }
 }
