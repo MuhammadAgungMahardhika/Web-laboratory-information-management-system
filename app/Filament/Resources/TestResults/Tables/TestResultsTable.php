@@ -14,21 +14,12 @@ class TestResultsTable
     {
         return $table
             ->columns([
-                TextColumn::make('sample_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('parameter_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('test_method_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('analyst_personel_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('validator_personel_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('sample.sample_code'),
+                TextColumn::make('parameter.name'),
+                TextColumn::make('testMethod.name'),
+                TextColumn::make('analyst_personel.fullname'),
+                TextColumn::make('validator_personel.fullname'),
+
                 TextColumn::make('tested_value')
                     ->searchable(),
                 TextColumn::make('corrected_value')

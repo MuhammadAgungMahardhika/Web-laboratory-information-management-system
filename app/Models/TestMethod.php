@@ -13,6 +13,10 @@ class TestMethod extends Model
     use HasFactory;
     use Blameable;
 
+    public function testResults()
+    {
+        return $this->hasMany(TestResult::class);
+    }
     public function parameter()
     {
         return $this->hasMany(Parameter::class);

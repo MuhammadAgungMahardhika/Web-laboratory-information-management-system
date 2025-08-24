@@ -16,6 +16,7 @@ class SamplesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->with('labJobItem'))
             ->groups([
                 Group::make('labJobItem.description')
                     ->label(''),

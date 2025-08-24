@@ -974,6 +974,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameter
  * @property-read int|null $parameter_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResult> $testResults
+ * @property-read int|null $test_results_count
  * @method static \Database\Factories\TestMethodFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestMethod newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestMethod newQuery()
@@ -1025,6 +1027,61 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereUpdatedBy($value)
  */
 	class TestPackage extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $sample_id
+ * @property int $parameter_id
+ * @property int $test_method_id
+ * @property int|null $analyst_personel_id
+ * @property int|null $validator_personel_id
+ * @property string|null $tested_value
+ * @property string|null $corrected_value
+ * @property string $unit
+ * @property string|null $test_date
+ * @property string|null $test_notes
+ * @property string|null $standard_value_ref
+ * @property string|null $standard_unit_ref
+ * @property string|null $standard_notes_ref
+ * @property string $validation_status
+ * @property string|null $validation_date
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Personel|null $analystPersonel
+ * @property-read \App\Models\Parameter $parameter
+ * @property-read \App\Models\Sample $sample
+ * @property-read \App\Models\TestMethod $testMethod
+ * @property-read \App\Models\Personel|null $validatorPersonel
+ * @method static \Database\Factories\TestResultFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereAnalystPersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCorrectedValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereParameterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereSampleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardNotesRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardUnitRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardValueRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestedValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereUpdatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereValidationDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereValidationStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereValidatorPersonelId($value)
+ */
+	class TestResult extends \Eloquent {}
 }
 
 namespace App\Models{

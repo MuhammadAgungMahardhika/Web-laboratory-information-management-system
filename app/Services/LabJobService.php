@@ -157,10 +157,10 @@ class LabJobService
                 TestResult::create([
                     'sample_id' => $sample->id,
                     'parameter_id' => $paramSnapshot->parameter_id,
-                    'test_method_id' => $paramSnapshot->parameter->default_test_method_id,
+                    'test_method_id' => $paramSnapshot->parameter->test_method_id,
                     'unit' => $paramSnapshot->parameter_unit,
                     'tested_value' => null, // Nilai masih kosong
-                    'analyst_personnel_id' => null, // Nanti ditugaskan
+                    'analyst_personel_id' => null, // Nanti ditugaskan
                     'validation_status' => 'raw', // Status awal
                     // ... tambahkan kolom lain
                 ]);

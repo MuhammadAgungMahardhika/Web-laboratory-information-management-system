@@ -152,8 +152,6 @@ class SamplesRelationManager extends RelationManager
                                 ->columnSpanFull(),
                         ])->columns(4),
                 ])->columnSpanFull(),
-
-
             ]);
     }
 
