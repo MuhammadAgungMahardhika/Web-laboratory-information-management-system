@@ -2,67 +2,26 @@
 
 namespace App\Policies;
 
+use App\Models\Enums\JobStatusEnum;
 use App\Models\LabJob;
 use App\Models\User;
 use App\Traits\HasAuthorization;
+use App\Traits\HasPolicyAuthorization;
+use Auth;
 use Illuminate\Auth\Access\Response;
 
 class LabJobPolicy
 {
+    use HasPolicyAuthorization;
 
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, LabJob $labJob): bool
-    {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, LabJob $labJob): bool
     {
-        return true;
+        // Panggil izin dasar dari trait, lalu tambahkan kondisi khusus
+        return static::hasPermission('update', static::getResourceName()) && $labJob->status === JobStatusEnum::PendingStart->value;
     }
-
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, LabJob $labJob): bool
     {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, LabJob $labJob): bool
-    {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, LabJob $labJob): bool
-    {
-        return true;
+        // Panggil izin dasar dari trait, lalu tambahkan kondisi khusus
+        return static::hasPermission('delete', static::getResourceName()) && $labJob->status === JobStatusEnum::PendingStart->value;
     }
 }

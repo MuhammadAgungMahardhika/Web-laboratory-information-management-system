@@ -14,7 +14,6 @@ class Quotation extends Model
     use Blameable;
     use HasFactory;
 
-
     public function labJob()
     {
         return $this->hasOne(LabJob::class);

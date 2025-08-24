@@ -13,22 +13,17 @@ use App\Filament\Resources\QuotationResource\Pages\ListQuotations;
 use App\Filament\Resources\QuotationResource\Pages\CreateQuotation;
 use App\Filament\Resources\QuotationResource\Pages\ViewQuotation;
 use App\Filament\Resources\QuotationResource\Pages\EditQuotation;
-use App\Filament\Resources\QuotationResource\Pages;
 use App\Filament\Resources\QuotationResource\RelationManagers\QuotationItemRelationManager;
-use App\Models\Enums\CustomerStatusEnum;
 use App\Models\Enums\QuotationStatusEnum;
 use App\Models\Enums\RoleEnum;
 use App\Models\Quotation;
 use App\Models\TermTemplate;
 use App\Services\QuotationService;
-use App\Traits\HasAuthorization;
 use Carbon\Carbon;
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -40,10 +35,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 
 class QuotationResource extends Resource
 {
-    use HasAuthorization;
+
     protected static ?string $model = Quotation::class;
     protected static ?string $navigationLabel = 'Penawaran';
     protected static ?string $label = 'Penawaran';
@@ -481,30 +478,12 @@ class QuotationResource extends Resource
                 EditAction::make(),
             ])
             ->toolbarActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make(),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
                 // ]),
             ]);
     }
 
-
-    public static function canEdit(Model $record): bool
-    {
-        return in_array($record->status, [
-            QuotationStatusEnum::Draft->value,
-            QuotationStatusEnum::Submitted->value,
-            QuotationStatusEnum::Revised->value,
-        ]);
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return in_array($record->status, [
-            QuotationStatusEnum::Draft->value,
-            QuotationStatusEnum::Submitted->value,
-            QuotationStatusEnum::Revised->value,
-        ]);
-    }
     public static function getRelations(): array
     {
         return [

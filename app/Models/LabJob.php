@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-#[UsePolicy(LabJobPolicy::class)]
 class LabJob extends Model
 {
     /** @use HasFactory<JobFactory> */
