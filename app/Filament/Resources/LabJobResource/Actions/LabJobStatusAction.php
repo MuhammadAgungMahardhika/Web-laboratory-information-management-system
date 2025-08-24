@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\LabJobResource\Actions;
 
-use App\Filament\Resources\LabJobResource\Actions;
 use App\Models\Enums\JobStatusEnum;
-use App\Models\Enums\LabJobStatusEnum;
 use App\Models\LabJob;
 use App\Services\LabJobService;
 use Auth;
@@ -19,7 +17,8 @@ use Filament\Support\Colors\Color;
 
 class LabJobStatusAction
 {
-
+    protected static string $taskLetterDownloadUrl = 'lab_jobs.download_task_letter';
+    protected static string $taskLetterPreviewUrl = 'lab_jobs.preview_task_letter';
     public static function preview(): Action
     {
         return Action::make('Preview Surat Tugas')
@@ -35,24 +34,28 @@ class LabJobStatusAction
             ->modalWidth('6xl')
             ->modalContent(function (LabJob $record) {
                 $safeJobNumber = Str::of($record->job_number)->replace('/', '-');
-                $pdfUrl = route('lab_jobs.preview_task_letter', $record);
-                $downloadUrl = route('lab_jobs.download_task_letter', $record);
+                $pdfUrl = route(static::$taskLetterDownloadUrl, $record);
+                $downloadUrl = route(static::$taskLetterPreviewUrl, $record);
 
-                return view('pdfs.preview', [ // Gunakan view modal yang sama
+                return view('pdfs.preview', [
                     'pdfUrl' => $pdfUrl,
                     'safeFileName' => $safeJobNumber,
                     'downloadUrl' => $downloadUrl
                 ]);
             })
             ->modalFooterActions([
-                // Tombol download di footer modal
-                Action::make('Download')
-                    ->url(fn(LabJob $record): string => route('lab_jobs.download_task_letter', $record))
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->color('primary')
-                    ->openUrlInNewTab()
+                static::download(),
             ])
             ->modalFooterActionsAlignment('right');
+    }
+
+    public static function download(): Action
+    {
+        return  Action::make('Download')
+            ->url(fn(LabJob $record): string => route(static::$taskLetterDownloadUrl, $record))
+            ->icon('heroicon-o-document-arrow-down')
+            ->color('primary')
+            ->openUrlInNewTab();
     }
     public static function taskLetter(): Action
     {
@@ -61,7 +64,7 @@ class LabJobStatusAction
             ->color('primary')
             // Hanya tampil jika pekerjaan sudah dimulai
             ->visible(fn(LabJob $record) => $record->job_status === JobStatusEnum::InProgress->value)
-            ->url(fn(LabJob $record): string => route('lab_jobs.download_task_letter', $record))
+            ->url(fn(LabJob $record): string => route(static::$taskLetterDownloadUrl, $record))
             ->openUrlInNewTab();
     }
     public static function startJob($url): Action

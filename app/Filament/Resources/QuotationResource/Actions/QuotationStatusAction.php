@@ -17,9 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\DocumentMail;
 use App\Services\WhatsAppService;
-
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Support\HtmlString;
@@ -30,6 +28,8 @@ use Filament\Schemas\Components\Utilities\Get;
 class QuotationStatusAction
 {
 
+    protected static string $quotationPreviewUrl = 'quotations.preview_pdf';
+    protected static string $quotationDownloadUrl = 'quotations.download_pdf';
     public static function preview(): Action
     {
         return  Action::make('Preview')
@@ -44,8 +44,8 @@ class QuotationStatusAction
                 // Ini adalah cara untuk me-render Blade view di dalam modal
                 // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
                 $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);
-                $pdfUrl = route('quotations.preview_pdf', $record);
-                $downloadUrl = route('quotations.download_pdf', $record);
+                $pdfUrl = route(static::$quotationPreviewUrl, $record);
+                $downloadUrl = route(static::$quotationDownloadUrl, $record);
 
                 return view('pdfs.preview', [
                     'pdfUrl' => $pdfUrl,
@@ -165,7 +165,7 @@ class QuotationStatusAction
                     $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);
                     $base64PdfContent = base64_encode($pdfContent);
 
-                    $publicPdfUrl = route('quotations.download_pdf', $record);
+                    $publicPdfUrl = route(static::$quotationDownloadUrl, $record);
 
                     if ($data['send_whatsapp']) {
                         // --- Inisialisasi WhatsApp Service ---
@@ -203,7 +203,7 @@ class QuotationStatusAction
                                     'message' => $data['message'],
                                     'customerName' => $record->customer->name ?? 'Pelanggan',
                                     'quotationNumber' => $record->quotation_number, // Tambahkan data spesifik untuk template
-                                    'downloadUrl' => route('quotations.download_pdf', $record),
+                                    'downloadUrl' => route(static::$quotationDownloadUrl, $record),
                                 ],
                                 attachmentsData: [
                                     [
@@ -244,7 +244,7 @@ class QuotationStatusAction
     public static function download(): Action
     {
         return    Action::make('Download')
-            ->url(fn(Quotation $record): string => route('quotations.download_pdf', $record))
+            ->url(fn(Quotation $record): string => route(static::$quotationDownloadUrl, $record))
             ->icon('heroicon-o-document-arrow-down')
             ->color('info')
             ->openUrlInNewTab();
