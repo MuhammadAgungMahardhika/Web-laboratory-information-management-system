@@ -8,6 +8,7 @@ use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\ParameterLabJobItem;
 use App\Models\Quotation;
+use App\Models\TestResult;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -133,8 +134,37 @@ class LabJobService
     {
         // 1. Perbarui status penawaran
         $labJob->status = $newStatus->value;
-
+        // 2. Lakukan aksi spesifik berdasarkan status baru
+        if ($newStatus === JobStatusEnum::SamplingCompleted) {
+            $this->generateTestResultsForLabJob($labJob);
+        }
         // 3. Simpan perubahan ke database
         return $labJob->save();
+    }
+
+    /**
+     * Membuat semua record TestResult kosong untuk sebuah LabJob.
+     * @param LabJob $labJob
+     */
+    protected function generateTestResultsForLabJob(LabJob $labJob): void
+    {
+        // 1. Muat semua relasi yang diperlukan
+        $labJob->load(['samples.labJobItem.parameterLabJobItems.parameter']);
+
+        foreach ($labJob->samples as $sample) {
+            foreach ($sample->labJobItem->parameterLabJobItems as $paramSnapshot) {
+                // 2. Buat record TestResult baru untuk setiap pasangan Sample-Parameter
+                TestResult::create([
+                    'sample_id' => $sample->id,
+                    'parameter_id' => $paramSnapshot->parameter_id,
+                    'test_method_id' => $paramSnapshot->parameter->default_test_method_id,
+                    'unit' => $paramSnapshot->parameter_unit,
+                    'tested_value' => null, // Nilai masih kosong
+                    'analyst_personnel_id' => null, // Nanti ditugaskan
+                    'validation_status' => 'raw', // Status awal
+                    // ... tambahkan kolom lain
+                ]);
+            }
+        }
     }
 }

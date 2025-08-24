@@ -37,6 +37,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Support\Icons\Heroicon;
 
 class QuotationResource extends Resource
 {
@@ -44,7 +45,7 @@ class QuotationResource extends Resource
     protected static ?string $model = Quotation::class;
     protected static ?string $navigationLabel = 'Penawaran';
     protected static ?string $label = 'Penawaran';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-duplicate';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedDocumentDuplicate;
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'quotation_number';
     protected static int $globalSearchResultsLimit = 20;

@@ -19,18 +19,19 @@ use Filament\Tables\Table;
 class SampleResource extends Resource
 {
     protected static ?string $model = Sample::class;
-
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationLabel = 'Sampel';
+    protected static ?string $label = 'Sampel';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentList;
 
     public static function form(Schema $schema): Schema
     {
         return SampleForm::configure($schema);
     }
 
-    public static function infolist(Schema $schema): Schema
-    {
-        return SampleInfolist::configure($schema);
-    }
+    // public static function infolist(Schema $schema): Schema
+    // {
+    //     return SampleInfolist::configure($schema);
+    // }
 
     public static function table(Table $table): Table
     {

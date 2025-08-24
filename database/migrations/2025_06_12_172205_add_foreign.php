@@ -269,6 +269,34 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('set null');
         });
+
+        Schema::table('test_results', function (Blueprint $table) {
+            $table->foreign('sample_id', 'fk_test_results_sample')
+                ->references('id')
+                ->on('samples')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('parameter_id', 'fk_test_results_parameter')
+                ->references('id')
+                ->on('parameters')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('test_method_id', 'fk_test_results_test_method')
+                ->references('id')
+                ->on('test_methods')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('analyst_personel_id', 'fk_test_results_analyst_personel')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+            $table->foreign('validator_personel_id', 'fk_test_results_validator_personel')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+        });
     }
 
     /**

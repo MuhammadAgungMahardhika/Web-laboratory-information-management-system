@@ -29,6 +29,7 @@ use App\Services\LabJobService;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +39,7 @@ class LabJobResource extends Resource
     protected static ?string $model = LabJob::class;
     protected static ?string $navigationLabel = 'Lab Job';
     protected static ?string $label = 'Lab Job';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-s-document';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::DocumentDuplicate;
     protected static ?int $navigationSort = 2;
     protected static ?string $recordTitleAttribute = 'job_number';
     protected static int $globalSearchResultsLimit = 20;
