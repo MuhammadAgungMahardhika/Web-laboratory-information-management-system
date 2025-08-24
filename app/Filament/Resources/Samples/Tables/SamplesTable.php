@@ -25,6 +25,12 @@ class SamplesTable
                 TextColumn::make('sample_code')
                     ->label('Kode Sampel')
                     ->searchable(),
+                TextColumn::make('status')
+                    ->formatStateUsing(fn($state) => SampleStatusEnum::labels()[$state])
+                    ->badge()
+                    ->color(fn($state) => SampleStatusEnum::color($state))
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('collectedByPersonel.fullname')
                     ->label('Ppc')
                     ->sortable(),
@@ -66,8 +72,7 @@ class SamplesTable
                     ->alignEnd()
                     ->time('H:i')
                     ->sortable(),
-                TextColumn::make('status')
-                    ->formatStateUsing(fn($state) => SampleStatusEnum::labels()[$state]),
+
                 TextColumn::make('created_by')
                     ->searchable(),
                 TextColumn::make('updated_by')

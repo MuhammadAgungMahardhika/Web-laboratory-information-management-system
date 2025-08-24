@@ -114,9 +114,12 @@ class LabJobResource extends Resource
                             ->maxLength(50),
                         DatePicker::make('start_date')
                             ->label('Tanggal Mulai')
+                            ->live()
                             ->default(now()),
                         DatePicker::make('end_date')
-                            ->label('Tanggal Selesai'),
+                            ->label('Tanggal Selesai')
+                            ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
+                            ->afterOrEqual('start_date'),
 
                     ])->columnSpanFull()->columns(2),
             ]);

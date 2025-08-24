@@ -39,11 +39,11 @@ class SamplesRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return false;
+        return $this->ownerRecord->status !== JobStatusEnum::InProgress->value;
     }
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
-        return $ownerRecord->status === JobStatusEnum::InProgress->value;
+        return $ownerRecord->status !== JobStatusEnum::PendingStart->value;
     }
     public function form(Schema $schema): Schema
     {
