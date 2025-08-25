@@ -299,6 +299,10 @@ namespace App\Models{
  * @property-read int|null $parameter_quotation_item_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterTestPackage> $parameterTestPackages
  * @property-read int|null $parameter_test_packages_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelParameter> $personelParameters
+ * @property-read int|null $personel_parameters_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Personel> $personels
+ * @property-read int|null $personels_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuotationItem> $quotationItems
  * @property-read int|null $quotation_items_count
  * @property-read \App\Models\TestMethod $testMethod
@@ -447,6 +451,10 @@ namespace App\Models{
  * @property-read int|null $lab_job_personels_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJob> $labJobs
  * @property-read int|null $lab_jobs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
+ * @property-read int|null $parameters_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelParameter> $personelParameters
+ * @property-read int|null $personel_parameters_count
  * @property-read \App\Models\Position|null $position
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quotation> $quotations
  * @property-read int|null $quotations_count
@@ -474,6 +482,32 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereUserId($value)
  */
 	class Personel extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $personel_id
+ * @property int $parameter_id
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Parameter $parameter
+ * @property-read \App\Models\Personel $personel
+ * @method static \Database\Factories\PersonelParameterFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereParameterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter wherePersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereUpdatedBy($value)
+ */
+	class PersonelParameter extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -1035,12 +1069,12 @@ namespace App\Models{
  * @property int $sample_id
  * @property int $parameter_id
  * @property int $test_method_id
- * @property int|null $analyst_personel_id
+ * @property int $analyst_personel_id
  * @property int|null $validator_personel_id
  * @property string|null $tested_value
  * @property string|null $corrected_value
  * @property string $unit
- * @property string|null $test_date
+ * @property string $test_date
  * @property string|null $test_notes
  * @property string|null $standard_value_ref
  * @property string|null $standard_unit_ref
@@ -1051,7 +1085,7 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Personel|null $analystPersonel
+ * @property-read \App\Models\Personel $analystPersonel
  * @property-read \App\Models\Parameter $parameter
  * @property-read \App\Models\Sample $sample
  * @property-read \App\Models\TestMethod $testMethod

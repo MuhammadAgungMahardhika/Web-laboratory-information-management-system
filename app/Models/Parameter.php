@@ -12,6 +12,16 @@ class Parameter extends Model
     /** @use HasFactory<ParameterFactory> */
     use HasFactory;
     use Blameable;
+
+    public function personelParameters()
+    {
+        return $this->hasMany(PersonelParameter::class);
+    }
+
+    public function personels()
+    {
+        return $this->belongsToMany(Personel::class, 'personel_parameters');
+    }
     public function testMethod()
     {
         return $this->belongsTo(TestMethod::class);

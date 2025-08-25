@@ -14,22 +14,15 @@ use App\Filament\Resources\PersonelResource\Pages\ListPersonels;
 use App\Filament\Resources\PersonelResource\Pages\CreatePersonel;
 use App\Filament\Resources\PersonelResource\Pages\ViewPersonel;
 use App\Filament\Resources\PersonelResource\Pages\EditPersonel;
-use App\Filament\Resources\PersonelResource\Pages;
-use App\Filament\Resources\PersonelResource\RelationManagers;
+use App\Filament\Resources\PersonelResource\RelationManagers\PersonelParametersRelationManager;
 use App\Models\Enums\RoleEnum;
 use App\Models\Enums\UserStatusEnum;
 use App\Models\Personel;
 use App\Traits\HasAuthorization;
-use Closure;
-use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PersonelResource extends Resource
 {
@@ -168,8 +161,8 @@ class PersonelResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->with('position'))
             ->columns([
-
                 TextColumn::make('fullname')
                     ->label('Nama personel')
                     ->searchable(),
@@ -222,7 +215,7 @@ class PersonelResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PersonelParametersRelationManager::class
         ];
     }
 

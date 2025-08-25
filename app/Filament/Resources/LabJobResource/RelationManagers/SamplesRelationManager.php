@@ -134,7 +134,7 @@ class SamplesRelationManager extends RelationManager
                         ->columnSpanFull()
                         ->schema([
                             Select::make('received_by_personel_id')
-                                ->relationship('receivedByPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->where('name', PositionEnum::Administrator->value)))
+                                ->relationship('receivedByPersonel', 'fullname')
                                 ->label('Penerima')
                                 ->default(Auth::user()->id)
                                 ->searchable()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TestResults\Tables;
 
+use App\Models\Enums\PositionEnum;
 use App\Models\Enums\RoleEnum;
 use Auth;
 use Filament\Actions\BulkActionGroup;
@@ -18,7 +19,11 @@ class TestResultsTable
     {
         return $table
             ->modifyQueryUsing(function ($query) {
-                if (Auth::user()->hasRole(RoleEnum::Analyst->value)) {
+                $user = Auth::user();
+                $personel = $user->personel;
+                if ($personel && $personel->position->name === PositionEnum::Analyst->value) {
+                    // Filter untuk hanya menampilkan hasil yang parameternya sesuai keahlian analis ini
+                    return $query->whereHas('parameter', fn($q) => $q->whereHas('personels', fn($qi) => $qi->where('personel_id', $personel->id)));
                 }
                 return $query;
             })

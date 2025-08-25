@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TestResults\Schemas;
 
+use App\Models\Enums\PositionEnum;
 use App\Models\Enums\RoleEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
@@ -33,7 +34,6 @@ class TestResultForm
                         ->default(TestResultStatusEnum::Raw->value)
                         ->required(),
                     Select::make('sample_id')
-                        ->hidden($isDisabled)
                         ->label('Sampel')
                         ->relationship('sample', 'sample_code')
                         ->required()
@@ -47,7 +47,7 @@ class TestResultForm
                         ->preload(),
                     Select::make('analyst_personel_id')
                         ->label('Analis')
-                        ->relationship('analystPersonel', 'fullname')
+                        ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::Analyst->value])))
                         ->searchable()
                         ->preload(),
                 ])->columnSpanFull()->heading('Detail Pengujian')->columns(4)->disabled($isDisabled),
@@ -90,7 +90,7 @@ class TestResultForm
                         ->label('Tanggal Validasi'),
                     Select::make('validator_personel_id')
                         ->label('Validator')
-                        ->relationship('validatorPersonel', 'fullname')
+                        ->relationship('validatorPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::LaboratoryHead->value])))
                         ->searchable()
                         ->preload(),
                 ])->columnSpanFull()->heading('Validasi')->columns(2),

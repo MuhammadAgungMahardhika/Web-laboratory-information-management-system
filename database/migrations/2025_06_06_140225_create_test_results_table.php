@@ -18,14 +18,14 @@ return new class extends Migration
             $table->unsignedBigInteger('sample_id');
             $table->unsignedBigInteger('parameter_id');
             $table->unsignedBigInteger('test_method_id');
-            $table->unsignedBigInteger('analyst_personel_id');
+            $table->unsignedBigInteger('analyst_personel_id')->nullable();
             $table->unsignedBigInteger('validator_personel_id')->nullable();
 
             // Hasil uji dan data terkait
             $table->string('tested_value', 100)->nullable();
             $table->string('corrected_value', 100)->nullable();
             $table->string('unit', 50);
-            $table->date('test_date');
+            $table->date('test_date')->nullable();
             $table->text('test_notes')->nullable();
 
             // Data standar referensi
