@@ -5,7 +5,9 @@ namespace App\Filament\Resources\TestResults;
 use App\Filament\Resources\TestResults\Pages\CreateTestResult;
 use App\Filament\Resources\TestResults\Pages\EditTestResult;
 use App\Filament\Resources\TestResults\Pages\ListTestResults;
+use App\Filament\Resources\TestResults\Pages\ViewTestResult;
 use App\Filament\Resources\TestResults\Schemas\TestResultForm;
+use App\Filament\Resources\TestResults\Schemas\TestResultInfolist;
 use App\Filament\Resources\TestResults\Tables\TestResultsTable;
 use App\Models\TestResult;
 use BackedEnum;
@@ -26,6 +28,12 @@ class TestResultResource extends Resource
         return TestResultForm::configure($schema);
     }
 
+    // public static function infolist(Schema $schema): Schema
+    // {
+    //     return TestResultInfolist::configure($schema);
+    // }
+
+
     public static function table(Table $table): Table
     {
         return TestResultsTable::configure($table);
@@ -43,6 +51,7 @@ class TestResultResource extends Resource
         return [
             'index' => ListTestResults::route('/'),
             'create' => CreateTestResult::route('/create'),
+            'view' => ViewTestResult::route('/{record}'),
             'edit' => EditTestResult::route('/{record}/edit'),
         ];
     }

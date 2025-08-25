@@ -2,17 +2,27 @@
 
 namespace App\Filament\Resources\TestResults\Tables;
 
+use App\Models\Enums\RoleEnum;
+use Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use View;
 
 class TestResultsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query) {
+                if (Auth::user()->hasRole(RoleEnum::Analyst->value)) {
+                }
+                return $query;
+            })
+            ->striped()
             ->columns([
                 TextColumn::make('sample.sample_code'),
                 TextColumn::make('parameter.name'),
@@ -56,6 +66,7 @@ class TestResultsTable
                 //
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
