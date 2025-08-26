@@ -304,13 +304,13 @@ class QuotationStatusAction
                 Checkbox::make('acknowledgement')
                     ->label(function () {
                         $personelName = Auth::user()->personel->fullname ?? 'Petugas';
-                        return "Saya **{$personelName}** memahami bahwa penawaran ini tidak dapat diedit lagi setelah disetujui.";
+                        return "Saya, {$personelName} memahami bahwa penawaran ini tidak dapat diedit lagi setelah disetujui.";
                     })
                     ->required(),
                 Checkbox::make('labJobCreated')
                     ->label(function () {
                         $personelName = Auth::user()->personel->fullname ?? 'Petugas';
-                        return "Saya **{$personelName}** memahami bahwa ketika penawaran disetujui, akan dibuatkan job untuk pengerjaannya.";
+                        return "Saya, {$personelName}memahami bahwa ketika penawaran disetujui, akan dibuatkan job untuk pengerjaannya.";
                     })
                     ->required()
             ])

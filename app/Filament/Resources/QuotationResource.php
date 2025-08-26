@@ -334,12 +334,12 @@ class QuotationResource extends Resource
                                 ->numeric()
                                 ->default(0),
                             TextInput::make('ppn_percentage')
-                                ->label('Ppn')
+                                ->label('Ppn (%)')
                                 ->required()
                                 ->numeric()
                                 ->default(11),
                             TextInput::make('pph_percentage')
-                                ->label('Pph')
+                                ->label('Pph (%)')
                                 ->required()
                                 ->numeric()
                                 ->default(0),

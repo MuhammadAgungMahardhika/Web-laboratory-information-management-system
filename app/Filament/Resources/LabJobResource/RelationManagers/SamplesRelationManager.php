@@ -2,33 +2,28 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
-use App\Filament\Resources\Samples\SampleResource;
+
 use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\SampleStatusEnum;
 use Auth;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
-use Filament\Tables\Grouping\Group;
 
 class SamplesRelationManager extends RelationManager
 {
@@ -47,34 +42,40 @@ class SamplesRelationManager extends RelationManager
     }
     public function form(Schema $schema): Schema
     {
+        $user = Auth::user();
+        $personel = $user->personel;
+        $isCollector = $user->can('collecting-sample');
+        $isReceiver = $user->can('receiving-sample');
         return  $schema
             ->components([
-                Select::make('lab_job_item_id')
-                    ->label('Item Job')
-                    ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) {
-                        return $query
-                            ->where('group', 'A')
-                            ->where('lab_job_id', $this->ownerRecord->id);
-                    })
-                    ->required()
-                    ->searchable()
-                    ->preload()
-                    ->live()
-                    ->afterStateUpdated(function ($state, $set) {
-                        if ($state) {
-                            // Inisialisasi service
-                            $sampleService = new \App\Services\SampleService();
-                            $labJobItem = $this->ownerRecord->labJobItems()->find($state);
-                            $sampleCode = $sampleService->generateSampleCode($labJobItem);
-                            $set('sample_code', $sampleCode);
-                        } else {
-                            $set('sample_code', null);
-                        }
-                    }),
-                Select::make('status')
-                    ->options(SampleStatusEnum::labels())
-                    ->default(SampleStatusEnum::default())
-                    ->required(),
+                Section::make([
+                    Select::make('lab_job_item_id')
+                        ->label('Item Job')
+                        ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) {
+                            return $query
+                                ->where('group', 'A')
+                                ->where('lab_job_id', $this->ownerRecord->id);
+                        })
+                        ->required()
+                        ->searchable()
+                        ->preload()
+                        ->live()
+                        ->afterStateUpdated(function ($state,  $set) {
+                            if ($state) {
+                                // Inisialisasi service
+                                $sampleService = new \App\Services\SampleService();
+                                $labJobItem = $this->ownerRecord->labJobItems()->find($state);
+                                $sampleCode = $sampleService->generateSampleCode($labJobItem);
+                                $set('sample_code', $sampleCode);
+                            } else {
+                                $set('sample_code', null);
+                            }
+                        }),
+                    Select::make('status')
+                        ->options(SampleStatusEnum::labels())
+                        ->default(SampleStatusEnum::default())
+                        ->required(),
+                ])->columnSpanFull()->visible(fn() => $isCollector)->columns(2),
                 Wizard::make([
                     Step::make('PENGAMBILAN OLEH PPC')
                         ->columnSpanFull()
@@ -83,14 +84,16 @@ class SamplesRelationManager extends RelationManager
                                 ->relationship(
                                     'collectedByPersonel',
                                     'fullname',
-                                    modifyQueryUsing: fn($query) => $query->whereHas('position', fn($query) => $query->whereIn('name', [PositionEnum::KepalaPpc->value, PositionEnum::Ppc->value]))
-                                        ->whereHas('labJobPersonels', fn($q) => $q->where('lab_job_id', $this->ownerRecord->id))
+                                    modifyQueryUsing: fn($query) =>
+                                    $query->whereHas('labJobPersonels', fn($q) => $q->where('lab_job_id', $this->ownerRecord->id))
                                 )
+                                ->default($isCollector ? ($personel->id ?? null) : null)
                                 ->label('Ppc')
                                 ->searchable()
                                 ->preload(),
                             TextInput::make('sample_code')
                                 ->label('Kode Sampel')
+                                ->unique()
                                 ->readOnly() // Kode sampel tidak bisa diubah manual
                                 ->required(),
                             DatePicker::make('collection_date')
@@ -129,14 +132,14 @@ class SamplesRelationManager extends RelationManager
                                         ->maxLength(50)
                                         ->nullable(),
                                 ])->columnSpanFull(),
-                        ])->columns(4),
+                        ])->columns(4)->visible(fn() =>  $isCollector),
                     Step::make('PENERIMAAN OLEH ADMIN')
                         ->columnSpanFull()
                         ->schema([
                             Select::make('received_by_personel_id')
                                 ->relationship('receivedByPersonel', 'fullname')
                                 ->label('Penerima')
-                                ->default(Auth::user()->id)
+                                ->default($isReceiver ? ($personel->id ?? null) : null)
                                 ->searchable()
                                 ->preload(),
                             DatePicker::make('received_date')
@@ -150,7 +153,7 @@ class SamplesRelationManager extends RelationManager
                             Textarea::make('received_condition_notes')
                                 ->label('Catatan Kondisi Penerimaan')
                                 ->columnSpanFull(),
-                        ])->columns(4),
+                        ])->columns(4)->visible(fn(Get $get) => $isReceiver && !is_null($get('sample_code'))),
                 ])->columnSpanFull(),
             ]);
     }

@@ -33,8 +33,8 @@ return new class extends Migration
             $table->string('preservation_method', 255)->nullable();
             $table->text('collection_notes')->nullable();
             // Received details
-            $table->date('received_date');
-            $table->time('received_time');
+            $table->date('received_date')->nullable();
+            $table->time('received_time')->nullable();
             $table->text('received_condition_notes')->nullable();
 
             // Status

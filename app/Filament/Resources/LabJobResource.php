@@ -89,6 +89,7 @@ class LabJobResource extends Resource
                     ->schema([
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
+                            ->disabledOn('edit')
                             ->relationship('quotation', 'quotation_number', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value)->when(
                                 ! $schema->getRecord(), // Hanya terapkan filter ini saat CREATE
                                 fn($q) => $q->whereDoesntHave('labJob')
@@ -111,14 +112,16 @@ class LabJobResource extends Resource
                         TextInput::make('job_number')
                             ->label('Nomor Job')
                             ->required()
-                            ->readOnly() // <-- Jadikan read-only
+                            ->disabled() // <-- Jadikan read-only
                             ->maxLength(50),
                         DatePicker::make('start_date')
                             ->label('Tanggal Mulai')
                             ->live()
+                            ->visibleOn(['view', 'edit'])
                             ->default(now()),
                         DatePicker::make('end_date')
                             ->label('Tanggal Selesai')
+                            ->visibleOn(['view', 'edit'])
                             ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
                             ->afterOrEqual('start_date'),
 

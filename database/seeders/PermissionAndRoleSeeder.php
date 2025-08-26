@@ -99,6 +99,9 @@ class PermissionAndRoleSeeder extends Seeder
             'create-sample',
             'update-sample',
             'delete-sample',
+
+            'collecting-sample',
+            'receiving-sample',
         ];
         $testMethodPermissions = [
             'view-any-test-method',

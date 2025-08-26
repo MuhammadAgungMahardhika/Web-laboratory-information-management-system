@@ -27,7 +27,6 @@ class LabJobService
         $labJob = LabJob::create([
             'quotation_id' => $quotation->id,
             'job_number' => $this->generateLabJobNumber($quotation),
-            'start_date' => now(),
             'status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
         ]);
         // 2. Salin rincian item penawaran (snapshot) ke rincian pekerjaan lab
@@ -132,13 +131,21 @@ class LabJobService
      */
     public function updateLabJobStatus(LabJob $labJob, JobStatusEnum $newStatus): bool
     {
-        // 1. Perbarui status penawaran
+        // Perbarui status penawaran
         $labJob->status = $newStatus->value;
-        // 2. Lakukan aksi spesifik berdasarkan status baru
+        // mulai job
+        if ($newStatus === JobStatusEnum::InProgress) {
+            $labJob->start_date = now();
+        }
+        // selesai sampling
         if ($newStatus === JobStatusEnum::SamplingCompleted) {
             $this->generateTestResultsForLabJob($labJob);
         }
-        // 3. Simpan perubahan ke database
+        // job selesai / dikirim
+        if ($newStatus === JobStatusEnum::Delivered) {
+            $labJob->end_date = now();
+        }
+        // Simpan perubahan ke database
         return $labJob->save();
     }
 
