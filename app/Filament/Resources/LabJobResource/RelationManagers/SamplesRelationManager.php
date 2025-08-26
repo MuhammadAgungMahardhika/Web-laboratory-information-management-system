@@ -44,6 +44,7 @@ class SamplesRelationManager extends RelationManager
     {
         $user = Auth::user();
         $personel = $user->personel;
+        $isLabJobPersonel = $personel->labJobPersonels()->where('lab_job_id', $this->ownerRecord->id)->exists();
         $isCollector = $user->can('collecting-sample');
         $isReceiver = $user->can('receiving-sample');
         return  $schema
@@ -87,7 +88,7 @@ class SamplesRelationManager extends RelationManager
                                     modifyQueryUsing: fn($query) =>
                                     $query->whereHas('labJobPersonels', fn($q) => $q->where('lab_job_id', $this->ownerRecord->id))
                                 )
-                                ->default($isCollector ? ($personel->id ?? null) : null)
+                                ->default($isLabJobPersonel ? ($personel->id ?? null) : null)
                                 ->label('Ppc')
                                 ->searchable()
                                 ->preload(),
