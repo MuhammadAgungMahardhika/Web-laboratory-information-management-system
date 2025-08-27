@@ -19,7 +19,10 @@ class TestResultForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isDisabled = Auth::user()->hasRole(RoleEnum::SuperAdmin->value) ? true : true;
+        $user = Auth::user();
+        $personel = $user->personel;
+        $validatingTestResult = $user->can('validating-test-result');
+        $fillingTestResult = $user->can('filling-test-result');
         return $schema
             ->columns([
                 'sm' => 2,
@@ -28,7 +31,7 @@ class TestResultForm
             ])
             ->components([
                 Section::make([
-                    Select::make('validation_status')
+                    Select::make('status')
                         ->label('Status')
                         ->options(TestResultStatusEnum::labels())
                         ->default(TestResultStatusEnum::Raw->value)
@@ -50,7 +53,7 @@ class TestResultForm
                         ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::Analyst->value])))
                         ->searchable()
                         ->preload(),
-                ])->columnSpanFull()->heading('Detail Pengujian')->columns(4)->disabled($isDisabled),
+                ])->columnSpanFull()->heading('Detail Pengujian')->columns(4)->disabledOn('edit'),
                 Section::make([
                     Section::make([
                         DatePicker::make('test_date')
@@ -83,7 +86,7 @@ class TestResultForm
                         TextInput::make('standard_notes_ref')
                             ->label('Catatan Standar Referensi')
                     ])->heading('Standar Referensi')->columns(1)->inlineLabel(),
-                ])->columnSpanFull()->columns(2)->heading('Hasil Uji'),
+                ])->columnSpanFull()->columns(2)->heading('Hasil Uji')->visible(fn() => $fillingTestResult),
 
                 Section::make([
                     DateTimePicker::make('validation_date')
@@ -93,7 +96,7 @@ class TestResultForm
                         ->relationship('validatorPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::LaboratoryHead->value])))
                         ->searchable()
                         ->preload(),
-                ])->columnSpanFull()->heading('Validasi')->columns(2),
+                ])->columnSpanFull()->heading('Validasi')->columns(2)->visible(fn() => $validatingTestResult),
             ]);
     }
 }

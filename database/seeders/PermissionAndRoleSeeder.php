@@ -109,6 +109,8 @@ class PermissionAndRoleSeeder extends Seeder
             'create-test-method',
             'update-test-method',
             'delete-test-method',
+
+
         ];
         $testPackagePermissions = [
             'view-any-test-package',
@@ -124,7 +126,6 @@ class PermissionAndRoleSeeder extends Seeder
             'update-quotation',
             'delete-quotation',
         ];
-
 
         $termTemplatePermissions = [
             'view-any-term-template',
@@ -148,6 +149,16 @@ class PermissionAndRoleSeeder extends Seeder
             'update-lab-job',
             'delete-lab-job',
         ];
+        $testResultPermissions = [
+            'view-any-test-result',
+            'view-test-result',
+            'create-test-result',
+            'update-test-result',
+            'delete-test-result',
+
+            'filling-test-result',
+            'validating-test-result',
+        ];
 
 
 
@@ -169,7 +180,8 @@ class PermissionAndRoleSeeder extends Seeder
             $quotationPermissions,
             $termTemplatePermissions,
             $companyPermissions,
-            $labJobPermissions
+            $labJobPermissions,
+            $testResultPermissions
         );
 
         // Membuat semua permissions

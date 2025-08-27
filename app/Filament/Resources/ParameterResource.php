@@ -19,6 +19,7 @@ use App\Models\Parameter;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -43,39 +44,60 @@ class ParameterResource extends Resource
                 'xl' => 4,
             ])
             ->components([
-                TextInput::make('name')
-                    ->required()
-                    ->label('Nama parameter uji')
-                    ->unique(ignoreRecord: true)
-                    ->maxLength(255),
-                TextInput::make('unit')
-                    ->required()
-                    ->label('Satuan')
-                    ->maxLength(50),
-                TextInput::make('default_price')
-                    ->label('Harga standar')
-                    ->required()
-                    ->numeric()
-                    ->step(10000)
-                    ->label('Harga')
-                    ->prefix('Rp. '),
-                Select::make('test_method_id')
-                    ->label('Metode uji')
-                    ->relationship('testMethod', 'name')
-                    ->searchable()
-                    ->required()
-                    ->preload()
-                    ->createOptionForm([
-                        TextInput::make('code')
-                            ->label('Kode')
-                            ->required(),
+                Section::make([
+                    Section::make([
                         TextInput::make('name')
-                            ->label('Nama metode uji')
-                            ->required(),
-                        Textarea::make('description')
-                            ->label('Keterangan')
+                            ->required()
+                            ->label('Nama parameter uji')
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(255),
+                        TextInput::make('unit')
+                            ->required()
+                            ->label('Satuan')
+                            ->maxLength(50),
+                        TextInput::make('default_price')
+                            ->label('Harga standar')
+                            ->required()
+                            ->numeric()
+                            ->step(10000)
+                            ->label('Harga')
+                            ->prefix('Rp. '),
+                        Select::make('test_method_id')
+                            ->label('Metode uji')
+                            ->relationship('testMethod', 'name')
+                            ->searchable()
+                            ->required()
+                            ->preload()
+                            ->createOptionForm([
+                                TextInput::make('code')
+                                    ->label('Kode')
+                                    ->required(),
+                                TextInput::make('name')
+                                    ->label('Nama metode uji')
+                                    ->required(),
+                                Textarea::make('description')
+                                    ->label('Keterangan')
+                                    ->columnSpanFull(),
+                            ])->createOptionModalHeading('Buat Regulasi'),
+                    ])->heading('Parameter uji')->columns(1)->inlineLabel(),
+                    // Standar nilai
+                    Section::make([
+                        TextInput::make('standart_value')
+                            ->required()
+                            ->label('Nilai standar')
+                            ->maxLength(100),
+                        TextInput::make('standard_unit')
+                            ->required()
+                            ->label('Satuan standar')
+                            ->maxLength(50),
+                        Textarea::make('standard_notes')
+                            ->required()
+                            ->label('Catatan standar')
+                            ->maxLength(255)
                             ->columnSpanFull(),
-                    ])->createOptionModalHeading('Buat Regulasi'),
+                    ])->heading('Standar Referensi')->columns(1)->inlineLabel(),
+                ])->columnSpanFull()->columns(2),
+
                 Textarea::make('description')
                     ->label('Keterangan')
                     ->columnSpanFull(),

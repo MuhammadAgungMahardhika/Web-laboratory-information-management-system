@@ -18,11 +18,18 @@ return new class extends Migration
             $table->decimal('default_price');
             $table->enum('status', ['accredited', 'unaccredited'])->default('accredited');
 
+            // standart value
+            $table->string('standard_value', 100)->nullable();
+            $table->string('standard_unit', 50)->nullable();
+            $table->string('standard_notes', 255)->nullable();
+
+
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
             $table->index('name');
+            $table->index('status');
         });
     }
 

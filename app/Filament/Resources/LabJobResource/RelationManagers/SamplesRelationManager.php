@@ -44,9 +44,8 @@ class SamplesRelationManager extends RelationManager
     {
         $user = Auth::user();
         $personel = $user->personel;
-        $isLabJobPersonel = $personel->labJobPersonels()->where('lab_job_id', $this->ownerRecord->id)->exists();
-        $isCollector = $user->can('collecting-sample');
-        $isReceiver = $user->can('receiving-sample');
+        $canCollecting = $user->can('collecting-sample');
+        $canReceiving = $user->can('receiving-sample');
         return  $schema
             ->components([
                 Section::make([
@@ -76,7 +75,7 @@ class SamplesRelationManager extends RelationManager
                         ->options(SampleStatusEnum::labels())
                         ->default(SampleStatusEnum::default())
                         ->required(),
-                ])->columnSpanFull()->visible(fn() => $isCollector)->columns(2),
+                ])->columnSpanFull()->visible(fn() => $canCollecting)->columns(2),
                 Wizard::make([
                     Step::make('PENGAMBILAN OLEH PPC')
                         ->columnSpanFull()
@@ -88,7 +87,6 @@ class SamplesRelationManager extends RelationManager
                                     modifyQueryUsing: fn($query) =>
                                     $query->whereHas('labJobPersonels', fn($q) => $q->where('lab_job_id', $this->ownerRecord->id))
                                 )
-                                ->default($isLabJobPersonel ? ($personel->id ?? null) : null)
                                 ->label('Ppc')
                                 ->searchable()
                                 ->preload(),
@@ -133,14 +131,14 @@ class SamplesRelationManager extends RelationManager
                                         ->maxLength(50)
                                         ->nullable(),
                                 ])->columnSpanFull(),
-                        ])->columns(4)->visible(fn() =>  $isCollector),
+                        ])->columns(4)->visible(fn() =>  $canCollecting),
                     Step::make('PENERIMAAN OLEH ADMIN')
                         ->columnSpanFull()
                         ->schema([
                             Select::make('received_by_personel_id')
                                 ->relationship('receivedByPersonel', 'fullname')
                                 ->label('Penerima')
-                                ->default($isReceiver ? ($personel->id ?? null) : null)
+                                ->default($canReceiving ? ($personel->id ?? null) : null)
                                 ->searchable()
                                 ->preload(),
                             DatePicker::make('received_date')
@@ -154,7 +152,7 @@ class SamplesRelationManager extends RelationManager
                             Textarea::make('received_condition_notes')
                                 ->label('Catatan Kondisi Penerimaan')
                                 ->columnSpanFull(),
-                        ])->columns(4)->visible(fn(Get $get) => $isReceiver && !is_null($get('sample_code'))),
+                        ])->columns(4)->visible(fn(Get $get) => $canReceiving && !is_null($get('sample_code'))),
                 ])->columnSpanFull(),
             ]);
     }

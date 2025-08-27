@@ -168,8 +168,11 @@ class LabJobService
                     'unit' => $paramSnapshot->parameter_unit,
                     'tested_value' => null, // Nilai masih kosong
                     'analyst_personel_id' => null, // Nanti ditugaskan
-                    'validation_status' => 'raw', // Status awal
-                    // ... tambahkan kolom lain
+                    'status' => 'raw', // Status awal
+                    // --- SALIN NILAI STANDAR DI SINI ---
+                    'standard_value_ref' =>  $paramSnapshot->parameter->standard_value,
+                    'standard_unit_ref' =>  $paramSnapshot->parameter->standard_unit,
+                    'standard_notes_ref' =>  $paramSnapshot->parameter->standard_notes,
                 ]);
             }
         }

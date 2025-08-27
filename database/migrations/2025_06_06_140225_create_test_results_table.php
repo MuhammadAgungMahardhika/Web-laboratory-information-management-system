@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('standard_notes_ref', 255)->nullable();
 
             // Status validasi
-            $table->enum('validation_status', [
+            $table->enum('status', [
                 'raw',
                 'validated',
                 'clarification_needed',
@@ -49,7 +49,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Indexes
-            $table->index('validation_status');
+            $table->index('status');
         });
     }
 

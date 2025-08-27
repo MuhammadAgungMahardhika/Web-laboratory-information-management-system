@@ -1079,7 +1079,7 @@ namespace App\Models{
  * @property string|null $standard_value_ref
  * @property string|null $standard_unit_ref
  * @property string|null $standard_notes_ref
- * @property string $validation_status
+ * @property string $status
  * @property string|null $validation_date
  * @property string|null $created_by
  * @property string|null $updated_by

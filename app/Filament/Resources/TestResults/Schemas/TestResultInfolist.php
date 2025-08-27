@@ -29,7 +29,7 @@ class TestResultInfolist
                 TextEntry::make('standard_value_ref'),
                 TextEntry::make('standard_unit_ref'),
                 TextEntry::make('standard_notes_ref'),
-                TextEntry::make('validation_status'),
+                TextEntry::make('status'),
                 TextEntry::make('validation_date')
                     ->dateTime(),
                 TextEntry::make('created_by'),
