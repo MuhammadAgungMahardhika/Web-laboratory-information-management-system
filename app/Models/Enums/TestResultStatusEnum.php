@@ -7,8 +7,8 @@ use Filament\Support\Colors\Color;
 enum TestResultStatusEnum: string
 {
     case Raw = 'raw';
-    case Validated = 'validated';
     case ClarificationNeeded = 'clarification_needed';
+    case Validated = 'validated';
     case RevisionNeeded = 'revision_needed';
     case Rejected = 'rejected';
 
@@ -16,8 +16,8 @@ enum TestResultStatusEnum: string
     {
         return [
             self::Raw->value => 'Mentah',
-            self::Validated->value => 'Divalidasi',
             self::ClarificationNeeded->value => 'Perlu Klarifikasi',
+            self::Validated->value => 'Divalidasi',
             self::RevisionNeeded->value => 'Perlu Revisi',
             self::Rejected->value => 'Ditolak',
         ];

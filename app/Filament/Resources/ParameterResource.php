@@ -52,7 +52,7 @@ class ParameterResource extends Resource
                 Section::make([
                     TextInput::make('name')
                         ->required()
-                        ->label('Nama parameter uji')
+                        ->label('Nama parameter')
                         ->autocomplete(false)
                         ->unique(ignoreRecord: true)
                         ->maxLength(255),
@@ -62,7 +62,6 @@ class ParameterResource extends Resource
                             ->modalHeading('Pilih Karakter Khusus')
                             ->modalSubmitActionLabel('Tutup')
                             ->modalCancelActionLabel('Batal')
-                            ->slideOver()
                             ->link()
                             ->modalWidth('4xl')
                             ->modalContent(
@@ -75,8 +74,6 @@ class ParameterResource extends Resource
                         ->required()
                         ->label('Satuan')
                         ->autocomplete(false)
-                        ->afterStateUpdated(fn($state, Set $set) => $set('standard_unit', $state))
-                        ->live()
                         ->maxLength(50),
 
                     TextInput::make('default_price')
@@ -102,7 +99,11 @@ class ParameterResource extends Resource
                             Textarea::make('description')
                                 ->label('Keterangan')
                                 ->columnSpanFull(),
-                        ])->createOptionModalHeading('Buat Regulasi'),
+                        ])->createOptionModalHeading('Buat Metode uji'),
+                    Select::make('status')
+                        ->options(ParameterStatusEnum::labels())
+                        ->default(ParameterStatusEnum::default())
+                        ->required(),
                 ])->heading('Parameter uji')->columns(1)->inlineLabel()->columnSpan(2),
                 // Standar nilai
                 Section::make([
@@ -118,7 +119,6 @@ class ParameterResource extends Resource
                             ->modalHeading('Pilih Karakter Khusus')
                             ->modalSubmitActionLabel('Tutup')
                             ->modalCancelActionLabel('Batal')
-                            ->slideOver()
                             ->link()
                             ->modalWidth('4xl')
                             ->modalContent(
@@ -141,10 +141,6 @@ class ParameterResource extends Resource
                 Textarea::make('description')
                     ->label('Keterangan')
                     ->columnSpanFull(),
-                Select::make('status')
-                    ->options(ParameterStatusEnum::labels())
-                    ->default(ParameterStatusEnum::default())
-                    ->required(),
 
             ]);
     }

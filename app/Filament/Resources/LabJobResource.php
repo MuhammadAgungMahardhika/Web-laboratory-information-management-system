@@ -102,8 +102,7 @@ class LabJobResource extends Resource
                             ->afterStateUpdated(function ($state, Set $set, LabJobService $labJobService) {
                                 // Jika penawaran dipilih, generate nomor job
                                 if ($state) {
-                                    $quotation = Quotation::find($state);
-                                    $job_number = $labJobService->generateLabJobNumber($quotation);
+                                    $job_number = $labJobService->generateLabJobNumber();
                                     $set('job_number', $job_number);
                                 } else {
                                     $set('job_number', null);

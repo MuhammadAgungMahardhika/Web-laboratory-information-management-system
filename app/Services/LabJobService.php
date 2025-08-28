@@ -16,10 +16,20 @@ use Illuminate\Support\Facades\Log;
 
 class LabJobService
 {
-    public function generateLabJobNumber(Quotation $quotation): string
+
+    public function generateLabJobNumber(): string
     {
-        // Gabungkan menjadi format akhir
-        return "JOB-{$quotation->quotation_number}";
+        $currentYear = Carbon::now()->format('y'); // 25
+        $currentMonth = Carbon::now()->format('m'); // 08
+
+        $totalJobsThisMonth = LabJob::whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->count();
+
+        // Format nomor unik dengan padding
+        $uniqueNumber = str_pad($totalJobsThisMonth + 1, 4, '0', STR_PAD_LEFT);
+
+        return "LAB-JLI-{$currentYear}{$currentMonth}{$uniqueNumber}";
     }
 
     public function createLabJobFromQuotation(Quotation $quotation): LabJob
@@ -27,7 +37,7 @@ class LabJobService
         // Contoh logika untuk membuat LabJob
         $labJob = LabJob::create([
             'quotation_id' => $quotation->id,
-            'job_number' => $this->generateLabJobNumber($quotation),
+            'job_number' => $this->generateLabJobNumber(),
             'status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
         ]);
         // 2. Salin rincian item penawaran (snapshot) ke rincian pekerjaan lab
