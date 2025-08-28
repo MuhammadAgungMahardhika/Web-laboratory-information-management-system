@@ -54,12 +54,12 @@ class TestResultsTable
                 TextColumn::make('tested_value')
                     ->alignEnd()
                     ->color(Color::Green)
-                    ->label('Skor')
+                    ->label('Nilai')
                     ->searchable(),
                 TextColumn::make('corrected_value')
                     ->alignEnd()
                     ->color(Color::Green)
-                    ->label('Skor terkoreksi')
+                    ->label('Nilai terkoreksi')
                     ->searchable(),
                 TextColumn::make('unit')
                     ->label('Satuan')
@@ -69,12 +69,14 @@ class TestResultsTable
                     ->date()
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('standard_value_ref')
-                    ->label('Nilai Standar Referensi'),
+                TextColumn::make('standard_max_value_ref')
+                    ->label('Nilai Standar Maksimum'),
+                TextColumn::make('standard_min_value_ref')
+                    ->label('Nilai Standar Minimum'),
                 TextColumn::make('standard_unit_ref')
-                    ->label('Satuan Standar Referensi'),
+                    ->label('Satuan Standar'),
                 TextColumn::make('standard_notes_ref')
-                    ->label('Catatan Standar Referensi'),
+                    ->label('Catatan Standar'),
                 TextColumn::make('analyst_personel.fullname')->label('Analis')
                     ->searchable()
                     ->sortable(),

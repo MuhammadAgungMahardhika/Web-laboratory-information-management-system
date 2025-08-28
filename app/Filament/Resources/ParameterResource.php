@@ -17,13 +17,17 @@ use App\Filament\Resources\ParameterResource\RelationManagers;
 use App\Models\Enums\ParameterStatusEnum;
 use App\Models\Parameter;
 use App\Traits\HasAuthorization;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 
 class ParameterResource extends Resource
 {
@@ -44,59 +48,95 @@ class ParameterResource extends Resource
                 'xl' => 4,
             ])
             ->components([
+                // Section::make([
                 Section::make([
-                    Section::make([
-                        TextInput::make('name')
-                            ->required()
-                            ->label('Nama parameter uji')
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255),
-                        TextInput::make('unit')
-                            ->required()
-                            ->label('Satuan')
-                            ->maxLength(50),
-                        TextInput::make('default_price')
-                            ->label('Harga standar')
-                            ->required()
-                            ->numeric()
-                            ->step(10000)
-                            ->label('Harga')
-                            ->prefix('Rp. '),
-                        Select::make('test_method_id')
-                            ->label('Metode uji')
-                            ->relationship('testMethod', 'name')
-                            ->searchable()
-                            ->required()
-                            ->preload()
-                            ->createOptionForm([
-                                TextInput::make('code')
-                                    ->label('Kode')
-                                    ->required(),
-                                TextInput::make('name')
-                                    ->label('Nama metode uji')
-                                    ->required(),
-                                Textarea::make('description')
-                                    ->label('Keterangan')
-                                    ->columnSpanFull(),
-                            ])->createOptionModalHeading('Buat Regulasi'),
-                    ])->heading('Parameter uji')->columns(1)->inlineLabel(),
-                    // Standar nilai
-                    Section::make([
-                        TextInput::make('standart_value')
-                            ->required()
-                            ->label('Nilai standar')
-                            ->maxLength(100),
-                        TextInput::make('standard_unit')
-                            ->required()
-                            ->label('Satuan standar')
-                            ->maxLength(50),
-                        Textarea::make('standard_notes')
-                            ->required()
-                            ->label('Catatan standar')
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-                    ])->heading('Standar Referensi')->columns(1)->inlineLabel(),
-                ])->columnSpanFull()->columns(2),
+                    TextInput::make('name')
+                        ->required()
+                        ->label('Nama parameter uji')
+                        ->autocomplete(false)
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(255),
+                    Actions::make([
+                        Action::make('open_char_modal')
+                            ->label('Spesial karakter')
+                            ->modalHeading('Pilih Karakter Khusus')
+                            ->modalSubmitActionLabel('Tutup')
+                            ->modalCancelActionLabel('Batal')
+                            ->slideOver()
+                            ->link()
+                            ->modalWidth('4xl')
+                            ->modalContent(
+                                fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
+                                        <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
+                                    </div>')
+                            ),
+                    ])->columnSpanFull()->alignEnd(),
+                    TextInput::make('unit')
+                        ->required()
+                        ->label('Satuan')
+                        ->autocomplete(false)
+                        ->afterStateUpdated(fn($state, Set $set) => $set('standard_unit', $state))
+                        ->live()
+                        ->maxLength(50),
+
+                    TextInput::make('default_price')
+                        ->label('Harga standar')
+                        ->required()
+                        ->numeric()
+                        ->step(10000)
+                        ->label('Harga')
+                        ->prefix('Rp. '),
+                    Select::make('test_method_id')
+                        ->label('Metode uji')
+                        ->relationship('testMethod', 'name')
+                        ->searchable()
+                        ->required()
+                        ->preload()
+                        ->createOptionForm([
+                            TextInput::make('code')
+                                ->label('Kode')
+                                ->required(),
+                            TextInput::make('name')
+                                ->label('Nama metode uji')
+                                ->required(),
+                            Textarea::make('description')
+                                ->label('Keterangan')
+                                ->columnSpanFull(),
+                        ])->createOptionModalHeading('Buat Regulasi'),
+                ])->heading('Parameter uji')->columns(1)->inlineLabel()->columnSpan(2),
+                // Standar nilai
+                Section::make([
+                    TextInput::make('standard_max_value')
+                        ->numeric()
+                        ->label('Nilai standar maksimum'),
+                    TextInput::make('standard_min_value')
+                        ->numeric()
+                        ->label('Nilai standar minimum'),
+                    Actions::make([
+                        Action::make('open_char_modal')
+                            ->label('Spesial karakter')
+                            ->modalHeading('Pilih Karakter Khusus')
+                            ->modalSubmitActionLabel('Tutup')
+                            ->modalCancelActionLabel('Batal')
+                            ->slideOver()
+                            ->link()
+                            ->modalWidth('4xl')
+                            ->modalContent(
+                                fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
+                                        <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
+                                    </div>')
+                            ),
+                    ])->columnSpanFull()->alignEnd(),
+                    TextInput::make('standard_unit')
+                        ->label('Satuan standar')
+                        ->maxLength(50),
+
+                    Textarea::make('standard_notes')
+                        ->label('Catatan standar')
+                        ->maxLength(255)
+                        ->columnSpanFull(),
+                ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel()->columnSpan(2),
+                // ])->columnSpanFull()->columns(2),
 
                 Textarea::make('description')
                     ->label('Keterangan')
@@ -120,7 +160,7 @@ class ParameterResource extends Resource
                     ->label('Satuan')
                     ->searchable(),
                 TextColumn::make('default_price')
-                    ->label('Harga standar')
+                    ->label('Harga')
                     ->alignEnd()
                     ->searchable()
                     ->money('IDR')

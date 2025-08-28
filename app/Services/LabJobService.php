@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\QuotationStatusEnum;
+use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\ParameterLabJobItem;
@@ -168,9 +169,10 @@ class LabJobService
                     'unit' => $paramSnapshot->parameter_unit,
                     'tested_value' => null, // Nilai masih kosong
                     'analyst_personel_id' => null, // Nanti ditugaskan
-                    'status' => 'raw', // Status awal
+                    'status' => TestResultStatusEnum::Raw->value, // Status awal
                     // --- SALIN NILAI STANDAR DI SINI ---
-                    'standard_value_ref' =>  $paramSnapshot->parameter->standard_value,
+                    'standard_max_value_ref' =>  $paramSnapshot->parameter->standard_max_value,
+                    'standard_min_value_ref' =>  $paramSnapshot->parameter->standard_min_value,
                     'standard_unit_ref' =>  $paramSnapshot->parameter->standard_unit,
                     'standard_notes_ref' =>  $paramSnapshot->parameter->standard_notes,
                 ]);

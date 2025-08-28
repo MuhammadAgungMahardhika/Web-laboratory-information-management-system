@@ -67,10 +67,10 @@ class TestResultForm
                             ->searchable()
                             ->preload(),
                         TextInput::make('tested_value')
-                            ->label('Skor')
+                            ->label('Nilai')
                             ->required(),
                         TextInput::make('corrected_value')
-                            ->label('Skor Koreksi'),
+                            ->label('Nilai Koreksi'),
                         TextInput::make('unit')
                             ->label('Satuan')
                             ->required(),
@@ -79,13 +79,15 @@ class TestResultForm
                             ->label('Catatan Pengujian'),
                     ])->columns(1)->inlineLabel(),
                     Section::make([
-                        TextInput::make('standard_value_ref')
-                            ->label('Nilai Standar Referensi'),
+                        TextInput::make('standard_max_value_ref')
+                            ->label('Nilai Standar Maksimum'),
+                        TextInput::make('standard_min_alue_ref')
+                            ->label('Nilai Standar Minimum'),
                         TextInput::make('standard_unit_ref')
-                            ->label('Satuan Standar Referensi'),
+                            ->label('Satuan Standar'),
                         TextInput::make('standard_notes_ref')
-                            ->label('Catatan Standar Referensi')
-                    ])->heading('Standar Referensi')->columns(1)->inlineLabel(),
+                            ->label('Catatan Standar')
+                    ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
                 ])->columnSpanFull()->columns(2)->heading('Hasil Uji')->visible(fn() => $fillingTestResult),
 
                 Section::make([
