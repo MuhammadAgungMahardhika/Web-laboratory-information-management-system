@@ -4,10 +4,22 @@ namespace App\Services;
 
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
+use Auth;
 
 class TestResultService
 {
     // app/Services/TestResultService.php
+    public function updateTestResultStatus(TestResult $testResult, TestResultStatusEnum $newStatus): bool
+    {
+        // Perbarui status penawaran
+        $testResult->status = $newStatus->value;
+        if ($newStatus === TestResultStatusEnum::Validated) {
+            $testResult->validation_date = now();
+            $testResult->validator_personel_id = Auth::user()->id;
+        }
+        // Simpan perubahan ke database
+        return $testResult->save();
+    }
 
     public function validateAndSetConclusion(TestResult $testResult): TestResult
     {

@@ -68,9 +68,11 @@ class TestResultForm
                             ->preload(),
                         TextInput::make('tested_value')
                             ->label('Nilai')
+                            ->numeric()
                             ->required(),
                         TextInput::make('corrected_value')
-                            ->label('Nilai Koreksi'),
+                            ->label('Nilai Koreksi')
+                            ->numeric(),
                         TextInput::make('unit')
                             ->label('Satuan')
                             ->required(),
@@ -81,7 +83,7 @@ class TestResultForm
                     Section::make([
                         TextInput::make('standard_max_value_ref')
                             ->label('Nilai Standar Maksimum'),
-                        TextInput::make('standard_min_alue_ref')
+                        TextInput::make('standard_min_value_ref')
                             ->label('Nilai Standar Minimum'),
                         TextInput::make('standard_unit_ref')
                             ->label('Satuan Standar'),

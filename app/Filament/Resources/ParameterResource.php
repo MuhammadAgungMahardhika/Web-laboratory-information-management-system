@@ -12,21 +12,14 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\ParameterResource\Pages\ManageParameters;
-use App\Filament\Resources\ParameterResource\Pages;
-use App\Filament\Resources\ParameterResource\RelationManagers;
 use App\Models\Enums\ParameterStatusEnum;
 use App\Models\Parameter;
 use App\Traits\HasAuthorization;
 use Filament\Actions\Action;
-use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
 
 class ParameterResource extends Resource

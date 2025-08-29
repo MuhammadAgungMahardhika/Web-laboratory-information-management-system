@@ -367,11 +367,18 @@ class QuotationStatusAction
                     // Redirect ke halaman view setelah sukses
                 } catch (Exception $e) {
                     // Tangkap error dan tampilkan notifikasi yang ramah pengguna
+
                     Notification::make()
                         ->title('Gagal revisi penawaran')
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
                         ->danger()
                         ->send();
+
+                    Log::error('Gagal revisi penawaran', [
+                        'quotation_id' => $record->id,
+                        'error' => $e->getMessage(),
+                        'user_id' => Auth::id(),
+                    ]);
                 }
             });
     }
@@ -395,12 +402,18 @@ class QuotationStatusAction
                     return redirect()->to(QuotationResource::getUrl('view', ['record' => $record->refresh()]));
                     // Redirect ke halaman view setelah sukses
                 } catch (Exception $e) {
-                    // Tangkap error dan tampilkan notifikasi yang ramah pengguna
+
                     Notification::make()
                         ->title('Gagal membatalkan penawaran')
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
                         ->danger()
                         ->send();
+
+                    Log::error('Gagal membatalkan penawaran', [
+                        'quotation_id' => $record->id,
+                        'error' => $e->getMessage(),
+                        'user_id' => Auth::id(),
+                    ]);
                 }
             });
     }
