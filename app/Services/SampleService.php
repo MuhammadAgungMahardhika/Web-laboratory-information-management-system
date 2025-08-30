@@ -2,10 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Sample;
 use App\Models\LabJobItem; // Import model LabJobItem
-use Illuminate\Support\Str;
-
 class SampleService
 {
     /**
