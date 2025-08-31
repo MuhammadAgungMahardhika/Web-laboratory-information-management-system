@@ -49,25 +49,28 @@ class ParameterResource extends Resource
                         ->autocomplete(false)
                         ->unique(ignoreRecord: true)
                         ->maxLength(255),
-                    Actions::make([
-                        Action::make('open_char_modal')
-                            ->label('Spesial karakter')
-                            ->modalHeading('Pilih Karakter Khusus')
-                            ->modalSubmitActionLabel('Tutup')
-                            ->modalCancelActionLabel('Batal')
-                            ->link()
-                            ->modalWidth('4xl')
-                            ->modalContent(
-                                fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
-                                        <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
-                                    </div>')
-                            ),
-                    ])->columnSpanFull()->alignEnd(),
+
                     TextInput::make('unit')
                         ->required()
                         ->label('Satuan')
                         ->autocomplete(false)
-                        ->maxLength(50),
+                        ->maxLength(50)
+                        ->belowContent(
+                            Schema::end([
+                                Action::make('open_char_modal')
+                                    ->label('Spesial karakter')
+                                    ->modalHeading('Pilih Karakter Khusus')
+                                    ->modalSubmitActionLabel('Tutup')
+                                    ->modalCancelActionLabel('Batal')
+                                    ->link()
+                                    ->modalWidth('4xl')
+                                    ->modalContent(
+                                        fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
+                                        <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
+                                    </div>')
+                                    ),
+                            ])
+                        ),
 
                     TextInput::make('default_price')
                         ->label('Harga standar')
@@ -106,23 +109,25 @@ class ParameterResource extends Resource
                     TextInput::make('standard_min_value')
                         ->numeric()
                         ->label('Nilai standar minimum'),
-                    Actions::make([
-                        Action::make('open_char_modal')
-                            ->label('Spesial karakter')
-                            ->modalHeading('Pilih Karakter Khusus')
-                            ->modalSubmitActionLabel('Tutup')
-                            ->modalCancelActionLabel('Batal')
-                            ->link()
-                            ->modalWidth('4xl')
-                            ->modalContent(
-                                fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
-                                        <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
-                                    </div>')
-                            ),
-                    ])->columnSpanFull()->alignEnd(),
                     TextInput::make('standard_unit')
                         ->label('Satuan standar')
-                        ->maxLength(50),
+                        ->maxLength(50)
+                        ->belowContent(
+                            Schema::end([
+                                Action::make('open_char_modal')
+                                    ->label('Spesial karakter')
+                                    ->modalHeading('Pilih Karakter Khusus')
+                                    ->modalSubmitActionLabel('Tutup')
+                                    ->modalCancelActionLabel('Batal')
+                                    ->link()
+                                    ->modalWidth('4xl')
+                                    ->modalContent(
+                                        fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
+                                        <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
+                                    </div>')
+                                    ),
+                            ])
+                        ),
 
                     Textarea::make('standard_notes')
                         ->label('Catatan standar')

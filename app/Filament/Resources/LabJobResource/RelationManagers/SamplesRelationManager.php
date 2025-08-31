@@ -8,6 +8,7 @@ use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\SampleStatusEnum;
 use Auth;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -20,10 +21,14 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
+use Filament\Schemas\JsContent;
+use Illuminate\Support\HtmlString;
 
 class SamplesRelationManager extends RelationManager
 {
@@ -72,7 +77,11 @@ class SamplesRelationManager extends RelationManager
                             }
                         }),
                     Select::make('status')
-                        ->options(SampleStatusEnum::labels())
+                        ->label('Status')
+                        ->options([
+                            SampleStatusEnum::Received->value => SampleStatusEnum::labels()[SampleStatusEnum::Received->value],
+                            SampleStatusEnum::Invalid->value => SampleStatusEnum::labels()[SampleStatusEnum::Invalid->value],
+                        ])
                         ->default(SampleStatusEnum::default())
                         ->required(),
                 ])->columnSpanFull()->visible(fn() => $canCollecting)->columns(2),
@@ -103,19 +112,25 @@ class SamplesRelationManager extends RelationManager
                                 ->label('Waktu Pengambilan')
                                 ->default(now()->format('H:i:s'))
                                 ->required(),
-                            Textarea::make('collection_location_desc')
-                                ->label('Lokasi Pengambilan'),
-                            TextInput::make('latitude'),
-                            TextInput::make('longitude'),
+
                             TextInput::make('preservation_method')
                                 ->label('Metode Preservasi')
                                 ->maxLength(255)
                                 ->nullable(),
                             Textarea::make('collection_notes')
                                 ->label('Catatan Pengambilan')
-                                ->columnSpanFull(),
+                                ->columnSpan(3),
+                            Section::make('Lokasi pengambilan')
+                                ->columns(1)
+                                ->columnSpan(2)
+                                ->schema([
+                                    Textarea::make('collection_location_desc')
+                                        ->label('Lokasi Pengambilan'),
+                                    TextInput::make('latitude'),
+                                    TextInput::make('longitude'),
+                                ])->inlineLabel(),
                             Section::Make('Wadah dan Volume')
-                                ->columns(3)
+                                ->columns(1)
                                 ->schema([
                                     TextInput::make('container_type')
                                         ->label('Jenis Wadah')
@@ -130,7 +145,8 @@ class SamplesRelationManager extends RelationManager
                                         ->label('Volume Sampel')
                                         ->maxLength(50)
                                         ->nullable(),
-                                ])->columnSpanFull(),
+                                ])->columnSpan(2)
+                                ->inlineLabel(),
                         ])->columns(4)->visible(fn() =>  $canCollecting),
                     Step::make('PENERIMAAN OLEH ADMIN')
                         ->columnSpanFull()
