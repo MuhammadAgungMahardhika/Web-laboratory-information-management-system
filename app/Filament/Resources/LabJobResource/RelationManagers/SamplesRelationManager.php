@@ -7,7 +7,6 @@ use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\SampleStatusEnum;
-use Auth;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -28,6 +27,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\JsContent;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 
 class SamplesRelationManager extends RelationManager
