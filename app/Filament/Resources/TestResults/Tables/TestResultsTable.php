@@ -5,15 +5,20 @@ namespace App\Filament\Resources\TestResults\Tables;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\RoleEnum;
 use App\Models\Enums\TestResultStatusEnum;
+use App\Services\TestResultService;
 use Auth;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use View;
 
 class TestResultsTable
@@ -110,6 +115,38 @@ class TestResultsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('validate')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $testResultService = new TestResultService();
+                            $successCount = 0;
+                            $failedCount = 0;
+                            foreach ($records as $record) {
+                                try {
+                                    DB::transaction(function () use ($testResultService, $record) {
+                                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Validated);
+                                    });
+                                    $successCount++;
+                                } catch (\Exception $e) {
+                                    $failedCount++;
+                                }
+                            }
+                            if ($successCount > 0) {
+                                Notification::make()
+                                    ->title("Validasi Berhasil")
+                                    ->body("{$successCount} hasil uji berhasil divalidasi.")
+                                    ->success()
+                                    ->send();
+                            }
+                            if ($failedCount > 0) {
+                                Notification::make()
+                                    ->title("Validasi Gagal")
+                                    ->body("{$failedCount} hasil uji gagal divalidasi.")
+                                    ->danger()
+                                    ->send();
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion()
                 ]),
             ]);
     }

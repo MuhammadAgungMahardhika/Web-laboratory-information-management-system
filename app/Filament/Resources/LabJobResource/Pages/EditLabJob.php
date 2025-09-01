@@ -53,7 +53,7 @@ class EditLabJob extends EditRecord
             ActionGroup::make([
                 // Aksi: Tugaskan Tim PPC
                 LabJobStatusAction::startJob(static::getResource()::getUrl('view', ['record' => $this->record->id])),
-                LabJobStatusAction::taskLetter(),
+                LabJobStatusAction::printTaskLetter(),
             ])
                 ->label('Update Job') // Label untuk tombol dropdown utama
                 ->icon('heroicon-o-arrow-path')

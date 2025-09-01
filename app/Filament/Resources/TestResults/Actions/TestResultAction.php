@@ -5,7 +5,7 @@ namespace App\Filament\Resources\TestResults\Actions;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
 use App\Services\TestResultService;
-use Auth;
+
 use Exception;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -13,25 +13,29 @@ use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Checkbox;
 use Illuminate\Support\Str;
 use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\Auth;
 use Log;
 
 class TestResultAction
 {
 
-    public static function sendClarification($url): Action
+    public static function requestValidate($url = null): Action
     {
+        $authorized = Auth::user()->can('request-validate-test-result');
         return  Action::make('Request Validasi')
             ->icon('heroicon-o-document-check')
             ->color('success')
-            ->visible(fn(TestResult $record) => $record->status === TestResultStatusEnum::Raw->value)
+            ->visible(fn(TestResult $record) => $record->status === TestResultStatusEnum::Raw->value && $authorized)
             ->requiresConfirmation()
             ->action(function (TestResult $record, TestResultService $testResultService) use ($url) {
                 try {
                     DB::transaction(function () use ($testResultService, $record) {
-                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::ClarificationNeeded);
+                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RequestValidate);
                     });
                     Notification::make()->title('Hasil uji sudah dikirim untuk di validasi')->success()->send();
-                    return redirect()->to($url);
+                    if ($url) {
+                        return redirect()->to($url);
+                    }
                 } catch (Exception $e) {
                     Notification::make()
                         ->title('Gagal Request validasi hasil uji')
@@ -46,12 +50,13 @@ class TestResultAction
                 }
             });
     }
-    public static function validate($url): Action
+    public static function validate($url = null): Action
     {
+        $authorized = Auth::user()->can('validating-test-result');
         return  Action::make('Validasi Hasil Uji')
             ->icon('heroicon-o-document-check')
             ->color('success')
-            ->visible(fn(TestResult $record) => $record->status === TestResultStatusEnum::ClarificationNeeded->value)
+            ->visible(fn(TestResult $record) => $record->status === TestResultStatusEnum::RequestValidate->value && $authorized)
             ->requiresConfirmation()
             ->action(function (TestResult $record, TestResultService $testResultService) use ($url) {
                 try {
@@ -59,7 +64,9 @@ class TestResultAction
                         $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Validated);
                     });
                     Notification::make()->title('Hasil uji sudah tervalidasi')->success()->send();
-                    return redirect()->to($url);
+                    if ($url) {
+                        return redirect()->to($url);
+                    }
                 } catch (Exception $e) {
                     Notification::make()
                         ->title('Gagal validasi hasil uji')

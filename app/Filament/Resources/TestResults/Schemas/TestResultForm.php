@@ -19,10 +19,7 @@ class TestResultForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $user = Auth::user();
-        $personel = $user->personel;
-        $validatingTestResult = $user->can('validating-test-result');
-        $fillingTestResult = $user->can('filling-test-result');
+        $fillingTestResult = Auth::user()->can('filling-test-result');
         return $schema
             ->columns([
                 'sm' => 2,
@@ -94,13 +91,15 @@ class TestResultForm
 
                 Section::make([
                     DateTimePicker::make('validation_date')
-                        ->label('Tanggal Validasi'),
+                        ->label('Tanggal Validasi')
+                        ->disabled(),
                     Select::make('validator_personel_id')
                         ->label('Validator')
                         ->relationship('validatorPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::LaboratoryHead->value])))
                         ->searchable()
-                        ->preload(),
-                ])->columnSpanFull()->heading('Validasi')->columns(2)->visible(fn() => $validatingTestResult),
+                        ->preload()
+                        ->disabled(),
+                ])->columnSpanFull()->heading('Validasi')->columns(2),
             ]);
     }
 }

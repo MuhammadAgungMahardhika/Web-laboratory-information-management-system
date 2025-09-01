@@ -37,8 +37,8 @@ return new class extends Migration
             // Status validasi
             $table->enum('status', [
                 'raw',
+                'request_validate',
                 'validated',
-                'clarification_needed',
                 'revision_needed',
                 'rejected'
             ])->default('raw');

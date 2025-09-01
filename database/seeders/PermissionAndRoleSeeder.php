@@ -148,6 +148,18 @@ class PermissionAndRoleSeeder extends Seeder
             'create-lab-job',
             'update-lab-job',
             'delete-lab-job',
+
+            'preview-lab-job-task-letter', //0
+            'download-lab-job-task-letter', //1
+            'print-lab-job-task-letter', //2
+            'start-lab-job', //3
+            'complete-lab-job-sampling', //4
+            'complete-lab-job-analysis', //5
+            'complete-lab-job-validation', //6
+            'generate-lab-job-report', //7
+            'approve-lab-job-report', //8
+            'send-lab-job-report', //9
+            'abort-lab-job-report', //10
         ];
         $testResultPermissions = [
             'view-any-test-result',
@@ -157,6 +169,7 @@ class PermissionAndRoleSeeder extends Seeder
             'delete-test-result',
 
             'filling-test-result',
+            'request-validate-test-result',
             'validating-test-result',
         ];
 

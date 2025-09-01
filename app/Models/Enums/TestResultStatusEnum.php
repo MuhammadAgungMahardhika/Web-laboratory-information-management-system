@@ -7,7 +7,7 @@ use Filament\Support\Colors\Color;
 enum TestResultStatusEnum: string
 {
     case Raw = 'raw';
-    case ClarificationNeeded = 'clarification_needed';
+    case RequestValidate = 'request_validate';
     case Validated = 'validated';
     case RevisionNeeded = 'revision_needed';
     case Rejected = 'rejected';
@@ -16,7 +16,7 @@ enum TestResultStatusEnum: string
     {
         return [
             self::Raw->value => 'Mentah',
-            self::ClarificationNeeded->value => 'Perlu Klarifikasi',
+            self::RequestValidate->value => 'Minta Validasi',
             self::Validated->value => 'Divalidasi',
             self::RevisionNeeded->value => 'Perlu Revisi',
             self::Rejected->value => 'Ditolak',
@@ -38,7 +38,7 @@ enum TestResultStatusEnum: string
         return match ($status) {
             self::Raw->value => 'gray',
             self::Validated->value => 'success',
-            self::ClarificationNeeded->value => 'warning',
+            self::RequestValidate->value => 'warning',
             self::RevisionNeeded->value => 'info',
             self::Rejected->value => 'danger',
             default => 'gray',
