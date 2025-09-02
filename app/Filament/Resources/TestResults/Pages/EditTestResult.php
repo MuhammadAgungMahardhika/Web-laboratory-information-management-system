@@ -19,11 +19,10 @@ class EditTestResult extends EditRecord
             ViewAction::make(),
             DeleteAction::make(),
             ActionGroup::make([
-                // Aksi: Tugaskan Tim PPC
-                TestResultAction::sendClarification(static::getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::requestValidate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
                 TestResultAction::validate(static::getResource()::getUrl('view', ['record' => $this->record->id]))
             ])
-                ->label('Update Job') // Label untuk tombol dropdown utama
+                ->label('Update Hasil Uji')
                 ->icon('heroicon-o-arrow-path')
                 ->button()
                 ->color('success'),

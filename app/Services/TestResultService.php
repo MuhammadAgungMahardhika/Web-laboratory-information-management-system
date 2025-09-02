@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
+use Error;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class TestResultService
@@ -11,13 +13,20 @@ class TestResultService
     // app/Services/TestResultService.php
     public function updateTestResultStatus(TestResult $testResult, TestResultStatusEnum $newStatus): bool
     {
+        if ($newStatus === TestResultStatusEnum::RequestValidate) {
+            if ($testResult->status === TestResultStatusEnum::Raw->value) {
+                $testResult->tested_value ?? throw new Exception('Validasi gagal');
+            } else {
+                throw new Exception('Validasi gagal');
+            }
+        }
 
         if ($newStatus === TestResultStatusEnum::Validated) {
             if ($testResult->status === TestResultStatusEnum::RequestValidate->value) {
                 $testResult->validation_date = now();
                 $testResult->validator_personel_id = Auth::user()->id;
             } else {
-                return false;
+                throw new Exception('Validasi gagal');
             }
         }
         // Perbarui status penawaran

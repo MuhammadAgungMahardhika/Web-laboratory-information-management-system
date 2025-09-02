@@ -14,7 +14,10 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
@@ -106,8 +109,17 @@ class TestResultsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('parameter_id')
+                    ->label('Parameter uji')
+                    ->relationship('parameter', 'name')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('method_id')
+                    ->label('Metode uji')
+                    ->relationship('testMethod', 'name')
+                    ->searchable()
+                    ->preload()
+            ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
@@ -115,8 +127,46 @@ class TestResultsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    BulkAction::make('validate')
+                    BulkAction::make('requestValidate')
+                        ->label('Request Validasi')
+                        ->icon(Heroicon::ArrowUpTray)
                         ->requiresConfirmation()
+                        ->color('warning')
+                        ->action(function (Collection $records) {
+                            $testResultService = new TestResultService();
+                            $successCount = 0;
+                            $failedCount = 0;
+                            foreach ($records as $record) {
+                                try {
+                                    DB::transaction(function () use ($testResultService, $record) {
+                                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RequestValidate);
+                                    });
+                                    $successCount++;
+                                } catch (\Exception $e) {
+                                    $failedCount++;
+                                }
+                            }
+                            if ($successCount > 0) {
+                                Notification::make()
+                                    ->title("Request Validasi Berhasil")
+                                    ->body("{$successCount} hasil uji berhasil untuk request validasi.")
+                                    ->success()
+                                    ->send();
+                            }
+                            if ($failedCount > 0) {
+                                Notification::make()
+                                    ->title("Request Validasi Gagal")
+                                    ->body("{$failedCount} hasil uji gagal untuk request validasi.")
+                                    ->danger()
+                                    ->send();
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    BulkAction::make('validate')
+                        ->label('Validasi Hasil Uji')
+                        ->icon(Heroicon::Check)
+                        ->requiresConfirmation()
+                        ->color('success')
                         ->action(function (Collection $records) {
                             $testResultService = new TestResultService();
                             $successCount = 0;

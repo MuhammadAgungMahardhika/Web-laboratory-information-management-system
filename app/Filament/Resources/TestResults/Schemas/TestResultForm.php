@@ -50,7 +50,7 @@ class TestResultForm
                         ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::Analyst->value])))
                         ->searchable()
                         ->preload(),
-                ])->columnSpanFull()->heading('Detail Pengujian')->columns(4)->disabledOn('edit'),
+                ])->columnSpanFull()->heading(fn($record) => 'Detail Pengujian ' . TestResultStatusEnum::labels()[$record->status])->columns(4)->disabledOn('edit'),
                 Section::make([
                     Section::make([
                         DatePicker::make('test_date')
@@ -79,9 +79,11 @@ class TestResultForm
                     ])->columns(1)->inlineLabel(),
                     Section::make([
                         TextInput::make('standard_max_value_ref')
-                            ->label('Nilai Standar Maksimum'),
+                            ->label('Nilai Standar Maksimum')
+                            ->numeric(),
                         TextInput::make('standard_min_value_ref')
-                            ->label('Nilai Standar Minimum'),
+                            ->label('Nilai Standar Minimum')
+                            ->numeric(),
                         TextInput::make('standard_unit_ref')
                             ->label('Satuan Standar'),
                         TextInput::make('standard_notes_ref')

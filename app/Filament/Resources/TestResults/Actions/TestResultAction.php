@@ -9,23 +9,24 @@ use App\Services\TestResultService;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\DB;
-use Filament\Forms\Components\Checkbox;
-use Illuminate\Support\Str;
-use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Log;
 
 class TestResultAction
 {
-
+    protected static array $permissions = [
+        'request-validate-test-result',
+        'validating-test-result'
+    ];
     public static function requestValidate($url = null): Action
     {
-        $authorized = Auth::user()->can('request-validate-test-result');
+        $authorized = Auth::user()->can(static::$permissions[0]);
         return  Action::make('Request Validasi')
-            ->icon('heroicon-o-document-check')
-            ->color('success')
-            ->visible(fn(TestResult $record) => $record->status === TestResultStatusEnum::Raw->value && $authorized)
+            ->icon(Heroicon::ArrowUpTray)
+            ->color('warning')
+            ->visible(fn(TestResult $record) => $record->status === TestResultStatusEnum::Raw->value && $record->tested_value && $authorized)
             ->requiresConfirmation()
             ->action(function (TestResult $record, TestResultService $testResultService) use ($url) {
                 try {
@@ -50,11 +51,12 @@ class TestResultAction
                 }
             });
     }
+
     public static function validate($url = null): Action
     {
-        $authorized = Auth::user()->can('validating-test-result');
+        $authorized = Auth::user()->can(static::$permissions[1]);
         return  Action::make('Validasi Hasil Uji')
-            ->icon('heroicon-o-document-check')
+            ->icon(Heroicon::Check)
             ->color('success')
             ->visible(fn(TestResult $record) => $record->status === TestResultStatusEnum::RequestValidate->value && $authorized)
             ->requiresConfirmation()
