@@ -150,7 +150,8 @@ class LabJobService
         }
         // selesai sampling
         if ($newStatus === JobStatusEnum::SamplingCompleted) {
-            $this->generateTestResultsForLabJob($labJob);
+            $testResultService = new TestResultService();
+            $testResultService->generateTestResultsFromLabJob($labJob);
         }
         // job selesai / dikirim
         if ($newStatus === JobStatusEnum::Delivered) {
@@ -158,35 +159,5 @@ class LabJobService
         }
         // Simpan perubahan ke database
         return $labJob->save();
-    }
-
-    /**
-     * Membuat semua record TestResult kosong untuk sebuah LabJob.
-     * @param LabJob $labJob
-     */
-    protected function generateTestResultsForLabJob(LabJob $labJob): void
-    {
-        // 1. Muat semua relasi yang diperlukan
-        $labJob->load(['samples.labJobItem.parameterLabJobItems.parameter']);
-
-        foreach ($labJob->samples as $sample) {
-            foreach ($sample->labJobItem->parameterLabJobItems as $paramSnapshot) {
-                // 2. Buat record TestResult baru untuk setiap pasangan Sample-Parameter
-                TestResult::create([
-                    'sample_id' => $sample->id,
-                    'parameter_id' => $paramSnapshot->parameter_id,
-                    'test_method_id' => $paramSnapshot->parameter->test_method_id,
-                    'unit' => $paramSnapshot->parameter_unit,
-                    'tested_value' => null, // Nilai masih kosong
-                    'analyst_personel_id' => null, // Nanti ditugaskan
-                    'status' => TestResultStatusEnum::Raw->value, // Status awal
-                    // --- SALIN NILAI STANDAR DI SINI ---
-                    'standard_max_value_ref' =>  $paramSnapshot->parameter->standard_max_value,
-                    'standard_min_value_ref' =>  $paramSnapshot->parameter->standard_min_value,
-                    'standard_unit_ref' =>  $paramSnapshot->parameter->standard_unit,
-                    'standard_notes_ref' =>  $paramSnapshot->parameter->standard_notes,
-                ]);
-            }
-        }
     }
 }

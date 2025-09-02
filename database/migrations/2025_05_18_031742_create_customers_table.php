@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('npwp')->nullable();
 
             $table->date('registration_date');
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->tinyInteger('status')->default(1);
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();

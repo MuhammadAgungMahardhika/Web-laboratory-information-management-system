@@ -291,6 +291,10 @@ namespace App\Models{
  * @property string|null $description
  * @property string $default_price
  * @property string $status
+ * @property string|null $standard_max_value
+ * @property string|null $standard_min_value
+ * @property string|null $standard_unit
+ * @property string|null $standard_notes
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -318,6 +322,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardMaxValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardMinValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereTestMethodId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereUnit($value)
@@ -821,8 +829,8 @@ namespace App\Models{
  * @property string|null $sample_volume
  * @property string|null $preservation_method
  * @property string|null $collection_notes
- * @property string $received_date
- * @property string $received_time
+ * @property string|null $received_date
+ * @property string|null $received_time
  * @property string|null $received_condition_notes
  * @property string $status
  * @property string|null $created_by
@@ -1069,14 +1077,15 @@ namespace App\Models{
  * @property int $sample_id
  * @property int $parameter_id
  * @property int $test_method_id
- * @property int $analyst_personel_id
+ * @property int|null $analyst_personel_id
  * @property int|null $validator_personel_id
  * @property string|null $tested_value
  * @property string|null $corrected_value
  * @property string $unit
- * @property string $test_date
+ * @property string|null $test_date
  * @property string|null $test_notes
- * @property string|null $standard_value_ref
+ * @property string|null $standard_max_value_ref
+ * @property string|null $standard_min_value_ref
  * @property string|null $standard_unit_ref
  * @property string|null $standard_notes_ref
  * @property string $status
@@ -1085,7 +1094,7 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Personel $analystPersonel
+ * @property-read \App\Models\Personel|null $analystPersonel
  * @property-read \App\Models\Parameter $parameter
  * @property-read \App\Models\Sample $sample
  * @property-read \App\Models\TestMethod $testMethod
@@ -1101,9 +1110,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereParameterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereSampleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardMaxValueRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardMinValueRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardNotesRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardUnitRef($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardValueRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestMethodId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestNotes($value)
@@ -1112,7 +1123,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereUpdatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereValidationDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereValidationStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereValidatorPersonelId($value)
  */
 	class TestResult extends \Eloquent {}

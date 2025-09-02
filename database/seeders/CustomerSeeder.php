@@ -50,7 +50,7 @@ class CustomerSeeder extends Seeder
             'contact_email' => 'contact@lajujaya.com',
             'npwp' => '01.234.567.8-901.234',
             'registration_date' => Carbon::now()->subMonths(6)->toDateString(), // 6 bulan lalu
-            'status' => 'active', // Enum: 'active' atau 'inactive'
+            'status' => 1, // Enum: 1 atau 2
 
             'created_by' => 'system_seeder', // Isi dengan nilai default atau ID user jika ada Blameable trait
             'updated_by' => 'system_seeder',

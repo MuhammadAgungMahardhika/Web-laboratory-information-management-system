@@ -1,6 +1,6 @@
-1,Total Padatan,mg/L,150000,1,Total padatan terlarut & tersuspensi,accredited
-2,Residu Kering,mg/L,125000,1,Hasil pengeringan residu,accredited
-3,Abu Tak Larut,mg/L,140000,1,Komponen padatan yang tak larut,unaccredited
-4,Timbal (Pb),µg/L,200000,2,Kandungan logam berat Pb,accredited
-5,Kadmium (Cd),µg/L,180000,2,Pengujian logam berat Cd,accredited
-6,Seng (Zn),µg/L,160000,2,Logam berat Zn dengan AAS,unaccredited
+1,Total Padatan,mg/L,150000,1,Total padatan terlarut & tersuspensi,1
+2,Residu Kering,mg/L,125000,1,Hasil pengeringan residu,1
+3,Abu Tak Larut,mg/L,140000,1,Komponen padatan yang tak larut,2
+4,Timbal (Pb),µg/L,200000,2,Kandungan logam berat Pb,1
+5,Kadmium (Cd),µg/L,180000,2,Pengujian logam berat Cd,1
+6,Seng (Zn),µg/L,160000,2,Logam berat Zn dengan AAS,2

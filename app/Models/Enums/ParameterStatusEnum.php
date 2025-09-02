@@ -2,11 +2,11 @@
 
 namespace App\Models\Enums;
 
-enum ParameterStatusEnum: string
+enum ParameterStatusEnum: int
 {
-    case Accredited = 'accredited';
-    case Unaccredited = 'unaccredited';
-
+    case Accredited = 1;
+    case Unaccredited = 2;
+    //3,4,5->empty
     /**
      * Menyediakan label untuk setiap status akreditasi.
      *

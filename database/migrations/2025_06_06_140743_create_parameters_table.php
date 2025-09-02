@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->text('description')->nullable();
             $table->decimal('default_price');
-            $table->enum('status', ['accredited', 'unaccredited'])->default('accredited');
+            $table->tinyInteger('status')->default(1);
 
             // standard value
             $table->decimal('standard_max_value', 10, 4)->nullable();

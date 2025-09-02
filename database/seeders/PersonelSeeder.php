@@ -27,6 +27,7 @@ class PersonelSeeder extends Seeder
             'email' => 'superadmin@example.com', // Anda bisa ganti email ini
             'password' => Hash::make('123456'), // Password default yang di-hash
             // 'is_active' => true,
+            'status' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -39,7 +40,6 @@ class PersonelSeeder extends Seeder
             'fullname' => 'superadmin',
             'nip' => '01.01.01',
             'phone_number' => '',
-
             'address' =>  '',
             'certification_details' =>  '',
         ]);

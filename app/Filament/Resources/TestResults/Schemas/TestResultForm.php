@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class TestResultForm
 {
@@ -47,10 +48,10 @@ class TestResultForm
                         ->preload(),
                     Select::make('analyst_personel_id')
                         ->label('Analis')
-                        ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::Analyst->value])))
+                        ->relationship('analystPersonel', 'fullname')
                         ->searchable()
                         ->preload(),
-                ])->columnSpanFull()->heading(fn($record) => 'Detail Pengujian ' . TestResultStatusEnum::labels()[$record->status])->columns(4)->disabledOn('edit'),
+                ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible()->iconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary')->icon(Heroicon::Beaker),
                 Section::make([
                     Section::make([
                         DatePicker::make('test_date')
@@ -97,7 +98,7 @@ class TestResultForm
                         ->disabled(),
                     Select::make('validator_personel_id')
                         ->label('Validator')
-                        ->relationship('validatorPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->whereHas('position', fn($qi) => $qi->whereIn('name', [PositionEnum::LaboratoryHead->value])))
+                        ->relationship('validatorPersonel', 'fullname')
                         ->searchable()
                         ->preload()
                         ->disabled(),

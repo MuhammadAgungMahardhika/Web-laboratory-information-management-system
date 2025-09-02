@@ -61,11 +61,13 @@ class TestResultsTable
                     ->sortable(),
                 TextColumn::make('tested_value')
                     ->alignEnd()
+                    ->numeric()
                     ->color(Color::Green)
                     ->label('Nilai')
                     ->searchable(),
                 TextColumn::make('corrected_value')
                     ->alignEnd()
+                    ->numeric()
                     ->color(Color::Green)
                     ->label('Nilai terkoreksi')
                     ->searchable(),
@@ -78,8 +80,10 @@ class TestResultsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('standard_max_value_ref')
+                    ->numeric()
                     ->label('Nilai Standar Maksimum'),
                 TextColumn::make('standard_min_value_ref')
+                    ->numeric()
                     ->label('Nilai Standar Minimum'),
                 TextColumn::make('standard_unit_ref')
                     ->label('Satuan Standar'),

@@ -4,14 +4,15 @@ namespace App\Models\Enums;
 
 use Filament\Support\Colors\Color;
 
-enum SampleStatusEnum: string
+enum SampleStatusEnum: int
 {
-    case Received = 'received';
-    case Prepared = 'prepared';
-    case InAnalysis = 'in_analysis';
-    case AnalysisCompleted = 'analysis_completed';
-    case Invalid = 'invalid';
-    case Archived = 'archived';
+    case Received = 1;
+    case Prepared = 2;
+    case InAnalysis = 3;
+    case AnalysisCompleted = 4;
+    case Invalid = 5;
+    case Archived = 6;
+    //7,8,9,10->empty
 
 
     /**
@@ -45,7 +46,7 @@ enum SampleStatusEnum: string
     {
         return self::Received; // Status default adalah "Pending"
     }
-    public static function color(string $status): string
+    public static function color(int $status): string
     {
         return match ($status) {
             self::Received->value => 'info',

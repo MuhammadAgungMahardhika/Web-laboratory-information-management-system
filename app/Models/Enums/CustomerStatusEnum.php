@@ -3,11 +3,11 @@
 
 namespace App\Models\Enums;
 
-enum CustomerStatusEnum: string
+enum CustomerStatusEnum: int
 {
-    case Active = 'active';
-    case Inactive = 'inactive';
-
+    case Active = 1;
+    case Inactive = 2;
+    //3,4,5->empty
     /**
      * Menyediakan label untuk setiap status pembayaran
      *

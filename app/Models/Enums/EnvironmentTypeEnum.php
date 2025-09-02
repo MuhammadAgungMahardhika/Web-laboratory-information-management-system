@@ -2,12 +2,12 @@
 
 namespace App\Models\Enums;
 
-enum EnvironmentTypeEnum: string
+enum EnvironmentTypeEnum: int
 {
-    case Living = 'living';
-    case Working = 'working';
-    case General = 'general';
-
+    case Living = 1;
+    case Working = 2;
+    case General = 3;
+    // 4,5 ->empty
     /**
      * Menyediakan label untuk setiap status lingkungan
      *

@@ -4,19 +4,21 @@ namespace App\Models\Enums;
 
 use Filament\Support\Colors\Color;
 
-enum JobStatusEnum: string
+enum JobStatusEnum: int
 {
-    case PendingStart = 'pending_start';
-    case InProgress = 'in_progress';
-    case SamplingCompleted = 'sampling_completed';
-    case AnalysisCompleted = 'analysis_completed';
-    case ValidationCompleted = 'validation_completed';
-    case ReportGenerated = 'report_generated';
-    case ReportApproved = 'report_approved';
-    case Invoiced = 'invoiced';
-    case Delivered = 'delivered';
-    case Cancelled = 'cancelled';
-    case OnHold = 'on_hold';
+
+    case PendingStart = 1;
+    case InProgress = 2;
+    case SamplingCompleted = 3;
+    case AnalysisCompleted = 4;
+    case ValidationCompleted = 5;
+    case ReportGenerated = 6;
+    case ReportApproved = 7;
+    case Invoiced = 8;
+    case Delivered = 9;
+    case Cancelled = 10;
+    case OnHold = 11;
+    //12,13,14,15->empty
 
     /**
      * Menyediakan label yang mudah dibaca untuk setiap status pekerjaan.

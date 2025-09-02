@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('received_by_personel_id')->nullable();
             // Sample collection details
             $table->string('sample_code', 50)->unique();
-            $table->date('collection_date');
-            $table->time('collection_time');
+            $table->date('collection_date')->nullable();
+            $table->time('collection_time')->nullable();
             $table->text('collection_location_desc')->nullable();
             $table->string('latitude', 50)->nullable();
             $table->string('longitude', 50)->nullable();
@@ -37,15 +37,9 @@ return new class extends Migration
             $table->time('received_time')->nullable();
             $table->text('received_condition_notes')->nullable();
 
-            // Status
-            $table->enum('status', [
-                'received',
-                'prepared',
-                'in_analysis',
-                'analysis_completed',
-                'invalid',
-                'archived'
-            ])->default('received');
+            $table->tinyInteger('collection_type')->default(1);
+            $table->tinyInteger('status')->default(1);
+
 
             // Auditing columns
             $table->string('created_by', 255)->nullable();
@@ -54,6 +48,7 @@ return new class extends Migration
 
 
             $table->index('status');
+            $table->index('collection_type');
         });
     }
 

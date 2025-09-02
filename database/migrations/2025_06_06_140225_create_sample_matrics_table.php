@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sample_type_id');
 
             $table->string('name', 100)->unique();
-            $table->enum('environment_type', ['living', 'working', 'general']);
+            $table->tinyInteger('environment_type')->default(1);
             $table->text('description')->nullable();
 
             // Kolom auditing standar
@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
+            $table->index('environment_type');
             $table->index('code');
             $table->index('name');
         });

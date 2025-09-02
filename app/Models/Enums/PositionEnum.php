@@ -14,7 +14,7 @@ enum PositionEnum: string
     case LaboratoryHead = 'Kepala Laboratorium';
     case Manager = 'Manajer Laboratorium';
     case SamplingTechnician = 'Petugas Sampling';
-
+    // 
     /**
      * Menyediakan label untuk setiap status posisi.
      *

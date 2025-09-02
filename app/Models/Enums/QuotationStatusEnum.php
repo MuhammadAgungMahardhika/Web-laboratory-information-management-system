@@ -4,15 +4,16 @@ namespace App\Models\Enums;
 
 use Filament\Support\Colors\Color; // Assuming you're using Filament's Color class for consistency, otherwise return simple strings like 'success', 'danger'
 
-enum QuotationStatusEnum: string
+enum QuotationStatusEnum: int
 {
-    case Draft = 'draft';
-    case Submitted = 'submitted';
-    case Accepted = 'accepted';
-    case Revised = 'revised';
-    case Expired = 'expired';
-    case Rejected = 'rejected';
-    case Cancelled = 'cancelled';
+    case Draft = 1;
+    case Submitted = 2;
+    case Accepted = 3;
+    case Revised = 4;
+    case Expired = 5;
+    case Rejected = 6;
+    case Cancelled = 7;
+    //8,9,10->empty
 
     /**
      * Provides a human-readable label for each quotation status.
