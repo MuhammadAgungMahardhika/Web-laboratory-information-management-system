@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\TestResults\Pages;
 
+use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Filament\Resources\TestResults\TestResultResource;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -14,6 +16,14 @@ class ViewTestResult extends ViewRecord
     {
         return [
             EditAction::make(),
+            ActionGroup::make([
+                TestResultAction::requestValidate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::validate(static::getResource()::getUrl('view', ['record' => $this->record->id]))
+            ])
+                ->label('Update Hasil Uji')
+                ->icon('heroicon-o-arrow-path')
+                ->button()
+                ->color('success'),
         ];
     }
 }

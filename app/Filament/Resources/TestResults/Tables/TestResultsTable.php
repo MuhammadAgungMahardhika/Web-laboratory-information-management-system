@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\TestResults\Tables;
 
 use App\Models\Enums\PositionEnum;
-use App\Models\Enums\RoleEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Services\TestResultService;
 use Auth;
@@ -22,7 +21,6 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use View;
 
 class TestResultsTable
 {
