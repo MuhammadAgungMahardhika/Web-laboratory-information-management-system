@@ -18,7 +18,7 @@ enum JobStatusEnum: int
     case Delivered = 9;
     case Cancelled = 10;
     case OnHold = 11;
-    //12,13,14,15->empty
+
 
     /**
      * Menyediakan label yang mudah dibaca untuk setiap status pekerjaan.
@@ -54,10 +54,10 @@ enum JobStatusEnum: int
     /**
      * Menyediakan warna visual untuk status pekerjaan (untuk Filament).
      *
-     * @param string $status
+     * @param int $status
      * @return string
      */
-    public static function color(string $status): string
+    public static function color(int $status): string
     {
         return match ($status) {
             self::PendingStart->value, self::OnHold->value => 'gray',
@@ -73,10 +73,10 @@ enum JobStatusEnum: int
     /**
      * Menyediakan kode warna CSS (heksadesimal) untuk styling kustom.
      *
-     * @param string $status
+     * @param int $status
      * @return string
      */
-    public static function cssColor(string $status): string
+    public static function cssColor(int $status): string
     {
         return match ($status) {
             self::PendingStart->value, self::OnHold->value => '#6B7280',

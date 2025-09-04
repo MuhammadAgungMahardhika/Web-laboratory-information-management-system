@@ -13,7 +13,7 @@ enum QuotationStatusEnum: int
     case Expired = 5;
     case Rejected = 6;
     case Cancelled = 7;
-    //8,9,10->empty
+
 
     /**
      * Provides a human-readable label for each quotation status.
@@ -56,10 +56,10 @@ enum QuotationStatusEnum: int
     /**
      * Provides a color hint for Filament badges/status displays.
      *
-     * @param string|null $status The string value of the status.
+     * @param int|null $status The string value of the status.
      * @return string The color name (e.g., 'success', 'danger', 'info').
      */
-    public static function color(?string $status): string
+    public static function color(int $status): string
     {
         // Handle null input gracefully for robustness, similar to ParameterStatusEnum
         if ($status === null) {
@@ -90,10 +90,10 @@ enum QuotationStatusEnum: int
     /**
      * Provides a CSS hex color code for inline styling.
      *
-     * @param string|null $status The string value of the status.
+     * @param int|null $status The string value of the status.
      * @return string The CSS hex color code.
      */
-    public static function cssColor(?string $status): string
+    public static function cssColor(int $status): string
     {
         if ($status === null) {
             return '#6B7280'; // Default gray

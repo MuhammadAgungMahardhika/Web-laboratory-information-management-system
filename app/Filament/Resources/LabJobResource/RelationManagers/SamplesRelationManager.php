@@ -8,6 +8,7 @@ use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleCollectionTypeEnum;
 use App\Models\Enums\SampleStatusEnum;
 use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
@@ -36,6 +37,7 @@ class SamplesRelationManager extends RelationManager
     protected static string $relationship = 'samples';
     protected static ?string $label = "Sampel";
     protected static ?string $title = "Sampel";
+    protected $listeners = ['refresh'];
     public function isReadOnly(): bool
     {
         return $this->ownerRecord->status !== JobStatusEnum::InProgress->value;
@@ -194,11 +196,23 @@ class SamplesRelationManager extends RelationManager
     {
         return SamplesTable::configure($table)
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->after(
+                    function (RelationManager $livewire) {
+                        $livewire->dispatch('refresh');
+                    }
+                ),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()->after(
+                    function (RelationManager $livewire) {
+                        $livewire->dispatch('refresh');
+                    }
+                ),
+                DeleteAction::make()->after(
+                    function (RelationManager $livewire) {
+                        $livewire->dispatch('refresh');
+                    }
+                )
             ]);
     }
 }

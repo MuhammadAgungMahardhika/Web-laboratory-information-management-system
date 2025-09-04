@@ -138,13 +138,14 @@ class LabJobStatusAction
         return Action::make('Selesai Sampling')
             ->icon('heroicon-o-clipboard-document-check')
             ->color('info')
-            ->visible(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized)
+            ->visible(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized && count($record->samples) > 0)
             ->requiresConfirmation()
             ->action(function (LabJob $record, LabJobService $labJobService) {
                 try {
                     DB::transaction(function () use ($record, $labJobService) {
                         $labJobService->updateLabJobStatus($record, JobStatusEnum::SamplingCompleted);
                     });
+
                     Notification::make()->title('Status pekerjaan diubah menjadi Sampling Selesai.')->success()->send();
                 } catch (Exception $e) {
                     Notification::make()

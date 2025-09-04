@@ -17,6 +17,8 @@ class TestResultService
      */
     public function generateTestResultsFromLabJob(LabJob $labJob): void
     {
+        TestResult::whereIn('sample_id', $labJob->samples()->pluck('samples.id'))
+            ->delete();
         // 1. Muat semua relasi yang diperlukan
         $labJob->load(['samples.labJobItem.parameterLabJobItems.parameter']);
 

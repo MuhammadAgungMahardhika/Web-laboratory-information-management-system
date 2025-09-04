@@ -6,7 +6,7 @@ enum ParameterStatusEnum: int
 {
     case Accredited = 1;
     case Unaccredited = 2;
-    //3,4,5->empty
+
     /**
      * Menyediakan label untuk setiap status akreditasi.
      *
@@ -43,10 +43,10 @@ enum ParameterStatusEnum: int
     /**
      * Mendapatkan warna visual untuk status akreditasi (contoh untuk Filament).
      *
-     * @param string $status
-     * @return string
+     * @param int $status
+     * @return int
      */
-    public static function color(string $status): string
+    public static function color(int $status): string
     {
         switch ($status) {
             case self::Accredited->value:
@@ -61,10 +61,10 @@ enum ParameterStatusEnum: int
     /**
      * Mendapatkan kode warna CSS (heksadesimal) untuk styling kustom.
      *
-     * @param string $status
+     * @param int $status
      * @return string
      */
-    public static function cssColor(string $status): string
+    public static function cssColor(int $status): string
     {
         return match ($status) {
             self::Accredited->value => '#10B981', // Hijau yang sesuai dengan 'success' di Filament

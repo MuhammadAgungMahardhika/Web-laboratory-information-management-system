@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('parameter_default_price')->nullable();
             $table->string('parameter_default_test_method_name', 50)->nullable();
             $table->text('parameter_description')->nullable();
-            $table->enum('parameter_status', ["accredited", "unaccredited"])->nullable();
+            $table->enum('parameter_status', [1, 2, 3, 4, 5])->nullable();
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();

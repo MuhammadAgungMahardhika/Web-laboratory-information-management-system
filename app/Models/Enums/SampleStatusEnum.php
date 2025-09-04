@@ -12,7 +12,6 @@ enum SampleStatusEnum: int
     case AnalysisCompleted = 4;
     case Invalid = 5;
     case Archived = 6;
-    //7,8,9,10->empty
 
 
     /**
