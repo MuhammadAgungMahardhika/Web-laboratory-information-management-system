@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Enums\SampleStatusEnum;
 use App\Models\LabJobItem; // Import model LabJobItem
+use App\Models\Sample;
+
 class SampleService
 {
     /**
@@ -18,5 +21,16 @@ class SampleService
         $sampleCount = $labJobItem->labJob->samples()->count();
         $sampleNumber = $sampleCount + 1;
         return "{$jobNumber}-{$sampleNumber}";
+    }
+
+    public function updateSampleStatus(Sample $sample, SampleStatusEnum $newStatus): bool
+    {
+
+        if ($newStatus === SampleStatusEnum::Prepared) {
+        }
+        // Perbarui status penawaran
+        $sample->status = $newStatus->value;
+        // Simpan perubahan ke database
+        return $sample->save();
     }
 }

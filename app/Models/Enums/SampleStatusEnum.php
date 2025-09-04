@@ -23,7 +23,7 @@ enum SampleStatusEnum: int
     {
         return [
             self::Received->value => 'Diterima',
-            self::Prepared->value  => 'Disiapkan',
+            self::Prepared->value  => 'Siap diuji',
             self::InAnalysis->value  => 'Dalam Analisis',
             self::AnalysisCompleted->value  => 'Analisis Selesai',
             self::Invalid->value  => 'Tidak Valid',

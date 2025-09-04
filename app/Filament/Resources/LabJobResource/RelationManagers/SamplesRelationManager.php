@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
-
+use App\Filament\Resources\LabJobResource\Actions\SampleAction;
 use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleCollectionTypeEnum;
@@ -28,6 +28,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -203,6 +204,9 @@ class SamplesRelationManager extends RelationManager
                 ),
             ])
             ->recordActions([
+                SampleAction::prepare()
+                    ->modalHeading('Sampel siap untuk diuji')
+                    ->modalDescription('Apakah anda yakin untuk mengubah status sampel menjadi siap diuji? '),
                 EditAction::make()->after(
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
@@ -212,7 +216,8 @@ class SamplesRelationManager extends RelationManager
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
                     }
-                )
-            ]);
+                ),
+
+            ], position: RecordActionsPosition::BeforeColumns);
     }
 }

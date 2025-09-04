@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Filament\Resources\LabJobResource\Actions;
+
+use App\Models\Enums\JobStatusEnum;
+use App\Models\Enums\SampleStatusEnum;
+use App\Models\LabJob;
+use App\Models\Sample;
+use App\Services\LabJobService;
+use App\Services\SampleService;
+use App\Services\TestResultService;
+use Auth;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
+use Filament\Forms\Components\Checkbox;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
+
+class SampleAction
+{
+    protected static string $taskLetterDownloadUrl = 'lab_jobs.download_task_letter';
+    protected static string $taskLetterPreviewUrl = 'lab_jobs.preview_task_letter';
+    protected static array $permissions = [
+        'preview-lab-job-task-letter', //0
+        'download-lab-job-task-letter', //1
+        'print-lab-job-task-letter', //2
+        'start-lab-job', //3
+        'complete-lab-job-sampling', //4
+        'complete-lab-job-analysis', //5
+        'complete-lab-job-validation', //6
+        'generate-lab-job-report', //7
+        'approve-lab-job-report', //8
+        'send-lab-job-report', //9
+        'abort-lab-job-report', //10
+
+    ];
+
+    public static function prepare(): Action
+    {
+        // $authorized = Auth::user()->can(static::$permissions[8]);
+        $authorized = true;
+        return  Action::make('Siapkan')
+            ->icon(Heroicon::OutlinedClipboardDocumentCheck)
+            ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
+            ->visible(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value && $authorized)
+            ->requiresConfirmation()
+            ->action(function (Sample $record, SampleService $sampleService) {
+                try {
+                    DB::transaction(function () use ($record, $sampleService) {
+                        $sampleService->updateSampleStatus($record, SampleStatusEnum::Prepared);
+                    });
+                    Notification::make()->title('Status sampel diubah menjadi disiapkan.')->success()->send();
+                } catch (Exception $e) {
+                    Notification::make()
+                        ->title('Gagal mengubah status disiapkan')
+                        ->body('Terjadi kesalahan: ' . $e->getMessage())
+                        ->danger()
+                        ->send();
+                    Log::error('Gagal mengubah status disiapkan', [
+                        'sample_id' => $record->id,
+                        'error' => $e->getMessage(),
+                        'user_id' => Auth::id(),
+                    ]);
+                }
+            });
+    }
+    public static function progress(): Action
+    {
+        $authorized = Auth::user()->can(static::$permissions[9]);
+        return  Action::make('Dalam Analisa')
+            ->icon('heroicon-o-truck')
+            ->color('success')
+            ->visible(fn(LabJob $record) => $record->status === JobStatusEnum::Invoiced->value && $authorized)
+            ->requiresConfirmation()
+            ->action(function (LabJob $record, LabJobService $labJobService) {
+                try {
+                    DB::transaction(function () use ($record, $labJobService) {
+                        $labJobService->updateLabJobStatus($record, JobStatusEnum::Delivered);
+                    });
+                    Notification::make()->title('Pekerjaan telah selesai dan dikirim.')->success()->send();
+                } catch (Exception $e) {
+                    Notification::make()
+                        ->title('Gagal mengubah status Pekerjaan telah selesai dan dikirim')
+                        ->body('Terjadi kesalahan: ' . $e->getMessage())
+                        ->danger()
+                        ->send();
+                    Log::error('Gagal mengubah status Pekerjaan telah selesai dan dikirim', [
+                        'lab_job_id' => $record->id,
+                        'error' => $e->getMessage(),
+                        'user_id' => Auth::id(),
+                    ]);
+                }
+            });
+    }
+}
