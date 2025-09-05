@@ -27,6 +27,7 @@ class Parameter extends Model
         return $this->belongsTo(TestMethod::class);
     }
 
+    // test package
     public function testPackages()
     {
         return $this->belongsToMany(TestPackage::class, 'parameter_test_packages'); // butuh perbaikan 
@@ -37,11 +38,22 @@ class Parameter extends Model
         return $this->hasMany(ParameterTestPackage::class);
     }
 
+    // labjob
+    public function labJobItems()
+    {
+        return $this->belongsToMany(LabJobItem::class, 'parameter_lab_job_items');
+    }
+    public function parameterLabJobItems()
+    {
+        return $this->hasMany(ParameterLabJobItem::class);
+    }
+
+    // quotation
     public function quotationItems()
     {
         return $this->belongsToMany(QuotationItem::class, 'parameter_quotation_items');
     }
-    public function parameterQuotationItem()
+    public function parameterQuotationItems()
     {
         return $this->hasMany(ParameterQuotationItem::class);
     }

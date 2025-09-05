@@ -7,6 +7,9 @@ use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleCollectionTypeEnum;
 use App\Models\Enums\SampleStatusEnum;
+use App\Services\SampleService;
+use Exception;
+use Filament\Actions\BulkAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -21,6 +24,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -29,8 +33,10 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\RecordActionsPosition;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SamplesRelationManager extends RelationManager
 {
@@ -218,6 +224,45 @@ class SamplesRelationManager extends RelationManager
                     }
                 ),
 
-            ], position: RecordActionsPosition::BeforeColumns);
+            ], position: RecordActionsPosition::BeforeColumns)
+            ->toolbarActions([
+                BulkAction::make('Siapkan')
+                    ->icon(Heroicon::OutlinedDocumentCheck)
+                    ->color('info')
+                    ->link()
+                    ->requiresConfirmation()
+                    ->action(function (Collection $records) {
+                        $sampleService = new SampleService();
+                        $successCount = 0;
+                        $failedCount = 0;
+
+                        foreach ($records as $record) {
+                            try {
+                                DB::transaction(function () use ($sampleService, $record) {
+                                    $sampleService->updateSampleStatus($record, SampleStatusEnum::Prepared);
+                                });
+
+                                $successCount++;
+                            } catch (\Exception $e) {
+                                $failedCount++;
+                            }
+                        }
+                        if ($successCount > 0) {
+                            Notification::make()
+                                ->title("Berhasil menyiapkan sampel uji")
+                                ->body("{$successCount} sample berhasil untuk disiapkan.")
+                                ->success()
+                                ->send();
+                        }
+                        if ($failedCount > 0) {
+                            Notification::make()
+                                ->title("Gagal menyiapkan sampel uji")
+                                ->body("{$failedCount} sample gagal untuk disiapkan.")
+                                ->danger()
+                                ->send();
+                        }
+                    })
+                    ->deselectRecordsAfterCompletion(),
+            ]);
     }
 }

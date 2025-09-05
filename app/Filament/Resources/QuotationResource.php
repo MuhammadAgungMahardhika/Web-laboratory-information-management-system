@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Enums\RecordActionsPosition;
 
 class QuotationResource extends Resource
 {
@@ -477,7 +478,7 @@ class QuotationResource extends Resource
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-            ])
+            ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 // BulkActionGroup::make([
                 //     DeleteBulkAction::make(),

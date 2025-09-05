@@ -13,6 +13,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
@@ -43,7 +45,17 @@ class TestResultForm
                     Select::make('parameter_id')
                         ->label('Parameter')
                         ->required()
-                        ->relationship('parameter', 'name')
+                        ->relationship('parameter', 'name', modifyQueryUsing: function ($query, Get $get) {
+                            $sampleId =   $get('sample_id');
+
+                            $query->whereHas('parameterLabJobItems', function ($q) use ($sampleId) {
+                                return $q->whereHas('labJobItem', function ($a) use ($sampleId) {
+                                    return $a->whereHas('samples', function ($b) use ($sampleId) {
+                                        return $b->where('id', $sampleId);
+                                    });
+                                });
+                            });
+                        })
                         ->searchable()
                         ->preload(),
                     Select::make('analyst_personel_id')

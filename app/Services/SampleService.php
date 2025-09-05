@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Enums\SampleStatusEnum;
 use App\Models\LabJobItem; // Import model LabJobItem
 use App\Models\Sample;
+use Exception;
 
 class SampleService
 {
@@ -25,8 +26,13 @@ class SampleService
 
     public function updateSampleStatus(Sample $sample, SampleStatusEnum $newStatus): bool
     {
-
         if ($newStatus === SampleStatusEnum::Prepared) {
+            if ($sample->status === SampleStatusEnum::Received) {
+                $testResultService = new TestResultService();
+                $testResultService->generateTestResultsFromSample($sample);
+            } else {
+                throw new Exception('Validasi gagal');
+            }
         }
         // Perbarui status penawaran
         $sample->status = $newStatus->value;

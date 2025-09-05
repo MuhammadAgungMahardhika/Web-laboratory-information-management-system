@@ -150,8 +150,6 @@ class LabJobService
         }
         // selesai sampling
         if ($newStatus === JobStatusEnum::SamplingCompleted) {
-            $testResultService = new TestResultService();
-            $testResultService->generateTestResultsFromLabJob($labJob);
         }
         // job selesai / dikirim
         if ($newStatus === JobStatusEnum::Delivered) {

@@ -102,7 +102,7 @@ namespace App\Models{
  * @property string|null $contact_email
  * @property string|null $npwp
  * @property string $registration_date
- * @property string $status
+ * @property int $status
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -169,7 +169,7 @@ namespace App\Models{
  * @property string $job_number
  * @property string|null $start_date
  * @property string|null $end_date
- * @property string $status
+ * @property int $status
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -290,7 +290,7 @@ namespace App\Models{
  * @property string $unit
  * @property string|null $description
  * @property string $default_price
- * @property string $status
+ * @property int $status
  * @property string|null $standard_max_value
  * @property string|null $standard_min_value
  * @property string|null $standard_unit
@@ -299,8 +299,12 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterQuotationItem> $parameterQuotationItem
- * @property-read int|null $parameter_quotation_item_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobItem> $labJobItems
+ * @property-read int|null $lab_job_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterLabJobItem> $parameterLabJobItems
+ * @property-read int|null $parameter_lab_job_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterQuotationItem> $parameterQuotationItems
+ * @property-read int|null $parameter_quotation_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterTestPackage> $parameterTestPackages
  * @property-read int|null $parameter_test_packages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelParameter> $personelParameters
@@ -585,7 +589,7 @@ namespace App\Models{
  * @property string $pph_percentage
  * @property string $total_amount
  * @property string|null $additional_description
- * @property string $status
+ * @property int $status
  * @property int|null $approved_by_personel_id
  * @property string|null $approved_at
  * @property string|null $created_by
@@ -819,8 +823,8 @@ namespace App\Models{
  * @property int|null $collected_by_personel_id
  * @property int|null $received_by_personel_id
  * @property string $sample_code
- * @property string $collection_date
- * @property string $collection_time
+ * @property string|null $collection_date
+ * @property string|null $collection_time
  * @property string|null $collection_location_desc
  * @property string|null $latitude
  * @property string|null $longitude
@@ -832,7 +836,8 @@ namespace App\Models{
  * @property string|null $received_date
  * @property string|null $received_time
  * @property string|null $received_condition_notes
- * @property string $status
+ * @property int $collection_type
+ * @property int $status
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -841,6 +846,8 @@ namespace App\Models{
  * @property-read \App\Models\LabJobItem $labJobItem
  * @property-read \App\Models\Personel|null $receivedByPersonel
  * @property-read \App\Models\SampleMatric|null $sampleMatric
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResult> $testResults
+ * @property-read int|null $test_results_count
  * @method static \Database\Factories\SampleFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newQuery()
@@ -850,6 +857,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionLocationDesc($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereContainerQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereContainerType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCreatedAt($value)
@@ -878,7 +886,7 @@ namespace App\Models{
  * @property string $code
  * @property int $sample_type_id
  * @property string $name
- * @property string $environment_type
+ * @property int $environment_type
  * @property string|null $description
  * @property string|null $created_by
  * @property string|null $updated_by
@@ -1142,7 +1150,7 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property int|null $current_team_id
  * @property string|null $profile_photo_path
- * @property string $status
+ * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Customer|null $customer

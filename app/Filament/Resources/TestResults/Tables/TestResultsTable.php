@@ -11,11 +11,13 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
@@ -111,6 +113,11 @@ class TestResultsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('sample_id')
+                    ->label('Kode sampel')
+                    ->relationship('sample', 'sample_code')
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('parameter_id')
                     ->label('Parameter uji')
                     ->relationship('parameter', 'name')
@@ -123,9 +130,10 @@ class TestResultsTable
                     ->preload()
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
-            ])
+                ViewAction::make(),
+
+            ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

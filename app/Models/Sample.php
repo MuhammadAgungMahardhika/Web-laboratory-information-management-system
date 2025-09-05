@@ -13,6 +13,10 @@ class Sample extends Model
     use Blameable;
 
 
+    public function testResults()
+    {
+        return $this->hasMany(TestResult::class);
+    }
     /**
      * Aksesor untuk mendapatkan pekerjaan lab induk.
      * Tidak perlu relasi baru, cukup panggil melalui labJobItem.

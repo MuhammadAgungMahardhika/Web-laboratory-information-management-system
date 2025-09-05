@@ -31,6 +31,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -187,7 +188,7 @@ class LabJobResource extends Resource
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-            ])
+            ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 // BulkActionGroup::make([
                 //     DeleteBulkAction::make(),
@@ -202,12 +203,6 @@ class LabJobResource extends Resource
             SamplesRelationManager::class,
             LabJobPersonelsRelationManager::class,
             LabJobItemsRelationManager::class,
-            // RelationGroup::make('items', [
-            //     SamplesRelationManager::class,
-            //     LabJobItemsRelationManager::class,
-            //     LabJobPersonelsRelationManager::class,
-            // ]),
-
         ];
     }
 

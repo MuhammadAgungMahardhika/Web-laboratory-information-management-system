@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJob;
+use App\Models\Sample;
 use App\Models\TestResult;
 use Error;
 use Exception;
@@ -11,6 +12,33 @@ use Illuminate\Support\Facades\Auth;
 
 class TestResultService
 {
+    /**
+     * Membuat semua record TestResult kosong untuk sebuah sampel.
+     * @param Sample $sample
+     */
+
+    public function generateTestResultsFromSample(Sample $sample): void
+    {
+        TestResult::where('sample_id', $sample->id)->delete();
+        $sample->load('labJobItem.parameterLabJobItems.parameter');
+        foreach ($sample->labJobItem->parameterLabJobItems as $paramSnapshot) {
+            // 2. Buat record TestResult baru untuk setiap pasangan Sample-Parameter
+            TestResult::create([
+                'sample_id' => $sample->id,
+                'parameter_id' => $paramSnapshot->parameter_id,
+                'test_method_id' => $paramSnapshot->parameter->test_method_id,
+                'unit' => $paramSnapshot->parameter_unit,
+                'tested_value' => null, // Nilai masih kosong
+                'analyst_personel_id' => null, // Nanti ditugaskan
+                'status' => TestResultStatusEnum::Raw->value, // Status awal
+                // --- SALIN NILAI STANDAR DI SINI ---
+                'standard_max_value_ref' =>  $paramSnapshot->parameter->standard_max_value,
+                'standard_min_value_ref' =>  $paramSnapshot->parameter->standard_min_value,
+                'standard_unit_ref' =>  $paramSnapshot->parameter->standard_unit,
+                'standard_notes_ref' =>  $paramSnapshot->parameter->standard_notes,
+            ]);
+        }
+    }
     /**
      * Membuat semua record TestResult kosong untuk sebuah LabJob.
      * @param LabJob $labJob

@@ -2,15 +2,23 @@
 
 namespace App\Filament\Resources\Samples\Tables;
 
+use App\Filament\Resources\LabJobResource\Actions\SampleAction;
 use App\Models\Enums\SampleStatusEnum;
+use App\Services\SampleService;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class SamplesTable
 {
@@ -92,16 +100,56 @@ class SamplesTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
+                SampleAction::prepare()
+                    ->modalHeading('Sampel siap untuk diuji')
+                    ->modalDescription('Apakah anda yakin untuk mengubah status sampel menjadi siap diuji? '),
                 EditAction::make(),
-            ])
+                ViewAction::make(),
+
+            ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()->after(
                         function (RelationManager $livewire) {
-                            $livewire->dispatch('refresh-lab-job');
+                            $livewire->dispatch('refresh');
                         }
                     ),
+                    BulkAction::make('Siapkan')
+                        ->icon(Heroicon::OutlinedDocumentCheck)
+                        ->color('info')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $sampleService = new SampleService();
+                            $successCount = 0;
+                            $failedCount = 0;
+
+                            foreach ($records as $record) {
+                                try {
+                                    DB::transaction(function () use ($sampleService, $record) {
+                                        $sampleService->updateSampleStatus($record, SampleStatusEnum::Prepared);
+                                    });
+
+                                    $successCount++;
+                                } catch (\Exception $e) {
+                                    $failedCount++;
+                                }
+                            }
+                            if ($successCount > 0) {
+                                Notification::make()
+                                    ->title("Berhasil menyiapkan sampel uji")
+                                    ->body("{$successCount} sample berhasil untuk disiapkan.")
+                                    ->success()
+                                    ->send();
+                            }
+                            if ($failedCount > 0) {
+                                Notification::make()
+                                    ->title("Gagal menyiapkan sampel uji")
+                                    ->body("{$failedCount} sample gagal untuk disiapkan.")
+                                    ->danger()
+                                    ->send();
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }
