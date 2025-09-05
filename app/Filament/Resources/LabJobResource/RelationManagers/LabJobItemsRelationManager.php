@@ -75,7 +75,6 @@ class LabJobItemsRelationManager extends RelationManager
                         ->label('Paket Pengujian')
                         ->relationship('testPackage', 'name')
                         ->searchable()
-                        ->helperText('Pilih paket pengujian jika item adalah sampel')
                         ->live()
                         ->afterStateUpdated(function ($state, Set $set) {
                             $set('description', null);

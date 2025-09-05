@@ -69,7 +69,6 @@ class QuotationItemRelationManager extends RelationManager
                         ->relationship('testPackage', 'name', modifyQueryUsing: fn(Builder $query) => $query->with('regulation'))
                         ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} ({$record->regulation->name})")
                         ->searchable()
-                        ->helperText('Pilih paket pengujian jika item adalah sampel')
                         ->reactive()
                         ->afterStateUpdated(function ($state, Set $set) {
                             $set('description', null);

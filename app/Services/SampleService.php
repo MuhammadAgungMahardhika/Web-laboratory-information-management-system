@@ -27,7 +27,7 @@ class SampleService
     public function updateSampleStatus(Sample $sample, SampleStatusEnum $newStatus): bool
     {
         if ($newStatus === SampleStatusEnum::Prepared) {
-            if ($sample->status === SampleStatusEnum::Received) {
+            if ($sample->status === SampleStatusEnum::Received->value) {
                 $testResultService = new TestResultService();
                 $testResultService->generateTestResultsFromSample($sample);
             } else {

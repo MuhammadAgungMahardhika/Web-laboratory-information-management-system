@@ -7,6 +7,7 @@ use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleCollectionTypeEnum;
 use App\Models\Enums\SampleStatusEnum;
+use App\Models\Sample;
 use App\Services\SampleService;
 use Exception;
 use Filament\Actions\BulkAction;
@@ -209,60 +210,6 @@ class SamplesRelationManager extends RelationManager
                     }
                 ),
             ])
-            ->recordActions([
-                SampleAction::prepare()
-                    ->modalHeading('Sampel siap untuk diuji')
-                    ->modalDescription('Apakah anda yakin untuk mengubah status sampel menjadi siap diuji? '),
-                EditAction::make()->after(
-                    function (RelationManager $livewire) {
-                        $livewire->dispatch('refresh');
-                    }
-                ),
-                DeleteAction::make()->after(
-                    function (RelationManager $livewire) {
-                        $livewire->dispatch('refresh');
-                    }
-                ),
-
-            ], position: RecordActionsPosition::BeforeColumns)
-            ->toolbarActions([
-                BulkAction::make('Siapkan')
-                    ->icon(Heroicon::OutlinedDocumentCheck)
-                    ->color('info')
-                    ->link()
-                    ->requiresConfirmation()
-                    ->action(function (Collection $records) {
-                        $sampleService = new SampleService();
-                        $successCount = 0;
-                        $failedCount = 0;
-
-                        foreach ($records as $record) {
-                            try {
-                                DB::transaction(function () use ($sampleService, $record) {
-                                    $sampleService->updateSampleStatus($record, SampleStatusEnum::Prepared);
-                                });
-
-                                $successCount++;
-                            } catch (\Exception $e) {
-                                $failedCount++;
-                            }
-                        }
-                        if ($successCount > 0) {
-                            Notification::make()
-                                ->title("Berhasil menyiapkan sampel uji")
-                                ->body("{$successCount} sample berhasil untuk disiapkan.")
-                                ->success()
-                                ->send();
-                        }
-                        if ($failedCount > 0) {
-                            Notification::make()
-                                ->title("Gagal menyiapkan sampel uji")
-                                ->body("{$failedCount} sample gagal untuk disiapkan.")
-                                ->danger()
-                                ->send();
-                        }
-                    })
-                    ->deselectRecordsAfterCompletion(),
-            ]);
+            ->paginated(false);
     }
 }

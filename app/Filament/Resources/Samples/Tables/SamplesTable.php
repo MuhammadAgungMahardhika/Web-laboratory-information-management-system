@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Samples\Tables;
 
 use App\Filament\Resources\LabJobResource\Actions\SampleAction;
 use App\Models\Enums\SampleStatusEnum;
+use App\Models\Sample;
 use App\Services\SampleService;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -100,12 +101,10 @@ class SamplesTable
                 //
             ])
             ->recordActions([
-                SampleAction::prepare()
-                    ->modalHeading('Sampel siap untuk diuji')
-                    ->modalDescription('Apakah anda yakin untuk mengubah status sampel menjadi siap diuji? '),
+                SampleAction::downloadLabel(),
+                SampleAction::prepare(),
                 EditAction::make(),
                 ViewAction::make(),
-
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([

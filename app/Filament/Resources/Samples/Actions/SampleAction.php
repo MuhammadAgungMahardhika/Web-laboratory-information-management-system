@@ -22,27 +22,26 @@ use Filament\Support\Icons\Heroicon;
 
 class SampleAction
 {
-    protected static string $taskLetterDownloadUrl = 'lab_jobs.download_task_letter';
+    protected static string $labelDownloadUrl = 'samples.download_label';
     protected static string $taskLetterPreviewUrl = 'lab_jobs.preview_task_letter';
     protected static array $permissions = [
-        'preview-lab-job-task-letter', //0
-        'download-lab-job-task-letter', //1
-        'print-lab-job-task-letter', //2
-        'start-lab-job', //3
-        'complete-lab-job-sampling', //4
-        'complete-lab-job-analysis', //5
-        'complete-lab-job-validation', //6
-        'generate-lab-job-report', //7
-        'approve-lab-job-report', //8
-        'send-lab-job-report', //9
-        'abort-lab-job-report', //10
-
+        'download-label-sample',
+        'prepare-sample', //1
     ];
 
+    public static function downloadLabel(): Action
+    {
+        $authorized = Auth::user()->can(static::$permissions[0]);
+        return Action::make('Label')
+            ->icon(Heroicon::OutlinedPrinter)
+            ->visible(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $authorized)
+            ->url(fn(Sample $record): string => route(static::$labelDownloadUrl, $record))
+            ->color('gray')
+            ->openUrlInNewTab();
+    }
     public static function prepare(): Action
     {
-        // $authorized = Auth::user()->can(static::$permissions[8]);
-        $authorized = true;
+        $authorized = Auth::user()->can(static::$permissions[0]);
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))

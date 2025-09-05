@@ -14,9 +14,13 @@ use Filament\Forms\Components\Checkbox;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 
 class LabJobStatusAction
 {
+    protected static string $reportPreviewUrl = 'reports.preview_report';
+    protected static string $reportDownloadUrl = 'reports.download_report';
+
     protected static string $taskLetterDownloadUrl = 'lab_jobs.download_task_letter';
     protected static string $taskLetterPreviewUrl = 'lab_jobs.preview_task_letter';
     protected static array $permissions = [
@@ -323,5 +327,42 @@ class LabJobStatusAction
                     ]);
                 }
             });
+    }
+    public static function previewReport(): Action
+    {
+        return  Action::make('Preview Laporan Hasil')
+            ->icon(Heroicon::OutlinedEye)
+            ->color('info')
+            ->slideOver()
+            ->modalHeading('Pratinjau Laporan Hasil Uji') // Judul modal
+            ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
+            ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
+            ->modalWidth('6xl') // Atur lebar modal (misal: '7xl' atau 'full')
+            ->modalContent(function (LabJob $record) {
+                // Ini adalah cara untuk me-render Blade view di dalam modal
+                // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
+                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->job_number);
+                $pdfUrl = route(static::$reportPreviewUrl, $record);
+                $downloadUrl = route(static::$reportDownloadUrl, $record);
+
+                return view('pdfs.preview', [
+                    'pdfUrl' => $pdfUrl,
+                    'safeFileName' => $safeFileName, // Opsional, jika perlu di view modal
+                    'downloadUrl' => $downloadUrl, // Opsional, jika perlu di view modal
+                ]);
+            })->modalFooterActions([
+                static::downloadReport(),
+                // static::sendReport(),
+            ])->modalFooterActionsAlignment('right');
+    }
+    public static function downloadReport(): Action
+    {
+        return  Action::make('Cetak Laporan Hasil ')
+            ->url(fn(LabJob $record): string => route(static::$reportDownloadUrl, $record))
+            ->icon(Heroicon::OutlinedPrinter)
+            ->color(Color::Gray)
+            ->outlined()
+            // ->visible(fn(LabJob $record) => $record->status === JobStatusEnum::ReportApproved->value)
+            ->openUrlInNewTab();
     }
 }

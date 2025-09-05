@@ -17,6 +17,7 @@ class ViewLabJob extends ViewRecord
     {
         return [
             EditAction::make(),
+            LabJobStatusAction::previewReport(),
             LabJobStatusAction::previewTaskLetter(),
             ActionGroup::make([
                 LabJobStatusAction::completeSampling()->after(
