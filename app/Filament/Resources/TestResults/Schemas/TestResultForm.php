@@ -63,6 +63,15 @@ class TestResultForm
                         ->relationship('analystPersonel', 'fullname')
                         ->searchable()
                         ->preload(),
+                    DateTimePicker::make('validation_date')
+                        ->label('Tanggal Validasi')
+                        ->disabled(),
+                    Select::make('validator_personel_id')
+                        ->label('Validator')
+                        ->relationship('validatorPersonel', 'fullname')
+                        ->searchable()
+                        ->preload()
+                        ->disabled(),
                 ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible()->iconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary')->icon(Heroicon::Beaker),
                 Section::make([
                     Section::make([
@@ -103,18 +112,6 @@ class TestResultForm
                             ->label('Catatan Standar')
                     ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
                 ])->columnSpanFull()->columns(2)->heading('Hasil Uji')->visible(fn() => $fillingTestResult),
-
-                Section::make([
-                    DateTimePicker::make('validation_date')
-                        ->label('Tanggal Validasi')
-                        ->disabled(),
-                    Select::make('validator_personel_id')
-                        ->label('Validator')
-                        ->relationship('validatorPersonel', 'fullname')
-                        ->searchable()
-                        ->preload()
-                        ->disabled(),
-                ])->columnSpanFull()->heading('Validasi')->columns(2),
             ]);
     }
 }

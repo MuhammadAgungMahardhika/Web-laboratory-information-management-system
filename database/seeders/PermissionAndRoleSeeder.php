@@ -127,6 +127,14 @@ class PermissionAndRoleSeeder extends Seeder
             'create-quotation',
             'update-quotation',
             'delete-quotation',
+
+            'preview-quotation',
+            'send-quotation',
+            'download-quotation',
+            'submit-quotation',
+            'accept-quotation',
+            'revise-quotation',
+            'cancel-quotation',
         ];
 
         $termTemplatePermissions = [

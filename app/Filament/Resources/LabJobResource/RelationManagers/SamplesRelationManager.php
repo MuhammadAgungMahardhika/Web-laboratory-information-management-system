@@ -7,6 +7,7 @@ use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleCollectionTypeEnum;
 use App\Models\Enums\SampleStatusEnum;
+use App\Models\LabJobItem;
 use App\Models\Sample;
 use App\Services\SampleService;
 use Exception;
@@ -47,7 +48,10 @@ class SamplesRelationManager extends RelationManager
     protected static string $relationship = 'samples';
     protected static ?string $label = "Sampel";
     protected static ?string $title = "Sampel";
+    public const PERMISSION_COLLECTING_SAMPLE = 'collecting-sample';
+    public const PERMISSION_RECEIVING_SAMPLE = 'receiving-sample';
     protected $listeners = ['refresh'];
+
     public function isReadOnly(): bool
     {
         return $this->ownerRecord->status !== JobStatusEnum::InProgress->value;
@@ -60,8 +64,8 @@ class SamplesRelationManager extends RelationManager
     {
         $user = Auth::user();
         $personel = $user->personel;
-        $canCollecting = $user->can('collecting-sample');
-        $canReceiving = $user->can('receiving-sample');
+        $canCollecting = $user->can(static::PERMISSION_COLLECTING_SAMPLE);
+        $canReceiving = $user->can(static::PERMISSION_RECEIVING_SAMPLE);
         return  $schema
             ->components([
                 Section::make([
@@ -80,7 +84,7 @@ class SamplesRelationManager extends RelationManager
                             if ($state) {
                                 // Inisialisasi service
                                 $sampleService = new \App\Services\SampleService();
-                                $labJobItem = $this->ownerRecord->labJobItems()->find($state);
+                                $labJobItem = LabJobItem::find($state);
                                 $sampleCode = $sampleService->generateSampleCode($labJobItem);
                                 $set('sample_code', $sampleCode);
                             } else {
