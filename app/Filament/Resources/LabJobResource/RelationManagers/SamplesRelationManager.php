@@ -212,6 +212,12 @@ class SamplesRelationManager extends RelationManager
                     }
                 ),
             ])
+            ->recordActions([
+                SampleAction::downloadLabel($this->ownerRecord),
+                SampleAction::prepare($this->ownerRecord),
+                EditAction::make(),
+                ViewAction::make(),
+            ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()->after(

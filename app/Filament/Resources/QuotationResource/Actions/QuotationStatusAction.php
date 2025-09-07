@@ -30,12 +30,26 @@ class QuotationStatusAction
 
     protected static string $quotationPreviewUrl = 'quotations.preview_pdf';
     protected static string $quotationDownloadUrl = 'quotations.download_pdf';
+
+    public const PERMISSION_PREVIEW_QUOTATION = 'preview-quotation';
+    public const PERMISSION_SEND_QUOTATION = 'send-quotation';
+    public const PERMISSION_DOWNLOAD_QUOTATION = 'download-quotation';
+    public const PERMISSION_SUBMIT_QUOTATION = 'submit-quotation';
+    public const PERMISSION_ACCEPT_QUOTATION = 'accept-quotation';
+    public const PERMISSION_REVISE_QUOTATION = 'revise-quotation';
+    public const PERMISSION_CANCEL_QUOTATION = 'cancel-quotation';
+
+    protected static function isAuthorized(string $permission): bool
+    {
+        return Auth::user()->can($permission);
+    }
     public static function preview(): Action
     {
         return  Action::make('Preview')
             ->color(Color::Blue) // Menggunakan warna biru Filament
             ->icon('heroicon-o-eye')
             ->slideOver()
+            ->authorize(static::isAuthorized(static::PERMISSION_PREVIEW_QUOTATION))
             ->modalHeading('Pratinjau Penawaran PDF') // Judul modal
             ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
             ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
@@ -61,6 +75,7 @@ class QuotationStatusAction
     public static function sendQuotation(): Action
     {
         return Action::make('Kirim Penawaran')
+            ->authorize(static::isAuthorized(static::PERMISSION_SEND_QUOTATION))
             ->icon('heroicon-o-paper-airplane')
             ->color(Color::Green)
             ->visible(fn(Quotation $record) => in_array($record->status, [
@@ -244,6 +259,7 @@ class QuotationStatusAction
     public static function download(): Action
     {
         return    Action::make('Download')
+            ->authorize(static::isAuthorized(static::PERMISSION_DOWNLOAD_QUOTATION))
             ->url(fn(Quotation $record): string => route(static::$quotationDownloadUrl, $record))
             ->icon('heroicon-o-document-arrow-down')
             ->color('info')
@@ -252,6 +268,7 @@ class QuotationStatusAction
     public static function submitted(): Action
     {
         return Action::make('Penawaran dikirimkan')
+            ->authorize(static::isAuthorized(static::PERMISSION_SUBMIT_QUOTATION))
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->visible(fn(Quotation $record): bool => in_array($record->status, [
@@ -288,6 +305,7 @@ class QuotationStatusAction
     public static function accepted(): Action
     {
         return  Action::make('Penawaran disetujui')
+            ->authorize(static::isAuthorized(static::PERMISSION_ACCEPT_QUOTATION))
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->visible(fn(Quotation $record): bool => in_array($record->status, [
@@ -350,6 +368,7 @@ class QuotationStatusAction
     public static function revised(): Action
     {
         return  Action::make('Penawaran perlu perbaikan')
+            ->authorize(static::isAuthorized(static::PERMISSION_REVISE_QUOTATION))
             ->icon('heroicon-o-pencil-square')
             ->color('info')
             ->visible(fn(Quotation $record): bool => in_array($record->status, [
@@ -386,6 +405,7 @@ class QuotationStatusAction
     public static function cancelled(): Action
     {
         return  Action::make('Penawaran dibatalkan')
+            ->authorize(static::isAuthorized(static::PERMISSION_CANCEL_QUOTATION))
             ->icon('heroicon-o-x-circle')
             ->color('danger')
             ->visible(fn(Quotation $record): bool => in_array($record->status, [

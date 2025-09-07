@@ -24,28 +24,41 @@ class SampleAction
 {
     protected static string $labelDownloadUrl = 'samples.download_label';
     protected static string $taskLetterPreviewUrl = 'lab_jobs.preview_task_letter';
-    protected static array $permissions = [
-        'download-label-sample',
-        'prepare-sample', //1
-    ];
+    public const PERMISSION_DOWNLOAD_LABEL = 'download-label-sample';
+    public const PERMISSION_PREPARE = 'prepare-sample';
 
-    public static function downloadLabel(): Action
+
+    protected static function isJobStatusAllowed(?LabJob $labJob): bool
     {
-        $authorized = Auth::user()->can(static::$permissions[0]);
+        return $labJob
+            ? $labJob->status === JobStatusEnum::SamplingCompleted->value
+            : true;
+    }
+
+    protected static function isAuthorized(string $permission): bool
+    {
+        return Auth::user()->can($permission);
+    }
+
+    public static function downloadLabel(?LabJob $labJob = null): Action
+    {
+        $allowedJobStatus = static::isJobStatusAllowed($labJob);
+        $authorized = static::isAuthorized(static::PERMISSION_DOWNLOAD_LABEL);
         return Action::make('Label')
             ->icon(Heroicon::OutlinedPrinter)
-            ->visible(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value && $authorized)
+            ->authorize(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $allowedJobStatus  && $authorized)
             ->url(fn(Sample $record): string => route(static::$labelDownloadUrl, $record))
             ->color('gray')
             ->openUrlInNewTab();
     }
-    public static function prepare(): Action
+    public static function prepare(?LabJob $labJob = null): Action
     {
-        $authorized = Auth::user()->can(static::$permissions[0]);
+        $allowedJobStatus = static::isJobStatusAllowed($labJob);
+        $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
-            ->visible(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value && $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value && $authorized)
+            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value && $allowedJobStatus && $authorized)
             ->requiresConfirmation()
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {
