@@ -26,7 +26,7 @@ class SamplesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn($query) => $query->with('labJobItem'))
+            ->modifyQueryUsing(fn($query) => $query->with('labJobItem.labJob'))
             ->groups([
                 Group::make('labJobItem.description')
                     ->label(''),
@@ -108,11 +108,7 @@ class SamplesTable
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->after(
-                        function (RelationManager $livewire) {
-                            $livewire->dispatch('refresh');
-                        }
-                    ),
+                    DeleteBulkAction::make(),
                     BulkAction::make('Siapkan')
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')

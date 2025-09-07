@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleStatusEnum;
 use App\Models\LabJobItem; // Import model LabJobItem
 use App\Models\Sample;
@@ -26,17 +27,22 @@ class SampleService
 
     public function updateSampleStatus(Sample $sample, SampleStatusEnum $newStatus): bool
     {
-        if ($newStatus === SampleStatusEnum::Prepared) {
-            if ($sample->status === SampleStatusEnum::Received->value) {
-                $testResultService = new TestResultService();
-                $testResultService->generateTestResultsFromSample($sample);
-            } else {
-                throw new Exception('Validasi gagal');
-            }
+        if ($newStatus === SampleStatusEnum::Received) {
+            $testResultService = new TestResultService();
+            $testResultService->rollBackTestResultsFromSample($sample);
         }
-        // Perbarui status penawaran
+        if ($newStatus === SampleStatusEnum::Prepared) {
+            if ($sample->status !== SampleStatusEnum::Received->value) {
+                throw new Exception("Status belum diterima, update status sampel diterima untuk mengubah status");
+            }
+            if ($sample->labJobItem->labJob->status !== JobStatusEnum::SamplingCompleted->value) {
+                throw new Exception("Status job belum complete, update status job untuk update sampel");
+            }
+            $testResultService = new TestResultService();
+            $testResultService->generateTestResultsFromSample($sample);
+        }
+
         $sample->status = $newStatus->value;
-        // Simpan perubahan ke database
         return $sample->save();
     }
 }

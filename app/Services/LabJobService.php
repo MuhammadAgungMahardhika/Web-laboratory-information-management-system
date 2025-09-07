@@ -3,14 +3,10 @@
 namespace App\Services;
 
 use App\Models\Enums\JobStatusEnum;
-use App\Models\Enums\QuotationStatusEnum;
-use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\ParameterLabJobItem;
 use App\Models\Quotation;
-use App\Models\TestResult;
-use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 

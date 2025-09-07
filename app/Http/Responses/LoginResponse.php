@@ -17,11 +17,11 @@ class LoginResponse implements LoginResponseContract
             if ($request->wantsJson()) {
                 return response()->json(['two_factor' => false]);
             }
-            $user = auth()->user();
+            $user = Auth::user();
             // Iterasi melalui semua case dalam enum RoleStatusEnum
             foreach (RoleEnum::cases() as $roleEnum) {
                 if ($user->hasRole($roleEnum->value)) {
-                    return redirect()->to($roleEnum->getPanelPrefix());
+                    return redirect()->to('lims');
                 }
             }
             // Jika pengguna tidak memiliki role yang sesuai

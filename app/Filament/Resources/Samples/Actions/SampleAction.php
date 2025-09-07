@@ -34,7 +34,7 @@ class SampleAction
         $authorized = Auth::user()->can(static::$permissions[0]);
         return Action::make('Label')
             ->icon(Heroicon::OutlinedPrinter)
-            ->visible(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $authorized)
+            ->visible(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value && $authorized)
             ->url(fn(Sample $record): string => route(static::$labelDownloadUrl, $record))
             ->color('gray')
             ->openUrlInNewTab();
@@ -45,7 +45,7 @@ class SampleAction
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
-            ->visible(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value && $authorized)
+            ->visible(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value && $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value && $authorized)
             ->requiresConfirmation()
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {
@@ -61,34 +61,6 @@ class SampleAction
                         ->send();
                     Log::error('Gagal mengubah status disiapkan', [
                         'sample_id' => $record->id,
-                        'error' => $e->getMessage(),
-                        'user_id' => Auth::id(),
-                    ]);
-                }
-            });
-    }
-    public static function progress(): Action
-    {
-        $authorized = Auth::user()->can(static::$permissions[9]);
-        return  Action::make('Dalam Analisa')
-            ->icon('heroicon-o-truck')
-            ->color('success')
-            ->visible(fn(LabJob $record) => $record->status === JobStatusEnum::Invoiced->value && $authorized)
-            ->requiresConfirmation()
-            ->action(function (LabJob $record, LabJobService $labJobService) {
-                try {
-                    DB::transaction(function () use ($record, $labJobService) {
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::Delivered);
-                    });
-                    Notification::make()->title('Pekerjaan telah selesai dan dikirim.')->success()->send();
-                } catch (Exception $e) {
-                    Notification::make()
-                        ->title('Gagal mengubah status Pekerjaan telah selesai dan dikirim')
-                        ->body('Terjadi kesalahan: ' . $e->getMessage())
-                        ->danger()
-                        ->send();
-                    Log::error('Gagal mengubah status Pekerjaan telah selesai dan dikirim', [
-                        'lab_job_id' => $record->id,
                         'error' => $e->getMessage(),
                         'user_id' => Auth::id(),
                     ]);

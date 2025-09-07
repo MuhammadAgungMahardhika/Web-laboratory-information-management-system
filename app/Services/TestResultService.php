@@ -13,13 +13,21 @@ use Illuminate\Support\Facades\Auth;
 class TestResultService
 {
     /**
+     * Rollback untuk sebuah sampel.
+     * @param Sample $sample
+     */
+    public function rollBackTestResultsFromSample(Sample $sample): void
+    {
+        TestResult::where('sample_id', $sample->id)->delete();
+    }
+    /**
      * Membuat semua record TestResult kosong untuk sebuah sampel.
      * @param Sample $sample
      */
 
     public function generateTestResultsFromSample(Sample $sample): void
     {
-        TestResult::where('sample_id', $sample->id)->delete();
+        $this->rollBackTestResultsFromSample($sample);
         $sample->load('labJobItem.parameterLabJobItems.parameter');
         foreach ($sample->labJobItem->parameterLabJobItems as $paramSnapshot) {
             // 2. Buat record TestResult baru untuk setiap pasangan Sample-Parameter
@@ -39,37 +47,7 @@ class TestResultService
             ]);
         }
     }
-    /**
-     * Membuat semua record TestResult kosong untuk sebuah LabJob.
-     * @param LabJob $labJob
-     */
-    public function generateTestResultsFromLabJob(LabJob $labJob): void
-    {
-        TestResult::whereIn('sample_id', $labJob->samples()->pluck('samples.id'))
-            ->delete();
-        // 1. Muat semua relasi yang diperlukan
-        $labJob->load(['samples.labJobItem.parameterLabJobItems.parameter']);
 
-        foreach ($labJob->samples as $sample) {
-            foreach ($sample->labJobItem->parameterLabJobItems as $paramSnapshot) {
-                // 2. Buat record TestResult baru untuk setiap pasangan Sample-Parameter
-                TestResult::create([
-                    'sample_id' => $sample->id,
-                    'parameter_id' => $paramSnapshot->parameter_id,
-                    'test_method_id' => $paramSnapshot->parameter->test_method_id,
-                    'unit' => $paramSnapshot->parameter_unit,
-                    'tested_value' => null, // Nilai masih kosong
-                    'analyst_personel_id' => null, // Nanti ditugaskan
-                    'status' => TestResultStatusEnum::Raw->value, // Status awal
-                    // --- SALIN NILAI STANDAR DI SINI ---
-                    'standard_max_value_ref' =>  $paramSnapshot->parameter->standard_max_value,
-                    'standard_min_value_ref' =>  $paramSnapshot->parameter->standard_min_value,
-                    'standard_unit_ref' =>  $paramSnapshot->parameter->standard_unit,
-                    'standard_notes_ref' =>  $paramSnapshot->parameter->standard_notes,
-                ]);
-            }
-        }
-    }
     // app/Services/TestResultService.php
     public function updateTestResultStatus(TestResult $testResult, TestResultStatusEnum $newStatus): bool
     {
