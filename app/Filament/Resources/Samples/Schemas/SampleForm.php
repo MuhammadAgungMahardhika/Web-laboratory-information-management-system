@@ -24,12 +24,13 @@ class SampleForm
     public const PERMISSION_COLLECTING_SAMPLE = 'collecting-sample';
     public const PERMISSION_RECEIVING_SAMPLE = 'receiving-sample';
 
+    protected static function isAuthorized(string $permission): bool
+    {
+        return Auth::user()->can($permission);
+    }
     public static function configure(Schema $schema): Schema
     {
-        $user = Auth::user();
-        $personel = $user->personel;
-        $canCollecting = $user->can(static::PERMISSION_COLLECTING_SAMPLE);
-        $canReceiving = $user->can(static::PERMISSION_COLLECTING_SAMPLE);
+        $personel = Auth::user()->personel;
         return  $schema
             ->components([
                 Section::make([
@@ -73,7 +74,7 @@ class SampleForm
                         ->live()
                         ->default(SampleCollectionTypeEnum::default()->value)
                         ->inline(),
-                ])->columnSpanFull()->visible(fn() => $canCollecting)->columns(4),
+                ])->columnSpanFull()->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->columns(4),
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')
@@ -114,7 +115,7 @@ class SampleForm
                                     ])->inlineLabel(),
 
                             ])->columns(4)->visible(
-                                fn(Get $get) =>  $canCollecting
+                                fn(Get $get) => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)
                                     && SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ),
                         Tab::make('penerimaan')
@@ -125,7 +126,7 @@ class SampleForm
                                 Select::make('received_by_personel_id')
                                     ->relationship('receivedByPersonel', 'fullname')
                                     ->label('Penerima')
-                                    ->default($canReceiving ? ($personel->id ?? null) : null)
+                                    ->default(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) ? ($personel->id ?? null) : null)
                                     ->searchable()
                                     ->preload(),
                                 DatePicker::make('received_date')
@@ -157,7 +158,7 @@ class SampleForm
                                             ->nullable(),
                                     ])->columnSpan(2)
                                     ->inlineLabel(),
-                            ])->columns(4)->visible(fn() => $canReceiving),
+                            ])->columns(4)->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
                     ])
                     ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('sample_code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
