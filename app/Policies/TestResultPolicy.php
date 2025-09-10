@@ -15,7 +15,10 @@ class TestResultPolicy
 
     public function update(User $user, Model $record): bool
     {
-        return  static::hasPermission('update', static::getResourceName()) && $record->status === TestResultStatusEnum::Raw->value;
+        return  static::hasPermission('update', static::getResourceName()) && in_array($record->status, [
+            TestResultStatusEnum::Raw->value,
+            TestResultStatusEnum::RevisionNeeded->value
+        ]);
     }
 
     public function delete(User $user, Model $record): bool

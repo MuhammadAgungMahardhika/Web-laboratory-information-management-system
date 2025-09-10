@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TestResults\Tables;
 
+use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Services\TestResultService;
@@ -144,76 +145,10 @@ class TestResultsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    BulkAction::make('requestValidate')
-                        ->label('Request Validasi')
-                        ->icon(Heroicon::ArrowUpTray)
-                        ->requiresConfirmation()
-                        ->color('warning')
-                        ->action(function (Collection $records) {
-                            $testResultService = new TestResultService();
-                            $successCount = 0;
-                            $failedCount = 0;
-                            foreach ($records as $record) {
-                                try {
-                                    DB::transaction(function () use ($testResultService, $record) {
-                                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RequestValidate);
-                                    });
-                                    $successCount++;
-                                } catch (\Exception $e) {
-                                    $failedCount++;
-                                }
-                            }
-                            if ($successCount > 0) {
-                                Notification::make()
-                                    ->title("Request Validasi Berhasil")
-                                    ->body("{$successCount} hasil uji berhasil untuk request validasi.")
-                                    ->success()
-                                    ->send();
-                            }
-                            if ($failedCount > 0) {
-                                Notification::make()
-                                    ->title("Request Validasi Gagal")
-                                    ->body("{$failedCount} hasil uji gagal untuk request validasi.")
-                                    ->danger()
-                                    ->send();
-                            }
-                        })
-                        ->deselectRecordsAfterCompletion(),
-                    BulkAction::make('validate')
-                        ->label('Validasi Hasil Uji')
-                        ->icon(Heroicon::Check)
-                        ->requiresConfirmation()
-                        ->color('success')
-                        ->action(function (Collection $records) {
-                            $testResultService = new TestResultService();
-                            $successCount = 0;
-                            $failedCount = 0;
-                            foreach ($records as $record) {
-                                try {
-                                    DB::transaction(function () use ($testResultService, $record) {
-                                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Validated);
-                                    });
-                                    $successCount++;
-                                } catch (\Exception $e) {
-                                    $failedCount++;
-                                }
-                            }
-                            if ($successCount > 0) {
-                                Notification::make()
-                                    ->title("Validasi Berhasil")
-                                    ->body("{$successCount} hasil uji berhasil divalidasi.")
-                                    ->success()
-                                    ->send();
-                            }
-                            if ($failedCount > 0) {
-                                Notification::make()
-                                    ->title("Validasi Gagal")
-                                    ->body("{$failedCount} hasil uji gagal divalidasi.")
-                                    ->danger()
-                                    ->send();
-                            }
-                        })
-                        ->deselectRecordsAfterCompletion()
+                    TestResultAction::bulkRequestValidate(),
+                    TestResultAction::bulkValidate(),
+                    TestResultAction::bulkRevisionNeeded(),
+                    TestResultAction::bulkReject()
                 ]),
             ]);
     }

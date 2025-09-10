@@ -18,7 +18,9 @@ class ViewTestResult extends ViewRecord
             EditAction::make(),
             ActionGroup::make([
                 TestResultAction::requestValidate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
-                TestResultAction::validate(static::getResource()::getUrl('view', ['record' => $this->record->id]))
+                TestResultAction::validate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::revisionNeeded(static::getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::reject(static::getResource()::getUrl('view', ['record' => $this->record->id])),
             ])
                 ->label('Update Hasil Uji')
                 ->icon('heroicon-o-arrow-path')
