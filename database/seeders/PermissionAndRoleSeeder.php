@@ -180,7 +180,14 @@ class PermissionAndRoleSeeder extends Seeder
 
             'filling-test-result',
             'request-validate-test-result',
-            'validating-test-result',
+            'validate-test-result',
+        ];
+        $specializationPermissions = [
+            'view-any-specialization',
+            'view-specialization',
+            'create-specialization',
+            'update-specialization',
+            'delete-specialization',
         ];
 
 
@@ -204,7 +211,8 @@ class PermissionAndRoleSeeder extends Seeder
             $termTemplatePermissions,
             $companyPermissions,
             $labJobPermissions,
-            $testResultPermissions
+            $testResultPermissions,
+            $specializationPermissions
         );
 
         // Membuat semua permissions

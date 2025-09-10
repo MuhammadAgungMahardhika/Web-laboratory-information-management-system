@@ -307,12 +307,14 @@ namespace App\Models{
  * @property-read int|null $parameter_quotation_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterTestPackage> $parameterTestPackages
  * @property-read int|null $parameter_test_packages_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelParameter> $personelParameters
- * @property-read int|null $personel_parameters_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Personel> $personels
  * @property-read int|null $personels_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuotationItem> $quotationItems
  * @property-read int|null $quotation_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SpecialisasiParameters> $specialisasiParameters
+ * @property-read int|null $specialisasi_parameters_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Specialization> $specializations
+ * @property-read int|null $specializations_count
  * @property-read \App\Models\TestMethod $testMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestPackage> $testPackages
  * @property-read int|null $test_packages_count
@@ -467,6 +469,8 @@ namespace App\Models{
  * @property-read int|null $parameters_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelParameter> $personelParameters
  * @property-read int|null $personel_parameters_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelSpecialization> $personelSpecializations
+ * @property-read int|null $personel_specializations_count
  * @property-read \App\Models\Position|null $position
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quotation> $quotations
  * @property-read int|null $quotations_count
@@ -474,6 +478,8 @@ namespace App\Models{
  * @property-read int|null $samples_collected_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sample> $samplesReceived
  * @property-read int|null $samples_received_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Specialization> $specializations
+ * @property-read int|null $specializations_count
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\PersonelFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel newModelQuery()
@@ -498,28 +504,42 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * @property int $id
- * @property int $personel_id
- * @property int $parameter_id
- * @property string|null $created_by
- * @property string|null $updated_by
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Parameter $parameter
- * @property-read \App\Models\Personel $personel
+ * @property-read \App\Models\Parameter|null $parameter
+ * @property-read \App\Models\Personel|null $personel
  * @method static \Database\Factories\PersonelParameterFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereCreatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereParameterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter wherePersonelId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter whereUpdatedBy($value)
  */
 	class PersonelParameter extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $personel_id
+ * @property int $specialization_id
+ * @property string|null $file_path
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Personel $personel
+ * @property-read \App\Models\Specialization $specialization
+ * @method static \Database\Factories\PersonelSpecializationFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization wherePersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization whereSpecializationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelSpecialization whereUpdatedBy($value)
+ */
+	class PersonelSpecialization extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -983,6 +1003,63 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereUpdatedBy($value)
  */
 	class Setting extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $specialization_id
+ * @property int $parameter_id
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Parameter|null $parameter
+ * @property-read \App\Models\Specialization|null $specialization
+ * @method static \Database\Factories\SpecialisasiParametersFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters whereParameterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters whereSpecializationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SpecialisasiParameters whereUpdatedBy($value)
+ */
+	class SpecialisasiParameters extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
+ * @property-read int|null $parameters_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelSpecialization> $personelSpecializations
+ * @property-read int|null $personel_specializations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Personel> $personels
+ * @property-read int|null $personels_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SpecialisasiParameters> $specialisasiParameters
+ * @property-read int|null $specialisasi_parameters_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Specialization whereUpdatedBy($value)
+ */
+	class Specialization extends \Eloquent {}
 }
 
 namespace App\Models{

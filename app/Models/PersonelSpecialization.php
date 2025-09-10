@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PersonelParameter extends Model
+class PersonelSpecialization extends Model
 {
-    /** @use HasFactory<\Database\Factories\PersonelParameterFactory> */
+    //
     use HasFactory;
     use Blameable;
 
@@ -17,8 +18,8 @@ class PersonelParameter extends Model
         return $this->belongsTo(Personel::class);
     }
 
-    public function parameter()
+    public function specialization()
     {
-        return $this->belongsTo(Parameter::class);
+        return $this->belongsTo(Specialization::class);
     }
 }

@@ -43,7 +43,6 @@ class RoleResource extends Resource
             ->components([
                 TextInput::make('name')
                     ->label('Nama')
-                    ->formatStateUsing(fn($state) => RoleEnum::labels()[$state] ?? $state)
                     ->required()
                     ->maxLength(255),
                 Hidden::make('guard_name')->default('web'),

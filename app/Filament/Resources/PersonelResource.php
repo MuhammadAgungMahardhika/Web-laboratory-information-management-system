@@ -19,6 +19,8 @@ use App\Models\Enums\RoleEnum;
 use App\Models\Enums\UserStatusEnum;
 use App\Models\Personel;
 use App\Traits\HasAuthorization;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -62,8 +64,7 @@ class PersonelResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
-                Textarea::make('certification_details')
-                    ->label('Sertifikasi'),
+
                 Select::make('user_id')
                     ->label('Akun')
                     ->required()
@@ -154,7 +155,32 @@ class PersonelResource extends Resource
                     ->label('Perusahaan')
                     ->required()
                     ->relationship('company', 'name')
-                    ->preload()
+                    ->preload(),
+                Repeater::make('personelSpecializations')
+                    ->relationship()
+                    ->label('Keahlian')
+                    ->schema([
+                        Select::make('specialization_id')
+                            ->relationship('specialization', 'name')
+                            ->label('Sertifikasi')
+                            ->searchable()
+                            ->required()
+                            ->preload(),
+                        FileUpload::make('file_path')
+                            ->label('Dokumen')
+                            ->acceptedFileTypes(['application/pdf', 'image/*'])
+                            ->imagePreviewHeight('250')
+                            ->loadingIndicatorPosition('left')
+                            ->panelAspectRatio('2:1')
+                            ->panelLayout('integrated')
+                            ->removeUploadedFileButtonPosition('right')
+                            ->uploadButtonPosition('left')
+                            ->previewable()
+                            ->openable()
+                            ->uploadProgressIndicatorPosition('left'),
+
+                    ])
+                    ->columnSpanFull()->columns(2)->grid(3)
             ]);
     }
 
@@ -214,9 +240,7 @@ class PersonelResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            PersonelParametersRelationManager::class
-        ];
+        return [];
     }
 
     public static function getPages(): array

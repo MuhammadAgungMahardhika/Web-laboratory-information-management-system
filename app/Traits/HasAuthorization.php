@@ -4,6 +4,7 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 trait HasAuthorization
 {
@@ -13,13 +14,13 @@ trait HasAuthorization
     protected static function generatePermissionCheck(string $action, string $resource): bool
     {
         // Cek jika user tidak null
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Jika user null, kembalikan false atau lakukan pengecekan lain yang sesuai
         if (!$user) {
             return false;
         }
-        return auth()->user()->can("{$action}-{$resource}");
+        return $user->can("{$action}-{$resource}");
     }
 
     /**

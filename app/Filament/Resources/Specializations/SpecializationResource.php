@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Filament\Resources\Specializations;
+
+use App\Filament\Resources\Specializations\Pages\ManageSpecializations;
+use App\Models\Specialization;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+
+class SpecializationResource extends Resource
+{
+    protected static ?string $model = Specialization::class;
+    protected static ?string $navigationLabel = 'Sertifikasi';
+    protected static ?string $label = 'Sertifikasi';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCheckBadge;
+    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextInput::make('name')
+                    ->required(),
+                Textarea::make('description')
+                    ->columnSpanFull(),
+                Select::make('parameters')
+                    ->relationship('parameters', 'name')
+                    ->multiple()
+                    ->preload()
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->label('Nama sertifikasi')
+                    ->searchable(),
+                TextColumn::make('parameters.name')
+                    ->label('Parameter')
+                    ->listWithLineBreaks()
+                    ->limitList(4)
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('created_by')
+                    ->searchable(),
+                TextColumn::make('updated_by')
+                    ->searchable(),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                SelectFilter::make('parameters')
+                    ->label('Parameter')
+                    ->searchable()
+                    ->relationship('parameters', 'name')
+                    ->preload()
+            ], layout: FiltersLayout::AboveContent)
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ], position: RecordActionsPosition::BeforeColumns)
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ManageSpecializations::route('/'),
+        ];
+    }
+}

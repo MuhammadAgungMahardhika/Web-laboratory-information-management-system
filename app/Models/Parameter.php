@@ -13,9 +13,15 @@ class Parameter extends Model
     use HasFactory;
     use Blameable;
 
-    public function personelParameters()
+
+    public function specializations()
     {
-        return $this->hasMany(PersonelParameter::class);
+        return $this->belongsToMany(Specialization::class, 'specialisasi_parameters');
+    }
+
+    public function specialisasiParameters()
+    {
+        return $this->hasMany(SpecialisasiParameters::class);
     }
 
     public function personels()

@@ -11,17 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personel_parameters', function (Blueprint $table) {
+        Schema::create('specializations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('personel_id');
-            $table->unsignedBigInteger('parameter_id');
-
-            // Auditing columns
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
-
-            $table->unique(['personel_id', 'parameter_id']);
         });
     }
 
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personel_parameters');
+        Schema::dropIfExists('specializations');
     }
 };

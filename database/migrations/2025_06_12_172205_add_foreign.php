@@ -297,15 +297,15 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
         });
-        Schema::table('personel_parameters', function (Blueprint $table) {
-            $table->foreign('personel_id', 'fk_personel_parameters_personel')
+        Schema::table('personel_specializations', function (Blueprint $table) {
+            $table->foreign('personel_id', 'fk_personel_specializations_personel')
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
-            $table->foreign('parameter_id', 'fk_personel_parameters_parameter')
+            $table->foreign('specialization_id', 'fk_personel_specializations_specialization')
                 ->references('id')
-                ->on('parameters')
+                ->on('specializations')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
         });

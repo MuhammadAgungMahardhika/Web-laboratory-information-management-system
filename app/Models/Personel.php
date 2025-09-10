@@ -13,6 +13,15 @@ class Personel extends Model
     use HasFactory;
     use Blameable;
 
+
+    public function specializations()
+    {
+        return $this->belongsToMany(Specialization::class, 'personel_specializations');
+    }
+    public function personelSpecializations()
+    {
+        return $this->hasMany(PersonelSpecialization::class);
+    }
     public function parameters()
     {
         return $this->belongsToMany(Parameter::class, 'personel_parameters');

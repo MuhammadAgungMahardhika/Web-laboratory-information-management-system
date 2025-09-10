@@ -42,7 +42,6 @@ use Filament\Tables\Enums\RecordActionsPosition;
 
 class QuotationResource extends Resource
 {
-
     protected static ?string $model = Quotation::class;
     protected static ?string $navigationLabel = 'Penawaran';
     protected static ?string $label = 'Penawaran';

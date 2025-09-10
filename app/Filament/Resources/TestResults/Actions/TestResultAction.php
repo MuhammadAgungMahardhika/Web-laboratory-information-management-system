@@ -16,13 +16,12 @@ use Log;
 
 class TestResultAction
 {
-    protected static array $permissions = [
-        'request-validate-test-result',
-        'validating-test-result'
-    ];
+    public const PERMISSION_REQUEST_VALIDATE_TEST_RESULT =  'request-validate-test-result';
+    public const PERMISSION_VALIDATE_TEST_RESULT =  'validate-test-result';
+
     public static function requestValidate($url = null): Action
     {
-        $authorized = Auth::user()->can(static::$permissions[0]);
+        $authorized = Auth::user()->can(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);
         return  Action::make('Request Validasi')
             ->icon(Heroicon::ArrowUpTray)
             ->color('warning')
@@ -54,7 +53,7 @@ class TestResultAction
 
     public static function validate($url = null): Action
     {
-        $authorized = Auth::user()->can(static::$permissions[1]);
+        $authorized = Auth::user()->can(static::PERMISSION_VALIDATE_TEST_RESULT);
         return  Action::make('Validasi Hasil Uji')
             ->icon(Heroicon::Check)
             ->color('success')

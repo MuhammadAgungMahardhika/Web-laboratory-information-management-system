@@ -28,13 +28,20 @@ class TestResultsTable
 {
     public static function configure(Table $table): Table
     {
+        $user = Auth::user();
+        $personel = $user->personel;
+        $specializationIds = $personel
+            ? $personel->personelSpecializations()->pluck('specialization_id')->toArray()
+            : [];
         return $table
-            ->modifyQueryUsing(function ($query) {
-                $user = Auth::user();
-                $personel = $user->personel;
+            ->modifyQueryUsing(function ($query) use ($personel, $specializationIds) {
                 if ($personel && $personel->position->name === PositionEnum::Analyst->value) {
-                    // Filter untuk hanya menampilkan hasil yang parameternya sesuai keahlian analis ini
-                    return $query->whereHas('parameter', fn($q) => $q->whereHas('personels', fn($qi) => $qi->where('personel_id', $personel->id)));
+                    return $query
+                        ->select('test_results.*')
+                        ->join('parameters', 'parameters.id', '=', 'test_results.parameter_id')
+                        ->join('specialisasi_parameters', 'specialisasi_parameters.parameter_id', '=', 'parameters.id')
+                        ->whereIn('specialisasi_parameters.specialization_id', $specializationIds)
+                        ->distinct();
                 }
                 return $query;
             })

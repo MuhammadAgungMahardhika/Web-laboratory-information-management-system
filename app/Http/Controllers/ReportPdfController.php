@@ -46,4 +46,23 @@ class ReportPdfController extends Controller
 
         return $pdf->download("LHP-{$safeJobNumber}.pdf");
     }
+
+    public function printReport(LabJob $labJob)
+    {
+        // Muat semua relasi yang diperlukan untuk laporan
+        $labJob->load([
+            'quotation.customer',
+            'labJobItems.samples.testResults.parameter',
+            'labJobItems.samples.testResults.analystPersonnel',
+            'labJobItems.samples.testResults.validatorPersonnel'
+        ]);
+
+        $company = Company::where('is_main_company', true)->first();
+
+        $pdf = Pdf::loadView('pdfs.test_report', compact('labJob', 'company'));
+
+        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+
+        return $pdf->download("LHP-{$safeJobNumber}.pdf");
+    }
 }
