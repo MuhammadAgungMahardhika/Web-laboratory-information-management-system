@@ -5,25 +5,18 @@ namespace App\Filament\Resources\TestResults\Tables;
 use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\TestResultStatusEnum;
-use App\Services\TestResultService;
 use Auth;
-use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Select;
-use Filament\Notifications\Notification;
 use Filament\Support\Colors\Color;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class TestResultsTable
 {
@@ -31,7 +24,7 @@ class TestResultsTable
     {
         $user = Auth::user();
         $personel = $user->personel;
-        $specializationIds = $personel
+        $specializationIds = !is_null($personel->personelSpecializations())
             ? $personel->personelSpecializations()->pluck('specialization_id')->toArray()
             : [];
         return $table

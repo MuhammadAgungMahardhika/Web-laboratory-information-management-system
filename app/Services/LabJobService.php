@@ -147,6 +147,9 @@ class LabJobService
         // selesai sampling
         if ($newStatus === JobStatusEnum::SamplingCompleted) {
         }
+
+        if ($newStatus === JobStatusEnum::AnalysisCompleted) {
+        }
         // job selesai / dikirim
         if ($newStatus === JobStatusEnum::Delivered) {
             $labJob->end_date = now();

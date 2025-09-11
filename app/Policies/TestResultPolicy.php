@@ -18,7 +18,7 @@ class TestResultPolicy
         return  static::hasPermission('update', static::getResourceName()) && in_array($record->status, [
             TestResultStatusEnum::Raw->value,
             TestResultStatusEnum::RevisionNeeded->value
-        ]);
+        ]) && $user->personel->;
     }
 
     public function delete(User $user, Model $record): bool
