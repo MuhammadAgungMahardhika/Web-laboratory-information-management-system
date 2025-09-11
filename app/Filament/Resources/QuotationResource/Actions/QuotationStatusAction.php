@@ -78,7 +78,7 @@ class QuotationStatusAction
             ->authorize(static::isAuthorized(static::PERMISSION_SEND_QUOTATION))
             ->icon('heroicon-o-paper-airplane')
             ->color(Color::Green)
-            ->visible(fn(Quotation $record) => in_array($record->status, [
+            ->authorize(fn(Quotation $record) => count($record->quotationItems) > 0 && in_array($record->status, [
                 QuotationStatusEnum::Draft->value,
                 QuotationStatusEnum::Submitted->value,
                 QuotationStatusEnum::Revised->value,
@@ -259,7 +259,7 @@ class QuotationStatusAction
     public static function download(): Action
     {
         return    Action::make('Download')
-            ->authorize(static::isAuthorized(static::PERMISSION_DOWNLOAD_QUOTATION))
+            ->authorize(fn(Quotation $record) => count($record->quotationItems) > 0 && static::isAuthorized(static::PERMISSION_DOWNLOAD_QUOTATION))
             ->url(fn(Quotation $record): string => route(static::$quotationDownloadUrl, $record))
             ->icon('heroicon-o-document-arrow-down')
             ->color('info')
@@ -268,13 +268,12 @@ class QuotationStatusAction
     public static function submitted(): Action
     {
         return Action::make('Penawaran dikirimkan')
-            ->authorize(static::isAuthorized(static::PERMISSION_SUBMIT_QUOTATION))
-            ->icon('heroicon-o-check-circle')
-            ->color('success')
-            ->visible(fn(Quotation $record): bool => in_array($record->status, [
+            ->authorize(fn(Quotation $record) =>  in_array($record->status, [
                 QuotationStatusEnum::Draft->value,
                 QuotationStatusEnum::Revised->value
-            ]))
+            ]) && static::isAuthorized(static::PERMISSION_SUBMIT_QUOTATION))
+            ->icon('heroicon-o-check-circle')
+            ->color('success')
             ->requiresConfirmation()
             ->action(function (Quotation $record, QuotationService $quotationService) {
                 try {
@@ -308,7 +307,7 @@ class QuotationStatusAction
             ->authorize(static::isAuthorized(static::PERMISSION_ACCEPT_QUOTATION))
             ->icon('heroicon-o-check-circle')
             ->color('success')
-            ->visible(fn(Quotation $record): bool => in_array($record->status, [
+            ->authorize(fn(Quotation $record): bool =>  in_array($record->status, [
                 QuotationStatusEnum::Submitted->value,
                 QuotationStatusEnum::Revised->value
             ]))
@@ -371,7 +370,7 @@ class QuotationStatusAction
             ->authorize(static::isAuthorized(static::PERMISSION_REVISE_QUOTATION))
             ->icon('heroicon-o-pencil-square')
             ->color('info')
-            ->visible(fn(Quotation $record): bool => in_array($record->status, [
+            ->authorize(fn(Quotation $record): bool =>  in_array($record->status, [
                 QuotationStatusEnum::Submitted->value,
             ]))
             ->requiresConfirmation()

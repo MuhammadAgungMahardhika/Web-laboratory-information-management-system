@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Enums\SampleStatusEnum;
+use App\Models\Enums\TestResultEvaluationStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJob;
 use App\Models\Sample;
@@ -53,49 +55,79 @@ class TestResultService
     {
         if ($newStatus === TestResultStatusEnum::RequestValidate) {
             if ($testResult->status === TestResultStatusEnum::Raw->value) {
-                $testResult->tested_value ?? throw new Exception('Validasi gagal');
+                $testResult->tested_value ?? throw new Exception('Hasil test belum terisi');
                 $testResult->analyst_personel_id = Auth::user()->personel->id;
+                $testResult->status = $newStatus->value;
+                $isSuccessed = $testResult->save();
             } else {
-                throw new Exception('Validasi gagal');
+                throw new Exception('Status hasil uji bukan "mentah" ');
             }
         }
-
         if ($newStatus === TestResultStatusEnum::Validated) {
             if ($testResult->status === TestResultStatusEnum::RequestValidate->value) {
                 $testResult->validation_date = now();
                 $testResult->validator_personel_id = Auth::user()->personel->id;
+                $testResult->status = $newStatus->value;
+                $isSuccessed = $testResult->save();
+                $allValidated = $testResult->sample->isAllTestResultsValidated();
+                if ($allValidated) {
+                    $sampleService = new SampleService();
+                    $sampleService->updateSampleStatus($testResult->sample, SampleStatusEnum::AnalysisCompleted);
+                }
             } else {
-                throw new Exception('Validasi gagal');
+                throw new Exception('Status hasil uji bukan "request validasi" ');
             }
         }
-        // Perbarui status penawaran
-        $testResult->status = $newStatus->value;
-        // Simpan perubahan ke database
-        return $testResult->save();
+        return  $isSuccessed;
     }
 
-    public function validateAndSetConclusion(TestResult $testResult): TestResult
+    public function evaluateResult(TestResult $testResult, ?float $min = null, ?float $max = null): TestResultEvaluationStatusEnum
     {
-        // Cek jika hasil sudah diverifikasi
-        if ($testResult->validation_status === TestResultStatusEnum::Validated->value) {
+        $value = $testResult->tested_value;
 
-            $testedValue = $testResult->tested_value;
-            $standardMin = $testResult->standard_value_ref_min; // Ambil nilai dari kolom yang baru
-            $standardMax = $testResult->standard_value_ref_max; // Ambil nilai dari kolom yang baru
-
-            // Lakukan perbandingan
-            if ($standardMin !== null && $testedValue < $standardMin) {
-                $testResult->conclusion_status = 'Not In Accordance';
-            } elseif ($standardMax !== null && $testedValue > $standardMax) {
-                $testResult->conclusion_status = 'Not In Accordance';
-            } elseif ($standardMin === null && $standardMax === null) {
-                $testResult->conclusion_status = 'Not Applicable';
-            } else {
-                $testResult->conclusion_status = 'In Accordance';
-            }
-
-            $testResult->save();
+        // Tidak ada nilai yang diuji → invalid
+        if ($value === null) {
+            return TestResultEvaluationStatusEnum::Invalid;
         }
-        return $testResult;
+
+        // Tidak ada standar sama sekali → not applicable
+        if ($min === null && $max === null) {
+            return TestResultEvaluationStatusEnum::NotApplicable;
+        }
+
+        // Ada minimum & maksimum
+        if ($min !== null && $max !== null) {
+            if ($value < $min) {
+                return TestResultEvaluationStatusEnum::BelowStandard;
+            }
+            if ($value > $max) {
+                return TestResultEvaluationStatusEnum::AboveStandard;
+            }
+            return TestResultEvaluationStatusEnum::Compliant;
+        }
+
+        // Hanya ada minimum
+        if ($min !== null && $max === null) {
+            return $value < $min
+                ? TestResultEvaluationStatusEnum::BelowStandard
+                : TestResultEvaluationStatusEnum::Compliant;
+        }
+
+        // Hanya ada maksimum
+        if ($max !== null && $min === null) {
+            return $value > $max
+                ? TestResultEvaluationStatusEnum::AboveStandard
+                : TestResultEvaluationStatusEnum::Compliant;
+        }
+
+        // fallback
+        return TestResultEvaluationStatusEnum::NotApplicable;
+    }
+
+    public function updateEvaluationStatus(TestResult $testResult, ?float $min = null, ?float $max = null): void
+    {
+        $status = $this->evaluateResult($testResult, $min, $max);
+        $testResult->evaluation_status = $status->value;
+        $testResult->save();
     }
 }

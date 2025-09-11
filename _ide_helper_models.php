@@ -467,8 +467,6 @@ namespace App\Models{
  * @property-read int|null $lab_jobs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
  * @property-read int|null $parameters_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelParameter> $personelParameters
- * @property-read int|null $personel_parameters_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelSpecialization> $personelSpecializations
  * @property-read int|null $personel_specializations_count
  * @property-read \App\Models\Position|null $position
@@ -500,18 +498,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereUserId($value)
  */
 	class Personel extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * @property-read \App\Models\Parameter|null $parameter
- * @property-read \App\Models\Personel|null $personel
- * @method static \Database\Factories\PersonelParameterFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonelParameter query()
- */
-	class PersonelParameter extends \Eloquent {}
 }
 
 namespace App\Models{

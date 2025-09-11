@@ -27,6 +27,7 @@ class TestResultAction
     {
         return Auth::user()->can($permission);
     }
+
     public static function requestValidate($url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);

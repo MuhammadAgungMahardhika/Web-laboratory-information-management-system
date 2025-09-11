@@ -35,13 +35,8 @@ return new class extends Migration
             $table->string('standard_notes_ref', 255)->nullable();
 
             // Status validasi
-            $table->enum('status', [
-                'raw',
-                'request_validate',
-                'validated',
-                'revision_needed',
-                'rejected'
-            ])->default('raw');
+            $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('evaluation_status')->default(1);
             $table->timestamp('validation_date')->nullable();
 
             // Auditing columns
@@ -51,6 +46,7 @@ return new class extends Migration
 
             // Indexes
             $table->index('status');
+            $table->index('evaluation_status');
         });
     }
 

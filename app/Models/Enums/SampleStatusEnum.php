@@ -8,10 +8,9 @@ enum SampleStatusEnum: int
 {
     case Received = 1;
     case Prepared = 2;
-    case InAnalysis = 3;
-    case AnalysisCompleted = 4;
-    case Invalid = 5;
-    case Archived = 6;
+    case AnalysisCompleted = 3;
+    case Invalid = 4;
+    case Archived = 5;
 
 
     /**
@@ -23,8 +22,7 @@ enum SampleStatusEnum: int
     {
         return [
             self::Received->value => 'Diterima',
-            self::Prepared->value  => 'Siap diuji',
-            self::InAnalysis->value  => 'Dalam Analisis',
+            self::Prepared->value  => 'Siap dianalisa',
             self::AnalysisCompleted->value  => 'Analisis Selesai',
             self::Invalid->value  => 'Tidak Valid',
             self::Archived->value  => 'Diarsipkan',
@@ -50,7 +48,6 @@ enum SampleStatusEnum: int
         return match ($status) {
             self::Received->value => 'info',
             self::Prepared->value => 'warning',
-            self::InAnalysis->value => 'primary',
             self::AnalysisCompleted->value => 'success',
             self::Invalid->value => 'danger',
             self::Archived->value => 'gray',

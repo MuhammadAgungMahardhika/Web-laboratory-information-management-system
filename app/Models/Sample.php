@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enums\TestResultStatusEnum;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,12 @@ class Sample extends Model
     use HasFactory;
     use Blameable;
 
-
+    public function isAllTestResultsValidated(): bool
+    {
+        return ! $this->testResults()
+            ->where('status', '!=', TestResultStatusEnum::Validated->value)
+            ->exists();
+    }
     public function testResults()
     {
         return $this->hasMany(TestResult::class);

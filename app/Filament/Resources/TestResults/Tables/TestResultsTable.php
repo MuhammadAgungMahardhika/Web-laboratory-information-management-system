@@ -29,15 +29,9 @@ class TestResultsTable
             : [];
         return $table
             ->modifyQueryUsing(function ($query) use ($personel, $specializationIds) {
-                if ($personel && $personel->position->name === PositionEnum::Analyst->value) {
-                    return $query
-                        ->select('test_results.*')
-                        ->join('parameters', 'parameters.id', '=', 'test_results.parameter_id')
-                        ->join('specialisasi_parameters', 'specialisasi_parameters.parameter_id', '=', 'parameters.id')
-                        ->whereIn('specialisasi_parameters.specialization_id', $specializationIds)
-                        ->distinct();
-                }
-                return $query;
+                return $query->whereHas('parameter.specialisasiParameters', function ($q) use ($specializationIds) {
+                    $q->whereIn('specialization_id', $specializationIds);
+                });
             })
             ->striped()
             ->groups([

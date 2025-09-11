@@ -4,13 +4,13 @@ namespace App\Models\Enums;
 
 use Filament\Support\Colors\Color;
 
-enum TestResultStatusEnum: string
+enum TestResultStatusEnum: int
 {
-    case Raw = 'raw';
-    case RequestValidate = 'request_validate';
-    case Validated = 'validated';
-    case RevisionNeeded = 'revision_needed';
-    case Rejected = 'rejected';
+    case Raw = 1;
+    case RequestValidate = 2;
+    case Validated = 3;
+    case RevisionNeeded = 4;
+    case Rejected = 5;
 
     public static function labels(): array
     {
@@ -33,7 +33,7 @@ enum TestResultStatusEnum: string
         return self::labels()[$this->value];
     }
 
-    public static function color(string $status): string
+    public static function color(int $status): string
     {
         return match ($status) {
             self::Raw->value => 'gray',

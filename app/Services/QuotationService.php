@@ -8,6 +8,7 @@ use App\Models\LabJob;
 use App\Models\Quotation;
 use Auth;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class QuotationService
@@ -54,8 +55,13 @@ class QuotationService
         // 1. Perbarui status penawaran
         $quotation->status = $newStatus->value;
 
+        if ($newStatus === QuotationStatusEnum::Submitted) {
+            if (count($quotation->quotationItems) == 0) {
+                throw new Exception('Detail penawaran belum terisi');
+            }
+        }
         // 2. Lakukan aksi spesifik berdasarkan status baru
-        if ($newStatus->value === QuotationStatusEnum::Accepted->value) {
+        if ($newStatus === QuotationStatusEnum::Accepted) {
             // Logika untuk membuat Lab Job saat penawaran diterima
             $labJobService = new LabJobService();
             $labJobService->createLabJobFromQuotation($quotation);

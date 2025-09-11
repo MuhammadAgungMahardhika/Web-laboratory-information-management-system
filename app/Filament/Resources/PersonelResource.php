@@ -167,7 +167,7 @@ class PersonelResource extends Resource
                             ->required()
                             ->preload(),
                         FileUpload::make('file_path')
-                            ->label('Dokumen')
+                            ->label('Dokumen Sertifikasi')
                             ->acceptedFileTypes(['application/pdf', 'image/*'])
                             ->imagePreviewHeight('250')
                             ->loadingIndicatorPosition('left')

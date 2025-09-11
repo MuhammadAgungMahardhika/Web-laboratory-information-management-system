@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Enums\JobStatusEnum;
+use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\ParameterLabJobItem;
@@ -149,6 +150,16 @@ class LabJobService
         }
 
         if ($newStatus === JobStatusEnum::AnalysisCompleted) {
+            $allValidated = $labJob->samples()
+                ->whereHas(
+                    'testResults',
+                    fn($q) =>
+                    $q->where('status', '!=', TestResultStatusEnum::Validated->value)
+                )
+                ->doesntExist();
+            if (! $allValidated) {
+                throw new \Exception("Masih ada hasil uji yang belum divalidasi.");
+            }
         }
         // job selesai / dikirim
         if ($newStatus === JobStatusEnum::Delivered) {

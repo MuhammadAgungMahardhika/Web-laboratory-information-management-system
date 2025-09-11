@@ -46,6 +46,7 @@ class QuotationItemRelationManager extends RelationManager
     protected static string $relationship = 'quotationItems';
     protected static ?string $label = 'Detail penawaran';
     protected static ?string $title = "Detail penawaran";
+
     public function form(Schema $schema): Schema
     {
 

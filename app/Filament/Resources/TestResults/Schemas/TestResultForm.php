@@ -4,8 +4,10 @@ namespace App\Filament\Resources\TestResults\Schemas;
 
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\RoleEnum;
+use App\Models\Enums\TestResultEvaluationStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
+use App\Services\TestResultService;
 use Auth;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -23,6 +25,7 @@ class TestResultForm
     public static function configure(Schema $schema): Schema
     {
         $fillingTestResult = Auth::user()->can('filling-test-result');
+        $testResultService = new TestResultService();
         return $schema
             ->columns([
                 'sm' => 2,
@@ -78,17 +81,33 @@ class TestResultForm
                         DatePicker::make('test_date')
                             ->default(now())
                             ->label('Tanggal Pengujian')
-                            ->required(),
+                            ->required()
+                            ->afterStateUpdated(function (Get $get, Set $set, TestResult $testResult) use ($testResultService) {
+                                $testResultEvaluationStatus =  $testResultService->evaluateResult($testResult, $get('standard_min_value_ref'), $get('standard_max_value_ref'));
+                                $set('evaluation_status', $testResultEvaluationStatus->value);
+                            }),
                         Select::make('test_method_id')
                             ->label('Metode Uji')
                             ->required()
                             ->relationship('testMethod', 'name')
                             ->searchable()
                             ->preload(),
+
                         TextInput::make('tested_value')
                             ->label('Nilai')
                             ->numeric()
-                            ->required(),
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function (Get $get, Set $set) use ($testResultService) {
+                                $set('evaluation_status', null);
+
+                                $value = $get('tested_value');
+                                $min   = $get('standard_min_value_ref');
+                                $max   = $get('standard_max_value_ref');
+                                $fakeTestResult = new TestResult(['tested_value' => $value]);
+                                $status = $testResultService->evaluateResult($fakeTestResult, $min, $max);
+                                $set('evaluation_status', $status->value);
+                            }),
                         TextInput::make('corrected_value')
                             ->label('Nilai Koreksi')
                             ->numeric(),
@@ -98,6 +117,9 @@ class TestResultForm
                         Textarea::make('test_notes')
                             ->columnSpanFull()
                             ->label('Catatan Pengujian'),
+                        Select::make('evaluation_status')
+                            ->options(TestResultEvaluationStatusEnum::labels())
+                            ->preload(),
                     ])->columns(1)->inlineLabel(),
                     Section::make([
                         TextInput::make('standard_max_value_ref')
@@ -111,7 +133,7 @@ class TestResultForm
                         TextInput::make('standard_notes_ref')
                             ->label('Catatan Standar')
                     ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
-                ])->columnSpanFull()->columns(2)->heading('Hasil Uji')->visible(fn() => $fillingTestResult),
+                ])->columnSpanFull()->columns(2)->heading(fn($record) => $record->evaluation_status ? 'Hasil Uji -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Hasil Uji')->visible(fn() => $fillingTestResult),
             ]);
     }
 }

@@ -190,14 +190,14 @@ class LabJobStatusAction
                     DB::transaction(function () use ($record, $labJobService) {
                         $labJobService->updateLabJobStatus($record, JobStatusEnum::AnalysisCompleted);
                     });
-                    Notification::make()->title('Status pekerjaan diubah menjadi Analisis Selesai.')->success()->send();
+                    Notification::make()->title('Status pekerjaan diubah menjadi selesai analisis.')->success()->send();
                 } catch (Exception $e) {
                     Notification::make()
-                        ->title('Gagal menyelesaikan sampling')
+                        ->title('Gagal menandai lab job sebagai selesai analisis')
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
                         ->danger()
                         ->send();
-                    Log::error('Gagal menyelesaikan analisis', [
+                    Log::error('Gagal menandai lab job sebagai selesai analisis', [
                         'lab_job_id' => $record->id,
                         'error' => $e->getMessage(),
                         'user_id' => Auth::id(),
