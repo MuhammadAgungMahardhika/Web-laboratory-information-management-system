@@ -5,7 +5,6 @@ namespace App\Filament\Resources\TestResults\Tables;
 use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\TestResultStatusEnum;
-use Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +16,7 @@ use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class TestResultsTable
 {
