@@ -8,7 +8,7 @@ use App\Models\Enums\TestResultEvaluationStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
 use App\Services\TestResultService;
-use Auth;
+
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -19,6 +19,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 
 class TestResultForm
 {
@@ -81,11 +82,7 @@ class TestResultForm
                         DatePicker::make('test_date')
                             ->default(now())
                             ->label('Tanggal Pengujian')
-                            ->required()
-                            ->afterStateUpdated(function (Get $get, Set $set, TestResult $testResult) use ($testResultService) {
-                                $testResultEvaluationStatus =  $testResultService->evaluateResult($testResult, $get('standard_min_value_ref'), $get('standard_max_value_ref'));
-                                $set('evaluation_status', $testResultEvaluationStatus->value);
-                            }),
+                            ->required(),
                         Select::make('test_method_id')
                             ->label('Metode Uji')
                             ->required()
@@ -98,16 +95,17 @@ class TestResultForm
                             ->numeric()
                             ->required()
                             ->live()
-                            ->afterStateUpdated(function (Get $get, Set $set) use ($testResultService) {
-                                $set('evaluation_status', null);
+                        // ->afterStateUpdated(function (Get $get, Set $set) use ($testResultService) {
+                        //     $set('evaluation_status', null);
 
-                                $value = $get('tested_value');
-                                $min   = $get('standard_min_value_ref');
-                                $max   = $get('standard_max_value_ref');
-                                $fakeTestResult = new TestResult(['tested_value' => $value]);
-                                $status = $testResultService->evaluateResult($fakeTestResult, $min, $max);
-                                $set('evaluation_status', $status->value);
-                            }),
+                        //     $value = $get('tested_value');
+                        //     $min   = $get('standard_min_value_ref');
+                        //     $max   = $get('standard_max_value_ref');
+                        //     $fakeTestResult = new TestResult(['tested_value' => $value]);
+                        //     $status = $testResultService->evaluateResult($fakeTestResult, $min, $max);
+                        //     $set('evaluation_status', $status->value);
+                        // })
+                        ,
                         TextInput::make('corrected_value')
                             ->label('Nilai Koreksi')
                             ->numeric(),

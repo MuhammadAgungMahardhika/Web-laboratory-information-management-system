@@ -51,8 +51,8 @@ class TestResultResource extends Resource
         return [
             'index' => ListTestResults::route('/'),
             'create' => CreateTestResult::route('/create'),
-            'view' => ViewTestResult::route('/{record}'),
-            'edit' => EditTestResult::route('/{record}/edit'),
+            // 'view' => ViewTestResult::route('/{record}'),
+            // 'edit' => EditTestResult::route('/{record}/edit'),
         ];
     }
 }

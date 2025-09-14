@@ -24,14 +24,23 @@ class ListSamples extends ListRecords
 
     public function getTabs(): array
     {
+        // Tab "SEMUA"
         $tabs = [
             'all' => Tab::make('all')
-                ->label('SEMUA'),
+                ->label('SEMUA')
+                ->badge(Sample::count()),
         ];
 
+        // Hitung jumlah per status sekali query
+        $counts = Sample::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        // Buat tab untuk tiap status
         foreach (SampleStatusEnum::cases() as $status) {
             $tabs[$status->value] = Tab::make($status->value)
-                ->badge(Sample::query()->where('status', $status->value)->count())
+                ->badge($counts[$status->value] ?? 0)
                 ->badgeColor(SampleStatusEnum::color($status->value))
                 ->label(strtoupper($status->label()))
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', $status->value));

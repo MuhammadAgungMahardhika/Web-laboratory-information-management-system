@@ -25,12 +25,19 @@ class ListTestResults extends ListRecords
     {
         $tabs = [
             'all' => Tab::make('all')
-                ->label('SEMUA'),
+                ->label('SEMUA')
+                ->badge(TestResult::count()),
         ];
+
+        // ambil jumlah per status dalam 1 query
+        $counts = TestResult::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
 
         foreach (TestResultStatusEnum::cases() as $status) {
             $tabs[$status->value] = Tab::make($status->value)
-                ->badge(TestResult::query()->where('status', $status->value)->count())
+                ->badge($counts[$status->value] ?? 0)
                 ->badgeColor(TestResultStatusEnum::color($status->value))
                 ->label(strtoupper($status->label()))
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', $status->value));

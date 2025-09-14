@@ -89,7 +89,7 @@ class SettingsRelationManager extends RelationManager
                     TextInput::make('mail_from_name')
                         ->default(Config('app.name'))
                         ->maxLength(255),
-                ])->columns(4)->heading('Pengaturan Email'),
+                ])->columns(4)->heading('Pengaturan Email')->columnSpanFull(),
             ]);
     }
 

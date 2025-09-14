@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sample;
+use Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Str;
@@ -22,5 +23,42 @@ class SamplePdfController extends Controller
         $pdf->setPaper([0, 0, $labelWidth, $labelHeight]);
         $safeFileName = 'label-' . Str::uuid();
         return $pdf->download("{$safeFileName}.pdf");
+    }
+
+    public function previewAnalystTestReport(Sample $sample)
+    {
+        // Muat semua relasi yang diperlukan, dimulai dari objek Sample
+        $sample->load([
+            'labJobItem.labJob.quotation.customer',
+            'testResults.parameter',
+            'testResults.testMethod',
+            'testResults.analystPersonel',
+            'testResults.validatorPersonel'
+        ]);
+
+        $company = Auth::user()?->personel?->company;
+
+        $pdf = Pdf::loadView('pdfs.analyst_test_report', compact('sample', 'company'));
+
+        $safeSampleCode = Str::of($sample->sample_code)->replace('/', '-');
+        return $pdf->stream("LPA-{$safeSampleCode}.pdf");
+    }
+
+    public function downloadAnalystTestReport(Sample $sample)
+    {
+        $sample->load([
+            'labJobItem.labJob.quotation.customer',
+            'testResults.parameter',
+            'testResults.testMethod',
+            'testResults.analystPersonel',
+            'testResults.validatorPersonel'
+        ]);
+
+        $company = Auth::user()?->personel?->company;
+
+        $pdf = Pdf::loadView('pdfs.analyst_test_report', compact('sample', 'company'));
+
+        $safeSampleCode = Str::of($sample->sample_code)->replace('/', '-');
+        return $pdf->download("LPA-{$safeSampleCode}.pdf");
     }
 }

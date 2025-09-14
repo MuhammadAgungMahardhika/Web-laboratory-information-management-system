@@ -7,6 +7,7 @@ use App\Filament\Resources\TestResults\TestResultResource;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Icons\Heroicon;
 
 class ViewTestResult extends ViewRecord
 {
@@ -22,8 +23,8 @@ class ViewTestResult extends ViewRecord
                 TestResultAction::revisionNeeded(static::getResource()::getUrl('view', ['record' => $this->record->id])),
                 TestResultAction::reject(static::getResource()::getUrl('view', ['record' => $this->record->id])),
             ])
-                ->label('Update Hasil Uji')
-                ->icon('heroicon-o-arrow-path')
+                ->label('Update Status')
+                ->icon(Heroicon::ArrowUp)
                 ->button()
                 ->color('success'),
         ];

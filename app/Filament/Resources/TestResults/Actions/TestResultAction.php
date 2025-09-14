@@ -63,7 +63,7 @@ class TestResultAction
     public static function validate($url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);
-        return  Action::make('Validasi Hasil Uji')
+        return  Action::make('Validasi')
             ->icon(Heroicon::Check)
             ->color('success')
             ->authorize(fn(TestResult $record) => $record->status === TestResultStatusEnum::RequestValidate->value && $authorized)
@@ -177,7 +177,7 @@ class TestResultAction
 
     public static function bulkRequestValidate(): BulkAction
     {
-        return        BulkAction::make('requestValidate')
+        return  BulkAction::make('requestValidate')
             ->label('Request Validasi')
             ->icon(Heroicon::ArrowUpTray)
             ->requiresConfirmation()

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Samples\Tables;
 
-use App\Filament\Resources\LabJobResource\Actions\SampleAction;
+use App\Filament\Resources\Samples\Actions\SampleAction;
 use App\Models\Enums\SampleStatusEnum;
 use App\Models\Sample;
 use App\Services\SampleService;
@@ -15,7 +15,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
@@ -26,13 +28,21 @@ class SamplesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->selectCurrentPageOnly()
             ->modifyQueryUsing(fn($query) => $query->with('labJobItem.labJob'))
             ->groups([
+                Group::make('labJobItem.labJob.job_number')
+                    ->label('Nomor Job')
+                    ->titlePrefixedWithLabel(false),
                 Group::make('labJobItem.description')
-                    ->label(''),
+                    ->label('Matrix')
+                    ->titlePrefixedWithLabel(false),
             ])
-            ->defaultGroup('labJobItem.description')
+            ->defaultGroup('labJobItem.labJob.job_number')
             ->columns([
+                TextColumn::make('labJobItem.description')
+                    ->label('Matrix')
+                    ->searchable(),
                 TextColumn::make('sample_code')
                     ->label('Kode Sampel')
                     ->searchable(),
@@ -98,8 +108,12 @@ class SamplesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('labJobItem.lab_job_id')
+                    ->label('Nomor Job')
+                    ->relationship('labJobItem.labJob', 'job_number')
+                    ->searchable()
+                    ->preload(),
+            ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 SampleAction::downloadLabel(),
                 SampleAction::prepare(),

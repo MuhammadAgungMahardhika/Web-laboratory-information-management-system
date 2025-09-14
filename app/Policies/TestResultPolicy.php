@@ -15,14 +15,24 @@ class TestResultPolicy
 
     public function update(User $user, Model $record): bool
     {
-        return  static::hasPermission('update', static::getResourceName()) && in_array($record->status, [
+        $hasPermission = static::hasPermission('update', static::getResourceName());
+
+        $isEditableStatus = in_array($record->status, [
             TestResultStatusEnum::Raw->value,
-            TestResultStatusEnum::RevisionNeeded->value
-        ]);
+            TestResultStatusEnum::RevisionNeeded->value,
+        ], true);
+
+        $hasSpecializationMatch = $user->personel?->specializations
+            ?->pluck('id')
+            ->intersect($record->parameter?->specializations?->pluck('id') ?? collect())
+            ->isNotEmpty();
+
+
+        return $hasPermission && $isEditableStatus && $hasSpecializationMatch;
     }
 
     public function delete(User $user, Model $record): bool
     {
-        return static::hasPermission('delete', static::getResourceName()) && $record->status === TestResultStatusEnum::Raw->value;;
+        return static::hasPermission('delete', static::getResourceName()) && $record->status === TestResultStatusEnum::Raw->value;
     }
 }

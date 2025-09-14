@@ -8,6 +8,7 @@ use App\Filament\Resources\LabJobResource\Actions\LabJobStatusAction;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\ActionGroup;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Icons\Heroicon;
 
 class ViewLabJob extends ViewRecord
 {
@@ -17,8 +18,14 @@ class ViewLabJob extends ViewRecord
     {
         return [
             EditAction::make(),
-            LabJobStatusAction::previewReport(),
-            LabJobStatusAction::previewTaskLetter(),
+            ActionGroup::make([
+                LabJobStatusAction::previewAnalystTestReport(),
+                LabJobStatusAction::previewFinalReport(),
+                LabJobStatusAction::previewTaskLetter(),
+            ])->label('Dokumen')
+                ->button()
+                ->icon(Heroicon::DocumentArrowDown)
+                ->color('gray'),
             ActionGroup::make([
                 LabJobStatusAction::completeSampling()->after(
                     function ($livewire) {
@@ -34,7 +41,7 @@ class ViewLabJob extends ViewRecord
             ])
                 ->label('Update Status')
                 ->button()
-                ->icon('heroicon-o-arrow-path')
+                ->icon(Heroicon::ArrowUp)
                 ->color('success'),
         ];
     }

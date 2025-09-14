@@ -24,14 +24,13 @@ use App\Traits\HasAuthorization;
 use Config;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Schemas\Components\Section as ComponentsSection;
+
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CompanyResource extends Resource
 {
@@ -86,11 +85,72 @@ class CompanyResource extends Resource
                 TextInput::make('npwp')
                     ->label('NPWP')
                     ->maxLength(50),
-
-
-
                 Toggle::make('is_main_company')
                     ->required(),
+
+                Repeater::make('settings')
+                    ->relationship()
+                    ->label('Pengaturan')
+                    ->maxItems(1)
+                    ->columns(2)
+                    ->schema([
+                        ComponentsSection::make([
+                            Toggle::make('is_active')
+                                ->label('Aktif ?'),
+                            TextInput::make('default_quotation_expiry_days')
+                                ->label('Default Masa berlaku penawaran (hari)')
+                                ->numeric()
+                                ->default(30),
+
+                            Select::make('term_template_id')
+                                ->label('Template syarat & ketentuan')
+                                ->relationship('termTemplate', 'name')
+                                ->searchable()
+                                ->preload(),
+                        ])->columns(4)->heading('Setting')->columnSpanFull(),
+                        ComponentsSection::make([
+                            FileUpload::make('letterhead_path')
+                                ->label('Kop Surat')
+                                ->image()
+                                ->disk('public')
+                                ->previewable()
+                                ->directory('company_letterheads')
+                                ->visibility('public')
+                                ->maxSize(1024)
+                                ->acceptedFileTypes(['image/jpeg', 'image/png'])
+                                ->columnSpanFull(),
+                            TextInput::make('mail_mailer')
+                                ->maxLength(255)
+                                ->default('smtp'),
+                            TextInput::make('mail_host')
+                                ->maxLength(255),
+                            TextInput::make('mail_port')
+                                ->numeric()
+                                ->maxLength(255)
+                                ->default(587),
+                            TextInput::make('mail_username')
+                                ->maxLength(255),
+                            TextInput::make('mail_password') // <-- Use TextInput
+                                ->label('Password SMTP')
+                                ->helperText('Pastikan password SMTP baru sudah ada di pengaturan Email ')
+                                ->password() // <-- Ini akan menyembunyikan input password dengan titik-titik
+                                ->nullable()
+                                ->dehydrateStateUsing(fn($state) => filled($state) ? $state : null),
+                            Select::make('mail_encryption')
+                                ->options([
+                                    'tls' => 'TLS',
+                                    'ssl' => 'SSL',
+                                    '' => 'None' // Atau 'false', tergantung kebutuhan
+                                ])
+                                ->default('tls')
+                                ->label('Enkripsi Email'),
+                            TextInput::make('mail_from_address')
+                                ->maxLength(255),
+                            TextInput::make('mail_from_name')
+                                ->default(Config('app.name'))
+                                ->maxLength(255),
+                        ])->columns(4)->heading('Pengaturan Email')->columnSpanFull(),
+                    ])->columnSpanFull()
             ]);
     }
 
@@ -157,7 +217,7 @@ class CompanyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            SettingsRelationManager::class
+            // SettingsRelationManager::class
         ];
     }
 

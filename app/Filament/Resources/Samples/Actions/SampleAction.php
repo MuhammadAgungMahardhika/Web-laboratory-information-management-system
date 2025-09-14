@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\LabJobResource\Actions;
+namespace App\Filament\Resources\Samples\Actions;
 
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleStatusEnum;
@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
+use Filament\Support\Colors\Color;
 
 class SampleAction
 {
-    protected static string $labelDownloadUrl = 'samples.download_label';
-    protected static string $taskLetterPreviewUrl = 'lab_jobs.preview_task_letter';
+    protected static string $labelDownloadUrl = 'sample_labels.download';
+    protected static string $taskLetterPreviewUrl = 'task_letters.preview';
+
+
     public const PERMISSION_DOWNLOAD_LABEL = 'download-label-sample';
     public const PERMISSION_PREPARE = 'prepare-sample';
 

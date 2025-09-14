@@ -10,6 +10,7 @@ use App\Filament\Resources\QuotationResource;
 use App\Filament\Resources\QuotationResource\Actions\QuotationStatusAction;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
 
 
@@ -48,7 +49,7 @@ class EditQuotation extends EditRecord
                 QuotationStatusAction::cancelled(),
             ])
                 ->label('Update Status')
-                ->icon('heroicon-o-arrow-path')
+                ->icon(Heroicon::ArrowUp)
                 ->button()
                 ->color('primary'),
 

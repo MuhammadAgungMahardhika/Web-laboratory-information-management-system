@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
-use App\Filament\Resources\LabJobResource\Actions\SampleAction;
+use App\Filament\Resources\Samples\Actions\SampleAction;
 use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleCollectionTypeEnum;

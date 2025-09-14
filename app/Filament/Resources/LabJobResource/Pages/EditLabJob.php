@@ -19,6 +19,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 
@@ -55,8 +56,8 @@ class EditLabJob extends EditRecord
                 LabJobStatusAction::startJob(static::getResource()::getUrl('view', ['record' => $this->record->id])),
                 LabJobStatusAction::printTaskLetter(),
             ])
-                ->label('Update Job') // Label untuk tombol dropdown utama
-                ->icon('heroicon-o-arrow-path')
+                ->label('Update Status') // Label untuk tombol dropdown utama
+                ->icon(Heroicon::ArrowUp)
                 ->button()
                 ->color('success'),
         ];

@@ -18,11 +18,14 @@ use Filament\Support\Icons\Heroicon;
 
 class LabJobStatusAction
 {
-    protected static string $reportPreviewUrl = 'reports.preview_report';
-    protected static string $reportDownloadUrl = 'reports.download_report';
+    protected static string $previewFinalReport = 'final_reports.preview';
+    protected static string $downloadFinalReport = 'final_reports.download';
 
-    protected static string $taskLetterDownloadUrl = 'lab_jobs.download_task_letter';
-    protected static string $taskLetterPreviewUrl = 'lab_jobs.preview_task_letter';
+    protected static string $previewAnalystTestResultUrl = 'analyst_reports.preview';
+    protected static string $downloadAnalystTestResultUrl = 'analyst_reports.download';
+
+    protected static string $taskLetterPreviewUrl = 'task_letters.preview';
+    protected static string $taskLetterDownloadUrl = 'task_letters.download';
 
     public const PERMISSION_PREVIEW_LAB_JOB_TASK_LETTER =    'preview-lab-job-task-letter';
     public const PERMISSION_DOWNLOAD_LAB_JOB_TASK_LETTER =   'download-lab-job-task-letter';
@@ -345,13 +348,12 @@ class LabJobStatusAction
                 }
             });
     }
-    public static function previewReport(): Action
+    public static function previewFinalReport(): Action
     {
-        return  Action::make('Preview Laporan Hasil')
+        return  Action::make('Final Report')
             ->icon(Heroicon::OutlinedEye)
-            ->color('info')
             ->slideOver()
-            ->modalHeading('Pratinjau Laporan Hasil Uji') // Judul modal
+            ->modalHeading('Pratinjau Laporan Hasil Pengujian') // Judul modal
             ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
             ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
             ->modalWidth('6xl') // Atur lebar modal (misal: '7xl' atau 'full')
@@ -359,8 +361,8 @@ class LabJobStatusAction
                 // Ini adalah cara untuk me-render Blade view di dalam modal
                 // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
                 $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->job_number);
-                $pdfUrl = route(static::$reportPreviewUrl, $record);
-                $downloadUrl = route(static::$reportDownloadUrl, $record);
+                $pdfUrl = route(static::$previewFinalReport, $record);
+                $downloadUrl = route(static::$downloadFinalReport, $record);
 
                 return view('pdfs.preview', [
                     'pdfUrl' => $pdfUrl,
@@ -368,14 +370,51 @@ class LabJobStatusAction
                     'downloadUrl' => $downloadUrl, // Opsional, jika perlu di view modal
                 ]);
             })->modalFooterActions([
-                static::downloadReport(),
+                static::downloadFinalReport(),
                 // static::sendReport(),
             ])->modalFooterActionsAlignment('right');
     }
-    public static function downloadReport(): Action
+    public static function downloadFinalReport(): Action
     {
-        return  Action::make('Cetak Laporan Hasil ')
-            ->url(fn(LabJob $record): string => route(static::$reportDownloadUrl, $record))
+        return  Action::make('Download Final Report')
+            ->url(fn(LabJob $record): string => route(static::$downloadFinalReport, $record))
+            ->icon(Heroicon::OutlinedPrinter)
+            ->outlined()
+            // ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::ReportApproved->value)
+            ->openUrlInNewTab();
+    }
+
+    public static function previewAnalystTestReport(): Action
+    {
+        return  Action::make('Lembar Pengujian Analis')
+            ->icon(Heroicon::OutlinedEye)
+            ->slideOver()
+            ->modalHeading('Pratinjau LPA') // Judul modal
+            ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
+            ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
+            ->modalWidth('6xl') // Atur lebar modal (misal: '7xl' atau 'full')
+            ->modalContent(function (LabJob $record) {
+                // Ini adalah cara untuk me-render Blade view di dalam modal
+                // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
+                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->job_number);
+                $pdfUrl = route(static::$previewAnalystTestResultUrl, $record);
+                $downloadUrl = route(static::$downloadAnalystTestResultUrl, $record);
+
+
+                return view('pdfs.preview', [
+                    'pdfUrl' => $pdfUrl,
+                    'safeFileName' => $safeFileName, // Opsional, jika perlu di view modal
+                    'downloadUrl' => $downloadUrl, // Opsional, jika perlu di view modal
+                ]);
+            })->modalFooterActions([
+                static::downloadAnalystTestReport(),
+                // static::sendAnalystTestReport(),
+            ])->modalFooterActionsAlignment('right');
+    }
+    public static function downloadAnalystTestReport(): Action
+    {
+        return  Action::make('Download Lpa')
+            ->url(fn(LabJob $record): string => route(static::$downloadAnalystTestResultUrl, $record))
             ->icon(Heroicon::OutlinedPrinter)
             ->color(Color::Gray)
             ->outlined()

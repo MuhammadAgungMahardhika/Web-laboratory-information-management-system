@@ -16,15 +16,21 @@ Route::get('/quotations/{quotation}/preview', [QuotationPdfController::class, 'p
 Route::get('/quotations/{quotation}/download', [QuotationPdfController::class, 'download'])->name('quotations.download_pdf');
 
 // labjob 
-Route::get('/lab_jobs/{labJob}/preview', [LabJobPdfController::class, 'previewTaskLetter'])->name('lab_jobs.preview_task_letter');
-Route::get('/lab_jobs/{labJob}/download', [LabJobPdfController::class, 'downloadTaskLetter'])->name('lab_jobs.download_task_letter');
+Route::get('/lab_jobs/{labJob}/preview', [LabJobPdfController::class, 'previewTaskLetter'])->name('task_letters.preview');
+Route::get('/lab_jobs/{labJob}/download', [LabJobPdfController::class, 'downloadTaskLetter'])->name('task_letters.download');
 
 // sample label
 Route::get('/sample/{sample}/download', [SamplePdfController::class, 'downloadLabel'])
-    ->name('samples.download_label');
+    ->name('sample_labels.download');
 
-// report pdf
-Route::get('/lab_jobs/{labJob}/report/preview', [ReportPdfController::class, 'preview'])
-    ->name('reports.preview_report');
-Route::get('/lab_jobs/{labJob}/report/download', [ReportPdfController::class, 'download'])
-    ->name('reports.download_report');
+// final report pdf
+Route::get('/lab_jobs/{labJob}/final-report/preview', [ReportPdfController::class, 'previewFinalReport'])
+    ->name('final_reports.preview');
+Route::get('/lab_jobs/{labJob}/final-report/download', [ReportPdfController::class, 'downloadFinalReport'])
+    ->name('final_reports.download');
+
+// analyst report pdf
+Route::get('/lab_jobs/{labJob}/analyst-report/preview', [LabJobPdfController::class, 'previewAnalystTestReport'])
+    ->name('analyst_reports.preview');
+Route::get('/lab_jobs/{labJob}/analyst-report/download', [LabJobPdfController::class, 'downloadAnalystTestReport'])
+    ->name('analyst_reports.download');

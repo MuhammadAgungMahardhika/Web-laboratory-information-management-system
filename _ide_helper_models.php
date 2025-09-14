@@ -1159,7 +1159,8 @@ namespace App\Models{
  * @property string|null $standard_min_value_ref
  * @property string|null $standard_unit_ref
  * @property string|null $standard_notes_ref
- * @property string $status
+ * @property int $status
+ * @property int $evaluation_status
  * @property string|null $validation_date
  * @property string|null $created_by
  * @property string|null $updated_by
@@ -1178,6 +1179,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCorrectedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereEvaluationStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereParameterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereSampleId($value)

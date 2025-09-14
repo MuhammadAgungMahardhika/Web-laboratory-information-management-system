@@ -8,6 +8,7 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Icons\Heroicon;
 
 class EditTestResult extends EditRecord
 {
@@ -22,8 +23,8 @@ class EditTestResult extends EditRecord
                 TestResultAction::requestValidate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
                 TestResultAction::validate(static::getResource()::getUrl('view', ['record' => $this->record->id]))
             ])
-                ->label('Update Hasil Uji')
-                ->icon('heroicon-o-arrow-path')
+                ->label('Update Status')
+                ->icon(Heroicon::ArrowUp)
                 ->button()
                 ->color('success'),
 

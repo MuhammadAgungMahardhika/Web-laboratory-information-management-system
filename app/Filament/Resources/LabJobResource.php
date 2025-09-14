@@ -10,8 +10,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\LabJobResource\Pages\ListLabJobs;
 use App\Filament\Resources\LabJobResource\Pages\CreateLabJob;
 use App\Filament\Resources\LabJobResource\Pages\ViewLabJob;
@@ -132,8 +130,8 @@ class LabJobResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->selectCurrentPageOnly()
             ->defaultSort('id', 'desc')
-            ->striped()
             ->columns([
                 TextColumn::make('status')
                     ->label('Status')
@@ -157,7 +155,6 @@ class LabJobResource extends Resource
                     ->label('Tanggal Selesai')
                     ->date('d M Y')
                     ->sortable(),
-
                 TextColumn::make('created_by')
                     ->searchable(),
                 TextColumn::make('updated_by')

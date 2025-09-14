@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Laravel\Fortify\Contracts\LoginResponse;
 use App\Http\Responses\LogoutResponse;
+use Filament\Tables\Enums\PaginationMode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Filament\Tables\Table;
@@ -30,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
         //
         Model::unguard();
         Table::configureUsing(fn(Table $table) => $table
+            ->striped()
+            ->paginationMode(PaginationMode::Simple)
             ->deferFilters(false));
     }
 }

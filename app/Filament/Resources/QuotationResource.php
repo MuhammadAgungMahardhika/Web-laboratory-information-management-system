@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Enums\PaginationMode;
 use Filament\Tables\Enums\RecordActionsPosition;
 
 class QuotationResource extends Resource
@@ -353,8 +354,8 @@ class QuotationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->selectCurrentPageOnly()
             ->defaultSort('id', 'desc')
-            ->striped()
             ->columns([
                 TextColumn::make('status')
                     ->formatStateUsing(fn($state) => QuotationStatusEnum::from($state)->label())
@@ -362,10 +363,10 @@ class QuotationResource extends Resource
                     ->color(fn($state) => QuotationStatusEnum::color($state))
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('request.code')
-                    ->label('Nomor permohonan')
-                    ->searchable()
-                    ->sortable(),
+                // TextColumn::make('request.code')
+                //     ->label('Nomor permohonan')
+                //     ->searchable()
+                //     ->sortable(),
                 TextColumn::make('quotation_number')
                     ->label('Nomor penawaran')
                     ->searchable()
@@ -409,7 +410,7 @@ class QuotationResource extends Resource
                     ->alignEnd()
                     ->sortable(),
 
-                TextColumn::make('approved_by_personel.fullname')
+                TextColumn::make('approvedByPersonel.fullname')
                     ->label('Disetujui oleh')
                     ->searchable(),
                 TextColumn::make('approved_at')

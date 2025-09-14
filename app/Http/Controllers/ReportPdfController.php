@@ -10,7 +10,7 @@ use App\Models\Company; // Asumsi model Company sudah ada
 
 class ReportPdfController extends Controller
 {
-    public function preview(LabJob $labJob)
+    public function previewFinalReport(LabJob $labJob)
     {
         // Muat semua relasi yang diperlukan untuk laporan
         $labJob->load([
@@ -28,7 +28,7 @@ class ReportPdfController extends Controller
 
         return $pdf->stream("LHP-{$safeJobNumber}.pdf");
     }
-    public function download(LabJob $labJob)
+    public function downloadFinalReport(LabJob $labJob)
     {
         // Muat semua relasi yang diperlukan untuk laporan
         $labJob->load([

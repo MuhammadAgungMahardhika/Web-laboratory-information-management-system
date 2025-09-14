@@ -5,11 +5,13 @@ namespace App\Filament\Resources\TestResults\Tables;
 use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\TestResultStatusEnum;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
@@ -36,22 +38,32 @@ class TestResultsTable
             ->striped()
             ->groups([
                 Group::make('sample.sample_code')
-                    ->label(''),
+                    ->label('Kode sampel')
+                    ->titlePrefixedWithLabel(false),
+                Group::make('sample.labJobItem.description')
+                    ->label('Matrix')
+                    ->titlePrefixedWithLabel(false),
+                Group::make('parameter.name')
+                    ->label('Parameter')
+                    ->titlePrefixedWithLabel(false),
             ])
             ->defaultGroup('sample.sample_code')
             ->columns([
+                TextColumn::make('sample.labJobItem.description')
+                    ->label('Matrix')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('sample.sample_code')
                     ->label('Kode sampel')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->toggledHiddenByDefault(),
+                    ->sortable(),
                 TextColumn::make('status')->formatStateUsing(fn($state) => TestResultStatusEnum::labels()[$state])->badge()->color(fn($state) => TestResultStatusEnum::color($state))->searchable()
                     ->sortable(),
-                TextColumn::make('parameter.name')->label('Parameter uji')
+                TextColumn::make('parameter.name')->label('Parameter')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('testMethod.name')->label('Metode uji')
+                TextColumn::make('testMethod.name')->label('Metode')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('tested_value')
@@ -84,10 +96,10 @@ class TestResultsTable
                     ->label('Satuan Standar'),
                 TextColumn::make('standard_notes_ref')
                     ->label('Catatan Standar'),
-                TextColumn::make('analyst_personel.fullname')->label('Analis')
+                TextColumn::make('analystPersonel.fullname')->label('Analis')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('validator_personel.fullname')->label('Validator')
+                TextColumn::make('validatorPersonel.fullname')->label('Validator')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('validation_date')
@@ -108,6 +120,11 @@ class TestResultsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('sample.labJobItem.lab_job_id')
+                    ->label('Nomor Job')
+                    ->relationship('sample.labJobItem.labJob', 'job_number')
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('sample_id')
                     ->label('Kode sampel')
                     ->relationship('sample', 'sample_code')
@@ -125,8 +142,16 @@ class TestResultsTable
                     ->preload()
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                EditAction::make(),
-                ViewAction::make(),
+                EditAction::make()->slideOver()->extraModalFooterActions([
+                    TestResultAction::requestValidate(),
+                    TestResultAction::validate()
+                ]),
+                ViewAction::make()->slideOver()->modalFooterActions([
+                    TestResultAction::requestValidate(),
+                    TestResultAction::validate(),
+                    TestResultAction::revisionNeeded(),
+                    TestResultAction::reject(),
+                ]),
 
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([

@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\HtmlString;
 use Filament\Support\Colors\Color;
+use Filament\Support\Icons\Heroicon;
 
 class ViewQuotation extends ViewRecord
 {
@@ -45,7 +46,7 @@ class ViewQuotation extends ViewRecord
                 QuotationStatusAction::cancelled(),
             ])
                 ->label('Update Status') // Label untuk tombol dropdown utama
-                ->icon('heroicon-o-arrow-path')
+                ->icon(Heroicon::ArrowUp)
                 ->button()
                 ->color('primary'),
 
