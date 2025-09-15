@@ -47,10 +47,10 @@ class SampleService
             $testResultService->generateTestResultsFromSample($sample);
         }
         if ($newStatus === SampleStatusEnum::AnalysisCompleted) {
-            $allValidated = !$sample->testResults()
+            $hasUnvalidatedTestResults = $sample->testResults
                 ->where('status', '!=', TestResultStatusEnum::Validated->value)
-                ->exists();
-            if (! $allValidated) {
+                ->isNotEmpty();
+            if ($hasUnvalidatedTestResults) {
                 // stop, jangan lanjut
                 throw new Exception("Masih ada hasil uji yang belum divalidasi, tidak bisa melanjutkan ke Analysis Completed.");
             }

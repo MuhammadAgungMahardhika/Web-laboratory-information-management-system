@@ -5,7 +5,7 @@ namespace App\Filament\Resources\LabJobResource\Actions;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\LabJob;
 use App\Services\LabJobService;
-use Auth;
+
 use Exception;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 
 class LabJobStatusAction
 {
@@ -60,10 +61,10 @@ class LabJobStatusAction
     public static function previewTaskLetter(): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_PREVIEW_LAB_JOB_TASK_LETTER);
-        return Action::make('Preview Surat Tugas')
-            ->label(fn($record) => $record->labJobPersonels->isNotEmpty() ? 'Preview Surat Tugas' : 'Tidak Ada Surat Tugas')
-            ->color(Color::Blue) // Menggunakan warna biru Filament
-            ->icon('heroicon-o-eye')
+        return Action::make('Surat Tugas')
+            ->label(fn($record) => $record->labJobPersonels->isNotEmpty() ? 'Surat Tugas' : 'Tidak Ada Surat Tugas')
+            ->color(Color::Gray) // Menggunakan warna biru Filament
+            ->icon(Heroicon::DocumentDuplicate)
             ->slideOver()
             ->disabled(fn($record) => !$record->labJobPersonels->isNotEmpty())
             ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized)
@@ -351,7 +352,7 @@ class LabJobStatusAction
     public static function previewFinalReport(): Action
     {
         return  Action::make('Final Report')
-            ->icon(Heroicon::OutlinedEye)
+            ->icon(Heroicon::DocumentChartBar)
             ->slideOver()
             ->modalHeading('Pratinjau Laporan Hasil Pengujian') // Judul modal
             ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
@@ -387,7 +388,7 @@ class LabJobStatusAction
     public static function previewAnalystTestReport(): Action
     {
         return  Action::make('Lembar Pengujian Analis')
-            ->icon(Heroicon::OutlinedEye)
+            ->icon(Heroicon::DocumentText)
             ->slideOver()
             ->modalHeading('Pratinjau LPA') // Judul modal
             ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)

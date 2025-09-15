@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Models\Enums\JobStatusEnum;
+use App\Models\Enums\SampleStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\ParameterLabJobItem;
 use App\Models\Quotation;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class LabJobService
@@ -140,32 +142,49 @@ class LabJobService
     public function updateLabJobStatus(LabJob $labJob, JobStatusEnum $newStatus): bool
     {
         // Perbarui status penawaran
-        $labJob->status = $newStatus->value;
+
         // mulai job
         if ($newStatus === JobStatusEnum::InProgress) {
             $labJob->start_date = now();
+            $labJob->status = $newStatus->value;
+            $isSuccessed =   $labJob->save();
         }
         // selesai sampling
         if ($newStatus === JobStatusEnum::SamplingCompleted) {
+            // Cek apakah semua samples memiliki status Received atau Invalid
+            $hasInvalidStatusSamples = $labJob->samples
+                ->whereNotIn('status', [
+                    SampleStatusEnum::Received->value,
+                    SampleStatusEnum::Invalid->value
+                ])
+                ->isNotEmpty();
+
+            if ($hasInvalidStatusSamples) {
+                throw new Exception("Tidak bisa mengubah status ke Sampling Completed. Masih ada sampel dengan status selain 'Diterima' atau 'Tidak Valid'.");
+            }
+            $labJob->status = $newStatus->value;
+            $isSuccessed =  $labJob->save();
         }
 
+        // selesai analisis
         if ($newStatus === JobStatusEnum::AnalysisCompleted) {
-            $allValidated = $labJob->samples()
-                ->whereHas(
-                    'testResults',
-                    fn($q) =>
-                    $q->where('status', '!=', TestResultStatusEnum::Validated->value)
-                )
-                ->doesntExist();
-            if (! $allValidated) {
-                throw new \Exception("Masih ada hasil uji yang belum divalidasi.");
+            $hasUnvalidatedSamples = $labJob->samples
+                ->where('status', '!=', SampleStatusEnum::AnalysisCompleted->value)
+                ->isNotEmpty();
+
+            if ($hasUnvalidatedSamples) {
+                throw new Exception("Masih ada sampel yang belum divalidasi.");
             }
+            $labJob->status = $newStatus->value;
+            $isSuccessed =   $labJob->save();
         }
         // job selesai / dikirim
         if ($newStatus === JobStatusEnum::Delivered) {
             $labJob->end_date = now();
+            $labJob->status = $newStatus->value;
+            $isSuccessed =  $labJob->save();
         }
         // Simpan perubahan ke database
-        return $labJob->save();
+        return $isSuccessed;
     }
 }
