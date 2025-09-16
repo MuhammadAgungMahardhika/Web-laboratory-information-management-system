@@ -5,6 +5,7 @@ namespace App\Filament\Resources\TestResults\Tables;
 use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\TestResultStatusEnum;
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -57,7 +58,9 @@ class TestResultsTable
                 TextColumn::make('sample.sample_code')
                     ->label('Kode sampel')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 TextColumn::make('status')->formatStateUsing(fn($state) => TestResultStatusEnum::labels()[$state])->badge()->color(fn($state) => TestResultStatusEnum::color($state))->searchable()
                     ->sortable(),
                 TextColumn::make('parameter.name')->label('Parameter')
@@ -142,16 +145,19 @@ class TestResultsTable
                     ->preload()
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                EditAction::make()->slideOver()->extraModalFooterActions([
-                    TestResultAction::requestValidate(),
-                    TestResultAction::validate()
-                ]),
+                EditAction::make()->slideOver()
+                    ->modalSubmitAction(fn(Action $action) => $action->keyBindings(['ctrl+s']))
+                    ->extraModalFooterActions([
+                        TestResultAction::requestValidate()->cancelParentActions(),
+                        TestResultAction::validate()->cancelParentActions()
+                    ])->modalHeading(fn($record) => "{$record->parameter->name} - Sampel {$record->sample->sample_code}")->modalIcon(Heroicon::Beaker)->modalIconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
                 ViewAction::make()->slideOver()->modalFooterActions([
-                    TestResultAction::requestValidate(),
-                    TestResultAction::validate(),
-                    TestResultAction::revisionNeeded(),
-                    TestResultAction::reject(),
-                ]),
+                    TestResultAction::requestValidate()->cancelParentActions(),
+                    TestResultAction::validate()->cancelParentActions(),
+                    TestResultAction::revisionNeeded()->cancelParentActions(),
+                    TestResultAction::reject()->cancelParentActions(),
+                ])
+                    ->modalHeading(fn($record) => "{$record->parameter->name} - Sampel {$record->sample->sample_code}")->modalIcon(Heroicon::Beaker)->modalIconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
 
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([

@@ -54,7 +54,7 @@ class TestResultService
     public function updateTestResultStatus(TestResult $testResult, TestResultStatusEnum $newStatus): bool
     {
         if ($newStatus === TestResultStatusEnum::RequestValidate) {
-            if ($testResult->status === TestResultStatusEnum::Raw->value) {
+            if (in_array($testResult->status, [TestResultStatusEnum::Raw->value, TestResultStatusEnum::RevisionNeeded->value])) {
                 $testResult->tested_value ?? throw new Exception('Hasil test belum terisi');
                 $testResult->analyst_personel_id = Auth::user()->personel->id;
                 $testResult->status = $newStatus->value;
@@ -74,6 +74,16 @@ class TestResultService
                     $sampleService = new SampleService();
                     $sampleService->updateSampleStatus($testResult->sample, SampleStatusEnum::AnalysisCompleted);
                 }
+            } else {
+                throw new Exception('Status hasil uji bukan "request validasi" ');
+            }
+        }
+        if ($newStatus === TestResultStatusEnum::RevisionNeeded) {
+            if ($testResult->status === TestResultStatusEnum::RequestValidate->value) {
+                $testResult->validation_date = null;
+                $testResult->validator_personel_id = Auth::user()->personel->id;
+                $testResult->status = $newStatus->value;
+                $isSuccessed = $testResult->save();
             } else {
                 throw new Exception('Status hasil uji bukan "request validasi" ');
             }

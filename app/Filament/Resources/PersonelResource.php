@@ -65,6 +65,7 @@ class PersonelResource extends Resource
                     ->preload()
                     ->required(),
 
+
                 Select::make('user_id')
                     ->label('Akun')
                     ->required()
@@ -132,7 +133,7 @@ class PersonelResource extends Resource
                                 ->autocomplete(false),
                             Select::make('roles')
                                 ->label('Hak akses')
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) =>  $query->whereNot('name', RoleEnum::Customer->value))
                                 ->searchable()
                                 ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
                                 ->preload()

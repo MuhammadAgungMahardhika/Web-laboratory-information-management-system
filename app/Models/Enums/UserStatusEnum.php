@@ -31,6 +31,7 @@ enum UserStatusEnum: int
         return self::labels()[$this->value];
     }
 
+
     /**
      * Mendapatkan default case untuk enum
      *

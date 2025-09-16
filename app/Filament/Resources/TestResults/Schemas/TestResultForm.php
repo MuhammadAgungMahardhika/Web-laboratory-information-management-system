@@ -76,12 +76,12 @@ class TestResultForm
                         ->searchable()
                         ->preload()
                         ->disabled(),
-                ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible()->iconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary')->icon(Heroicon::Beaker),
+                ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible(),
                 Section::make([
                     Section::make([
                         DatePicker::make('test_date')
                             ->default(now())
-                            ->label('Tanggal Pengujian')
+                            ->label('Tanggal Uji')
                             ->required(),
                         Select::make('test_method_id')
                             ->label('Metode Uji')

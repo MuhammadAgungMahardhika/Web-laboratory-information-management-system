@@ -34,9 +34,9 @@ class TestResultAction
         return  Action::make('Request Validasi')
             ->icon(Heroicon::ArrowUpTray)
             ->color('warning')
-            ->authorize(fn(TestResult $record) => $record->status === TestResultStatusEnum::Raw->value && $record->tested_value && $authorized)
+            ->authorize(fn(TestResult $record) => in_array($record->status, [TestResultStatusEnum::Raw->value, TestResultStatusEnum::RevisionNeeded->value]) && $record->tested_value && $authorized)
             ->requiresConfirmation()
-            ->action(function (TestResult $record, TestResultService $testResultService) use ($url) {
+            ->action(function (TestResult $record, TestResultService $testResultService, $livewire) use ($url) {
                 try {
                     DB::transaction(function () use ($testResultService, $record) {
                         $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RequestValidate);
@@ -44,6 +44,8 @@ class TestResultAction
                     Notification::make()->title('Hasil uji sudah dikirim untuk di validasi')->success()->send();
                     if ($url) {
                         return redirect()->to($url);
+                    } else {
+                        $livewire->mountedTableActionData = [];
                     }
                 } catch (Exception $e) {
                     Notification::make()

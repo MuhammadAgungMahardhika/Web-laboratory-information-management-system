@@ -193,7 +193,10 @@
             <td class="info-label">Job Number</td>
             <td>: {{ $labJob->job_number }}</td>
             <td class="info-label">Tanggal Uji</td>
-            <td>: {{ $labJob->test_date ?? '___________' }}</td>
+            <td>:
+                {{ $labJob->start_date ? \Carbon\Carbon::parse($labJob->start_date)->format('d/m/Y') : '___________' }}
+            </td>
+
         </tr>
         <tr>
             <td class="info-label">Bahan Produk</td>
@@ -204,7 +207,10 @@
                 @endforeach
             </td>
             <td class="info-label">Tanggal TAT</td>
-            <td>: {{ $labJob->tat_date ?? '___________' }}</td>
+            <td>:
+                {{ $labJob->end_date ? \Carbon\Carbon::parse($labJob->end_date)->format('d/m/Y') : '___________' }}
+            </td>
+
         </tr>
         <tr>
             <td class="info-label">Jumlah Contoh Uji</td>
