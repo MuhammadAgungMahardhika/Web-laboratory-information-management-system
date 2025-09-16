@@ -88,6 +88,16 @@ class TestResultService
                 throw new Exception('Status hasil uji bukan "request validasi" ');
             }
         }
+        if ($newStatus === TestResultStatusEnum::Rejected) {
+            if ($testResult->status === TestResultStatusEnum::RequestValidate->value) {
+                $testResult->validation_date = null;
+                $testResult->validator_personel_id = Auth::user()->personel->id;
+                $testResult->status = $newStatus->value;
+                $isSuccessed = $testResult->save();
+            } else {
+                throw new Exception('Status hasil uji bukan "request validasi" ');
+            }
+        }
         return  $isSuccessed;
     }
 

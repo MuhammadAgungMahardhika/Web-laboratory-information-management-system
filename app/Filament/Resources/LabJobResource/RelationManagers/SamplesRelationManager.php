@@ -99,10 +99,7 @@ class SamplesRelationManager extends RelationManager
                         ->required(),
                     Select::make('status')
                         ->label('Status')
-                        ->options([
-                            SampleStatusEnum::Received->value => SampleStatusEnum::labels()[SampleStatusEnum::Received->value],
-                            SampleStatusEnum::Invalid->value => SampleStatusEnum::labels()[SampleStatusEnum::Invalid->value],
-                        ])
+                        ->options(SampleStatusEnum::labels())
                         ->default(SampleStatusEnum::default())
                         ->required(),
                     Radio::make('collection_type')
