@@ -6,10 +6,12 @@ use App\Filament\Resources\Samples\Pages\CreateSample;
 use App\Filament\Resources\Samples\Pages\EditSample;
 use App\Filament\Resources\Samples\Pages\ListSamples;
 use App\Filament\Resources\Samples\Pages\ViewSample;
+use App\Filament\Resources\Samples\RelationManagers\TestResultsRelationManager;
 use App\Filament\Resources\Samples\Schemas\SampleForm;
 use App\Filament\Resources\Samples\Schemas\SampleInfolist;
 use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Sample;
+use App\Models\TestResult;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -41,7 +43,7 @@ class SampleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TestResultsRelationManager::class
         ];
     }
 

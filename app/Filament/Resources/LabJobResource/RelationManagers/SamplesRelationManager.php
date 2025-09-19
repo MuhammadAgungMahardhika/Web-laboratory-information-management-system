@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
 use App\Filament\Resources\Samples\Actions\SampleAction;
+use App\Filament\Resources\Samples\SampleResource;
 use App\Filament\Resources\Samples\Tables\SamplesTable;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\SampleCollectionTypeEnum;
@@ -66,7 +67,7 @@ class SamplesRelationManager extends RelationManager
         $personel = $user->personel;
         $canCollecting = $user->can(static::PERMISSION_COLLECTING_SAMPLE);
         $canReceiving = $user->can(static::PERMISSION_RECEIVING_SAMPLE);
-        return  $schema
+        return  SampleResource::form($schema)
             ->components([
                 Section::make([
                     Select::make('lab_job_item_id')
@@ -205,7 +206,7 @@ class SamplesRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return SamplesTable::configure($table)
+        return SampleResource::table($table)
             ->headerActions([
                 CreateAction::make()->after(
                     function (RelationManager $livewire) {

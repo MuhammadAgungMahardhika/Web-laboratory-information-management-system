@@ -59,13 +59,22 @@ class SampleForm
                         ->label('Kode Sampel')
                         ->unique()
                         ->live()
-                        ->readOnly() // Kode sampel tidak bisa diubah manual
+                        ->readOnly()
                         ->required(),
                     Select::make('status')
                         ->label('Status')
-                        ->options(
-                            SampleStatusEnum::labels()
-                        )
+                        ->options(function ($record) {
+                            $baseOptions = [
+                                SampleStatusEnum::Received->value => SampleStatusEnum::Received->label(),
+                                SampleStatusEnum::Invalid->value => SampleStatusEnum::Invalid->label(),
+                            ];
+                            // Jika edit dan record punya status lain, tambahkan status tersebut ke options
+                            if ($record && !array_key_exists($record->status, $baseOptions)) {
+                                $allLabels = SampleStatusEnum::labels();
+                                $baseOptions[$record->status] = $allLabels[$record->status];
+                            }
+                            return $baseOptions;
+                        })
                         ->default(SampleStatusEnum::default())
                         ->required(),
                     Radio::make('collection_type')
