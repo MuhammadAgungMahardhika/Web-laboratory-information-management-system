@@ -169,11 +169,11 @@ class LabJobService
         // selesai analisis
         if ($newStatus === JobStatusEnum::AnalysisCompleted) {
             $hasUnvalidatedSamples = $labJob->samples
-                ->where('status', '!=', SampleStatusEnum::AnalysisCompleted->value)
+                ->whereNotIn('status',  [SampleStatusEnum::AnalysisCompleted->value, SampleStatusEnum::Invalid->value])
                 ->isNotEmpty();
 
             if ($hasUnvalidatedSamples) {
-                throw new Exception("Masih ada sampel yang belum divalidasi.");
+                throw new Exception("Masih ada sampel yang belum tervalidasi.");
             }
             $labJob->status = $newStatus->value;
             $isSuccessed =   $labJob->save();

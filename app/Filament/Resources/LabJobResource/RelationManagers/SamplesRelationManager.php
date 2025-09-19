@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\RichEditor\Actions\LinkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
@@ -61,12 +62,15 @@ class SamplesRelationManager extends RelationManager
     {
         return $ownerRecord->status !== JobStatusEnum::PendingStart->value;
     }
+
+    protected static function isAuthorized(string $permission): bool
+    {
+        return Auth::user()->can($permission);
+    }
     public function form(Schema $schema): Schema
     {
         $user = Auth::user();
         $personel = $user->personel;
-        $canCollecting = $user->can(static::PERMISSION_COLLECTING_SAMPLE);
-        $canReceiving = $user->can(static::PERMISSION_RECEIVING_SAMPLE);
         return  SampleResource::form($schema)
             ->components([
                 Section::make([
@@ -109,7 +113,7 @@ class SamplesRelationManager extends RelationManager
                         ->live()
                         ->default(SampleCollectionTypeEnum::default()->value)
                         ->inline(),
-                ])->columnSpanFull()->visible(fn() => $canCollecting)->columns(4),
+                ])->columnSpanFull()->visible(fn() =>  static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->columns(4),
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')
@@ -152,7 +156,7 @@ class SamplesRelationManager extends RelationManager
                                     ])->inlineLabel(),
 
                             ])->columns(4)->visible(
-                                fn(Get $get) =>  $canCollecting
+                                fn(Get $get) =>   static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)
                                     && SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ),
                         Tab::make('penerimaan')
@@ -163,7 +167,7 @@ class SamplesRelationManager extends RelationManager
                                 Select::make('received_by_personel_id')
                                     ->relationship('receivedByPersonel', 'fullname')
                                     ->label('Penerima')
-                                    ->default($canReceiving ? ($personel->id ?? null) : null)
+                                    ->default(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) ? ($personel->id ?? null) : null)
                                     ->searchable()
                                     ->preload(),
                                 DatePicker::make('received_date')
@@ -195,7 +199,7 @@ class SamplesRelationManager extends RelationManager
                                             ->nullable(),
                                     ])->columnSpan(2)
                                     ->inlineLabel(),
-                            ])->columns(4)->visible(fn() => $canReceiving),
+                            ])->columns(4)->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
                     ])
                     ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('sample_code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
@@ -219,6 +223,7 @@ class SamplesRelationManager extends RelationManager
                 SampleAction::prepare($this->ownerRecord),
                 EditAction::make(),
                 ViewAction::make(),
+                LinkAction::make('detail')->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -236,7 +241,6 @@ class SamplesRelationManager extends RelationManager
                             $sampleService = new SampleService();
                             $successCount = 0;
                             $failedCount = 0;
-
                             foreach ($records as $record) {
                                 try {
                                     DB::transaction(function () use ($sampleService, $record) {
