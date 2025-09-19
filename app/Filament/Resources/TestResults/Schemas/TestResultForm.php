@@ -76,6 +76,11 @@ class TestResultForm
                         ->searchable()
                         ->preload()
                         ->disabled(),
+                    TextInput::make('revision_count')
+                        ->label('Jumlah Revisi')
+                        ->numeric()
+                        ->disabled()
+                        ->default(0),
                 ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible(),
                 Section::make([
                     Section::make([

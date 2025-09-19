@@ -5,6 +5,7 @@ namespace App\Filament\Resources\TestResults\Tables;
 use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\PositionEnum;
 use App\Models\Enums\TestResultStatusEnum;
+use App\Models\TestResult;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -146,7 +147,19 @@ class TestResultsTable
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 EditAction::make()->slideOver()
-                    ->modalSubmitAction(fn(Action $action) => $action->keyBindings(['ctrl+s']))
+                    ->modalSubmitAction(function (Action $action, TestResult $record) {
+                        $action->keyBindings(['ctrl+s']);
+                        if ($record->status === TestResultStatusEnum::RevisionNeeded->value) {
+                            $action->label('Perbaiki');
+                        }
+                        return $action;
+                    })
+                    ->mutateDataUsing(function (array $data, TestResult $record) {
+                        if ($record->status === TestResultStatusEnum::RevisionNeeded->value) {
+                            $data['status'] = TestResultStatusEnum::Raw->value;
+                        }
+                        return $data;
+                    })
                     ->extraModalFooterActions([
                         TestResultAction::requestValidate()->cancelParentActions(),
                         TestResultAction::validate()->cancelParentActions()

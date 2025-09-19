@@ -14,7 +14,7 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class TestResultAction
 {
@@ -34,7 +34,7 @@ class TestResultAction
         return  Action::make('Request Validasi')
             ->icon(Heroicon::ArrowUpTray)
             ->color('warning')
-            ->authorize(fn(TestResult $record) => in_array($record->status, [TestResultStatusEnum::Raw->value, TestResultStatusEnum::RevisionNeeded->value]) && $record->tested_value && $authorized)
+            ->authorize(fn(TestResult $record) => $record->status === TestResultStatusEnum::Raw->value && $record->tested_value && $authorized)
             ->requiresConfirmation()
             ->action(function (TestResult $record, TestResultService $testResultService, $livewire) use ($url) {
                 try {

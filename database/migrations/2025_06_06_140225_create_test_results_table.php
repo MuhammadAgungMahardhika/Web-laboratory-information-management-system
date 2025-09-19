@@ -36,6 +36,7 @@ return new class extends Migration
 
             // Status validasi
             $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('revision_count')->default(0);
             $table->tinyInteger('evaluation_status')->default(1);
             $table->timestamp('validation_date')->nullable();
 
