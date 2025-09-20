@@ -344,9 +344,9 @@ class QuotationResource extends Resource
                                 ->required()
                                 ->numeric()
                                 ->default(0),
-                        ])->columns(3)->collapsible()->heading('Potongan')->iconColor('primary')->icon('heroicon-s-receipt-percent')->columnSpan(1),
+                        ])->columns(3)->collapsible()->heading('Potongan')->icon(Heroicon::ReceiptPercent)->columnSpan(1),
 
-                    ])->columnSpanFull()->columns(2)->collapsible()->iconColor('primary')->icon('heroicon-s-document-text'),
+                    ])->columnSpanFull()->columns(2)->collapsible()->icon(Heroicon::DocumentCurrencyDollar),
 
             ]);
     }

@@ -38,25 +38,25 @@ class SampleAction
         return Auth::user()->can($permission);
     }
 
-    public static function downloadLabel(?LabJob $labJob = null): Action
+    public static function downloadLabel(): Action
     {
-        $allowedJobStatus = static::isJobStatusAllowed($labJob);
+
         $authorized = static::isAuthorized(static::PERMISSION_DOWNLOAD_LABEL);
         return Action::make('Label')
             ->icon(Heroicon::OutlinedPrinter)
-            ->authorize(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $allowedJobStatus  && $authorized)
+            ->authorize(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value  && $authorized)
             ->url(fn(Sample $record): string => route(static::$labelDownloadUrl, $record))
             ->color('gray')
             ->openUrlInNewTab();
     }
-    public static function prepare(?LabJob $labJob = null): Action
+    public static function prepare(): Action
     {
-        $allowedJobStatus = static::isJobStatusAllowed($labJob);
+        // $allowedJobStatus = static::isJobStatusAllowed($labJob);
         $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
-            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value && $allowedJobStatus && $authorized)
+            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value && $authorized)
             ->requiresConfirmation()
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {

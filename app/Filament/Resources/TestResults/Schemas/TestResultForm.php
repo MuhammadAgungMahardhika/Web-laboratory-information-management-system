@@ -8,9 +8,10 @@ use App\Models\Enums\TestResultEvaluationStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
 use App\Services\TestResultService;
-
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -81,12 +82,16 @@ class TestResultForm
                         ->numeric()
                         ->disabled()
                         ->default(0),
-                ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible(),
+                ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible()->collapsed(),
                 Section::make([
+                    Radio::make('evaluation_status')
+                        ->options(TestResultEvaluationStatusEnum::labels())->columnSpanFull()
+                        ->inline()->hintIcon(Heroicon::InformationCircle)->hintIconTooltip('Status evaluasi hasil uji, apakah hasil uji memenuhi standar/baku mutu atau tidak.')->label('Status Evaluasi'),
                     Section::make([
                         DatePicker::make('test_date')
                             ->default(now())
                             ->label('Tanggal Uji')
+                            ->minDate(now()->toDateString())
                             ->required(),
                         Select::make('test_method_id')
                             ->label('Metode Uji')
@@ -99,6 +104,7 @@ class TestResultForm
                             ->label('Nilai')
                             ->numeric()
                             ->required()
+                            ->copyable()
                             ->live()
                         // ->afterStateUpdated(function (Get $get, Set $set) use ($testResultService) {
                         //     $set('evaluation_status', null);
@@ -113,16 +119,19 @@ class TestResultForm
                         ,
                         TextInput::make('corrected_value')
                             ->label('Nilai Koreksi')
+                            ->autocomplete(false)
+                            ->required()
+
                             ->numeric(),
                         TextInput::make('unit')
                             ->label('Satuan')
+                            ->copyable()
+                            ->live()
                             ->required(),
                         Textarea::make('test_notes')
                             ->columnSpanFull()
                             ->label('Catatan Pengujian'),
-                        Select::make('evaluation_status')
-                            ->options(TestResultEvaluationStatusEnum::labels())
-                            ->preload(),
+
                     ])->columns(1)->inlineLabel(),
                     Section::make([
                         TextInput::make('standard_max_value_ref')
@@ -137,6 +146,7 @@ class TestResultForm
                             ->label('Catatan Standar')
                     ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
                 ])->columnSpanFull()->columns(2)->heading(fn($record) => $record->evaluation_status ? 'Hasil Uji -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Hasil Uji')->visible(fn() => $fillingTestResult),
+
             ]);
     }
 }

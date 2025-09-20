@@ -297,6 +297,19 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
         });
+
+        Schema::table('test_result_histories', function (Blueprint $table) {
+            $table->foreign('personel_id', 'fk_test_result_histories_personel')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('test_result_id', 'fk_test_result_histories_test_result')
+                ->references('id')
+                ->on('test_results')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+        });
         Schema::table('personel_specializations', function (Blueprint $table) {
             $table->foreign('personel_id', 'fk_personel_specializations_personel')
                 ->references('id')
