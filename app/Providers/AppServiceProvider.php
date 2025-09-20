@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Laravel\Fortify\Contracts\LoginResponse;
 use App\Http\Responses\LogoutResponse;
+use App\Models\TestResult;
+use App\Observers\TestResultObserver;
 use Filament\Tables\Enums\PaginationMode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
