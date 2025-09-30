@@ -39,20 +39,6 @@ class LabJobStatusAction
     public const PERMISSION_APPROVE_LAB_JOB_REPORT  = 'approve-lab-job-report';
     public const PERMISSION_SEND_LAB_JOB_REPORT  =  'send-lab-job-report';
     public const PERMISSION_ABORT_LAB_JOB_REPORT  =  'abort-lab-job-report';
-    protected static array $permissions = [
-        'preview-lab-job-task-letter', //0
-        'download-lab-job-task-letter', //1
-        'print-lab-job-task-letter', //2
-        'start-lab-job', //3
-        'complete-lab-job-sampling', //4
-        'complete-lab-job-analysis', //5
-        'complete-lab-job-validation', //6
-        'generate-lab-job-report', //7
-        'approve-lab-job-report', //8
-        'send-lab-job-report', //9
-        'abort-lab-job-report', //10
-
-    ];
 
     protected static function isAuthorized(string $permission): bool
     {

@@ -19,32 +19,23 @@ class PersonelSeeder extends Seeder
      */
     public function run(): void
     {
+        // Path ke file CSV
+        $csvFile = database_path('/csv/personel.csv');
 
-        // create product
-        $adminUser =   User::factory()->create([
-            'name' => 'superadmin',
-            'username' => 'superadmin',
-            'email' => 'superadmin@example.com', // Anda bisa ganti email ini
-            'password' => Hash::make('123456'), // Password default yang di-hash
-            // 'is_active' => true,
-            'status' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // Buka file CSV
+        if (File::exists($csvFile)) {
+            // Baca file CSV
+            $csvData = array_map('str_getcsv', file($csvFile));
+            array_shift($csvData); // skip header
 
-        $mainCompany = Company::where('is_main_company', true)->first();
-        DB::table('personels')->insert([
-            'user_id' => $adminUser->id,
-            'company_id' => $mainCompany->id, // Assuming the main company has ID 1
-            'position_id' => Position::where('name', 'ADMINISTRATOR')->first()->id, // Assuming you have a position named 'ADMINISTRATOR'
-            'fullname' => 'superadmin',
-            'nip' => '01.01.01',
-            'phone_number' => '',
-            'address' =>  '',
-            'certification_details' =>  '',
-        ]);
-
-        // asign role
-        $adminUser->assignRole('superadmin');
+            foreach ($csvData as $row) {
+                DB::table('personels')->insert([
+                    'nip' => $row[1],
+                    'fullname' => $row[2],
+                    'phone_number' => $row[3],
+                    'address' => $row[4],
+                ]);
+            }
+        }
     }
 }

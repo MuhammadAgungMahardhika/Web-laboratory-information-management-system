@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             PositionSeeder::class,
             PersonelSeeder::class,
+            UserSeeder::class
         ]);
     }
 }

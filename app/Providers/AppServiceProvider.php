@@ -10,6 +10,9 @@ use Filament\Tables\Enums\PaginationMode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Tables\Enums\RecordActionsPosition;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
         //
         Model::unguard();
         Table::configureUsing(fn(Table $table) => $table
+            ->recordActions([], position: RecordActionsPosition::BeforeColumns)
+            ->modifyUngroupedRecordActionsUsing(fn(Action $action) => $action->iconButton())
             ->striped()
             ->paginationMode(PaginationMode::Simple)
             ->deferFilters(false));

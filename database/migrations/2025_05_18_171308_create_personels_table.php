@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('personels', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('company_id'); // Assuming you might want to link personels to a company
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('company_id')->nullable(); // Assuming you might want to link personels to a company
             $table->unsignedBigInteger('position_id')->nullable(); // Assuming you might want to link personels to a position
-            $table->string('fullname', 255);
             $table->string('nip', 50)->unique()->nullable(); // Using 'nip' as per your provided schema
+            $table->string('fullname', 255);
             $table->string('phone_number', 50)->nullable();
             $table->text('address')->nullable();
-            $table->text('certification_details')->nullable();
 
             // Auditing columns
             $table->string('created_by', 255)->nullable();
