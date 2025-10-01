@@ -70,6 +70,21 @@ class PermissionAndRoleSeeder extends Seeder
             'update-position',
             'delete-position',
         ];
+        $termTemplatePermissions = [
+            'view-any-term-template',
+            'view-term-template',
+            'create-term-template',
+            'update-term-template',
+            'delete-term-template',
+        ];
+        $companyPermissions = [
+            'view-any-company',
+            'view-company',
+            'create-company',
+            'update-company',
+            'delete-company',
+        ];
+
         $parameterPermissions = [
             'view-any-parameter',
             'view-parameter',
@@ -129,6 +144,8 @@ class PermissionAndRoleSeeder extends Seeder
             'delete-test-package',
         ];
         $quotationPermissions = [
+            'view-chart-quotation',
+
             'view-any-quotation',
             'view-quotation',
             'create-quotation',
@@ -144,22 +161,10 @@ class PermissionAndRoleSeeder extends Seeder
             'cancel-quotation',
         ];
 
-        $termTemplatePermissions = [
-            'view-any-term-template',
-            'view-term-template',
-            'create-term-template',
-            'update-term-template',
-            'delete-term-template',
-        ];
-        $companyPermissions = [
-            'view-any-company',
-            'view-company',
-            'create-company',
-            'update-company',
-            'delete-company',
-        ];
 
         $labJobPermissions = [
+            'view-chart-lab-job',
+
             'view-any-lab-job',
             'view-lab-job',
             'create-lab-job',

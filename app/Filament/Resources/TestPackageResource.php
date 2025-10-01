@@ -28,6 +28,7 @@ use App\Models\TestPackage;
 use App\Traits\HasAuthorization;
 use Closure;
 use Filament\Forms;
+use Filament\Forms\Components\Radio;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -146,7 +147,8 @@ class TestPackageResource extends Resource
                         Textarea::make('description')
                             ->label('Keterangan')
                             ->columnSpanFull(),
-                        Select::make('status')
+                        Radio::make('status')
+                            ->inline()
                             ->options(ParameterStatusEnum::labels())
                             ->default(ParameterStatusEnum::default())
                             ->required(),

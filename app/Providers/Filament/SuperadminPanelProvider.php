@@ -6,21 +6,16 @@ use Filament\Pages\Dashboard;
 use App\Filament\Resources\CustomerResource\Widgets\CustomerStatsChart;
 use App\Filament\Resources\ParameterResource\Widgets\ParameterAccreditationChart;
 use App\Filament\Resources\PersonelResource\Widgets\PersonnelRolesChart;
-use App\Filament\Resources\QuotationResource\Widgets\QuotationStatusChart;
-use App\Filament\Resources\ParameterResource\Widgets\TopParametersTable;
-use App\Filament\Resources\TestPackageResource\Widgets\TopTestPackagesTable;
+use App\Filament\Widgets\LabJobsChartWidget;
+use App\Filament\Widgets\QuotationsChartWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\TextSize;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -47,12 +42,13 @@ class SuperadminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 // TopTestPackagesTable::class,
                 // TopParametersTable::class,
+                QuotationsChartWidget::class,
+                LabJobsChartWidget::class,
                 ParameterAccreditationChart::class,
-                QuotationStatusChart::class,
                 PersonnelRolesChart::class,
                 CustomerStatsChart::class,
             ])

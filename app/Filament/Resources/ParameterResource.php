@@ -16,6 +16,7 @@ use App\Models\Enums\ParameterStatusEnum;
 use App\Models\Parameter;
 use App\Traits\HasAuthorization;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Radio;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
@@ -95,7 +96,8 @@ class ParameterResource extends Resource
                                 ->label('Keterangan')
                                 ->columnSpanFull(),
                         ])->createOptionModalHeading('Buat Metode uji'),
-                    Select::make('status')
+                    Radio::make('status')
+                        ->inline()
                         ->options(ParameterStatusEnum::labels())
                         ->default(ParameterStatusEnum::default())
                         ->required(),

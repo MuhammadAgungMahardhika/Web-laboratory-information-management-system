@@ -25,9 +25,9 @@ use App\Filament\Resources\CustomerResource\Widgets\CustomerStatsChart;
 use App\Filament\Widgets\DynamicQuotationStatusChart;
 use App\Filament\Resources\ParameterResource\Widgets\ParameterAccreditationChart;
 use App\Filament\Resources\PersonelResource\Widgets\PersonnelRolesChart;
-use App\Filament\Resources\QuotationResource\Widgets\QuotationStatusChart;
 use App\Filament\Resources\ParameterResource\Widgets\TopParametersTable;
 use App\Filament\Resources\TestPackageResource\Widgets\TopTestPackagesTable;
+
 class ResourcesRegistry
 {
     /**
@@ -59,12 +59,11 @@ class ResourcesRegistry
     public static function getSuperAdminWidgets(): array
     {
         return [
-                TopTestPackagesTable::class,
-                TopParametersTable::class,
-                ParameterAccreditationChart::class,
-                QuotationStatusChart::class,
-                PersonnelRolesChart::class,
-                CustomerStatsChart::class,
+            TopTestPackagesTable::class,
+            TopParametersTable::class,
+            ParameterAccreditationChart::class,
+            PersonnelRolesChart::class,
+            CustomerStatsChart::class,
         ];
     }
 
@@ -77,7 +76,7 @@ class ResourcesRegistry
             static::getSuperAdminResources(),
         );
     }
-    
+
     /**
      * @return array<class-string<Widget>>
      */
