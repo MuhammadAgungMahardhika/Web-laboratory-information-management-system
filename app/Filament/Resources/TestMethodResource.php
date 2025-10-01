@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestMethodResource extends Resource
 {
-    use HasAuthorization;
+
     protected static ?string $model = TestMethod::class;
     protected static ?string $navigationLabel = 'Metode Uji';
     protected static ?string $label = 'Metode Uji';

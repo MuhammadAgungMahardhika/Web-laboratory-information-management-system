@@ -30,7 +30,6 @@ use Spatie\Permission\Models\Permission;
 
 class RoleResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = Role::class;
     protected static ?string $label = 'Hak Akses';
     protected static ?string $navigationLabel = 'Hak Akses';
@@ -51,7 +50,6 @@ class RoleResource extends Resource
                     ->searchable()
                     ->relationship('permissions', 'name')
                     ->options(Permission::all()->pluck('name', 'id'))
-                    ->required()
                     ->columns(4)
                     ->columnSpanFull()
             ]);

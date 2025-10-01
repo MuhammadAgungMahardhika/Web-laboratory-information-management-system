@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CityResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = City::class;
     protected static ?string $label = 'Kota / Kabupaten';
     protected static ?string $navigationLabel = 'Kota / Kabupaten';

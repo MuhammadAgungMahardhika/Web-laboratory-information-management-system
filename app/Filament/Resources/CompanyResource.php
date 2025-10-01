@@ -34,7 +34,6 @@ use Filament\Tables\Table;
 
 class CompanyResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = Company::class;
     protected static ?string $navigationLabel = 'Perusahaan';
     protected static ?string $label = 'Perusahaan';

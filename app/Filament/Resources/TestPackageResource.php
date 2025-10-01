@@ -36,7 +36,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestPackageResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = TestPackage::class;
     protected static ?string $navigationLabel = 'Paket Pengujian';
     protected static ?string $label = 'Paket Pengujian';

@@ -63,6 +63,13 @@ class PermissionAndRoleSeeder extends Seeder
             'delete-personel',
         ];
 
+        $positionPermissions = [
+            'view-any-position',
+            'view-position',
+            'create-position',
+            'update-position',
+            'delete-position',
+        ];
         $parameterPermissions = [
             'view-any-parameter',
             'view-parameter',
@@ -198,6 +205,7 @@ class PermissionAndRoleSeeder extends Seeder
         $allPermissions = array_merge(
             $userPermissions,
             $personelPermissions,
+            $positionPermissions,
             $provincePermissions,
             $cityPermissions,
             $customerPermissions,

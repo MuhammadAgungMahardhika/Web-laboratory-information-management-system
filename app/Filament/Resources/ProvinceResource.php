@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProvinceResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = Province::class;
     protected static ?string $label = 'Provinsi';
     protected static ?string $navigationLabel = 'Provinsi';

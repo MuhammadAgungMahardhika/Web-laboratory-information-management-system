@@ -28,7 +28,6 @@ use Filament\Tables\Table;
 
 class PersonelResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = Personel::class;
     protected static ?string $label = 'Personel';
     protected static ?string $navigationLabel = 'Personel';
@@ -43,7 +42,6 @@ class PersonelResource extends Resource
                 'xl' => 4,
             ])
             ->components([
-
                 TextInput::make('fullname')
                     ->label('Nama personel')
                     ->required()
@@ -64,8 +62,6 @@ class PersonelResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
-
-
                 Select::make('user_id')
                     ->label('Akun')
                     ->required()
@@ -120,6 +116,7 @@ class PersonelResource extends Resource
                             TextInput::make('name')
                                 ->label('Nama pengguna')
                                 ->required()
+                                ->maxLength(15)
                                 ->autocomplete(false),
                             TextInput::make('username')
                                 ->label('Username')

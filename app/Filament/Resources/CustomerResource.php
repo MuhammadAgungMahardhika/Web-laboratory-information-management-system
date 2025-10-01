@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CustomerResource extends Resource
 {
-    use HasAuthorization;
+
     protected static ?string $model = Customer::class;
     protected static ?string $label = 'Data klien';
     protected static ?string $navigationLabel = 'Data klien';

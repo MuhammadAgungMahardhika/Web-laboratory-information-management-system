@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
-    use HasAuthorization;
+
     protected static ?string $model = User::class;
     protected static ?string $label = 'Akun';
     protected static ?string $navigationLabel = 'Akun';
@@ -54,6 +54,7 @@ class UserResource extends Resource
                 TextInput::make('name')
                     ->label('Nama pengguna')
                     ->required()
+                    ->maxLength(15)
                     ->autocomplete(false),
                 TextInput::make('username')
                     ->label('Nip')
@@ -68,6 +69,7 @@ class UserResource extends Resource
                 Select::make('roles')
                     ->label('Hak akses')
                     ->multiple()
+                    ->maxItems(1)
                     ->relationship('roles', 'name')
                     ->searchable()
                     ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)

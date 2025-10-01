@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SampleTypeResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = SampleType::class;
     protected static ?string $navigationLabel = 'Jenis Sampel';
     protected static ?string $label = 'Jenis Sampel';

@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RegulationResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = Regulation::class;
     protected static ?string $navigationLabel = 'Regulasi';
     protected static ?string $label = 'Regulasi';

@@ -24,7 +24,6 @@ use Illuminate\Support\HtmlString;
 
 class ParameterResource extends Resource
 {
-    use HasAuthorization;
     protected static ?string $model = Parameter::class;
     protected static ?string $navigationLabel = 'Parameter Uji';
     protected static ?string $label = 'Parameter Uji';
