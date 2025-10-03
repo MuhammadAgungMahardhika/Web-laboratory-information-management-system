@@ -93,7 +93,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('test_methods')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
         Schema::table('test_packages', function (Blueprint $table) {
             $table->foreign('sample_matric_id', 'fk_test_packages_sample_matric')
