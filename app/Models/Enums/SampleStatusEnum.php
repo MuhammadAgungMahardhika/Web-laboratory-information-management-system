@@ -54,4 +54,26 @@ enum SampleStatusEnum: int
             default => 'gray',
         };
     }
+
+    /**
+     * Provides a CSS hex color code for inline styling.
+     *
+     * @param int|null $status The string value of the status.
+     * @return string The CSS hex color code.
+     */
+    public static function cssColor(int $status): string
+    {
+        if ($status === null) {
+            return '#6B7280'; // Default gray
+        }
+
+        return match ($status) {
+            self::Received->value => '#6B7280',
+            self::Prepared->value => '#F59E0B',
+            self::AnalysisCompleted->value =>  '#10B981',
+            self::Invalid->value => '#EF4444',
+            self::Archived->value => '#6B7280',
+            default => '#6B7280', // Fallback
+        };
+    }
 }

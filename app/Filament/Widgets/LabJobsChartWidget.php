@@ -17,7 +17,7 @@ class LabJobsChartWidget extends ChartWidget
     use HasFiltersSchema;
     protected static bool $isLazy = false;
     protected bool $isCollapsible = true;
-    protected ?string $heading = 'Perbandingan Lab Jobs Berdasarkan Status';
+    protected ?string $heading = 'Lab Jobs by Status';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_LAB_JOB = 'view-chart-lab-job';
 

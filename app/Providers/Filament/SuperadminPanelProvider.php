@@ -8,6 +8,7 @@ use App\Filament\Resources\ParameterResource\Widgets\ParameterAccreditationChart
 use App\Filament\Resources\PersonelResource\Widgets\PersonnelRolesChart;
 use App\Filament\Widgets\LabJobsChartWidget;
 use App\Filament\Widgets\QuotationsChartWidget;
+use App\Filament\Widgets\SamplesChartWidget;
 use App\Filament\Widgets\TestResultsChartWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -49,8 +50,9 @@ class SuperadminPanelProvider extends PanelProvider
                 // TopParametersTable::class,
                 QuotationsChartWidget::class,
                 LabJobsChartWidget::class,
-                ParameterAccreditationChart::class,
+                SamplesChartWidget::class,
                 TestResultsChartWidget::class,
+                ParameterAccreditationChart::class,
                 PersonnelRolesChart::class,
                 CustomerStatsChart::class,
             ])

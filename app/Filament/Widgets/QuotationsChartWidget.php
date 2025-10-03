@@ -16,7 +16,7 @@ class QuotationsChartWidget extends ChartWidget
     use HasFiltersSchema;
     protected static bool $isLazy = false;
     protected bool $isCollapsible = true;
-    protected ?string $heading = 'Perbandingan Penawaran Berdasarkan Status';
+    protected ?string $heading = 'Penawaran by Status';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_QUOTATION = 'view-chart-quotation';
 

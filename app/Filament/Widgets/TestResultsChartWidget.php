@@ -16,13 +16,14 @@ class TestResultsChartWidget extends ChartWidget
     use HasFiltersSchema;
     protected static bool $isLazy = false;
     protected bool $isCollapsible = true;
-    protected ?string $heading = 'Test Results Chart Widget';
+    protected ?string $heading = 'Hasil Uji by Status';
     protected ?string $pollingInterval = null;
-    public const PERMISSION_VIEW_CHART_TEST_RESULT = 'view-chart-test-result';
+    public const PERMISSION_VIEW_CHART_SAMPLE = 'view-chart-sample';
 
     public static function canView(): bool
     {
-        return Auth::user()->can(static::PERMISSION_VIEW_CHART_TEST_RESULT);
+        // return Auth::user()->can(static::PERMISSION_VIEW_CHART_SAMPLE);
+        return true;
     }
     protected function getData(): array
     {
