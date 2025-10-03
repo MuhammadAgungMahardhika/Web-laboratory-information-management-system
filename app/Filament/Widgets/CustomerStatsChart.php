@@ -5,12 +5,18 @@ namespace App\Filament\Widgets;
 use Filament\Widgets\ChartWidget;
 use App\Models\CustomerType; // Pastikan model CustomerType diimpor
 use App\Models\Customer; // Pastikan model Customer diimpor
+use Illuminate\Support\Facades\Auth;
 
 class CustomerStatsChart extends ChartWidget
 {
 
     protected ?string $heading = 'Pelanggan by Tipe';
     protected ?string $pollingInterval = null;
+    public const PERMISSION_VIEW_CHART_CUSTOMER = 'view-chart-customer';
+    public static function canView(): bool
+    {
+        return Auth::user()->can(static::PERMISSION_VIEW_CHART_CUSTOMER);
+    }
     protected function getType(): string
     {
         return 'doughnut'; // Menggunakan chart donat

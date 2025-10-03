@@ -446,21 +446,20 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property int $user_id
- * @property int $company_id
+ * @property int|null $user_id
+ * @property int|null $company_id
  * @property int|null $position_id
- * @property string $fullname
  * @property string|null $nip
+ * @property string $fullname
  * @property string|null $phone_number
  * @property string|null $address
- * @property string|null $certification_details
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quotation> $approvedQuotations
  * @property-read int|null $approved_quotations_count
- * @property-read \App\Models\Company $company
+ * @property-read \App\Models\Company|null $company
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobPersonel> $labJobPersonels
  * @property-read int|null $lab_job_personels_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJob> $labJobs
@@ -478,13 +477,12 @@ namespace App\Models{
  * @property-read int|null $samples_received_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Specialization> $specializations
  * @property-read int|null $specializations_count
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Database\Factories\PersonelFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereCertificationDetails($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Personel whereCreatedBy($value)

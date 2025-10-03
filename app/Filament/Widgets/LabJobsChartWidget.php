@@ -43,7 +43,8 @@ class LabJobsChartWidget extends ChartWidget
 
         // Tambahkan filter tanggal jika ada
         if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate]);
+            $query->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate);
         }
 
         $statusCounts = $query->get();

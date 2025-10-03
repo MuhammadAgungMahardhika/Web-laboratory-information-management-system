@@ -42,11 +42,11 @@ class LabJobPersonelsRelationManager extends RelationManager
                     ->relationship(
                         'personel',
                         'fullname',
-                        modifyQueryUsing: fn(Builder $query) => $query
-                            ->whereHas(
-                                'position',
-                                fn(Builder $query) => $query->whereIn('name', [PositionEnum::Ppc->value, PositionEnum::KepalaPpc->value])
-                            )->whereDoesntHave('labJobPersonels', fn(Builder $q) => $q->where('lab_job_id', $this->ownerRecord->id))
+                        // modifyQueryUsing: fn(Builder $query) => $query
+                        //     ->whereHas(
+                        //         'position',
+                        //         fn(Builder $query) => $query->whereIn('name', [PositionEnum::Ppc->value, PositionEnum::KepalaPpc->value])
+                        //     )->whereDoesntHave('labJobPersonels', fn(Builder $q) => $q->where('lab_job_id', $this->ownerRecord->id))
                     )
                     ->label('Personel')
                     ->preload(),

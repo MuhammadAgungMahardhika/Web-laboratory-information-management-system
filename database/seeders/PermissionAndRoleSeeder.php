@@ -48,6 +48,8 @@ class PermissionAndRoleSeeder extends Seeder
         ];
 
         $customerPermissions = [
+            'view-chart-customer',
+
             'view-any-customer',
             'view-customer',
             'create-customer',
@@ -56,6 +58,8 @@ class PermissionAndRoleSeeder extends Seeder
         ];
 
         $personelPermissions = [
+            'view-chart-role-personel',
+
             'view-any-personel',
             'view-personel',
             'create-personel',
@@ -86,6 +90,9 @@ class PermissionAndRoleSeeder extends Seeder
         ];
 
         $parameterPermissions = [
+            'view-chart-accreditation-status-parameter',
+
+
             'view-any-parameter',
             'view-parameter',
             'create-parameter',
@@ -192,7 +199,7 @@ class PermissionAndRoleSeeder extends Seeder
             'update-test-result',
             'delete-test-result',
 
-            'filling-test-result',
+            // 'filling-test-result',
             'request-validate-test-result',
             'validate-test-result',
             'revision-needed-test-result',

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\QuotationStatusEnum;
 use App\Services\LabJobService;
+use Filament\Forms\Components\Repeater;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -126,6 +127,36 @@ class LabJobResource extends Resource
                             ->afterOrEqual('start_date'),
 
                     ])->columnSpanFull()->columns(2),
+                Repeater::make('labJobPersonels')
+                    ->relationship()
+                    ->label('Petugas PPC')
+                    ->components([
+                        Select::make('personel_id')
+                            ->required()
+                            ->searchable()
+                            ->relationship(
+                                'personel',
+                                'fullname',
+                                // modifyQueryUsing: fn(Builder $query) => $query
+                                //     ->whereHas(
+                                //         'position',
+                                //         fn(Builder $query) => $query->whereIn('name', [PositionEnum::Ppc->value, PositionEnum::KepalaPpc->value])
+                                //     )->whereDoesntHave('labJobPersonels', fn(Builder $q) => $q->where('lab_job_id', $this->ownerRecord->id))
+                            )
+                            ->label('Personel')
+                            ->preload(),
+                        Select::make('position')
+                            ->required()
+                            ->options([
+                                'ketua' => 'Ketua tim',
+                                'anggota' => 'Anggota tim'
+                            ])
+                            ->label('Peran')
+                            ->required()
+                            ->default('anggota')
+                            ->preload(),
+                    ])->columns(1)->grid(3)->columnSpanFull(),
+
             ]);
     }
 
@@ -200,7 +231,7 @@ class LabJobResource extends Resource
     {
         return [
             SamplesRelationManager::class,
-            LabJobPersonelsRelationManager::class,
+            // LabJobPersonelsRelationManager::class,
             LabJobItemsRelationManager::class,
         ];
     }

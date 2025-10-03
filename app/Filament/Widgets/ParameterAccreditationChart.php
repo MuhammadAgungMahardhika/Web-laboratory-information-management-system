@@ -5,12 +5,19 @@ namespace App\Filament\Widgets;
 use App\Models\Enums\ParameterStatusEnum;
 use Filament\Widgets\ChartWidget;
 use App\Models\Parameter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ParameterAccreditationChart extends ChartWidget
 {
     protected ?string $heading = 'Parameter by Status Akreditasi';
     protected ?string $pollingInterval = null;
+    public const PERMISSION_VIEW_CHART_ACCREDITATION_STATUS_PARAMETER = 'view-chart-accreditation-status-parameter';
+    public static function canView(): bool
+    {
+        return Auth::user()->can(static::PERMISSION_VIEW_CHART_ACCREDITATION_STATUS_PARAMETER);
+    }
+
     protected function getType(): string
     {
         return 'pie'; // Menggunakan pie chart untuk proporsi

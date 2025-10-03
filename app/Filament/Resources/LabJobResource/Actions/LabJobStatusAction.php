@@ -53,14 +53,14 @@ class LabJobStatusAction
             ->icon(Heroicon::DocumentDuplicate)
             ->slideOver()
             ->disabled(fn($record) => !$record->labJobPersonels->isNotEmpty())
-            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized)
+            ->authorize(fn(LabJob $record) => $record->status !== JobStatusEnum::PendingStart->value && $authorized)
             ->modalHeading('Pratinjau Surat Tugas')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup Pratinjau')
             ->modalWidth('6xl')
             ->modalContent(function (LabJob $record) {
                 $safeJobNumber = Str::of($record->job_number)->replace('/', '-');
-                $pdfUrl = route(static::$taskLetterDownloadUrl, $record);
+                $pdfUrl = route(static::$taskLetterPreviewUrl, $record);
                 $downloadUrl = route(static::$taskLetterPreviewUrl, $record);
 
                 return view('pdfs.preview', [
@@ -92,7 +92,7 @@ class LabJobStatusAction
             ->icon('heroicon-o-document-arrow-down')
             ->color('primary')
             // Hanya tampil jika pekerjaan sudah dimulai
-            ->authorize(fn(LabJob $record) => $record->job_status === JobStatusEnum::InProgress->value && $authorized)
+            ->authorize(fn(LabJob $record) => $record->job_status !== JobStatusEnum::PendingStart->value && $authorized)
             ->url(fn(LabJob $record): string => route(static::$taskLetterDownloadUrl, $record))
             ->openUrlInNewTab();
     }

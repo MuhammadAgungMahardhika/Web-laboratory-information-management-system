@@ -50,7 +50,7 @@ class TestResultResource extends Resource
     {
         return [
             'index' => ListTestResults::route('/'),
-            'create' => CreateTestResult::route('/create'),
+            // 'create' => CreateTestResult::route('/create'),
             // 'view' => ViewTestResult::route('/{record}'),
             // 'edit' => EditTestResult::route('/{record}/edit'),
         ];

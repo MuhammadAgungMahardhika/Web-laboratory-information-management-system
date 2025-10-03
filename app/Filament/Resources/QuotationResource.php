@@ -75,7 +75,9 @@ class QuotationResource extends Resource
     }
     public static function form(Schema $schema): Schema
     {
-        $setting  = Auth::user()->personel->company->active_setting;
+        $user = Auth::user();
+        $setting  =   $user->personel->company->active_setting;
+        $personelId =   $user->personel->id ?? null;
         $defaultQuotationExpiryDays = (int) $setting->default_quotation_expiry_days;
         $quoatationService = app(QuotationService::class);
         return $schema
@@ -221,18 +223,8 @@ class QuotationResource extends Resource
                     Select::make('personel_id')
                         ->label('Petugas')
                         ->required()
-                        ->relationship('personel', 'fullname', modifyQueryUsing: fn($query) =>
-                        $query->whereHas(
-                            'user',
-                            fn($qUser) =>
-                            $qUser->whereHas(
-                                'roles',
-                                fn($qRole) =>
-                                $qRole->where('name', RoleEnum::Admin->value)
-                                    ->orWhere('name', RoleEnum::SuperAdmin->value)
-                            )
-                        ))
-                        ->default(Auth::user()->id)
+                        ->relationship('personel', 'fullname')
+                        ->default($personelId ?? null)
                         ->searchable()
                         ->preload(),
 

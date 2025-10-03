@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\User; // Pastikan model User diimpor
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PersonnelRolesChart extends ChartWidget
@@ -11,6 +12,12 @@ class PersonnelRolesChart extends ChartWidget
 
     protected ?string $heading = 'Personel by Hak Akses';
     protected ?string $pollingInterval = null;
+    public const PERMISSION_VIEW_CHART_ROLE_PERSONEL = 'view-chart-role-personel';
+
+    public static function canView(): bool
+    {
+        return Auth::user()->can(static::PERMISSION_VIEW_CHART_ROLE_PERSONEL);
+    }
     protected function getType(): string
     {
         return 'bar'; // Menggunakan bar chart untuk perbandingan

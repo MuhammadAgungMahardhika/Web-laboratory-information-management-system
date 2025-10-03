@@ -26,8 +26,6 @@ class TestResultForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $fillingTestResult = Auth::user()->can('filling-test-result');
-        $testResultService = new TestResultService();
         return $schema
             ->columns([
                 'sm' => 2,
@@ -145,7 +143,12 @@ class TestResultForm
                         TextInput::make('standard_notes_ref')
                             ->label('Catatan Standar')
                     ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
-                ])->columnSpanFull()->columns(2)->heading(fn($record) => $record->evaluation_status ? 'Hasil Uji -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Hasil Uji')->visible(fn() => $fillingTestResult),
+                ])->columnSpanFull()->columns(2)->heading(
+                    fn($record) =>
+                    $record
+                        ? 'Hasil Uji → ' . (TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] ?? '')
+                        : 'Hasil Uji'
+                ),
 
             ]);
     }
