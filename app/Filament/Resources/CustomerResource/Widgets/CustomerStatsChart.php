@@ -9,7 +9,7 @@ use App\Models\Customer; // Pastikan model Customer diimpor
 class CustomerStatsChart extends ChartWidget
 {
 
-    protected ?string $heading = 'Statistik Pelanggan Berdasarkan Tipe';
+    protected ?string $heading = 'Pelanggan by Tipe';
     protected ?string $pollingInterval = null;
     protected function getType(): string
     {

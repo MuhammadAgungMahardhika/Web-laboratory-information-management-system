@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ParameterAccreditationChart extends ChartWidget
 {
-    protected ?string $heading = 'Perbandingan Parameter Terakreditasi';
+    protected ?string $heading = 'Parameter by Status Akreditasi';
     protected ?string $pollingInterval = null;
     protected function getType(): string
     {
