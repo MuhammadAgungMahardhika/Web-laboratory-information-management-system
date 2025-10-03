@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\CustomerResource\Widgets;
+namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\CustomerType; // Pastikan model CustomerType diimpor

@@ -3,10 +3,11 @@
 namespace App\Providers\Filament;
 
 use Filament\Pages\Dashboard;
-use App\Filament\Resources\CustomerResource\Widgets\CustomerStatsChart;
-use App\Filament\Resources\ParameterResource\Widgets\ParameterAccreditationChart;
-use App\Filament\Resources\PersonelResource\Widgets\PersonnelRolesChart;
+
+use App\Filament\Widgets\CustomerStatsChart;
 use App\Filament\Widgets\LabJobsChartWidget;
+use App\Filament\Widgets\ParameterAccreditationChart;
+use App\Filament\Widgets\PersonnelRolesChart;
 use App\Filament\Widgets\QuotationsChartWidget;
 use App\Filament\Widgets\SamplesChartWidget;
 use App\Filament\Widgets\TestResultsChartWidget;

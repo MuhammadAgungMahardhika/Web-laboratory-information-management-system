@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ParameterResource\Widgets;
+namespace App\Filament\Widgets;
 
 use App\Models\Enums\ParameterStatusEnum;
 use Filament\Widgets\ChartWidget;

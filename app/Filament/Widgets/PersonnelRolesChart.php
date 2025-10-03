@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PersonelResource\Widgets;
+namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\User; // Pastikan model User diimpor
