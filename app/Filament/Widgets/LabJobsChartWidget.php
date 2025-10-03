@@ -24,8 +24,7 @@ class LabJobsChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        // return Auth::user()->can(static::PERMISSION_VIEW_CHART_QUOTATION);
-        return true;
+        return Auth::user()->can(static::PERMISSION_VIEW_CHART_LAB_JOB);
     }
     protected function getType(): string
     {

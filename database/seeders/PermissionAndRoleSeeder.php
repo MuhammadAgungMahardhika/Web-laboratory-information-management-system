@@ -184,6 +184,8 @@ class PermissionAndRoleSeeder extends Seeder
             'abort-lab-job-report', //10
         ];
         $testResultPermissions = [
+            'view-chart-test-result',
+
             'view-any-test-result',
             'view-test-result',
             'create-test-result',

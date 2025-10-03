@@ -8,6 +8,7 @@ use App\Filament\Resources\ParameterResource\Widgets\ParameterAccreditationChart
 use App\Filament\Resources\PersonelResource\Widgets\PersonnelRolesChart;
 use App\Filament\Widgets\LabJobsChartWidget;
 use App\Filament\Widgets\QuotationsChartWidget;
+use App\Filament\Widgets\TestResultsChartWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -49,6 +50,7 @@ class SuperadminPanelProvider extends PanelProvider
                 QuotationsChartWidget::class,
                 LabJobsChartWidget::class,
                 ParameterAccreditationChart::class,
+                TestResultsChartWidget::class,
                 PersonnelRolesChart::class,
                 CustomerStatsChart::class,
             ])

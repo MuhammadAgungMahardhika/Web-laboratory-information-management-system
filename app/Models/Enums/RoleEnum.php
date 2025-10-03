@@ -72,7 +72,7 @@ enum RoleEnum: string
     }
 
     /**
-     * Mendapatkan default case untuk enum
+     * Mendapatkan default case untuk enum  
      *
      * @return self
      */

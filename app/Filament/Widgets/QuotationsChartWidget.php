@@ -23,8 +23,7 @@ class QuotationsChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        // return Auth::user()->can(static::PERMISSION_VIEW_CHART_QUOTATION);
-        return true;
+        return Auth::user()->can(static::PERMISSION_VIEW_CHART_QUOTATION);
     }
     protected function getType(): string
     {

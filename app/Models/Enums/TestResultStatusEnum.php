@@ -44,4 +44,26 @@ enum TestResultStatusEnum: int
             default => 'gray',
         };
     }
+
+    /**
+     * Provides a CSS hex color code for inline styling.
+     *
+     * @param int|null $status The string value of the status.
+     * @return string The CSS hex color code.
+     */
+    public static function cssColor(int $status): string
+    {
+        if ($status === null) {
+            return '#6B7280'; // Default gray
+        }
+
+        return match ($status) {
+            self::Raw->value => '#6B7280',
+            self::Validated->value => '#10B981',
+            self::RequestValidate->value => '#F59E0B',
+            self::RevisionNeeded->value =>  '#F59E0B',
+            self::Rejected->value => '#EF4444',
+            default => '#6B7280', // Fallback
+        };
+    }
 }
