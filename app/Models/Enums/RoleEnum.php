@@ -18,8 +18,8 @@ enum RoleEnum: string
     {
         return match ($this) {
             self::SuperAdmin => 1,
-            self::Admin => 2,
-            self::Customer => 3,
+            self::Customer => 2,
+            self::Admin => 3,
             self::SamplingTechnician => 4,
             self::Analyst => 5,
             self::TechnicalManager => 6,
@@ -82,20 +82,20 @@ enum RoleEnum: string
     }
 
     /**
-     * Mendapatkan prefix panel berdasarkan peran
+     * Menentukan apakah sebuah peran adalah peran inti sistem yang tidak boleh diubah/dihapus.
+     * Logika ini digunakan oleh RolePolicy.
      *
-     * @return string
+     * @param string $roleId
+     * @return bool
      */
-    public function getPanelPrefix(): ?string
+    public static function isCoreSystemRole(int $roleId): bool
     {
-        return match ($this) {
-            self::SuperAdmin => 'superadmin',
-            self::Admin => 'admin',
-            self::Customer => 'customer', // Contoh: jika ada panel khusus customer
-            self::SamplingTechnician => 'sampling-technician', // Contoh: Mungkin tidak punya panel khusus
-            self::Analyst => 'analyst',            // Contoh: Mungkin tidak punya panel khusus
-            self::TechnicalManager => 'technical-manager', // Contoh: Jika ada panel 'technical'
-            self::LaboratoryHead => 'laboratory-head',  // Contoh: Jika ada panel 'laboratory'
-        };
+        return in_array($roleId, [
+            self::SuperAdmin->id(),
+            self::Customer->id(),
+            self::Analyst->id(),
+            self::SamplingTechnician->id(),
+
+        ]);
     }
 }

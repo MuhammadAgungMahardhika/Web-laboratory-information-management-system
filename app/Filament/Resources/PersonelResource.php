@@ -67,8 +67,9 @@ class PersonelResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
-                        $query->where(function ($query) use ($get) {
-                            $query->whereDoesntHave('customer');
+                        $query->where(function ($query) {
+                            // Memastikan user belum memiliki peran 'customer'
+                            $query->whereDoesntHave('roles', fn($q) => $q->where('id', RoleEnum::Customer->id()));
                         });
                     })
                     ->searchable()
@@ -81,6 +82,7 @@ class PersonelResource extends Resource
                                 ->autocomplete(false),
                             TextInput::make('username')
                                 ->label('Username')
+                                ->maxLength(15)
                                 ->default($get('fullname'))
                                 ->unique(ignoreRecord: true)
                                 ->required()
@@ -93,9 +95,15 @@ class PersonelResource extends Resource
                                 ->autocomplete(false),
                             Select::make('roles')
                                 ->label('Hak akses')
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('name', RoleEnum::Customer->value))
+                                ->required()
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('id', RoleEnum::Customer->id()))
                                 ->searchable()
-                                ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
+                                ->getOptionLabelFromRecordUsing(function ($record) {
+                                    // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                                    // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                                    $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                                    return $roleLabel ?? $record->name;
+                                })
                                 ->preload()
                                 ->dehydrated(false),
 
@@ -116,23 +124,29 @@ class PersonelResource extends Resource
                             TextInput::make('name')
                                 ->label('Nama pengguna')
                                 ->required()
-                                ->maxLength(15)
                                 ->autocomplete(false),
                             TextInput::make('username')
                                 ->label('Username')
+                                ->maxLength(15)
                                 ->unique(ignoreRecord: true)
                                 ->required()
                                 ->autocomplete(false),
                             TextInput::make('email')
                                 ->label('Email')
                                 ->email()
+                                ->required()
                                 ->unique(ignoreRecord: true)
                                 ->autocomplete(false),
                             Select::make('roles')
                                 ->label('Hak akses')
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) =>  $query->whereNot('name', RoleEnum::Customer->value))
+                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) =>  $query->whereNot('id', RoleEnum::Customer->id()))
                                 ->searchable()
-                                ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
+                                ->getOptionLabelFromRecordUsing(function ($record) {
+                                    // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                                    // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                                    $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                                    return $roleLabel ?? $record->name;
+                                })
                                 ->preload()
                                 ->dehydrated(false),
 

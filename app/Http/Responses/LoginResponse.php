@@ -2,8 +2,6 @@
 
 namespace App\Http\Responses;
 
-use App\Models\Enums\RoleEnum;
-use App\Models\Enums\RoleStatusEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
@@ -18,21 +16,23 @@ class LoginResponse implements LoginResponseContract
                 return response()->json(['two_factor' => false]);
             }
             $user = Auth::user();
-            // Iterasi melalui semua case dalam enum RoleStatusEnum
-            foreach (RoleEnum::cases() as $roleEnum) {
-                if ($user->hasRole($roleEnum->value)) {
-                    return redirect()->to('lims');
-                }
+
+            // --- PERBAIKAN DI SINI ---
+            // Cek apakah pengguna memiliki SETIDAKNYA SATU peran (asumsi model User memiliki relasi 'roles')
+            if ($user->roles()->exists()) {
+                return redirect()->to('lims'); // Redirect ke dashboard Filament/LIMS
             }
-            // Jika pengguna tidak memiliki role yang sesuai
+            // ------------------------
+
+            // Jika pengguna tidak memiliki role yang sesuai (meskipun terautentikasi)
             Auth::logout();
             Session::invalidate();
             Session::regenerateToken();
+
             return redirect()->route('login')->withErrors([
-                'email' => 'Akun Anda tidak memiliki akses yang valid.'
+                'email' => 'Akun Anda tidak memiliki peran akses yang valid. Silakan hubungi administrator.'
             ]);
         }
-
         // Jika pengguna tidak terautentikasi
         return redirect()->route('login');
     }

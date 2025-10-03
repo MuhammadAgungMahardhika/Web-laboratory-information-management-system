@@ -22,8 +22,7 @@ class TestResultsChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        // return Auth::user()->can(static::PERMISSION_VIEW_CHART_SAMPLE);
-        return true;
+        return Auth::user()->can(static::PERMISSION_VIEW_CHART_SAMPLE);
     }
     protected function getData(): array
     {

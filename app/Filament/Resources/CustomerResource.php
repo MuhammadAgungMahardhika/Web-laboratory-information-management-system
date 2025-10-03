@@ -95,7 +95,7 @@ class CustomerResource extends Resource
                         ->options(CustomerStatusEnum::labels())
                         ->default(CustomerStatusEnum::default())
                         ->required(),
-                ])->columns(3)->heading('Identitas')->iconColor('primary')->icon('heroicon-s-building-office'),
+                ])->columnSpanFull()->columns(3)->heading('Identitas')->iconColor('primary')->icon('heroicon-s-building-office'),
                 //
                 Section::make([
                     Select::make('province_id')
@@ -121,7 +121,7 @@ class CustomerResource extends Resource
                     TextInput::make('postal_code')
                         ->label('Kode pos')
                         ->maxLength(255),
-                ])->columns(4)->heading('Alamat')->iconColor('primary')->icon('heroicon-s-map-pin'),
+                ])->columnSpanFull()->columns(4)->heading('Alamat')->iconColor('primary')->icon('heroicon-s-map-pin'),
 
                 Section::make([
                     TextInput::make('contact_person_name')
@@ -146,15 +146,20 @@ class CustomerResource extends Resource
                     Select::make('user_id')
                         ->label('Akun klien')
                         ->unique(ignoreRecord: true)
-                        ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
-                            $query->where(function ($query) use ($get) {
-                                $query->whereDoesntHave('customer')
-                                    ->whereDoesntHave('personel')
-                                    ->orWhereHas('customer', function ($subQuery) use ($get) {
-                                        $subQuery->where('id', '=', $get('id'));
-                                    });
-                            });
-                        })
+                        ->relationship(
+                            'user',
+                            'name',
+                            modifyQueryUsing: fn(Builder $query, Get $get,  $record) => $query
+                                // 1. Filter: Hanya user dengan peran 'customer'
+                                ->whereHas('roles', fn($q) => $q->where('id', RoleEnum::Customer->id()))
+                                // 2. Filter: Kecualikan user yang sudah menjadi personel (pekerja lab)
+                                ->whereDoesntHave('personel')
+                                // 3. Filter Unik: Kecualikan user yang sudah terhubung ke Customer lain
+                                ->when(
+                                    !$record, // Hanya terapkan filter ini saat mode CREATE
+                                    fn($q) => $q->whereDoesntHave('customer')
+                                )
+                        )
                         ->searchable()
                         ->preload()
                         ->createOptionForm(function (Get $get) {
@@ -165,6 +170,7 @@ class CustomerResource extends Resource
                                     ->required()
                                     ->autocomplete(false),
                                 TextInput::make('username')
+                                    ->maxLength(15)
                                     ->label('Username')
                                     ->default($get('contact_person_name'))
                                     ->unique(ignoreRecord: true)
@@ -174,13 +180,20 @@ class CustomerResource extends Resource
                                     ->label('Email')
                                     ->default($get('contact_email'))
                                     ->email()
+                                    ->required()
                                     ->unique(ignoreRecord: true)
                                     ->autocomplete(false),
                                 Select::make('roles')
                                     ->label('Hak akses')
-                                    ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
+                                    ->required()
+                                    ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('id', RoleEnum::Customer->id()))
                                     ->searchable()
-                                    ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
+                                    ->getOptionLabelFromRecordUsing(function ($record) {
+                                        // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                                        // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                                        $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                                        return $roleLabel ?? $record->name;
+                                    })
                                     ->preload()
                                     ->dehydrated(false),
 
@@ -204,19 +217,27 @@ class CustomerResource extends Resource
                                     ->autocomplete(false),
                                 TextInput::make('username')
                                     ->label('Username')
+                                    ->maxLength(15)
                                     ->unique(ignoreRecord: true)
                                     ->required()
                                     ->autocomplete(false),
                                 TextInput::make('email')
                                     ->label('Email')
                                     ->email()
+                                    ->required()
                                     ->unique(ignoreRecord: true)
                                     ->autocomplete(false),
                                 Select::make('roles')
                                     ->label('Hak akses')
-                                    ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('name', RoleEnum::Customer->value))
+                                    ->required()
+                                    ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->where('id', RoleEnum::Customer->id()))
                                     ->searchable()
-                                    ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
+                                    ->getOptionLabelFromRecordUsing(function ($record) {
+                                        // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                                        // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                                        $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                                        return $roleLabel ?? $record->name;
+                                    })
                                     ->preload()
                                     ->dehydrated(false),
 
@@ -232,7 +253,7 @@ class CustomerResource extends Resource
                                     ->options(UserStatusEnum::labels()),
                             ];
                         })->helperText('Akun digunakan untuk melakukan permohonan secara online'),
-                ])->columns(4)->heading('Narahubung')->iconColor('primary')->icon('heroicon-s-user'),
+                ])->columnSpanFull()->columns(4)->heading('Narahubung')->iconColor('primary')->icon('heroicon-s-user'),
 
 
             ]);

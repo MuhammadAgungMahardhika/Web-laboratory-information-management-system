@@ -20,6 +20,7 @@ use App\Models\User;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -54,16 +55,17 @@ class UserResource extends Resource
                 TextInput::make('name')
                     ->label('Nama pengguna')
                     ->required()
-                    ->maxLength(15)
                     ->autocomplete(false),
                 TextInput::make('username')
                     ->label('Nip')
+                    ->maxLength(15)
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->autocomplete(false),
                 TextInput::make('email')
                     ->label('Email')
                     ->email()
+                    ->required()
                     ->unique(ignoreRecord: true)
                     ->autocomplete(false),
                 Select::make('roles')
@@ -72,7 +74,12 @@ class UserResource extends Resource
                     ->maxItems(1)
                     ->relationship('roles', 'name')
                     ->searchable()
-                    ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
+                    ->getOptionLabelFromRecordUsing(function ($record) {
+                        // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                        // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                        $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                        return $roleLabel ?? $record->name;
+                    })
                     ->preload()
                     ->dehydrated(false),
 
@@ -92,8 +99,9 @@ class UserResource extends Resource
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
                     ->label('Profile Photo')
                     ->visibility('public'),
-                Select::make('status')
+                Radio::make('status')
                     ->required()
+                    ->inline()
                     ->options(UserStatusEnum::labels()),
             ]);
     }
@@ -153,7 +161,12 @@ class UserResource extends Resource
                         'roles',
                         'name',
                     )
-                    // ->getOptionLabelFromRecordUsing(fn($record) => RoleEnum::labels()[$record->name] ?? $record->name)
+                    ->getOptionLabelFromRecordUsing(function ($record) {
+                        // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                        // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                        $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                        return $roleLabel ?? $record->name;
+                    })
                     ->preload(),
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([

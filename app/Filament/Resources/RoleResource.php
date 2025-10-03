@@ -60,9 +60,8 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->formatStateUsing(fn($state) => RoleEnum::labels()[$state])
+                    ->formatStateUsing(fn($state) => RoleEnum::labels()[$state] ?? $state)
                     ->searchable(),
-
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -79,11 +78,7 @@ class RoleResource extends Resource
                 ViewAction::make(),
                 EditAction::make(),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->toolbarActions([]);
     }
 
     public static function getRelations(): array
