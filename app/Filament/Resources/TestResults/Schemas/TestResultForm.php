@@ -115,12 +115,7 @@ class TestResultForm
                         //     $set('evaluation_status', $status->value);
                         // })
                         ,
-                        TextInput::make('corrected_value')
-                            ->label('Nilai Koreksi')
-                            ->autocomplete(false)
-                            ->required()
 
-                            ->numeric(),
                         TextInput::make('unit')
                             ->label('Satuan')
                             ->copyable()

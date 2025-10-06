@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('test_method_id');
+            $table->unsignedBigInteger('test_method_id')->nullable();
             $table->string('name', 255)->unique();
             $table->string('unit', 50);
 

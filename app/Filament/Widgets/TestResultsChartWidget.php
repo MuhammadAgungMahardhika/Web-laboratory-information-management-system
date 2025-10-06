@@ -22,7 +22,8 @@ class TestResultsChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        return Auth::user()->can(static::PERMISSION_VIEW_CHART_SAMPLE);
+        // return Auth::user()->can(static::PERMISSION_VIEW_CHART_SAMPLE);
+        return true;
     }
     protected function getData(): array
     {
@@ -70,7 +71,7 @@ class TestResultsChartWidget extends ChartWidget
 
     protected function getType(): string
     {
-        return 'line';
+        return 'bar';
     }
 
     public function filtersSchema(Schema $schema): Schema

@@ -27,10 +27,13 @@ class TestResultsTable
     public static function configure(Table $table): Table
     {
         $user = Auth::user();
-        $personel = $user->personel;
-        $specializationIds = !is_null($personel->personelSpecializations())
-            ? $personel->personelSpecializations()->pluck('specialization_id')->toArray()
-            : [];
+        $personel = $user?->personel;
+
+        $specializationIds = $personel?->personelSpecializations()
+            ->pluck('specialization_id')
+            ->toArray() ?? [];
+
+
         return $table
             ->modifyQueryUsing(function ($query) use ($personel, $specializationIds) {
                 return $query->whereHas('parameter.specialisasiParameters', function ($q) use ($specializationIds) {

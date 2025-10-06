@@ -19,8 +19,8 @@ use Filament\Tables\Table;
 class TestResultResource extends Resource
 {
     protected static ?string $model = TestResult::class;
-    protected static ?string $navigationLabel = 'Hasil Uji';
-    protected static ?string $label = 'Hasil Uji';
+    protected static ?string $navigationLabel = 'Hasil Pengujian';
+    protected static ?string $label = 'Hasil Pengujian';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Beaker;
 
     public static function form(Schema $schema): Schema
