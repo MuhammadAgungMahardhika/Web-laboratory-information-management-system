@@ -1,10 +1,8 @@
-import preset from './vendor/filament/support/tailwind.config.preset'
-
 export default {
-    presets: [preset],
+    presets: [],
     content: [
-        './app/Filament/**/*.php',
-        './resources/views/**/*.blade.php',
-        './vendor/filament/**/*.blade.php',
+        "./app/Filament/**/*.php",
+        "./resources/views/**/*.blade.php",
+        "./vendor/filament/**/*.blade.php",
     ],
-}
+};
