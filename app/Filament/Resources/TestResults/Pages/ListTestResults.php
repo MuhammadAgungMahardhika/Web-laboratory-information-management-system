@@ -40,7 +40,10 @@ class ListTestResults extends ListRecords
                 ->badge($counts[$status->value] ?? 0)
                 ->badgeColor(TestResultStatusEnum::color($status->value))
                 ->label(strtoupper($status->label()))
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', $status->value));
+                ->modifyQueryUsing(
+                    fn(Builder $query) =>
+                    $query->where('test_results.status', $status->value)
+                );
         }
 
         return $tabs;
