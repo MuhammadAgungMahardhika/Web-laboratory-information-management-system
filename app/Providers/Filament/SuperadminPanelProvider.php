@@ -33,6 +33,7 @@ class SuperadminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->spa()
             ->id('superadmin')
             ->path('superadmin')
             ->profile(isSimple: false)
