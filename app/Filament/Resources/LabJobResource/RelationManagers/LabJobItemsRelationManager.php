@@ -101,9 +101,6 @@ class LabJobItemsRelationManager extends RelationManager
                     TextInput::make('description')
                         ->label('Keterangan')
                         ->autocomplete(false)
-                        ->datalist([
-                            'Engineer dan Mobilisasi'
-                        ])
                         ->required()
                         ->maxLength(255)
                         ->placeholder('Deskripsi akan otomatis terisi dari Paket Pengujian'),

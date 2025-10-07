@@ -97,6 +97,7 @@ class LabJobResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required()
+                            ->helperText('Nomor penawaran yang muncul adalah penawaran yang sudah disetujui')
                             ->unique(ignoreRecord: true)
                             ->live()
                             ->afterStateUpdated(function ($state, Set $set, LabJobService $labJobService) {
@@ -110,6 +111,7 @@ class LabJobResource extends Resource
                             }),
                         TextInput::make('job_number')
                             ->label('Nomor Job')
+                            ->helperText('Generate otomatis dari Nomor Penawaran')
                             ->required()
                             ->disabled() // <-- Jadikan read-only
                             ->maxLength(50),
@@ -129,7 +131,8 @@ class LabJobResource extends Resource
                     ])->columnSpanFull()->columns(2),
                 Repeater::make('labJobPersonels')
                     ->relationship()
-                    ->label('Petugas PPC')
+                    ->hiddenLabel()
+                    ->visibleOn(['view', 'edit'])
                     ->components([
                         Select::make('personel_id')
                             ->required()
