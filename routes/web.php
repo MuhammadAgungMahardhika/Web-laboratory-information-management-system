@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('auth.login');
-})->middleware(RedirectIfLoggedIn::class)->name('login');
+})->middleware(RedirectIfLoggedIn::class)->name('home');
 
 
 // quotation
