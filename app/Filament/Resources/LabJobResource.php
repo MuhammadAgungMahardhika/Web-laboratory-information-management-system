@@ -118,13 +118,9 @@ class LabJobResource extends Resource
                         DatePicker::make('start_date')
                             ->label('Tanggal Mulai')
                             ->live()
-                            ->disabled()
-                            ->visibleOn(['view', 'edit'])
                             ->default(now()),
                         DatePicker::make('end_date')
                             ->label('Tanggal Selesai')
-                            ->disabled()
-                            ->visibleOn(['view', 'edit'])
                             ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
                             ->afterOrEqual('start_date'),
 
