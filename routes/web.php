@@ -4,11 +4,12 @@ use App\Http\Controllers\LabJobPdfController;
 use App\Http\Controllers\QuotationPdfController;
 use App\Http\Controllers\ReportPdfController;
 use App\Http\Controllers\SamplePdfController;
+use App\Http\Middleware\RedirectIfLoggedIn;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('auth.login');
-});
+})->middleware(RedirectIfLoggedIn::class)->name('login');
 
 
 // quotation
