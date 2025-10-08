@@ -51,7 +51,7 @@ class TestResultService
     }
 
     // app/Services/TestResultService.php
-    public function updateTestResultStatus(TestResult $testResult, TestResultStatusEnum $newStatus): bool
+    public function updateTestResultStatus(TestResult $testResult, TestResultStatusEnum $newStatus, array $data = null): bool
     {
         if ($newStatus === TestResultStatusEnum::Raw) {
             $testResult->tested_value ?? throw new Exception('Hasil test belum terisi');
@@ -86,6 +86,7 @@ class TestResultService
         }
         if ($newStatus === TestResultStatusEnum::RevisionNeeded) {
             if ($testResult->status === TestResultStatusEnum::RequestValidate->value) {
+                $testResult->comment = $data['comment'] ?? $testResult->comment;
                 $testResult->validation_date = null;
                 $testResult->validator_personel_id = Auth::user()->personel->id;
                 $testResult->status = $newStatus->value;
@@ -106,55 +107,5 @@ class TestResultService
             }
         }
         return  $isSuccessed;
-    }
-
-    public function evaluateResult(TestResult $testResult, ?float $min = null, ?float $max = null): TestResultEvaluationStatusEnum
-    {
-        $value = $testResult->tested_value;
-
-        // Tidak ada nilai yang diuji → invalid
-        if ($value === null) {
-            return TestResultEvaluationStatusEnum::Invalid;
-        }
-
-        // Tidak ada standar sama sekali → not applicable
-        if ($min === null && $max === null) {
-            return TestResultEvaluationStatusEnum::NotApplicable;
-        }
-
-        // Ada minimum & maksimum
-        if ($min !== null && $max !== null) {
-            if ($value < $min) {
-                return TestResultEvaluationStatusEnum::BelowStandard;
-            }
-            if ($value > $max) {
-                return TestResultEvaluationStatusEnum::AboveStandard;
-            }
-            return TestResultEvaluationStatusEnum::Compliant;
-        }
-
-        // Hanya ada minimum
-        if ($min !== null && $max === null) {
-            return $value < $min
-                ? TestResultEvaluationStatusEnum::BelowStandard
-                : TestResultEvaluationStatusEnum::Compliant;
-        }
-
-        // Hanya ada maksimum
-        if ($max !== null && $min === null) {
-            return $value > $max
-                ? TestResultEvaluationStatusEnum::AboveStandard
-                : TestResultEvaluationStatusEnum::Compliant;
-        }
-
-        // fallback
-        return TestResultEvaluationStatusEnum::NotApplicable;
-    }
-
-    public function updateEvaluationStatus(TestResult $testResult, ?float $min = null, ?float $max = null): void
-    {
-        $status = $this->evaluateResult($testResult, $min, $max);
-        $testResult->evaluation_status = $status->value;
-        $testResult->save();
     }
 }

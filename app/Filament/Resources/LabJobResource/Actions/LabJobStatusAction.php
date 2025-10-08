@@ -11,6 +11,7 @@ use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Filament\Support\Colors\Color;
@@ -102,38 +103,54 @@ class LabJobStatusAction
         return Action::make('Mulai Pekerjaan')
             ->icon('heroicon-o-play')
             ->color('success')
-            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::PendingStart->value &&  $authorized)
+            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::PendingStart->value && $authorized)
             ->requiresConfirmation()
             ->modalHeading('Konfirmasi Memulai Pekerjaan')
-            ->modalSubmitActionLabel(function (LabJob $record) {
-                return $record->labJobPersonels->isEmpty() ? 'Ya, Konfirmasi' : 'Ya, Mulai Pekerjaan';
-            })
-            ->modalDescription(function (LabJob $record) {
-                if ($record->labJobPersonels->isEmpty()) {
-                    return 'Pekerjaan ini tidak memiliki tim PPC. Anda harus mengonfirmasi bahwa penugasan tidak diperlukan untuk pekerjaan ini.';
-                }
-                return 'Tim PPC sudah ditugaskan. Apakah Anda yakin ingin memulai pekerjaan?';
-            })
+
             ->schema(function (LabJob $record) {
+                $fields = [
+                    // --- FIELDS BARU UNTUK START & END DATE ---
+                    DatePicker::make('start_date')
+                        ->label('Tanggal Mulai Aktual')
+                        ->live()
+                        ->default(now()->toDateString())
+                        ->required(),
+                    DatePicker::make('end_date')
+                        ->label('Tenggat Waktu Selesai')
+                        ->after('start_date')
+                        ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
+                        ->required(),
+                ];
+
+                // Tambahkan checkbox konfirmasi jika tidak ada personel
                 if ($record->labJobPersonels->isEmpty()) {
-                    return [
-                        Checkbox::make('skip_assignment_confirmation')
-                            ->label('Saya mengonfirmasi bahwa pekerjaan ini tidak membutuhkan penugasan tim PPC.')
-                            ->required()
-                    ];
+                    $fields[] = Checkbox::make('skip_assignment_confirmation')
+                        ->label('Saya mengonfirmasi bahwa pekerjaan ini tidak membutuhkan penugasan tim PPC.')
+                        ->required();
                 }
-                return [];
+                return $fields;
             })
-            ->action(function (LabJob $record, LabJobService $labJobService) use ($url) {
+            // --- ACTION YANG SUDAH DIPERBARUI UNTUK MENERIMA $data ---
+            ->action(function (LabJob $record, array $data, LabJobService $labJobService) use ($url) {
                 try {
-                    DB::transaction(function () use ($record, $labJobService) {
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::InProgress);
+                    // Periksa apakah ada personel yang ditugaskan atau dikonfirmasi untuk dilewati
+                    if ($record->labJobPersonels->isEmpty() && !($data['skip_assignment_confirmation'] ?? false)) {
+                        // Ini seharusnya tidak terjadi karena sudah di-guard di modalDescription/schema
+                        Notification::make()->title('Gagal: Konfirmasi penugasan diperlukan.')->danger()->send();
+                        return;
+                    }
+
+                    DB::transaction(function () use ($record, $labJobService, $data) {
+                        // Update status dan tanggal menggunakan service
+                        $labJobService->updateLabJobStatus($record, JobStatusEnum::InProgress, $data);
                     });
+
                     Notification::make()->title('Pekerjaan telah dimulai.')->success()->send();
                     if ($url) {
                         return redirect()->to($url);
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
+                    // ... (Logika error handling) ...
                     Notification::make()
                         ->title('Gagal memulai pekerjaan')
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
@@ -142,7 +159,6 @@ class LabJobStatusAction
                 }
             });
     }
-
     public static function completeSampling(): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_COMPLETE_LAB_JOB_SAMPLING);

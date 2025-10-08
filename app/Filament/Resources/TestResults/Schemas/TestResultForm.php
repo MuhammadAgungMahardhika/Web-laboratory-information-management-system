@@ -103,18 +103,7 @@ class TestResultForm
                             ->numeric()
                             ->required()
                             ->copyable()
-                            ->live()
-                        // ->afterStateUpdated(function (Get $get, Set $set) use ($testResultService) {
-                        //     $set('evaluation_status', null);
-
-                        //     $value = $get('tested_value');
-                        //     $min   = $get('standard_min_value_ref');
-                        //     $max   = $get('standard_max_value_ref');
-                        //     $fakeTestResult = new TestResult(['tested_value' => $value]);
-                        //     $status = $testResultService->evaluateResult($fakeTestResult, $min, $max);
-                        //     $set('evaluation_status', $status->value);
-                        // })
-                        ,
+                            ->live(),
 
                         TextInput::make('unit')
                             ->label('Satuan')

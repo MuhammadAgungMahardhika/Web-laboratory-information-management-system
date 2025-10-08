@@ -9,6 +9,7 @@ use App\Services\TestResultService;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
@@ -98,21 +99,32 @@ class TestResultAction
         $authorized = static::isAuthorized(static::PERMISSION_REVISION_NEEDED_TEST_RESULT);
 
         return Action::make('Perlu Revisi')
-            ->icon(Heroicon::PencilSquare) // lebih cocok untuk revisi
+            ->icon('heroicon-o-pencil-square') // Ikon Pensil Kotak lebih umum di Filament
             ->color('warning')
             ->authorize(
                 fn(TestResult $record) =>
                 $record->status === TestResultStatusEnum::RequestValidate->value && $authorized
             )
+            // --- TAMBAHKAN FORM UNTUK CATATAN ---
+            ->schema([
+                Textarea::make('comment')
+                    ->label('Alasan Revisi')
+                    ->placeholder('Jelaskan mengapa hasil uji ini perlu direvisi.')
+                    ->required()
+                    ->rows(4),
+            ])
+            // ------------------------------------
             ->requiresConfirmation()
-            ->action(function (TestResult $record, TestResultService $testResultService) use ($url) {
+            ->action(function (TestResult $record, array $data, TestResultService $testResultService) use ($url) {
                 try {
-                    DB::transaction(function () use ($testResultService, $record) {
-                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RevisionNeeded);
+                    DB::transaction(function () use ($testResultService, $record, $data) {
+                        // Panggil service untuk perubahan status
+                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RevisionNeeded, $data);
                     });
 
                     Notification::make()
                         ->title('Hasil uji ditandai perlu revisi')
+                        ->body('Catatan revisi berhasil dicatat.') // Perbarui notifikasi
                         ->success()
                         ->send();
 
@@ -142,15 +154,22 @@ class TestResultAction
         return Action::make('Tolak')
             ->icon(Heroicon::XCircle) // ikon penolakan
             ->color('danger')
+            ->schema([
+                Textarea::make('comment')
+                    ->label('Alasan ditolak')
+                    ->placeholder('Jelaskan mengapa hasil uji ini perlu ditolak.')
+                    ->required()
+                    ->rows(4),
+            ])
             ->visible(
                 fn(TestResult $record) =>
                 $record->status === TestResultStatusEnum::RequestValidate->value && $authorized
             )
             ->requiresConfirmation()
-            ->action(function (TestResult $record, TestResultService $testResultService) use ($url) {
+            ->action(function (TestResult $record, array $data, TestResultService $testResultService) use ($url) {
                 try {
-                    DB::transaction(function () use ($testResultService, $record) {
-                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Rejected);
+                    DB::transaction(function () use ($testResultService, $record, $data) {
+                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Rejected, $data['comment']);
                     });
 
                     Notification::make()

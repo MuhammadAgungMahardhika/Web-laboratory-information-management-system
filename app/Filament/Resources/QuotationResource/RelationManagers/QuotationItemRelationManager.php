@@ -29,6 +29,7 @@ use App\Models\QuotationItem; // Import model QuotationItem
 use App\Models\Regulation;
 use App\Services\QuotationItemService;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Radio;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
@@ -53,14 +54,16 @@ class QuotationItemRelationManager extends RelationManager
         return $schema
             ->components([
                 // --- FIELD PEMILIH JENIS ITEM ---
-                Select::make('group')
+                Radio::make('group')
                     ->label('Jenis Item')
                     ->options([
-                        'A' => 'Paket Pengujian',
-                        'B' => 'Biaya Pengambilan Sampel',
-                        'C' => 'Lainnya',
+                        'A' => 'A. Paket Pengujian',
+                        'B' => 'B. Biaya Pengambilan Sampel',
+                        'C' => 'C. Lainnya',
                     ])
+                    ->inline()
                     ->required()
+                    ->columnSpanFull()
                     ->default('A')
                     ->reactive(), // Field ini tidak perlu disimpan ke DB
                 // -------------------------------

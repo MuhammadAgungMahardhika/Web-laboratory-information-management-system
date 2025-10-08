@@ -139,13 +139,14 @@ class LabJobService
      * @param JobStatusEnum $newStatus
      * @return bool
      */
-    public function updateLabJobStatus(LabJob $labJob, JobStatusEnum $newStatus): bool
+    public function updateLabJobStatus(LabJob $labJob, JobStatusEnum $newStatus, array $data = null): bool
     {
         // Perbarui status penawaran
 
         // mulai job
         if ($newStatus === JobStatusEnum::InProgress) {
-            $labJob->start_date = now();
+            $labJob->start_date = $data['start_date'] ?? $labJob->start_date;
+            $labJob->end_date = $data['end_date'] ?? $labJob->end_date;
             $labJob->status = $newStatus->value;
             $isSuccessed =   $labJob->save();
         }

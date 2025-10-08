@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('standard_notes_ref', 255)->nullable();
 
             // Status validasi
+            $table->text('comment')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->tinyInteger('revision_count')->default(0);
             $table->tinyInteger('evaluation_status')->default(1);
