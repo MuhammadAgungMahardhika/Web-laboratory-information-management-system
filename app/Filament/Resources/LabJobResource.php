@@ -97,6 +97,7 @@ class LabJobResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required()
+                            ->helperText('Nomor penawaran yang muncul adalah penawaran yang sudah disetujui')
                             ->unique(ignoreRecord: true)
                             ->live()
                             ->afterStateUpdated(function ($state, Set $set, LabJobService $labJobService) {
@@ -110,26 +111,24 @@ class LabJobResource extends Resource
                             }),
                         TextInput::make('job_number')
                             ->label('Nomor Job')
+                            ->helperText('Generate otomatis dari Nomor Penawaran')
                             ->required()
                             ->disabled() // <-- Jadikan read-only
                             ->maxLength(50),
                         DatePicker::make('start_date')
                             ->label('Tanggal Mulai')
                             ->live()
-                            ->disabled()
-                            ->visibleOn(['view', 'edit'])
                             ->default(now()),
                         DatePicker::make('end_date')
                             ->label('Tanggal Selesai')
-                            ->disabled()
-                            ->visibleOn(['view', 'edit'])
                             ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
                             ->afterOrEqual('start_date'),
 
                     ])->columnSpanFull()->columns(2),
                 Repeater::make('labJobPersonels')
                     ->relationship()
-                    ->label('Petugas PPC')
+                    ->hiddenLabel()
+                    ->visibleOn(['view', 'edit'])
                     ->components([
                         Select::make('personel_id')
                             ->required()
