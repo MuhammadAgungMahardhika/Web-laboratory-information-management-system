@@ -81,7 +81,7 @@ class TestResultForm
                             ->searchable()
                             ->preload(),
 
-                    ])->columns(3)->heading(fn($record) => $record?->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->collapsible(),
+                    ])->columns(3)->heading(fn($record) => $record?->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Status -> Belum dibuat')->collapsible(),
                     Section::make([
                         Radio::make('evaluation_status')
                             // ->visible(fn() => static::isAuthorized(static::PERMISSION_EVALUATE_STATUS_TEST_RESULT))
@@ -98,7 +98,7 @@ class TestResultForm
                             ->relationship('validatorPersonel', 'fullname')
                             ->searchable(),
                         Textarea::make('comment')->label('Komentar')->autosize()->columnSpanFull()
-                    ])->columns(3)->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed(),
+                    ])->columns(3)->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed()->visibleOn(['view', 'edit']),
                 ])->columns(2)->columnSpanFull(),
 
                 Section::make([
