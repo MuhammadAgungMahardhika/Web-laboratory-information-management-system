@@ -13,6 +13,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -156,6 +157,7 @@ class TestResultsTable
                         }
                         return $data;
                     })
+                    ->modalWidth(Width::SixExtraLarge)
                     ->extraModalFooterActions([
                         TestResultAction::requestValidate()->cancelParentActions(),
                         TestResultAction::validate()->cancelParentActions()
@@ -166,6 +168,7 @@ class TestResultsTable
                     TestResultAction::revisionNeeded()->cancelParentActions(),
                     TestResultAction::reject()->cancelParentActions(),
                 ])
+                    ->modalWidth(Width::SixExtraLarge)
                     ->modalHeading(fn($record) => "{$record->parameter->name} - Sampel {$record->sample->sample_code}")->modalIcon(Heroicon::Beaker)->modalIconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
 
             ], position: RecordActionsPosition::BeforeColumns)

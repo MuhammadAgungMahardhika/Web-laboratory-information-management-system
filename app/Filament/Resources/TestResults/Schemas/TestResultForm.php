@@ -15,6 +15,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -42,52 +43,64 @@ class TestResultForm
             ])
             ->components([
                 Section::make([
-                    Select::make('status')
-                        ->label('Status')
-                        ->options(TestResultStatusEnum::labels())
-                        ->default(TestResultStatusEnum::Raw->value)
-                        ->required(),
-                    Select::make('sample_id')
-                        ->label('Sampel')
-                        ->relationship('sample', 'sample_code')
-                        ->required()
-                        ->searchable()
-                        ->preload(),
-                    Select::make('parameter_id')
-                        ->label('Parameter')
-                        ->required()
-                        ->relationship('parameter', 'name', modifyQueryUsing: function ($query, Get $get) {
-                            $sampleId =   $get('sample_id');
+                    Section::make([
+                        // Select::make('status')
+                        //     ->label('Status')
+                        //     ->options(TestResultStatusEnum::labels())
+                        //     ->default(TestResultStatusEnum::Raw->value)
+                        //     ->required(),
+                        Select::make('sample_id')
+                            ->label('Sampel')
+                            ->relationship('sample', 'sample_code')
+                            ->required()
+                            ->searchable()
+                            ->disabledOn(['view', 'edit'])
+                            ->preload(),
+                        Select::make('parameter_id')
+                            ->label('Parameter')
+                            ->required()
+                            ->relationship('parameter', 'name', modifyQueryUsing: function ($query, Get $get) {
+                                $sampleId =   $get('sample_id');
 
-                            $query->whereHas('parameterLabJobItems', function ($q) use ($sampleId) {
-                                return $q->whereHas('labJobItem', function ($a) use ($sampleId) {
-                                    return $a->whereHas('samples', function ($b) use ($sampleId) {
-                                        return $b->where('id', $sampleId);
+                                $query->whereHas('parameterLabJobItems', function ($q) use ($sampleId) {
+                                    return $q->whereHas('labJobItem', function ($a) use ($sampleId) {
+                                        return $a->whereHas('samples', function ($b) use ($sampleId) {
+                                            return $b->where('id', $sampleId);
+                                        });
                                     });
                                 });
-                            });
-                        })
-                        ->searchable()
-                        ->preload(),
+                            })
+                            ->searchable()
+                            ->disabledOn(['view', 'edit'])
+                            ->preload(),
 
-                ])->columnSpanFull()->heading(fn($record) => $record->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible()->collapsed(),
-                Section::make([
-                    Radio::make('evaluation_status')
-                        // ->visible(fn() => static::isAuthorized(static::PERMISSION_EVALUATE_STATUS_TEST_RESULT))
-                        ->options(TestResultEvaluationStatusEnum::labels())->columnSpanFull()
-                        ->inline()->hintIcon(Heroicon::InformationCircle)->hintIconTooltip('Status evaluasi hasil uji, apakah hasil uji memenuhi standar/baku mutu atau tidak.')->label('Status Evaluasi'),
-                    TextInput::make('revision_count')
-                        ->label('Jumlah Revisi')
-                        ->numeric()
-                        ->default(0),
-                    DateTimePicker::make('validation_date')
-                        ->label('Tanggal Validasi'),
-                    Select::make('validator_personel_id')
-                        ->label('Validator')
-                        ->relationship('validatorPersonel', 'fullname')
-                        ->searchable(),
-                    Textarea::make('comment')->label('Komentar')->autosize()
-                ])->columnSpanFull()->columns(3)->heading(fn($record) => $record->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi')->columns(4)->disabled()->collapsible()->collapsed(),
+                        Select::make('test_method_id')
+                            ->label('Metode Uji')
+                            ->required()
+                            ->relationship('testMethod', 'name')
+                            ->searchable()
+                            ->preload(),
+
+                    ])->columns(3)->heading(fn($record) => $record?->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->collapsible(),
+                    Section::make([
+                        Radio::make('evaluation_status')
+                            // ->visible(fn() => static::isAuthorized(static::PERMISSION_EVALUATE_STATUS_TEST_RESULT))
+                            ->options(TestResultEvaluationStatusEnum::labels())->columnSpanFull()
+                            ->inline()->hintIcon(Heroicon::InformationCircle)->hintIconTooltip('Status evaluasi hasil uji, apakah hasil uji memenuhi standar/baku mutu atau tidak.')->label('Status Evaluasi'),
+                        TextInput::make('revision_count')
+                            ->label('Jumlah Revisi')
+                            ->numeric()
+                            ->default(0),
+                        DateTimePicker::make('validation_date')
+                            ->label('Tanggal Validasi'),
+                        Select::make('validator_personel_id')
+                            ->label('Validator')
+                            ->relationship('validatorPersonel', 'fullname')
+                            ->searchable(),
+                        Textarea::make('comment')->label('Komentar')->autosize()->columnSpanFull()
+                    ])->columns(3)->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed(),
+                ])->columns(2)->columnSpanFull(),
+
                 Section::make([
                     Section::make([
                         Select::make('analyst_personel_id')
@@ -100,12 +113,7 @@ class TestResultForm
                             ->label('Tanggal Uji')
                             ->minDate(now()->toDateString())
                             ->required(),
-                        Select::make('test_method_id')
-                            ->label('Metode Uji')
-                            ->required()
-                            ->relationship('testMethod', 'name')
-                            ->searchable()
-                            ->preload(),
+
 
                         TextInput::make('tested_value')
                             ->label('Nilai')
@@ -138,7 +146,7 @@ class TestResultForm
                     ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
                 ])->columnSpanFull()->columns(2)->heading(
                     'Hasil Uji'
-                ),
+                )->visibleOn(['view', 'edit']),
 
             ]);
     }
