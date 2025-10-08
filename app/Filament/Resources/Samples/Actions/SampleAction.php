@@ -56,7 +56,7 @@ class SampleAction
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
-            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value && $authorized)
+            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $authorized)
             ->requiresConfirmation()
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {

@@ -156,7 +156,8 @@ class LabJobService
             $hasInvalidStatusSamples = $labJob->samples
                 ->whereNotIn('status', [
                     SampleStatusEnum::Received->value,
-                    SampleStatusEnum::Invalid->value
+                    SampleStatusEnum::Invalid->value,
+                    SampleStatusEnum::AnalysisCompleted->value
                 ])
                 ->isNotEmpty();
 

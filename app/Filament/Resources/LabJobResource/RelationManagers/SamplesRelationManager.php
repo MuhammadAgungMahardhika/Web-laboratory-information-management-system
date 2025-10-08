@@ -246,7 +246,6 @@ class SamplesRelationManager extends RelationManager
                     BulkAction::make('Siapkan')
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
-                        ->visible(fn() => $this->ownerRecord->status === JobStatusEnum::SamplingCompleted->value)
                         ->requiresConfirmation()
                         ->action(function (Collection $records) {
                             $sampleService = new SampleService();
