@@ -44,11 +44,6 @@ class TestResultForm
             ->components([
                 Section::make([
                     Section::make([
-                        // Select::make('status')
-                        //     ->label('Status')
-                        //     ->options(TestResultStatusEnum::labels())
-                        //     ->default(TestResultStatusEnum::Raw->value)
-                        //     ->required(),
                         Select::make('sample_id')
                             ->label('Sampel')
                             ->relationship('sample', 'sample_code')

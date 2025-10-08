@@ -44,14 +44,13 @@ class SampleAction
         $authorized = static::isAuthorized(static::PERMISSION_DOWNLOAD_LABEL);
         return Action::make('Label')
             ->icon(Heroicon::OutlinedPrinter)
-            ->authorize(fn(Sample $record) => in_array($record->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value]) && $record->labJobItem->labJob->status === JobStatusEnum::SamplingCompleted->value  && $authorized)
+            ->authorize(fn(Sample $record) => $authorized)
             ->url(fn(Sample $record): string => route(static::$labelDownloadUrl, $record))
             ->color('gray')
             ->openUrlInNewTab();
     }
     public static function prepare(): Action
     {
-        // $allowedJobStatus = static::isJobStatusAllowed($labJob);
         $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
