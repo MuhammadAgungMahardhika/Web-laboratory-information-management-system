@@ -8,6 +8,7 @@ use App\Models\TestResult;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListTestResults extends ListRecords
@@ -17,7 +18,7 @@ class ListTestResults extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->slideOver(),
+            CreateAction::make()->slideOver()->modalWidth(Width::SixExtraLarge),
         ];
     }
 
