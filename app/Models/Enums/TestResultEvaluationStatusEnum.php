@@ -13,7 +13,7 @@ enum TestResultEvaluationStatusEnum: int
     {
         return [
             self::Compliant->value => 'Sesuai Baku Mutu',
-            self::Invalid->value => 'Data Rusak',
+            self::Invalid->value => 'Tidak Sesuai Baku Mutu',
         ];
     }
 

@@ -35,7 +35,7 @@ class TestResultsTable
 
 
         return $table
-            ->modifyQueryUsing(function ($query) use ($personel, $specializationIds) {
+            ->modifyQueryUsing(function ($query) use ($specializationIds) {
                 return $query->whereHas('parameter.specialisasiParameters', function ($q) use ($specializationIds) {
                     $q->whereIn('specialization_id', $specializationIds);
                 });
@@ -43,8 +43,7 @@ class TestResultsTable
             ->striped()
             ->groups([
                 Group::make('sample.sample_code')
-                    ->label('Kode sampel')
-                    ->titlePrefixedWithLabel(false),
+                    ->label('KODE SAMPEL'),
                 Group::make('sample.labJobItem.description')
                     ->label('Matrix')
                     ->titlePrefixedWithLabel(false),
@@ -78,12 +77,6 @@ class TestResultsTable
                     ->numeric()
                     ->color(Color::Green)
                     ->label('Nilai')
-                    ->searchable(),
-                TextColumn::make('corrected_value')
-                    ->alignEnd()
-                    ->numeric()
-                    ->color(Color::Green)
-                    ->label('Nilai terkoreksi')
                     ->searchable(),
                 TextColumn::make('unit')
                     ->label('Satuan')

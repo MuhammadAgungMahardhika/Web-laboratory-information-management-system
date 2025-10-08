@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Observers\TestResultObserver;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,8 +18,10 @@ class TestResult extends Model
 
     protected static function booted(): void
     {
-        $personelId = Auth::user()->personel->id ?? null;
-        static::updated(queueable(function (TestResult $testResult) use ($personelId) {
+        $user = Auth::user();
+        $personelId =  $user->personel->id ?? null;
+        $personelFullname =  $user->personel->fullname ?? null;
+        static::updated(queueable(function (TestResult $testResult) use ($personelId, $personelFullname) {
             if ($testResult->isDirty('status') || $testResult->isDirty('tested_value') || $testResult->isDirty('corrected_value') || $testResult->isDirty('notes')) {
                 TestResultHistory::create([
                     'test_result_id' => $testResult->id,
@@ -29,9 +30,9 @@ class TestResult extends Model
                     'new_status' => $testResult->status,
                     'old_tested_value' => $testResult->getOriginal('tested_value'),
                     'new_tested_value' => $testResult->tested_value,
-                    'old_corrected_value' => $testResult->getOriginal('corrected_value'),
-                    'new_corrected_value' => $testResult->corrected_value,
-                    'notes' => $testResult->notes,
+                    'comment' => $testResult->comment ?? null,
+                    'created_by' =>  $personelFullname ?? 'System',
+                    'updated_by' =>  $personelFullname ?? 'System',
                 ]);
             }
         }));
@@ -59,5 +60,10 @@ class TestResult extends Model
     public function validatorPersonel()
     {
         return $this->belongsTo(Personel::class, 'validator_personel_id');
+    }
+
+    public function testResultHistories()
+    {
+        return $this->hasMany(TestResultHistory::class);
     }
 }

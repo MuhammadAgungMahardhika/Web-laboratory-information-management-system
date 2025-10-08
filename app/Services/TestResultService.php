@@ -87,7 +87,7 @@ class TestResultService
         if ($newStatus === TestResultStatusEnum::RevisionNeeded) {
             if ($testResult->status === TestResultStatusEnum::RequestValidate->value) {
                 $testResult->comment = $data['comment'] ?? $testResult->comment;
-                $testResult->validation_date = null;
+                $testResult->validation_date = now();
                 $testResult->validator_personel_id = Auth::user()->personel->id;
                 $testResult->status = $newStatus->value;
                 $testResult->revision_count += 1;
@@ -98,7 +98,7 @@ class TestResultService
         }
         if ($newStatus === TestResultStatusEnum::Rejected) {
             if ($testResult->status === TestResultStatusEnum::RequestValidate->value) {
-                $testResult->validation_date = null;
+                $testResult->validation_date = now();
                 $testResult->validator_personel_id = Auth::user()->personel->id;
                 $testResult->status = $newStatus->value;
                 $isSuccessed = $testResult->save();

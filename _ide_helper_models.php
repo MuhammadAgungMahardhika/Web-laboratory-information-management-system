@@ -285,7 +285,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property int $test_method_id
+ * @property int|null $test_method_id
  * @property string $name
  * @property string $unit
  * @property string|null $description
@@ -315,7 +315,7 @@ namespace App\Models{
  * @property-read int|null $specialisasi_parameters_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Specialization> $specializations
  * @property-read int|null $specializations_count
- * @property-read \App\Models\TestMethod $testMethod
+ * @property-read \App\Models\TestMethod|null $testMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestPackage> $testPackages
  * @property-read int|null $test_packages_count
  * @method static \Database\Factories\ParameterFactory factory($count = null, $state = [])
@@ -1149,7 +1149,6 @@ namespace App\Models{
  * @property int|null $analyst_personel_id
  * @property int|null $validator_personel_id
  * @property string|null $tested_value
- * @property string|null $corrected_value
  * @property string $unit
  * @property string|null $test_date
  * @property string|null $test_notes
@@ -1157,9 +1156,10 @@ namespace App\Models{
  * @property string|null $standard_min_value_ref
  * @property string|null $standard_unit_ref
  * @property string|null $standard_notes_ref
+ * @property string|null $comment
  * @property int $status
  * @property int $revision_count
- * @property int $evaluation_status
+ * @property int|null $evaluation_status
  * @property string|null $validation_date
  * @property string|null $created_by
  * @property string|null $updated_by
@@ -1169,13 +1169,15 @@ namespace App\Models{
  * @property-read \App\Models\Parameter $parameter
  * @property-read \App\Models\Sample $sample
  * @property-read \App\Models\TestMethod $testMethod
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultHistory> $testResultHistories
+ * @property-read int|null $test_result_histories_count
  * @property-read \App\Models\Personel|null $validatorPersonel
  * @method static \Database\Factories\TestResultFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereAnalystPersonelId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCorrectedValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereEvaluationStatus($value)
@@ -1210,27 +1212,29 @@ namespace App\Models{
  * @property int $new_status
  * @property string|null $old_tested_value
  * @property string|null $new_tested_value
- * @property string|null $old_corrected_value
- * @property string|null $new_corrected_value
- * @property string|null $notes
+ * @property string|null $comment
+ * @property string|null $created_by
+ * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Personel $personel
+ * @property-read \App\Models\TestResult $testResult
  * @method static \Database\Factories\TestResultHistoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereNewCorrectedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereNewStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereNewTestedValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereNotes($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereOldCorrectedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereOldStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereOldTestedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory wherePersonelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereTestResultId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereUpdatedBy($value)
  */
 	class TestResultHistory extends \Eloquent {}
 }

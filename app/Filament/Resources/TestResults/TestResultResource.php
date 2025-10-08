@@ -6,6 +6,7 @@ use App\Filament\Resources\TestResults\Pages\CreateTestResult;
 use App\Filament\Resources\TestResults\Pages\EditTestResult;
 use App\Filament\Resources\TestResults\Pages\ListTestResults;
 use App\Filament\Resources\TestResults\Pages\ViewTestResult;
+use App\Filament\Resources\TestResults\RelationManagers\TestResultHistoriesRelationManager;
 use App\Filament\Resources\TestResults\Schemas\TestResultForm;
 use App\Filament\Resources\TestResults\Schemas\TestResultInfolist;
 use App\Filament\Resources\TestResults\Tables\TestResultsTable;
@@ -42,7 +43,7 @@ class TestResultResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TestResultHistoriesRelationManager::class
         ];
     }
 

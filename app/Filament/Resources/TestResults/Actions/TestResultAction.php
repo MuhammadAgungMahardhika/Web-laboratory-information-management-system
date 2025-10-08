@@ -279,17 +279,24 @@ class TestResultAction
         return  BulkAction::make('revision_needed')
             ->label('Perlu Revisi')
             ->icon(Heroicon::PencilSquare)
+            ->schema([
+                Textarea::make('comment')
+                    ->label('Alasan Revisi')
+                    ->placeholder('Jelaskan mengapa hasil uji ini perlu direvisi secara massal.')
+                    ->required()
+                    ->rows(4),
+            ])
             ->authorize(fn() => TestResultAction::isAuthorized(TestResultAction::PERMISSION_REVISION_NEEDED_TEST_RESULT))
             ->requiresConfirmation()
             ->color('warning')
-            ->action(function (Collection $records) {
+            ->action(function (Collection $records, array $data) {
                 $testResultService = new TestResultService();
                 $successCount = 0;
                 $failedCount = 0;
                 foreach ($records as $record) {
                     try {
-                        DB::transaction(function () use ($testResultService, $record) {
-                            $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RevisionNeeded);
+                        DB::transaction(function () use ($testResultService, $record, $data) {
+                            $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RevisionNeeded, $data);
                         });
                         $successCount++;
                     } catch (\Exception $e) {

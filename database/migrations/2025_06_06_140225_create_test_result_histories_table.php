@@ -25,13 +25,10 @@ return new class extends Migration
             // tested value
             $table->decimal('old_tested_value', 10, 4)->nullable();
             $table->decimal('new_tested_value', 10, 4)->nullable();
+            $table->text('comment')->nullable();
 
-            // corrected value
-            $table->decimal('old_corrected_value', 10, 4)->nullable();
-            $table->decimal('new_corrected_value', 10, 4)->nullable();
-
-            $table->text('notes')->nullable();
-
+            $table->string('created_by', 255)->nullable();
+            $table->string('updated_by', 255)->nullable();
             $table->timestamps();
         });
     }

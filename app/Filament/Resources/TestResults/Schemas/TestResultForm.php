@@ -20,10 +20,18 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\Auth;
 
 class TestResultForm
 {
+    public const PERMISSION_EVALUATE_STATUS_TEST_RESULT =  'evaluate-status-test-result';
+
+    public static function isAuthorized(string $permission): bool
+    {
+        return Auth::user()->can($permission);
+    }
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
@@ -61,31 +69,32 @@ class TestResultForm
                         })
                         ->searchable()
                         ->preload(),
-                    Select::make('analyst_personel_id')
-                        ->label('Analis')
-                        ->relationship('analystPersonel', 'fullname')
-                        ->searchable()
-                        ->preload(),
-                    DateTimePicker::make('validation_date')
-                        ->label('Tanggal Validasi')
-                        ->disabled(),
-                    Select::make('validator_personel_id')
-                        ->label('Validator')
-                        ->relationship('validatorPersonel', 'fullname')
-                        ->searchable()
-                        ->preload()
-                        ->disabled(),
+
+                ])->columnSpanFull()->heading(fn($record) => $record->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible()->collapsed(),
+                Section::make([
+                    Radio::make('evaluation_status')
+                        // ->visible(fn() => static::isAuthorized(static::PERMISSION_EVALUATE_STATUS_TEST_RESULT))
+                        ->options(TestResultEvaluationStatusEnum::labels())->columnSpanFull()
+                        ->inline()->hintIcon(Heroicon::InformationCircle)->hintIconTooltip('Status evaluasi hasil uji, apakah hasil uji memenuhi standar/baku mutu atau tidak.')->label('Status Evaluasi'),
                     TextInput::make('revision_count')
                         ->label('Jumlah Revisi')
                         ->numeric()
-                        ->disabled()
                         ->default(0),
-                ])->columnSpanFull()->heading(fn($record) => $record ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Detail Pengujian')->columns(4)->disabledOn('edit')->collapsible()->collapsed(),
+                    DateTimePicker::make('validation_date')
+                        ->label('Tanggal Validasi'),
+                    Select::make('validator_personel_id')
+                        ->label('Validator')
+                        ->relationship('validatorPersonel', 'fullname')
+                        ->searchable(),
+                    Textarea::make('comment')->label('Komentar')->autosize()
+                ])->columnSpanFull()->columns(3)->heading(fn($record) => $record->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi')->columns(4)->disabled()->collapsible()->collapsed(),
                 Section::make([
-                    Radio::make('evaluation_status')
-                        ->options(TestResultEvaluationStatusEnum::labels())->columnSpanFull()
-                        ->inline()->hintIcon(Heroicon::InformationCircle)->hintIconTooltip('Status evaluasi hasil uji, apakah hasil uji memenuhi standar/baku mutu atau tidak.')->label('Status Evaluasi'),
                     Section::make([
+                        Select::make('analyst_personel_id')
+                            ->label('Analis')
+                            ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->where('id', Auth::user()->personel->id))
+                            ->searchable()
+                            ->preload(),
                         DatePicker::make('test_date')
                             ->default(now())
                             ->label('Tanggal Uji')
@@ -128,10 +137,7 @@ class TestResultForm
                             ->label('Catatan Standar')
                     ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
                 ])->columnSpanFull()->columns(2)->heading(
-                    fn($record) =>
-                    $record
-                        ? 'Hasil Uji → ' . (TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] ?? '')
-                        : 'Hasil Uji'
+                    'Hasil Uji'
                 ),
 
             ]);
