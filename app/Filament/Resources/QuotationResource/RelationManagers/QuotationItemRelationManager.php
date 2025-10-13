@@ -70,6 +70,7 @@ class QuotationItemRelationManager extends RelationManager
                 Section::make([
                     Select::make('test_package_id')
                         ->label('Paket Pengujian')
+                        ->required()
                         ->relationship('testPackage', 'name', modifyQueryUsing: fn(Builder $query) => $query->with('regulation'))
                         ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} ({$record->regulation->name})")
                         ->searchable()

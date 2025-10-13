@@ -35,7 +35,7 @@ class SuperadminPanelProvider extends PanelProvider
             ->default()
             ->spa()
             ->id('superadmin')
-            ->path('superadmin')
+            ->path('lims')
             ->profile(isSimple: false)
             ->colors([
                 'primary' => Color::Green,
@@ -81,7 +81,7 @@ class SuperadminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])->path('lims')
+            ])
             ->authMiddleware([
                 Authenticate::class,
             ])->readOnlyRelationManagersOnResourceViewPagesByDefault(true)->databaseNotifications()->databaseNotificationsPolling(null);
