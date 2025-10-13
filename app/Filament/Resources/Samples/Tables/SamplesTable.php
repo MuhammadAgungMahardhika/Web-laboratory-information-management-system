@@ -37,7 +37,7 @@ class SamplesTable
                     ->label('Matrix')
                     ->titlePrefixedWithLabel(false),
             ])
-            // ->defaultGroup('labJobItem.labJob.job_number')
+            ->defaultGroup('labJobItem.labJob.job_number')
             ->columns([
                 TextColumn::make('labJobItem.description')
                     ->label('Matrix')
