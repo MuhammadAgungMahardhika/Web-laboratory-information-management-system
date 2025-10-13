@@ -29,7 +29,6 @@ class SamplesTable
     {
         return $table
             ->selectCurrentPageOnly()
-            ->modifyQueryUsing(fn($query) => $query->with('labJobItem.labJob'))
             ->groups([
                 Group::make('labJobItem.labJob.job_number')
                     ->label('Nomor Job')
