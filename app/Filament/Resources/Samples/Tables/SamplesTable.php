@@ -107,11 +107,11 @@ class SamplesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // SelectFilter::make('labJobItem.lab_job_id')
-                //     ->label('Nomor Job')
-                //     ->relationship('labJobItem.labJob', 'job_number')
-                //     ->searchable()
-                //     ->preload(),
+                SelectFilter::make('labJobItem.lab_job_id')
+                    ->label('Nomor Job')
+                    ->relationship('labJobItem.labJob', 'job_number')
+                    ->searchable()
+                    ->preload(),
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 SampleAction::downloadLabel(),
