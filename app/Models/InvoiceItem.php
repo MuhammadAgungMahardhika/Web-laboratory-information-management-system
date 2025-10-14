@@ -21,4 +21,15 @@ class InvoiceItem extends Model
     {
         return $this->morphTo();
     }
+
+
+    /**
+     * Secara dinamis menghitung atribut 'subtotal'.
+     *
+     * @return float
+     */
+    public function getSubtotalAttribute(): float
+    {
+        return $this->price * $this->quantity;
+    }
 }

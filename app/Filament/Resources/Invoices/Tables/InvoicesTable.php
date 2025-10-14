@@ -7,6 +7,8 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class InvoicesTable
@@ -14,12 +16,14 @@ class InvoicesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->recordTitle(fn($record) => $record->invoice_number)
             ->columns([
-                TextColumn::make('lab_job_id')
-                    ->numeric()
+                TextColumn::make('labJob.job_number')
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('invoice_number')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('invoice_date')
                     ->date()
                     ->sortable(),
@@ -55,11 +59,16 @@ class InvoicesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('lab_job_id')
+                    ->label('Lab Job')
+                    ->relationship('labJob', 'job_number')
+                    ->searchable()
+                    ->preload(),
+
+            ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                ViewAction::make()->slideOver(),
-                EditAction::make()->slideOver(),
+                ViewAction::make(),
+                EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

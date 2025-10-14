@@ -31,8 +31,7 @@ class ListLabJobs extends ListRecords
         // Tab "SEMUA"
         $tabs = [
             'all' => Tab::make('all')
-                ->label('SEMUA')
-                ->badge(LabJob::count()),
+                ->label('SEMUA'),
         ];
 
         // Hitung jumlah per status sekali query

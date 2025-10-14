@@ -41,10 +41,10 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property string $name
- * @property string|null $address
  * @property int|null $province_id
  * @property int|null $city_id
+ * @property string $name
+ * @property string|null $address
  * @property string|null $postal_code
  * @property string|null $phone
  * @property string|null $email
@@ -165,6 +165,83 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $lab_job_id
+ * @property string $invoice_number
+ * @property string $invoice_date
+ * @property string $due_date
+ * @property string|null $subtotal
+ * @property string $discount
+ * @property string $tax_rate
+ * @property string|null $total_amount
+ * @property int $status
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceItems
+ * @property-read int|null $invoice_items_count
+ * @property-read \App\Models\LabJob $labJob
+ * @method static \Database\Factories\InvoiceFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereInvoiceDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereInvoiceNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereLabJobId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereSubtotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedBy($value)
+ */
+	class Invoice extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $invoice_id
+ * @property string $source_type
+ * @property int $source_id
+ * @property string $description
+ * @property int $quantity
+ * @property string $price
+ * @property float $subtotal
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Invoice $invoice
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $source
+ * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSourceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSourceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSubtotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedBy($value)
+ */
+	class InvoiceItem extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $quotation_id
  * @property string $job_number
  * @property string|null $start_date
@@ -175,6 +252,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read float $total_price
+ * @property-read \App\Models\Invoice|null $invoice
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobItem> $labJobItems
  * @property-read int|null $lab_job_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobPersonel> $labJobPersonels
@@ -220,6 +298,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read float $item_total
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceItems
+ * @property-read int|null $invoice_items_count
  * @property-read \App\Models\LabJob $labJob
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterLabJobItem> $parameterLabJobItems
  * @property-read int|null $parameter_lab_job_items_count
@@ -383,7 +463,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $quotation_item_id
- * @property int $parameter_id
+ * @property int|null $parameter_id
  * @property string|null $parameter_name
  * @property string|null $parameter_unit
  * @property string|null $parameter_default_price
@@ -394,7 +474,7 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Parameter $parameter
+ * @property-read \App\Models\Parameter|null $parameter
  * @property-read \App\Models\QuotationItem $quotationItem
  * @method static \Database\Factories\ParameterQuotationItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterQuotationItem newModelQuery()
@@ -441,6 +521,40 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ParameterTestPackage whereUpdatedBy($value)
  */
 	class ParameterTestPackage extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $invoice_id
+ * @property string $payment_date
+ * @property string $amount_paid
+ * @property string $payment_method
+ * @property string|null $reference_number
+ * @property string|null $notes
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property string|null $attachment_path
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\PaymentFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereAmountPaid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereAttachmentPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment wherePaymentDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereReferenceNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereUpdatedBy($value)
+ */
+	class Payment extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -582,8 +696,8 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int|null $request_id
- * @property int $customer_id
- * @property int $personel_id
+ * @property int|null $customer_id
+ * @property int|null $personel_id
  * @property string $quotation_name
  * @property string $quotation_number
  * @property string $quotation_date
@@ -601,10 +715,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Personel|null $approvedByPersonel
- * @property-read \App\Models\Customer $customer
+ * @property-read \App\Models\Customer|null $customer
  * @property-read float $total_price
  * @property-read \App\Models\LabJob|null $labJob
- * @property-read \App\Models\Personel $personel
+ * @property-read \App\Models\Personel|null $personel
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuotationItem> $quotationItems
  * @property-read int|null $quotation_items_count
  * @property-read \App\Models\Request|null $request
@@ -654,6 +768,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read float $item_total
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceItems
+ * @property-read int|null $invoice_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ParameterQuotationItem> $parameterQuotationItems
  * @property-read int|null $parameter_quotation_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
@@ -1144,12 +1260,12 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $sample_id
- * @property int $parameter_id
- * @property int $test_method_id
+ * @property int|null $parameter_id
+ * @property int|null $test_method_id
  * @property int|null $analyst_personel_id
  * @property int|null $validator_personel_id
  * @property string|null $tested_value
- * @property string $unit
+ * @property string|null $unit
  * @property string|null $test_date
  * @property string|null $test_notes
  * @property string|null $standard_max_value_ref
@@ -1159,16 +1275,16 @@ namespace App\Models{
  * @property string|null $comment
  * @property int $status
  * @property int $revision_count
- * @property int|null $evaluation_status
+ * @property int $evaluation_status
  * @property string|null $validation_date
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Personel|null $analystPersonel
- * @property-read \App\Models\Parameter $parameter
+ * @property-read \App\Models\Parameter|null $parameter
  * @property-read \App\Models\Sample $sample
- * @property-read \App\Models\TestMethod $testMethod
+ * @property-read \App\Models\TestMethod|null $testMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultHistory> $testResultHistories
  * @property-read int|null $test_result_histories_count
  * @property-read \App\Models\Personel|null $validatorPersonel

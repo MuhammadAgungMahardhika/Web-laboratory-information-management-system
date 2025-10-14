@@ -14,20 +14,16 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('invoice_id');
-            $table->string('source_type'); // 'App\Models\LabJobItem' atau 'App\Models\QuotationItem'
-            $table->unsignedBigInteger('source_id');
+            $table->morphs('source');
 
             // Snapshot Data
             $table->string('description');
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
-            $table->decimal('subtotal', 10, 2);
 
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();
-
-            $table->index(['source_type', 'source_id']);
         });
     }
 

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2)->nullable();
             $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('tax_rate', 5, 2)->default(0); // Misal: 11%
-            $table->decimal('total_amount', 10, 2);
+            $table->decimal('total_amount', 10, 2)->nullable();
 
             // Status (Misal: Draft, Sent, Paid, Void)
             $table->tinyInteger('status')->default(1);

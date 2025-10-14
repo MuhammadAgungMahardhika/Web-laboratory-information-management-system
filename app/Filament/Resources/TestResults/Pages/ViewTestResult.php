@@ -18,10 +18,10 @@ class ViewTestResult extends ViewRecord
         return [
             EditAction::make(),
             ActionGroup::make([
-                TestResultAction::requestValidate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
-                TestResultAction::validate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
-                TestResultAction::revisionNeeded(static::getResource()::getUrl('view', ['record' => $this->record->id])),
-                TestResultAction::reject(static::getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::requestValidate($this->getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::validate($this->getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::revisionNeeded($this->getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::reject($this->getResource()::getUrl('view', ['record' => $this->record->id])),
             ])
                 ->label('Update Status')
                 ->icon(Heroicon::ArrowUp)

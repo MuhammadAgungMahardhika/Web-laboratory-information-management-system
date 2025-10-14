@@ -46,6 +46,11 @@ class LabJobItem extends Model
         return $this->hasMany(ParameterLabJobItem::class);
     }
 
+    public function invoiceItems()
+    {
+        return $this->morphMany(InvoiceItem::class, 'source');
+    }
+
     /**
      * Dapatkan total harga dari semua item penawaran.
      * Accessor ini akan secara otomatis diakses saat Anda memanggil $labjob->total_amount.

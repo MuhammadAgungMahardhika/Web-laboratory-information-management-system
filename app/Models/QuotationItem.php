@@ -38,6 +38,10 @@ class QuotationItem extends Model
         return $this->hasMany(ParameterQuotationItem::class);
     }
 
+    public function invoiceItems()
+    {
+        return $this->morphMany(InvoiceItem::class, 'source');
+    }
     /**
      * Dapatkan total harga dari semua item penawaran.
      * Accessor ini akan secara otomatis diakses saat Anda memanggil $quotation->total_amount.

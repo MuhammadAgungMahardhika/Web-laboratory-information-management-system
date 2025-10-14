@@ -8,11 +8,10 @@ enum InvoiceStatusEnum: int
 {
     case Draft = 1;
     case Sent = 2;
-    case Paid = 3;
-    case Cancelled = 4;
+    case PartiallyPaid = 3;
+    case Paid = 4;
     case Overdue = 5;
     case Void = 6;
-    case PartiallyPaid = 7; // <-- STATUS BARU: Dibayar Sebagian
 
     /**
      * Menyediakan label yang mudah dibaca untuk setiap status faktur.
@@ -24,11 +23,10 @@ enum InvoiceStatusEnum: int
         return [
             self::Draft->value         => 'Draf',
             self::Sent->value          => 'Terkirim',
+            self::PartiallyPaid->value => 'Dibayar Sebagian', // Label
             self::Paid->value          => 'Lunas',
             self::Overdue->value       => 'Jatuh Tempo',
-            self::Cancelled->value     => 'Dibatalkan',
             self::Void->value          => 'Batal Permanen',
-            self::PartiallyPaid->value => 'Dibayar Sebagian', // Label
         ];
     }
 
@@ -53,10 +51,10 @@ enum InvoiceStatusEnum: int
         return match ($status) {
             self::Draft->value     => 'gray',
             self::Sent->value      => 'info',
+            self::PartiallyPaid->value => 'warning', // Kuning/Oranye untuk menandai masih ada saldo
             self::Paid->value      => 'success',
             self::Overdue->value   => 'danger', // Overdue tetap merah agar mendesak
-            self::Cancelled->value, self::Void->value => 'danger',
-            self::PartiallyPaid->value => 'warning', // Kuning/Oranye untuk menandai masih ada saldo
+            self::Void->value, self::Void->value => 'danger',
             default => 'gray',
         };
     }

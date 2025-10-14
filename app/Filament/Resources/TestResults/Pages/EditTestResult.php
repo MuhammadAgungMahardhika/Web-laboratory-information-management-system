@@ -20,8 +20,8 @@ class EditTestResult extends EditRecord
             ViewAction::make(),
             DeleteAction::make(),
             ActionGroup::make([
-                TestResultAction::requestValidate(static::getResource()::getUrl('view', ['record' => $this->record->id])),
-                TestResultAction::validate(static::getResource()::getUrl('view', ['record' => $this->record->id]))
+                TestResultAction::requestValidate($this->getResource()::getUrl('view', ['record' => $this->record->id])),
+                TestResultAction::validate($this->getResource()::getUrl('view', ['record' => $this->record->id]))
             ])
                 ->label('Update Status')
                 ->icon(Heroicon::ArrowUp)

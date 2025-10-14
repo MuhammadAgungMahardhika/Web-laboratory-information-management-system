@@ -6,6 +6,7 @@ use App\Filament\Resources\Invoices\Pages\CreateInvoice;
 use App\Filament\Resources\Invoices\Pages\EditInvoice;
 use App\Filament\Resources\Invoices\Pages\ListInvoices;
 use App\Filament\Resources\Invoices\Pages\ViewInvoice;
+use App\Filament\Resources\Invoices\RelationManagers\InvoiceItemsRelationManager;
 use App\Filament\Resources\Invoices\Schemas\InvoiceForm;
 use App\Filament\Resources\Invoices\Schemas\InvoiceInfolist;
 use App\Filament\Resources\Invoices\Tables\InvoicesTable;
@@ -36,7 +37,7 @@ class InvoiceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            InvoiceItemsRelationManager::class
         ];
     }
 
@@ -44,9 +45,9 @@ class InvoiceResource extends Resource
     {
         return [
             'index' => ListInvoices::route('/'),
-            // 'create' => CreateInvoice::route('/create'),
-            // 'view' => ViewInvoice::route('/{record}'),
-            // 'edit' => EditInvoice::route('/{record}/edit'),
+            'create' => CreateInvoice::route('/create'),
+            'view' => ViewInvoice::route('/{record}'),
+            'edit' => EditInvoice::route('/{record}/edit'),
         ];
     }
 }

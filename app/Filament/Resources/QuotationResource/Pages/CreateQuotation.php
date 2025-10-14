@@ -12,6 +12,6 @@ class CreateQuotation extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return static::getResource()::getUrl('edit', ['record' => $this->record->id]);
+        return $this->getResource()::getUrl('edit', ['record' => $this->record->id]);
     }
 }
