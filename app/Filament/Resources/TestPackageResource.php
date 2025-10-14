@@ -31,6 +31,7 @@ use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Radio;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -43,7 +44,7 @@ class TestPackageResource extends Resource
     protected static ?string $model = TestPackage::class;
     protected static ?string $navigationLabel = 'Paket Pengujian';
     protected static ?string $label = 'Paket Pengujian';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::ArchiveBox;
     protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema

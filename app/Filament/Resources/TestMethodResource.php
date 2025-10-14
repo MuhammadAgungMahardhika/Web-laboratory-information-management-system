@@ -18,6 +18,7 @@ use App\Models\TestMethod;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,7 +31,7 @@ class TestMethodResource extends Resource
     protected static ?string $model = TestMethod::class;
     protected static ?string $navigationLabel = 'Metode Uji';
     protected static ?string $label = 'Metode Uji';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::Scale;
     protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema

@@ -20,6 +20,7 @@ use App\Models\SampleMatric;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,7 +33,7 @@ class SampleMatricResource extends Resource
     protected static ?string $model = SampleMatric::class;
     protected static ?string $navigationLabel = 'Matrix Sampel';
     protected static ?string $label = 'Matrix Sampel';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::NumberedList;
     protected static ?int $navigationSort = 2;
     public static function form(Schema $schema): Schema
     {

@@ -24,6 +24,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,7 +37,7 @@ class TermTemplateResource extends Resource
     protected static ?string $model = TermTemplate::class;
     protected static ?string $navigationLabel = 'Template syarat & ketentuan';
     protected static ?string $label = 'Template syarat & ketentuan';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::DocumentCurrencyDollar;
     protected static ?int $navigationSort = 7;
     public static function form(Schema $schema): Schema
     {

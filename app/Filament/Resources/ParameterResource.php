@@ -19,6 +19,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Radio;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 
@@ -29,7 +30,7 @@ class ParameterResource extends Resource
     protected static ?string $model = Parameter::class;
     protected static ?string $navigationLabel = 'Parameter Uji';
     protected static ?string $label = 'Parameter Uji';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedBeaker;
     protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema

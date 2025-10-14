@@ -60,7 +60,7 @@ class LabJobsChartWidget extends ChartWidget
 
             $labels[] = $status->label();
             $data[] = $count;
-            $colors[] = JobStatusEnum::color($status->value);
+            $colors[] = JobStatusEnum::cssColor($status->value);
         }
 
         return [

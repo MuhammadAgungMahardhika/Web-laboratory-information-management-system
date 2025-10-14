@@ -17,6 +17,7 @@ use App\Models\SampleType;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +30,7 @@ class SampleTypeResource extends Resource
     protected static ?string $model = SampleType::class;
     protected static ?string $navigationLabel = 'Jenis Sampel';
     protected static ?string $label = 'Jenis Sampel';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::QueueList;
     protected static ?int $navigationSort = 1;
     public static function form(Schema $schema): Schema
     {

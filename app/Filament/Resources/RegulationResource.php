@@ -17,6 +17,7 @@ use App\Models\Regulation;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +30,7 @@ class RegulationResource extends Resource
     protected static ?string $model = Regulation::class;
     protected static ?string $navigationLabel = 'Regulasi';
     protected static ?string $label = 'Regulasi';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::DocumentChartBar;
     protected static ?int $navigationSort = 3;
     public static function form(Schema $schema): Schema
     {
