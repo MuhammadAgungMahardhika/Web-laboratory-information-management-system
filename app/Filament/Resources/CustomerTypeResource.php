@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -13,16 +14,18 @@ use App\Filament\Resources\CustomerTypeResource\Pages\ManageCustomerTypes;
 use App\Models\CustomerType;
 use App\Traits\HasAuthorization;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CustomerTypeResource extends Resource
 {
-    use HasAuthorization;
+    protected static ?string $cluster = MasterGeneralCluster::class;
+
     protected static ?string $model = CustomerType::class;
     protected static ?string $navigationLabel = 'Jenis Pelanggan';
     protected static ?string $label = 'Jenis Pelanggan';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master Pengguna';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Client';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::ListBullet;
 
 
     public static function form(Schema $schema): Schema

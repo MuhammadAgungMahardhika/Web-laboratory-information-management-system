@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -22,6 +23,7 @@ use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,12 +32,13 @@ use Spatie\Permission\Models\Permission;
 
 class RoleResource extends Resource
 {
+    protected static ?string $cluster = MasterGeneralCluster::class;
+
     protected static ?string $model = Role::class;
     protected static ?string $label = 'Hak Akses';
     protected static ?string $navigationLabel = 'Hak Akses';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
-
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::Key;
+    protected static string | \UnitEnum | null $navigationGroup = 'Internal';
     public static function form(Schema $schema): Schema
     {
         return $schema

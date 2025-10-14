@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use Filament\Schemas\Schema;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
@@ -25,6 +26,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -36,12 +38,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
+    protected static ?string $cluster = MasterGeneralCluster::class;
 
     protected static ?string $model = User::class;
     protected static ?string $label = 'Akun';
     protected static ?string $navigationLabel = 'Akun';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
+    protected static string | \BackedEnum | null $navigationIcon =  Heroicon::User;
+    protected static string | \UnitEnum | null $navigationGroup = 'Internal';
 
     public static function form(Schema $schema): Schema
     {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\MasterLocation\MasterLocationCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -16,6 +17,7 @@ use App\Models\Province;
 use App\Traits\HasAuthorization;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,11 +25,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProvinceResource extends Resource
 {
+    protected static ?string $cluster = MasterLocationCluster::class;
+
     protected static ?string $model = Province::class;
     protected static ?string $label = 'Provinsi';
     protected static ?string $navigationLabel = 'Provinsi';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = "Master Lokasi";
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::Map;
     protected static ?int $navigationSort = 1;
 
 
@@ -69,7 +72,7 @@ class ProvinceResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->slideOver(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([

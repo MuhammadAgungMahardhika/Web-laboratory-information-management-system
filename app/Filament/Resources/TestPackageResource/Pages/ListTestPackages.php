@@ -6,6 +6,7 @@ use Filament\Actions\CreateAction;
 use App\Filament\Resources\TestPackageResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Enums\Size;
 
 class ListTestPackages extends ListRecords
 {
@@ -14,7 +15,7 @@ class ListTestPackages extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->slideOver()->size(Size::ExtraLarge),
         ];
     }
 }

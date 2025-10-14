@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\Master\MasterCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
@@ -26,11 +27,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SampleMatricResource extends Resource
 {
-    use HasAuthorization;
+    protected static ?string $cluster = MasterCluster::class;
+
     protected static ?string $model = SampleMatric::class;
     protected static ?string $navigationLabel = 'Matrix Sampel';
     protected static ?string $label = 'Matrix Sampel';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 2;
     public static function form(Schema $schema): Schema

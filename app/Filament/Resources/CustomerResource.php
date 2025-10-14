@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -30,6 +31,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
@@ -39,12 +41,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CustomerResource extends Resource
 {
+    protected static ?string $cluster = MasterGeneralCluster::class;
 
     protected static ?string $model = Customer::class;
     protected static ?string $label = 'Data klien';
     protected static ?string $navigationLabel = 'Data klien';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
+    protected static string | \UnitEnum | null $navigationGroup = 'Client';
+    protected static string | \BackedEnum | null $navigationIcon =  Heroicon::UserCircle;
 
 
     public static function form(Schema $schema): Schema

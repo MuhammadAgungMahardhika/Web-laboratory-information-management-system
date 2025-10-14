@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\Master\MasterCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -23,10 +24,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SampleTypeResource extends Resource
 {
+    protected static ?string $cluster = MasterCluster::class;
+
     protected static ?string $model = SampleType::class;
     protected static ?string $navigationLabel = 'Jenis Sampel';
     protected static ?string $label = 'Jenis Sampel';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 1;
     public static function form(Schema $schema): Schema

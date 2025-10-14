@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Utilities\Get;
@@ -24,15 +25,18 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PersonelResource extends Resource
 {
+    protected static ?string $cluster = MasterGeneralCluster::class;
+
     protected static ?string $model = Personel::class;
     protected static ?string $label = 'Personel';
     protected static ?string $navigationLabel = 'Personel';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
+    protected static string | \UnitEnum | null $navigationGroup = 'Internal';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::Users;
     public static function form(Schema $schema): Schema
     {
         return $schema

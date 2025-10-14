@@ -6,6 +6,7 @@ use Filament\Actions\CreateAction;
 use App\Filament\Resources\CompanyResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Enums\Size;
 
 class ListCompanies extends ListRecords
 {
@@ -14,7 +15,7 @@ class ListCompanies extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->slideOver()->size(Size::ExtraLarge),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\Master\MasterCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -24,11 +25,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestMethodResource extends Resource
 {
+    protected static ?string $cluster = MasterCluster::class;
 
     protected static ?string $model = TestMethod::class;
     protected static ?string $navigationLabel = 'Metode Uji';
     protected static ?string $label = 'Metode Uji';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 4;
 

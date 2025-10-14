@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\Master\MasterCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
@@ -37,10 +38,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestPackageResource extends Resource
 {
+    protected static ?string $cluster = MasterCluster::class;
+
     protected static ?string $model = TestPackage::class;
     protected static ?string $navigationLabel = 'Paket Pengujian';
     protected static ?string $label = 'Paket Pengujian';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 6;
 
@@ -50,7 +52,7 @@ class TestPackageResource extends Resource
             ->columns([
                 'sm' => 2,
                 'md' => 3,
-                'xl' => 4,
+                'xl' => 3,
             ])
             ->components([
                 TextInput::make('name')
@@ -105,6 +107,7 @@ class TestPackageResource extends Resource
                     ->relationship('parameters', 'name')
                     ->searchable()
                     ->reactive()
+                    ->columnSpanFull()
                     ->afterStateUpdated(function (Get $get, Set $set, $state) {
                         // Ambil ID parameter yang dipilih
                         $parameterIds = $state;
@@ -212,8 +215,8 @@ class TestPackageResource extends Resource
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -233,9 +236,9 @@ class TestPackageResource extends Resource
     {
         return [
             'index' => ListTestPackages::route('/'),
-            'create' => CreateTestPackage::route('/create'),
-            'view' => ViewTestPackage::route('/{record}'),
-            'edit' => EditTestPackage::route('/{record}/edit'),
+            // 'create' => CreateTestPackage::route('/create'),
+            // 'view' => ViewTestPackage::route('/{record}'),
+            // 'edit' => EditTestPackage::route('/{record}/edit'),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\Master\MasterCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -19,6 +20,7 @@ use App\Filament\Resources\TermTemplateResource\Pages;
 use App\Filament\Resources\TermTemplateResource\RelationManagers;
 use App\Models\TermTemplate;
 use App\Traits\HasAuthorization;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
 use Filament\Resources\Resource;
@@ -29,11 +31,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TermTemplateResource extends Resource
 {
-    use HasAuthorization;
+    protected static ?string $cluster = MasterCluster::class;
+
     protected static ?string $model = TermTemplate::class;
     protected static ?string $navigationLabel = 'Template syarat & ketentuan';
     protected static ?string $label = 'Template syarat & ketentuan';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 7;
     public static function form(Schema $schema): Schema
@@ -47,6 +49,7 @@ class TermTemplateResource extends Resource
                 RichEditor::make('content')
                     ->label('Isi Template')
                     ->required()
+                    ->autofocus()
                     ->columnSpanFull(),
                 Toggle::make('is_active')
                     ->label('Aktif ?')
@@ -59,6 +62,7 @@ class TermTemplateResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordTitle(fn($record) => $record->name)
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama template')
@@ -66,7 +70,7 @@ class TermTemplateResource extends Resource
                 TextColumn::make('content')
                     ->label('Isi template')
                     ->html()
-                    ->limit(100) // Limit the content display to 50 characters
+                    ->limit(100)
                     ->searchable(),
                 IconColumn::make('is_active')
                     ->label('Aktif ?')
@@ -88,8 +92,9 @@ class TermTemplateResource extends Resource
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -109,9 +114,9 @@ class TermTemplateResource extends Resource
     {
         return [
             'index' => ListTermTemplates::route('/'),
-            'create' => CreateTermTemplate::route('/create'),
-            'view' => ViewTermTemplate::route('/{record}'),
-            'edit' => EditTermTemplate::route('/{record}/edit'),
+            // 'create' => CreateTermTemplate::route('/create'),
+            // 'view' => ViewTermTemplate::route('/{record}'),
+            // 'edit' => EditTermTemplate::route('/{record}/edit'),
         ];
     }
 }

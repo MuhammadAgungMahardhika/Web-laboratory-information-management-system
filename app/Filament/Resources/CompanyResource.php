@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\Master\MasterCluster;
+use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -25,21 +27,23 @@ use Config;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section as ComponentsSection;
-
+use Filament\Schemas\Components\Section;
+use Filament\Support\Enums\Size;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CompanyResource extends Resource
 {
+    protected static ?string $cluster = MasterGeneralCluster::class;
+
     protected static ?string $model = Company::class;
     protected static ?string $navigationLabel = 'Perusahaan';
     protected static ?string $label = 'Perusahaan';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?int $navigationSort = 8;
+
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::BuildingOffice;
+    protected static string | \UnitEnum | null $navigationGroup = 'Internal';
 
     public static function form(Schema $schema): Schema
     {
@@ -50,50 +54,53 @@ class CompanyResource extends Resource
                 'xl' => 4,
             ])
             ->components([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Select::make('province_id')
-                    ->label('Provinsi')
-                    ->relationship('province', 'name')
-                    ->searchable()
-                    ->preload(),
-                Select::make('city_id')
-                    ->label('Kota')
-                    ->relationship('city', 'name')
-                    ->searchable()
-                    ->preload(),
-                TextInput::make('postal_code')
-                    ->label('Kode Pos')
-                    ->maxLength(20),
-                Textarea::make('address')
-                    ->columnSpanFull(),
+                Section::make([
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Select::make('province_id')
+                        ->label('Provinsi')
+                        ->relationship('province', 'name')
+                        ->searchable()
+                        ->preload(),
+                    Select::make('city_id')
+                        ->label('Kota')
+                        ->relationship('city', 'name')
+                        ->searchable()
+                        ->preload(),
+                    TextInput::make('postal_code')
+                        ->label('Kode Pos')
+                        ->maxLength(20),
+                    Textarea::make('address')
+                        ->columnSpanFull(),
 
-                TextInput::make('phone')
-                    ->label('No Telepon')
-                    ->tel()
-                    ->prefix('+62')
-                    ->maxLength(20),
-                TextInput::make('email')
-                    ->label('Email')
-                    ->email()
-                    ->maxLength(255),
-                TextInput::make('website')
-                    ->label('Website')
-                    ->maxLength(255),
-                TextInput::make('npwp')
-                    ->label('NPWP')
-                    ->maxLength(50),
-                Toggle::make('is_main_company')
-                    ->required(),
-
+                    TextInput::make('phone')
+                        ->label('No Telepon')
+                        ->tel()
+                        ->prefix('+62')
+                        ->maxLength(20),
+                    TextInput::make('email')
+                        ->label('Email')
+                        ->email()
+                        ->maxLength(255),
+                    TextInput::make('website')
+                        ->label('Website')
+                        ->maxLength(255),
+                    TextInput::make('npwp')
+                        ->label('NPWP')
+                        ->maxLength(50),
+                    Toggle::make('is_main_company')
+                        ->label('Perusahaan utama ?')
+                        ->inline()
+                        ->required(),
+                ])->columnSpanFull()->columns(4)->heading('Data Perusahaan'),
                 Repeater::make('settings')
                     ->relationship()
                     ->label('Pengaturan')
                     ->maxItems(1)
                     ->columns(2)
                     ->schema([
-                        ComponentsSection::make([
+                        Section::make([
                             Toggle::make('is_active')
                                 ->label('Aktif ?'),
                             TextInput::make('default_quotation_expiry_days')
@@ -107,7 +114,7 @@ class CompanyResource extends Resource
                                 ->searchable()
                                 ->preload(),
                         ])->columns(4)->heading('Setting')->columnSpanFull(),
-                        ComponentsSection::make([
+                        Section::make([
                             FileUpload::make('letterhead_path')
                                 ->label('Kop Surat')
                                 ->image()
@@ -156,6 +163,7 @@ class CompanyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordTitle(fn($record) => $record->name)
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama perusahaan')
@@ -203,8 +211,8 @@ class CompanyResource extends Resource
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver()->size(Size::ExtraLarge),
+                EditAction::make()->slideOver()->size(Size::ExtraLarge),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -224,9 +232,9 @@ class CompanyResource extends Resource
     {
         return [
             'index' => ListCompanies::route('/'),
-            'create' => CreateCompany::route('/create'),
-            'view' => ViewCompany::route('/{record}'),
-            'edit' => EditCompany::route('/{record}/edit'),
+            // 'create' => CreateCompany::route('/create'),
+            // 'view' => ViewCompany::route('/{record}'),
+            // 'edit' => EditCompany::route('/{record}/edit'),
         ];
     }
 }

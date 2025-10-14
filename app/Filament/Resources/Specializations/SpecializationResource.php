@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Specializations;
 
+use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use App\Filament\Resources\Specializations\Pages\ManageSpecializations;
 use App\Models\Specialization;
 use BackedEnum;
@@ -23,11 +24,13 @@ use Filament\Tables\Table;
 
 class SpecializationResource extends Resource
 {
+    protected static ?string $cluster = MasterGeneralCluster::class;
+
     protected static ?string $model = Specialization::class;
     protected static ?string $navigationLabel = 'Sertifikasi';
     protected static ?string $label = 'Sertifikasi';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCheckBadge;
-    protected static string | \UnitEnum | null $navigationGroup = "Master Pengguna";
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::CheckBadge;
+    protected static string | \UnitEnum | null $navigationGroup = 'Internal';
     public static function form(Schema $schema): Schema
     {
         return $schema

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Clusters\Master\MasterCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
@@ -23,10 +24,11 @@ use Illuminate\Support\HtmlString;
 
 class ParameterResource extends Resource
 {
+    protected static ?string $cluster = MasterCluster::class;
+
     protected static ?string $model = Parameter::class;
     protected static ?string $navigationLabel = 'Parameter Uji';
     protected static ?string $label = 'Parameter Uji';
-    protected static string | \UnitEnum | null $navigationGroup = 'Master';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 6;
 
@@ -182,8 +184,8 @@ class ParameterResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->slideOver(),
+                DeleteAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
