@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('province_id')->nullable();
+            $table->unsignedBigInteger('city_id')->nullable();
             // Company General Information
             $table->string('name')->unique(); // Company Name
             $table->text('address')->nullable(); // Company Address
-            $table->unsignedBigInteger('province_id')->nullable();
-            $table->unsignedBigInteger('city_id')->nullable();
+
             $table->string('postal_code', 20)->nullable(); // Company Postal Code
             $table->string('phone', 50)->nullable(); // Company Phone Number
             $table->string('email')->nullable(); // Company Contact Email

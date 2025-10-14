@@ -16,8 +16,8 @@ return new class extends Migration
 
             // Foreign keys (sementara tanpa constraint)
             $table->unsignedBigInteger('sample_id');
-            $table->unsignedBigInteger('parameter_id');
-            $table->unsignedBigInteger('test_method_id');
+            $table->unsignedBigInteger('parameter_id')->nullable();
+            $table->unsignedBigInteger('test_method_id')->nullable();
             $table->unsignedBigInteger('analyst_personel_id')->nullable();
             $table->unsignedBigInteger('validator_personel_id')->nullable();
 

@@ -38,25 +38,25 @@ return new class extends Migration
                 ->references('id')
                 ->on('provinces')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
         Schema::table('personels', function (Blueprint $table) {
             $table->foreign('user_id', 'fk_personels_user')
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
 
             $table->foreign('company_id', 'fk_personels_company')
                 ->references('id')
                 ->on('companies')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
             $table->foreign('position_id', 'fk_personels_position')
                 ->references('id')
                 ->on('positions')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
 
         Schema::table('sample_matrics', function (Blueprint $table) {
@@ -192,42 +192,42 @@ return new class extends Migration
                 ->references('id')
                 ->on('requests')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('customer_id', 'fk_quotations_customer')
                 ->references('id')
                 ->on('customers')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
             $table->foreign('personel_id', 'fk_quotations_personel')
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
             $table->foreign('approved_by_personel_id', 'fk_quotations_approved_by_personel')
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
         Schema::table('quotation_items', function (Blueprint $table) {
             $table->foreign('quotation_id', 'fk_quotation_items_quotations')
                 ->references('id')
                 ->on('quotations')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('test_package_id', 'fk_quotation_items_test_packages')
                 ->references('id')
                 ->on('test_packages')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
 
             $table->foreign('regulation_id', 'fk_quotation_items_regulations')
                 ->references('id')
                 ->on('regulations')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
 
         Schema::table('parameter_quotation_items', function (Blueprint $table) {
@@ -235,13 +235,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('quotation_items')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('parameter_id', 'fk_parameter_quotation_items_parameters')
                 ->references('id')
                 ->on('parameters')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
 
         Schema::table('companies', function (Blueprint $table) {
@@ -262,7 +262,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('companies')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             $table->foreign('term_template_id', 'fk_settings_term_template')
                 ->references('id')
                 ->on('term_templates')
@@ -275,27 +275,27 @@ return new class extends Migration
                 ->references('id')
                 ->on('samples')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             $table->foreign('parameter_id', 'fk_test_results_parameter')
                 ->references('id')
                 ->on('parameters')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
             $table->foreign('test_method_id', 'fk_test_results_test_method')
                 ->references('id')
                 ->on('test_methods')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
             $table->foreign('analyst_personel_id', 'fk_test_results_analyst_personel')
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
             $table->foreign('validator_personel_id', 'fk_test_results_validator_personel')
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
 
         Schema::table('test_result_histories', function (Blueprint $table) {
@@ -315,12 +315,36 @@ return new class extends Migration
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             $table->foreign('specialization_id', 'fk_personel_specializations_specialization')
                 ->references('id')
                 ->on('specializations')
                 ->onUpdate('cascade')
+                ->onDelete('cascade');
+        });
+
+
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->foreign('lab_job_id', 'fk_invoices_lab_job')
+                ->references('id')
+                ->on('lab_jobs')
+                ->onUpdate('cascade')
                 ->onDelete('restrict');
+        });
+        Schema::table('invoice_items', function (Blueprint $table) {
+            $table->foreign('invoice_id', 'fk_invoice_items_invoice')
+                ->references('id')
+                ->on('invoices')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('payments', function (Blueprint $table) {
+            $table->foreign('invoice_id', 'fk_payments_invoice')
+                ->references('id')
+                ->on('invoices')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

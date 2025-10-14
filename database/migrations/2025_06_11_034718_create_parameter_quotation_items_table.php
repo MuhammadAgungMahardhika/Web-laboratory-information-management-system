@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('parameter_quotation_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('quotation_item_id');
-            $table->unsignedBigInteger('parameter_id');
+            $table->unsignedBigInteger('parameter_id')->nullable();
 
             // Snapshot data dari master parameter
             $table->string('parameter_name', 255)->nullable();

@@ -45,4 +45,9 @@ class LabJob extends Model
             return (float) $item->item_total;
         });
     }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
 }
