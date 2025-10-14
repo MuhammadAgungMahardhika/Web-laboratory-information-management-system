@@ -78,8 +78,8 @@ class RoleResource extends Resource
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
             ])
             ->toolbarActions([]);
     }
@@ -95,9 +95,9 @@ class RoleResource extends Resource
     {
         return [
             'index' => ListRoles::route('/'),
-            'create' => CreateRole::route('/create'),
-            'view' => ViewRole::route('/{record}'),
-            'edit' => EditRole::route('/{record}/edit'),
+            // 'create' => CreateRole::route('/create'),
+            // 'view' => ViewRole::route('/{record}'),
+            // 'edit' => EditRole::route('/{record}/edit'),
         ];
     }
 }

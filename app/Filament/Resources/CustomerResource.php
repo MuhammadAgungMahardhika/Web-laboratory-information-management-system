@@ -397,8 +397,8 @@ class CustomerResource extends Resource
                     })->columnSpan(2)
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -418,9 +418,9 @@ class CustomerResource extends Resource
     {
         return [
             'index' => ListCustomers::route('/'),
-            'create' => CreateCustomer::route('/create'),
-            'view' => ViewCustomer::route('/{record}'),
-            'edit' => EditCustomer::route('/{record}/edit'),
+            // 'create' => CreateCustomer::route('/create'),
+            // 'view' => ViewCustomer::route('/{record}'),
+            // 'edit' => EditCustomer::route('/{record}/edit'),
         ];
     }
 }

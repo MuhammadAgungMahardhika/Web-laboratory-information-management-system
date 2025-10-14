@@ -64,8 +64,8 @@ class CustomerTypeResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->slideOver(),
+                DeleteAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

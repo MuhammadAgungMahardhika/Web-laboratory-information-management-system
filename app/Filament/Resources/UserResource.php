@@ -52,7 +52,7 @@ class UserResource extends Resource
             ->columns([
                 'sm' => 2,
                 'md' => 3,
-                'xl' => 4,
+                'xl' => 3,
             ])
             ->components([
                 TextInput::make('name')
@@ -173,8 +173,8 @@ class UserResource extends Resource
                     ->preload(),
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
 
                 Action::make('resetPassword')
                     ->label('Reset Kata Sandi')
@@ -223,9 +223,9 @@ class UserResource extends Resource
     {
         return [
             'index' => ListUsers::route('/'),
-            'create' => CreateUser::route('/create'),
-            'view' => ViewUser::route('/{record}'),
-            'edit' => EditUser::route('/{record}/edit'),
+            // 'create' => CreateUser::route('/create'),
+            // 'view' => ViewUser::route('/{record}'),
+            // 'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

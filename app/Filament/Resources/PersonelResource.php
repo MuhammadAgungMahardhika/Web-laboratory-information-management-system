@@ -25,6 +25,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
@@ -43,135 +44,138 @@ class PersonelResource extends Resource
             ->columns([
                 'sm' => 2,
                 'md' => 3,
-                'xl' => 4,
+                'xl' => 3,
             ])
             ->components([
-                TextInput::make('fullname')
-                    ->label('Nama personel')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('nip')
-                    ->label('Nip')
-                    ->unique(ignoreRecord: true)
-                    ->required(),
-                TextInput::make('phone_number')
-                    ->label('No hp')
-                    ->tel()
-                    ->maxLength(50),
-                Textarea::make('address')
-                    ->label('Alamat'),
-                Select::make('position_id')
-                    ->label('Jabatan / Posisi')
-                    ->relationship('position', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-                Select::make('user_id')
-                    ->label('Akun')
-                    ->required()
-                    ->unique(ignoreRecord: true)
-                    ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
-                        $query->where(function ($query) {
-                            // Memastikan user belum memiliki peran 'customer'
-                            $query->whereDoesntHave('roles', fn($q) => $q->where('id', RoleEnum::Customer->id()));
-                        });
-                    })
-                    ->searchable()
-                    ->createOptionForm(function (Get $get) {
-                        return [
-                            TextInput::make('name')
-                                ->label('Nama pengguna')
-                                ->default($get('fullname'))
-                                ->required()
-                                ->autocomplete(false),
-                            TextInput::make('username')
-                                ->label('Username')
-                                ->maxLength(15)
-                                ->default($get('fullname'))
-                                ->unique(ignoreRecord: true)
-                                ->required()
-                                ->autocomplete(false),
-                            TextInput::make('email')
-                                ->label('Email')
-                                ->email()
-                                ->unique(ignoreRecord: true)
-                                ->required()
-                                ->autocomplete(false),
-                            Select::make('roles')
-                                ->label('Hak akses')
-                                ->required()
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('id', RoleEnum::Customer->id()))
-                                ->searchable()
-                                ->getOptionLabelFromRecordUsing(function ($record) {
-                                    // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
-                                    // atau mengambil nama dari database (untuk peran baru/fleksibel).
-                                    $roleLabel = RoleEnum::tryFrom($record->name)?->label();
-                                    return $roleLabel ?? $record->name;
-                                })
-                                ->preload()
-                                ->dehydrated(false),
+                Section::make([
+                    TextInput::make('fullname')
+                        ->label('Nama personel')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('nip')
+                        ->label('Nip')
+                        ->unique(ignoreRecord: true)
+                        ->required(),
+                    TextInput::make('phone_number')
+                        ->label('No hp')
+                        ->tel()
+                        ->maxLength(50),
+                    Textarea::make('address')
+                        ->label('Alamat'),
+                    Select::make('position_id')
+                        ->label('Jabatan / Posisi')
+                        ->relationship('position', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                    Select::make('user_id')
+                        ->label('Akun')
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
+                            $query->where(function ($query) {
+                                // Memastikan user belum memiliki peran 'customer'
+                                $query->whereDoesntHave('roles', fn($q) => $q->where('id', RoleEnum::Customer->id()));
+                            });
+                        })
+                        ->searchable()
+                        ->createOptionForm(function (Get $get) {
+                            return [
+                                TextInput::make('name')
+                                    ->label('Nama pengguna')
+                                    ->default($get('fullname'))
+                                    ->required()
+                                    ->autocomplete(false),
+                                TextInput::make('username')
+                                    ->label('Username')
+                                    ->maxLength(15)
+                                    ->default($get('fullname'))
+                                    ->unique(ignoreRecord: true)
+                                    ->required()
+                                    ->autocomplete(false),
+                                TextInput::make('email')
+                                    ->label('Email')
+                                    ->email()
+                                    ->unique(ignoreRecord: true)
+                                    ->required()
+                                    ->autocomplete(false),
+                                Select::make('roles')
+                                    ->label('Hak akses')
+                                    ->required()
+                                    ->relationship('roles', 'name', modifyQueryUsing: fn($query) => $query->whereNot('id', RoleEnum::Customer->id()))
+                                    ->searchable()
+                                    ->getOptionLabelFromRecordUsing(function ($record) {
+                                        // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                                        // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                                        $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                                        return $roleLabel ?? $record->name;
+                                    })
+                                    ->preload()
+                                    ->dehydrated(false),
 
-                            TextInput::make('password')
-                                ->label('Kata sandi')
-                                ->password()
-                                ->revealable()
-                                ->required()
-                                ->default('123456')
-                                ->autocomplete(false),
-                            Select::make('status')
-                                ->required()
-                                ->default(UserStatusEnum::default())
-                                ->options(UserStatusEnum::labels()),
-                        ];
-                    })->editOptionForm(function (Get $get) {
-                        return [
-                            TextInput::make('name')
-                                ->label('Nama pengguna')
-                                ->required()
-                                ->autocomplete(false),
-                            TextInput::make('username')
-                                ->label('Username')
-                                ->maxLength(15)
-                                ->unique(ignoreRecord: true)
-                                ->required()
-                                ->autocomplete(false),
-                            TextInput::make('email')
-                                ->label('Email')
-                                ->email()
-                                ->required()
-                                ->unique(ignoreRecord: true)
-                                ->autocomplete(false),
-                            Select::make('roles')
-                                ->label('Hak akses')
-                                ->relationship('roles', 'name', modifyQueryUsing: fn($query) =>  $query->whereNot('id', RoleEnum::Customer->id()))
-                                ->searchable()
-                                ->getOptionLabelFromRecordUsing(function ($record) {
-                                    // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
-                                    // atau mengambil nama dari database (untuk peran baru/fleksibel).
-                                    $roleLabel = RoleEnum::tryFrom($record->name)?->label();
-                                    return $roleLabel ?? $record->name;
-                                })
-                                ->preload()
-                                ->dehydrated(false),
+                                TextInput::make('password')
+                                    ->label('Kata sandi')
+                                    ->password()
+                                    ->revealable()
+                                    ->required()
+                                    ->default('123456')
+                                    ->autocomplete(false),
+                                Select::make('status')
+                                    ->required()
+                                    ->default(UserStatusEnum::default())
+                                    ->options(UserStatusEnum::labels()),
+                            ];
+                        })->editOptionForm(function (Get $get) {
+                            return [
+                                TextInput::make('name')
+                                    ->label('Nama pengguna')
+                                    ->required()
+                                    ->autocomplete(false),
+                                TextInput::make('username')
+                                    ->label('Username')
+                                    ->maxLength(15)
+                                    ->unique(ignoreRecord: true)
+                                    ->required()
+                                    ->autocomplete(false),
+                                TextInput::make('email')
+                                    ->label('Email')
+                                    ->email()
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->autocomplete(false),
+                                Select::make('roles')
+                                    ->label('Hak akses')
+                                    ->relationship('roles', 'name', modifyQueryUsing: fn($query) =>  $query->whereNot('id', RoleEnum::Customer->id()))
+                                    ->searchable()
+                                    ->getOptionLabelFromRecordUsing(function ($record) {
+                                        // Logika ini akan mengambil label dari Enum jika ada (untuk peran inti), 
+                                        // atau mengambil nama dari database (untuk peran baru/fleksibel).
+                                        $roleLabel = RoleEnum::tryFrom($record->name)?->label();
+                                        return $roleLabel ?? $record->name;
+                                    })
+                                    ->preload()
+                                    ->dehydrated(false),
 
-                            TextInput::make('password')
-                                ->label('Kata sandi')
-                                ->password()
-                                ->revealable()
-                                ->required()
-                                ->visible(fn(string $context) => $context === 'create')
-                                ->autocomplete(false),
-                            Select::make('status')
-                                ->required()
-                                ->options(UserStatusEnum::labels()),
-                        ];
-                    })
-                    ->preload(),
-                Select::make('company_id')
-                    ->label('Perusahaan')
-                    ->required()
-                    ->relationship('company', 'name')
-                    ->preload(),
+                                TextInput::make('password')
+                                    ->label('Kata sandi')
+                                    ->password()
+                                    ->revealable()
+                                    ->required()
+                                    ->visible(fn(string $context) => $context === 'create')
+                                    ->autocomplete(false),
+                                Select::make('status')
+                                    ->required()
+                                    ->options(UserStatusEnum::labels()),
+                            ];
+                        })
+                        ->preload(),
+                    Select::make('company_id')
+                        ->label('Perusahaan')
+                        ->required()
+                        ->relationship('company', 'name')
+                        ->preload(),
+                ])->columnSpanFull()->columns(3),
+
                 Repeater::make('personelSpecializations')
                     ->relationship()
                     ->label('Keahlian')
@@ -203,6 +207,7 @@ class PersonelResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordTitle(fn($record) => $record->fullname)
             ->modifyQueryUsing(fn($query) => $query->with('position'))
             ->columns([
                 TextColumn::make('fullname')
@@ -244,8 +249,8 @@ class PersonelResource extends Resource
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -263,9 +268,9 @@ class PersonelResource extends Resource
     {
         return [
             'index' => ListPersonels::route('/'),
-            'create' => CreatePersonel::route('/create'),
-            'view' => ViewPersonel::route('/{record}'),
-            'edit' => EditPersonel::route('/{record}/edit'),
+            // 'create' => CreatePersonel::route('/create'),
+            // 'view' => ViewPersonel::route('/{record}'),
+            // 'edit' => EditPersonel::route('/{record}/edit'),
         ];
     }
 }

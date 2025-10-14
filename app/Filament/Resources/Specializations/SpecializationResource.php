@@ -40,6 +40,7 @@ class SpecializationResource extends Resource
                 Textarea::make('description')
                     ->columnSpanFull(),
                 Select::make('parameters')
+                    ->columnSpanFull()
                     ->relationship('parameters', 'name')
                     ->multiple()
                     ->preload()
@@ -80,7 +81,7 @@ class SpecializationResource extends Resource
                     ->preload()
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->slideOver(),
                 DeleteAction::make(),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
