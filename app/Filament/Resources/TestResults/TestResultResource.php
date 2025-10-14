@@ -23,7 +23,7 @@ class TestResultResource extends Resource
     protected static ?string $navigationLabel = 'Hasil Pengujian';
     protected static ?string $label = 'Hasil Pengujian';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Beaker;
-
+    protected static ?int $navigationSort = 3;
     public static function form(Schema $schema): Schema
     {
         return TestResultForm::configure($schema);

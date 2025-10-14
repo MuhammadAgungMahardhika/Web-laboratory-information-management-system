@@ -23,6 +23,7 @@ class SampleResource extends Resource
     protected static ?string $model = Sample::class;
     protected static ?string $navigationLabel = 'Sampel';
     protected static ?string $label = 'Sampel';
+    protected static ?int $navigationSort = 4;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentList;
 
     public static function form(Schema $schema): Schema
