@@ -12,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Support\Facades\FilamentAsset;
 use Filament\Tables\Enums\RecordActionsPosition;
 
 class AppServiceProvider extends ServiceProvider
@@ -41,5 +42,8 @@ class AppServiceProvider extends ServiceProvider
             ->striped()
             ->paginationMode(PaginationMode::Simple)
             ->deferFilters(false));
+        FilamentAsset::registerScriptData([
+            'baseUrl' => url(''),
+        ]);
     }
 }
