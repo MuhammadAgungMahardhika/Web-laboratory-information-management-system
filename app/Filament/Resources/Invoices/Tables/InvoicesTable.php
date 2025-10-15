@@ -22,24 +22,31 @@ class InvoicesTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('invoice_number')
+                    ->label('Nomor Tagihan')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('invoice_date')
+                    ->label('Tanggal Tagihan')
                     ->date()
                     ->sortable(),
                 TextColumn::make('due_date')
+                    ->label('Tanggal Jatuh Tempo')
                     ->date()
                     ->sortable(),
                 TextColumn::make('subtotal')
+                    ->label('Subtotal')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('discount')
+                    ->label('Diskon')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('tax_rate')
+                    ->label('Pajak')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('total_amount')
+                    ->label('Jumlah Total')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
