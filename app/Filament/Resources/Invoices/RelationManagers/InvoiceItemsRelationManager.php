@@ -22,9 +22,12 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class InvoiceItemsRelationManager extends RelationManager
 {
+    protected static bool $isLazy = false;
     protected static string $relationship = 'invoiceItems';
 
     public function form(Schema $schema): Schema
@@ -36,15 +39,14 @@ class InvoiceItemsRelationManager extends RelationManager
                     ->searchable()
                     ->preload()
                     ->types([
-                        // Tipe pertama: LabJobItem
                         Type::make(LabJobItem::class)
-                            ->titleAttribute('description'), // Tampilkan deskripsi di dropdown
-                        // Tipe kedua: QuotationItem
+                            ->titleAttribute('description'),
                         Type::make(QuotationItem::class)
                             ->titleAttribute('description'),
                     ])
                     ->live() // <-- Wajib untuk memicu update otomatis
-                    ->columnSpanFull()->afterStateUpdated(function ($set, $state) {
+                    ->columnSpanFull()
+                    ->afterStateUpdated(function ($set, $state) {
                         $set('price', null);
                         $set('quantity', null);
                         $set('description', null);
@@ -53,13 +55,19 @@ class InvoiceItemsRelationManager extends RelationManager
                             $source = $state['source_type']::find($state['source_id']);
                             if ($source) {
                                 if ($state['source_type'] == LabJobItem::class) {
+                                    $description = $source->description;
                                     $price = $source->price;
                                     $quantity = $source->quantity;
+
+                                    $set('description', $description);
                                     $set('price', $price);
                                     $set('quantity', $quantity);
                                 } else if ($state['source_type'] == QuotationItem::class) {
+                                    $description = $source->description;
                                     $price = $source->price;
                                     $quantity = $source->quantity;
+
+                                    $set('description', $description);
                                     $set('price', $price);
                                     $set('quantity', $quantity);
                                 }
@@ -70,23 +78,19 @@ class InvoiceItemsRelationManager extends RelationManager
                 Textarea::make('description')
                     ->label('Deskripsi')
                     ->required()
-                    ->columnSpanFull()
-                    // Nonaktifkan jika sumber sudah dipilih (data diambil otomatis)
-                    ->disabled(fn(Get $get) => filled($get('source'))),
+                    ->columnSpanFull(),
 
                 TextInput::make('quantity')
                     ->label('Kuantitas')
                     ->numeric()
                     ->required()
-                    ->minValue(1)
-                    ->disabled(fn(Get $get) => filled($get('source'))),
+                    ->minValue(1),
 
                 TextInput::make('price')
                     ->label('Harga Satuan')
                     ->numeric()
                     ->required()
-                    ->prefix('Rp')
-                    ->disabled(fn(Get $get) => filled($get('source'))),
+                    ->prefix('Rp'),
             ]);
     }
 

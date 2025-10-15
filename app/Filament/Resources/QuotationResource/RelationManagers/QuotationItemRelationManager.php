@@ -43,7 +43,6 @@ use function Filament\Support\format_money;
 class QuotationItemRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
-    protected  bool $isCachingForms = true;
     protected static string $relationship = 'quotationItems';
     protected static ?string $label = 'Detail penawaran';
     protected static ?string $title = "Detail penawaran";

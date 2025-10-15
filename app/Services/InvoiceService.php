@@ -5,7 +5,8 @@ namespace App\Services;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\LabJob;
-use App\Models\Quotation;
+use App\Models\LabJobItem;
+use App\Models\QuotationItem;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -56,7 +57,7 @@ class InvoiceService
         foreach ($labJob->labJobItems as $jobItem) {
             InvoiceItem::create([
                 'invoice_id' => $invoice->id,
-                'source_type' => LabJob::class,
+                'source_type' => LabJobItem::class,
                 'source_id' => $jobItem->id,
                 'description' => $jobItem->description,
                 'price' => $jobItem->price,
@@ -73,7 +74,7 @@ class InvoiceService
             foreach ($otherItems as $quotationItem) {
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
-                    'source_type' => Quotation::class,
+                    'source_type' => QuotationItem::class,
                     'source_id' => $quotationItem->id,
                     'description' => $quotationItem->description,
                     'price' => $quotationItem->price,

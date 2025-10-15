@@ -212,11 +212,11 @@ namespace App\Models{
  * @property string $description
  * @property int $quantity
  * @property string $price
- * @property float $subtotal
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read float $subtotal
  * @property-read \App\Models\Invoice $invoice
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $source
  * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
@@ -232,7 +232,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSourceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSourceType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSubtotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedBy($value)
  */

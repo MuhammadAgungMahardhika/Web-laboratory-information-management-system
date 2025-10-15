@@ -60,7 +60,6 @@ class SuperadminPanelProvider extends PanelProvider
                 CustomerStatsChart::class,
             ])
             ->navigationGroups([
-
                 NavigationGroup::make()
                     ->label('Client')
                     ->icon('heroicon-o-users')->collapsed(),
