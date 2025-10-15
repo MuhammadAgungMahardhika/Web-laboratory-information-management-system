@@ -28,7 +28,7 @@ class InvoiceForm
                     ->components([
                         Select::make('lab_job_id')
                             ->label('Nomor Lab Job')
-                            ->relationship('labJob', 'job_number')
+                            ->relationship('labJob', 'job_number', modifyQueryUsing: fn($query) => $query->whereDoesntHave('invoice'))
                             ->required()
                             ->searchable()
                             ->preload()
