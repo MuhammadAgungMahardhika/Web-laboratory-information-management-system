@@ -28,7 +28,16 @@ class InvoiceForm
                     ->components([
                         Select::make('lab_job_id')
                             ->label('Nomor Lab Job')
-                            ->relationship('labJob', 'job_number', modifyQueryUsing: fn($query) => $query->whereDoesntHave('invoice'))
+                            ->disabledOn(['view', 'edit'])
+                            ->relationship('labJob', 'job_number', modifyQueryUsing: function ($query,  $record) {
+                                $currentInvoiceId = $record?->id;
+                                return $query->whereDoesntHave('invoice', function (Builder $q) use ($currentInvoiceId) {
+                                    if ($currentInvoiceId) {
+                                        // Saat EDIT, abaikan invoice yang sedang diedit (memungkinkan Lab Job muncul)
+                                        $q->where('id', '!=', $currentInvoiceId);
+                                    }
+                                });
+                            })
                             ->required()
                             ->searchable()
                             ->preload()
@@ -46,6 +55,7 @@ class InvoiceForm
                             ->dehydrated(false)
                             ->live()
                             ->inline()
+                            ->visibleOn('create')
                             ->label('Manual Input Nomor Tagihan'),
                         TextInput::make('invoice_number')
                             ->label('Nomor Tagihan')
