@@ -21,7 +21,7 @@ class InvoicesTable
             ->recordTitle(fn($record) => $record->invoice_number)
             ->columns([
                 TextColumn::make('labJob.job_number')
-                    ->label('Nomor Pekerjaan Lab')
+                    ->label('Nomor Lab Job')
                     ->searchable()
                     ->sortable()
                     ->url(
