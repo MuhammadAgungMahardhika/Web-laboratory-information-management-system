@@ -44,10 +44,6 @@ class PositionResource extends Resource
                 TextInput::make('description')
                     ->label('Deskripsi Jabatan')
                     ->maxLength(255),
-                TextInput::make('created_by')
-                    ->maxLength(255),
-                TextInput::make('updated_by')
-                    ->maxLength(255),
             ]);
     }
 

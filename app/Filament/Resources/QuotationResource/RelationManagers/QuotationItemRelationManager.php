@@ -35,6 +35,7 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Grouping\Group;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 
@@ -204,9 +205,9 @@ class QuotationItemRelationManager extends RelationManager
             ->paginated(false)
             ->groups([
                 Group::make('group')
-                    ->label(''),
+                    ->label('Group')
+                    ->titlePrefixedWithLabel(false),
             ])
-            ->defaultGroup('group')
             ->columns([
                 TextColumn::make('description')
                     ->label('Deskripsi')
@@ -239,6 +240,18 @@ class QuotationItemRelationManager extends RelationManager
                     ->label('Harga Total')
                     ->alignEnd()
                     ->size(TextSize::Small)
+                    ->summarize(
+                        Summarizer::make()
+
+                            ->prefix('Total : ')
+                            // --- PERBAIKAN DI SINI: Gunakan closure kustom untuk menjumlahkan ---
+                            ->using(
+                                fn(QueryBuilder $query): string =>
+                                // Hitung total dari kuantitas * harga satuan untuk semua item yang difilter
+                                $query->sum(DB::raw('quantity * price'))
+                            )
+                            ->money('IDR')
+                    )
                     ->money('IDR'),
                 TextColumn::make('location')
                     ->size(TextSize::Small)

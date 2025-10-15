@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('invoice_id');
-            $table->morphs('source');
+            $table->nullableMorphs('source', 'source_index'); // source_type, source_id
 
             // Snapshot Data
             $table->string('description');
