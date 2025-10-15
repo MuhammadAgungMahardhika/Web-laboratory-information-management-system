@@ -24,7 +24,7 @@ class InvoiceForm
         return $schema
 
             ->components([
-                Section::make('Rincian Faktur')
+                Section::make('Informasi Tagihan')
                     ->components([
                         Select::make('lab_job_id')
                             ->label('Nomor Pekerjaan Lab')
@@ -46,20 +46,20 @@ class InvoiceForm
                             ->dehydrated(false)
                             ->live()
                             ->inline()
-                            ->label('Manual Input Nomor Faktur'),
+                            ->label('Manual Input Nomor Tagihan'),
                         TextInput::make('invoice_number')
-                            ->label('Nomor Faktur')
+                            ->label('Nomor Tagihan')
                             ->required()
                             ->live()
                             ->unique(ignoreRecord: true)
                             ->readOnly(fn(Get $get) => !$get('manual_invoice_confirmation')),
                         DatePicker::make('invoice_date')
-                            ->label('Tanggal Faktur')
+                            ->label('Tanggal Tagihan')
                             ->required()
                             ->default(now())
                             ->live() // <-- 1. JADIKAN LIVE: Ini adalah pemicunya
                             ->afterStateUpdated(function (Set $set, ?string $state) {
-                                // 2. AKSI: Jalankan ini setelah tanggal faktur diubah
+                                // 2. AKSI: Jalankan ini setelah tanggal Tagihan diubah
                                 if ($state) {
                                     // Ubah nilai 'due_date' menjadi 30 hari setelah tanggal baru
                                     $set('due_date', Carbon::parse($state)->addDays(30)->format('Y-m-d'));
@@ -69,7 +69,7 @@ class InvoiceForm
                         DatePicker::make('due_date')
                             ->label('Jatuh Tempo')
                             ->required()
-                            ->helperText('Otomatis diatur ke 30 hari setelah Tanggal Faktur')
+                            ->helperText('Otomatis diatur ke 30 hari setelah Tanggal Tagihan')
                             ->default(now()->addDays(30)) // <-- Default awal tetap berguna
                             ->afterOrEqual('invoice_date'),
 

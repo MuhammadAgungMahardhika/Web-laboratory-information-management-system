@@ -29,7 +29,8 @@ class InvoiceItemsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
     protected static string $relationship = 'invoiceItems';
-
+    protected static ?string $label = 'Rincian Tagihan';
+    protected static ?string $title = "Rincian Tagihan";
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -40,8 +41,10 @@ class InvoiceItemsRelationManager extends RelationManager
                     ->preload()
                     ->types([
                         Type::make(LabJobItem::class)
+                            ->label('Lab Job')
                             ->titleAttribute('description'),
                         Type::make(QuotationItem::class)
+                            ->label('Penawaran')
                             ->titleAttribute('description'),
                     ])
                     ->live() // <-- Wajib untuk memicu update otomatis
