@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Invoices\Tables;
 
+use App\Filament\Resources\LabJobResource;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -19,8 +21,16 @@ class InvoicesTable
             ->recordTitle(fn($record) => $record->invoice_number)
             ->columns([
                 TextColumn::make('labJob.job_number')
+                    ->label('Nomor Pekerjaan Lab')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->url(
+                        fn($record) => $record->labJob
+                            ? LabJobResource::getUrl('view', ['record' => $record->labJob->id])
+                            : null
+                    )
+                    ->openUrlInNewTab()
+                    ->tooltip(fn($record) => $record->labJob ? 'Lihat Lab Job' : 'Tidak ada Lab Job terkait'),
                 TextColumn::make('invoice_number')
                     ->label('Nomor Tagihan')
                     ->searchable()
