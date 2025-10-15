@@ -176,7 +176,7 @@ class LabJobResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('job_number')
-                    ->label('Nomor Pekerjaan')
+                    ->label('Nomor Lab Job')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('start_date')

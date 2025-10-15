@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <title>Surat Tugas - {{ $labJob->job_number }}</title>
@@ -10,17 +11,58 @@
             line-height: 1.5;
             margin: 0.5in;
         }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 18pt; }
-        .document-title { text-align: center; margin-bottom: 20px; font-size: 16pt; font-weight: bold; }
-        .details-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .details-table td { padding: 5px 0; vertical-align: top; }
-        .details-table .label { width: 150px; font-weight: bold; }
-        .personnel-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .personnel-table th, .personnel-table td { border: 1px solid #ddd; padding: 8px; }
-        .signature-section { margin-top: 50px; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 18pt;
+        }
+
+        .document-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16pt;
+            font-weight: bold;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .details-table td {
+            padding: 5px 0;
+            vertical-align: top;
+        }
+
+        .details-table .label {
+            width: 150px;
+            font-weight: bold;
+        }
+
+        .personnel-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .personnel-table th,
+        .personnel-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .signature-section {
+            margin-top: 50px;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="header">
@@ -44,7 +86,7 @@
 
     <table class="details-table">
         <tr>
-            <td class="label">Nomor Pekerjaan</td>
+            <td class="label">Nomor Lab Job</td>
             <td>: {{ $labJob->job_number ?? '-' }}</td>
         </tr>
         <tr>
@@ -62,9 +104,9 @@
     </table>
 
     <p>Kepada Tim PPC yang ditugaskan, dengan ini kami memberikan surat tugas untuk melaksanakan pekerjaan:</p>
-    
+
     <p><strong>Nama Pekerjaan:</strong> {{ $labJob->quotation->quotation_name ?? '-' }}</p>
-    
+
     <h3>Tim yang Ditugaskan:</h3>
     <table class="personnel-table">
         <thead>
@@ -95,4 +137,5 @@
     </div>
 
 </body>
+
 </html>

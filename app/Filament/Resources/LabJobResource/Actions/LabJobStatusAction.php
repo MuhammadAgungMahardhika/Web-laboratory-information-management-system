@@ -100,12 +100,12 @@ class LabJobStatusAction
     public static function startJob($url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_START_LAB_JOB);
-        return Action::make('Mulai Pekerjaan')
+        return Action::make('Mulai Job')
             ->icon('heroicon-o-play')
             ->color('success')
             ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::PendingStart->value && $authorized)
             ->requiresConfirmation()
-            ->modalHeading('Konfirmasi Memulai Pekerjaan')
+            ->modalHeading('Konfirmasi Memulai Job')
 
             ->schema(function (LabJob $record) {
                 $fields = [
@@ -145,7 +145,7 @@ class LabJobStatusAction
                         $labJobService->updateLabJobStatus($record, JobStatusEnum::InProgress, $data);
                     });
 
-                    Notification::make()->title('Pekerjaan telah dimulai.')->success()->send();
+                    Notification::make()->title('Lab Job telah dimulai.')->success()->send();
                     if ($url) {
                         return redirect()->to($url);
                     }
@@ -308,14 +308,14 @@ class LabJobStatusAction
                     DB::transaction(function () use ($record, $labJobService) {
                         $labJobService->updateLabJobStatus($record, JobStatusEnum::Delivered);
                     });
-                    Notification::make()->title('Pekerjaan telah selesai dan dikirim.')->success()->send();
+                    Notification::make()->title('Lab Job telah selesai dan dikirim.')->success()->send();
                 } catch (Exception $e) {
                     Notification::make()
-                        ->title('Gagal mengubah status Pekerjaan telah selesai dan dikirim')
+                        ->title('Gagal mengubah status Lab Job telah selesai dan dikirim')
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
                         ->danger()
                         ->send();
-                    Log::error('Gagal mengubah status Pekerjaan telah selesai dan dikirim', [
+                    Log::error('Gagal mengubah status Lab Job telah selesai dan dikirim', [
                         'lab_job_id' => $record->id,
                         'error' => $e->getMessage(),
                         'user_id' => Auth::id(),
@@ -326,7 +326,7 @@ class LabJobStatusAction
     public static function abortJob(): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_ABORT_LAB_JOB_REPORT);
-        return  Action::make('Batalkan Pekerjaan')
+        return  Action::make('Batalkan Lab Job')
             ->icon('heroicon-o-x-circle')
             ->color('danger')
             ->authorize(fn(LabJob $record) =>  $record->status == JobStatusEnum::InProgress->value &&  $authorized)
@@ -336,14 +336,14 @@ class LabJobStatusAction
                     DB::transaction(function () use ($record, $labJobService) {
                         $labJobService->updateLabJobStatus($record, JobStatusEnum::Cancelled);
                     });
-                    Notification::make()->title('Pekerjaan telah dibatalkan.')->danger()->send();
+                    Notification::make()->title('Lab Job telah dibatalkan.')->danger()->send();
                 } catch (Exception $e) {
                     Notification::make()
-                        ->title('Gagal mengubah status Pekerjaan telah dibatalkan')
+                        ->title('Gagal mengubah status Lab Job telah dibatalkan')
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
                         ->danger()
                         ->send();
-                    Log::error('Gagal mengubah status Pekerjaan telah dibatalkan', [
+                    Log::error('Gagal mengubah status Lab Job telah dibatalkan', [
                         'lab_job_id' => $record->id,
                         'error' => $e->getMessage(),
                         'user_id' => Auth::id(),

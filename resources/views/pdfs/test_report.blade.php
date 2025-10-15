@@ -106,7 +106,7 @@
 
     <div class="section-heading">Rincian Pengujian</div>
     @foreach ($labJob->labJobItems as $item)
-        <h4>Item Pekerjaan: {{ $item->description ?? '-' }}</h4>
+        <h4>Item Lab Job: {{ $item->description ?? '-' }}</h4>
         <p>Total Sampel: {{ $item->samples->count() }}</p>
 
         @foreach ($item->samples as $sample)

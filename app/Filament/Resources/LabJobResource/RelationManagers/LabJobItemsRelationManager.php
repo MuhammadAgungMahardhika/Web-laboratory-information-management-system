@@ -246,11 +246,11 @@ class LabJobItemsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Action::make('resetToQuotationSnapshot')
-                    ->label('Kembalikan Rincian Pekerjaan')
+                    ->label('Kembalikan Rincian Lab Job')
                     ->icon(Heroicon::ArrowUturnLeft)
                     ->color('warning')
                     ->requiresConfirmation()
-                    ->modalHeading('Kembalikan Rincian Pekerjaan?')
+                    ->modalHeading('Kembalikan Rincian Lab Job?')
                     ->modalDescription('Ini akan menghapus semua rincian pekerjaan saat ini dan menggantinya dengan rincian dari penawaran awal.')
                     ->modalSubmitActionLabel('Ya, Kembalikan')
                     ->action(function (LabJobService $labJobService) {

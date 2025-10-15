@@ -27,7 +27,7 @@ class InvoiceForm
                 Section::make('Informasi Tagihan')
                     ->components([
                         Select::make('lab_job_id')
-                            ->label('Nomor Pekerjaan Lab')
+                            ->label('Nomor Lab Job')
                             ->relationship('labJob', 'job_number')
                             ->required()
                             ->searchable()
