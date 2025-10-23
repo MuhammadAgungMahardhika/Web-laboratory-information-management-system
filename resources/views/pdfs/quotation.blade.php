@@ -5,12 +5,16 @@
     <meta charset="utf-8" />
     <title>Penawaran - {{ $quotation->quotation_number }}</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         html,
         body {
-            height: 100%;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         body {
@@ -18,29 +22,35 @@
             font-size: 9pt;
             line-height: 1.4;
             color: #333;
+        }
+
+        /* Page Break */
+        .page {
+            page-break-after: always;
             padding-top: 90px;
-            /* Adjust this value if header collision persists */
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
         }
 
         .container {
-            width: 100%;
-            margin: 0 auto;
-            padding: 0 20px 15px 20px;
-            box-sizing: border-box;
+            max-width: 100%;
+            margin: 0;
+            padding: 0 10px 10px 10px;
         }
 
         .header {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 120px;
-            /* Adjust this to fit your korp.jpg's actual height if different */
-            padding: 10px 20px;
-            /* Padding inside the absolute header (for image) */
-            /* border-bottom: 1px solid #eee; */
+            height: 80px;
+            padding: 5px 10px;
             text-align: center;
-            box-sizing: border-box;
+            background: white;
             z-index: 1000;
         }
 
@@ -48,71 +58,144 @@
             max-height: 100%;
             max-width: 100%;
             object-fit: contain;
-            display: block;
-            margin: 0 auto;
         }
 
-        .document-title {
-            text-align: center;
-            color: #000000;
-            font-size: 12pt;
-            margin-bottom: 20px;
-            margin-top: 0;
-            /* Ensure no margin collapse */
+        /* Header Info */
+        .header-info {
+            border: 2px solid #333;
+            padding: 5px;
+            margin-bottom: 10px;
+            font-size: 8pt;
         }
 
-        .details-table {
-            width: 100%;
-            border-collapse: collapse;
+        .info-row {
+            display: flex;
+            margin-bottom: 2px;
         }
 
-        .details-table td {
-            padding: 2px 0;
-            vertical-align: top;
-            font-size: 8.5pt;
+        .info-col {
+            flex: 1;
+            display: flex;
+            gap: 5px;
         }
 
-        .details-table .label-col {
-            width: 22%;
+        .info-label {
             font-weight: bold;
-            color: #555;
+            min-width: 50px;
+        }
+
+        .greeting {
+            margin: 10px 0;
+            font-weight: bold;
         }
 
         .intro-text {
-            margin-bottom: 15px;
-            font-size: 9pt;
+            text-align: justify;
+            margin-bottom: 10px;
+            font-size: 8.5pt;
+            line-height: 1.5;
+        }
+
+        .price-highlight {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .closing-text {
+            margin-top: 30px;
+            font-size: 8.5pt;
+        }
+
+        /* Signature for Page 1 */
+        .signature-page1 {
+            margin-top: 50px;
+        }
+
+        .signature-page1 p {
+            margin: 3px 0;
+        }
+
+        .signature-box-page1 {
+            height: 60px;
+            margin: 15px 0;
+        }
+
+        .section-title {
+            background-color: #333;
+            color: white;
+            padding: 6px;
+            font-weight: bold;
+            font-size: 8pt;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* Tabel Items */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin: 10px 0;
         }
 
         .items-table {
-            table-layout: fixed;
-            /* ⬅️ PENTING: Membuat lebar kolom tetap */
-            width: 95%;
+            width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            margin-bottom: 15px;
+            font-size: 6.5pt;
         }
 
         .items-table th,
         .items-table td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            text-align: left;
-            font-size: 7pt;
+            border: 1px solid #333;
+            padding: 3px;
             vertical-align: top;
-            /* --- PENTING: Pengaturan untuk pembungkus teks --- */
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
-            /* ------------------------------------------------- */
+            word-break: break-word;
         }
 
         .items-table th {
-            background-color: #f2f2f2;
+            background-color: #e8e8e8;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .items-table .section-header {
+            background-color: #f5f5f5;
             font-weight: bold;
         }
 
-        .items-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .col-no {
+            width: 25px;
+        }
+
+        .col-name {
+            width: 120px;
+        }
+
+        .col-reg {
+            width: 80px;
+        }
+
+        .col-param {
+            width: 180px;
+        }
+
+        .col-qty {
+            width: 35px;
+        }
+
+        .col-unit {
+            width: 45px;
+        }
+
+        .col-freq {
+            width: 35px;
+        }
+
+        .col-price {
+            width: 70px;
+        }
+
+        .col-total {
+            width: 80px;
         }
 
         .text-right {
@@ -123,245 +206,482 @@
             text-align: center;
         }
 
-        .parameters-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            font-size: 8pt;
-            /* Sedikit lebih besar dari 7.5pt */
+        /* Summary */
+        .summary-section {
+            margin-top: 10px;
         }
 
-        /* Ganti dengan kode ini (Flexbox) */
-
-
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8pt;
+        }
 
         .summary-table td {
-            padding: 6px;
-            border: 1px solid #ddd;
-            font-size: 7pt;
+            padding: 4px;
+            border: 1px solid #333;
         }
 
         .summary-table .label {
             background-color: #f2f2f2;
+            font-weight: bold;
+            width: 70%;
         }
 
         .summary-table .value {
             text-align: right;
             font-weight: bold;
+            width: 30%;
         }
 
         .summary-table .total-row td {
             background-color: #e6f7ff;
-            color: #0056b3;
             font-weight: bold;
         }
 
-        .terms {
-            margin-top: 25px;
-            font-size: 8.5pt;
-            color: #555;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
+        .terbilang {
+            font-style: italic;
+            font-weight: bold;
+            margin: 8px 0;
+            font-size: 8pt;
         }
 
+        /* Signature Page 2 */
         .signature-section {
-            margin-top: 30px;
-            overflow: hidden;
-            font-size: 8.5pt;
+            margin-top: 20px;
         }
 
-        .left-col {
-            float: left;
-            width: 48%;
+        .signature-flex {
+            display: flex;
+            gap: 10px;
+            border: 1px solid #333;
+        }
+
+        .signature-col {
+            flex: 1;
+            padding: 8px;
+            border-right: 1px solid #333;
+        }
+
+        .signature-col:last-child {
+            border-right: none;
         }
 
         .signature-box {
-            margin-top: 40px;
-            border-top: 1px solid #333;
-            padding-top: 5px;
-            width: 60%;
+            height: 50px;
+            margin: 8px 0;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
+        /* Policy */
+        .policy-section {
+            margin-top: 15px;
+        }
+
+        .policy-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 10px 0 5px 0;
+            font-size: 8.5pt;
+        }
+
+        .policy-section ol {
+            margin-left: 15px;
             font-size: 7.5pt;
-            color: #888;
-            border-top: 1px solid #eee;
+            line-height: 1.4;
+        }
+
+        .policy-section li {
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+
+        .bank-info {
+            border: 1px solid #333;
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 7.5pt;
+        }
+
+        .bank-row {
+            display: flex;
+            margin-bottom: 2px;
+        }
+
+        .bank-label {
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        .footer-note {
+            margin-top: 15px;
+            font-size: 7pt;
+            font-style: italic;
+            text-align: center;
+            border-top: 1px solid #ddd;
             padding-top: 8px;
         }
 
         @page {
             margin: 0.5in;
+            size: A4;
+        }
+
+        @media print {
+            .page {
+                padding-top: 0;
+                page-break-after: always;
+            }
+
+            .header {
+                position: relative;
+                height: auto;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        @php
-            $dynamicKorpPath = $company->active_setting?->letterhead_path;
-            $korpPath = $dynamicKorpPath ? public_path("storage/{$dynamicKorpPath}") : public_path('images/korp.jpg');
+    <!-- HALAMAN 1: Surat Pengantar -->
+    <div class="page">
+        <div class="header">
+            @php
+                $dynamicKorpPath = $company->active_setting?->letterhead_path;
+                $korpPath = $dynamicKorpPath
+                    ? public_path("storage/{$dynamicKorpPath}")
+                    : public_path('images/korp.jpg');
 
-            $korpBase64 = '';
-            if (file_exists($korpPath)) {
-                $korpData = file_get_contents($korpPath);
-                $korpType = pathinfo($korpPath, PATHINFO_EXTENSION);
-                $korpBase64 = 'data:image/' . $korpType . ';base64,' . base64_encode($korpData);
-            }
-        @endphp
-        @if ($korpBase64)
-            <img src="{{ $korpBase64 }}" alt="Kop Surat Perusahaan">
-        @endif
-    </div>
-
-    <div class="container">
-        <div class="document-title">PENAWARAN HARGA</div>
-
-        <table class="details-table">
-            <tr>
-                <td class="label-col">Nomor Penawaran</td>
-                <td>: {{ $quotation->quotation_number ?? '-' }}</td>
-                <td class="label-col">Kepada Yth.</td>
-                <td>: <strong>{{ $quotation->customer->name ?? '-' }}</strong></td>
-            </tr>
-            <tr>
-                <td class="label-col">Nama Penawaran</td>
-                <td>: {{ $quotation->quotation_name ?? '-' }}</td>
-                <td class="label-col">Alamat</td>
-                <td>: {{ $quotation->customer->full_address ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label-col">Tanggal Penawaran</td>
-                <td>: {{ \Carbon\Carbon::parse($quotation->quotation_date)->format('d F Y') ?? '-' }}</td>
-                <td class="label-col">Kontak Personil</td>
-                <td>: {{ $quotation->customer->contact_person_name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label-col">Berlaku Hingga</td>
-                <td>: {{ \Carbon\Carbon::parse($quotation->valid_until_date)->format('d F Y') ?? '-' }}</td>
-                <td class="label-col">Telp. Kontak</td>
-                <td>: {{ $quotation->customer->contact_phone_number ?? '-' }}</td>
-            </tr>
-        </table>
-
-        <p class="intro-text">Dengan hormat,</p>
-        <p class="intro-text">Bersama ini kami sampaikan penawaran harga untuk layanan sebagai berikut:</p>
-
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th class="text-center" style="width: 5%;">No.</th>
-                    <th style="width: 20%;">Deskripsi Item & Lokasi</th>
-                    <th style="width: 14%;">Regulasi</th>
-                    <th style="width: 19%;">Parameter</th>
-                    <th style="width: 7%; text-align: right;">Jumlah</th>
-                    <th style="width: 9%;">Satuan</th>
-                    <th style="width: 12%; text-align: right;">Harga (Rp)</th>
-                    <th style="width: 14%; text-align: right;">Total (Rp)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php $grandSubtotal = $quotation->total_price; @endphp
-                @foreach ($quotation->quotationItems as $index => $item)
-                    <tr>
-                        <td class="text-center">{{ $index + 1 }}</td>
-                        <td>
-                            <strong>{{ $item->description ?? '-' }}</strong><br>
-                            @if ($item->location)
-                                <small>Lokasi: {{ $item->location }}</small>
-                            @endif
-                        </td>
-                        <td>{{ $item->regulation_name ?? '-' }}</td>
-                        <td>
-                            @if ($item->parameterQuotationItems->isNotEmpty())
-                                {{-- Mengambil semua 'parameter_name' dan menggabungkannya dengan koma dan spasi --}}
-                                {{ $item->parameterQuotationItems->pluck('parameter_name')->implode(', ') }}
-                            @else
-                                - {{-- Tampilkan tanda hubung jika tidak ada parameter --}}
-                            @endif
-                        </td>
-                        <td class="text-center" style="text-align: right;">{{ $item->quantity ?? 0 }}</td>
-                        <td>{{ $item->unit ?? '-' }}</td>
-                        <td class="text-right" style="text-align: right;">
-                            {{ number_format($item->price, 2, ',', '.') }}</td>
-                        <td class="text-right" style="text-align: right;">
-                            {{ number_format(($item->quantity ?? 0) * $item->price, 2, ',', '.') }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-            <tfoot class="summary-table">
-                <tr>
-                    <td class="label" colspan="7">Subtotal</td>
-                    <td class="value">Rp {{ number_format($grandSubtotal, 2, ',', '.') }}</td>
-                </tr>
-                @if ($quotation->discount_percentage > 0)
-                    <tr>
-                        <td class="label" colspan="7">Diskon
-                            ({{ number_format($quotation->discount_percentage, 2, ',', '.') }}%)
-                        </td>
-                        <td class="value">Rp
-                            {{ number_format($grandSubtotal * ($quotation->discount_percentage / 100), 2, ',', '.') }}
-                        </td>
-                    </tr>
-                @endif
-                @if ($quotation->ppn_percentage > 0)
-                    <tr>
-                        <td class="label" colspan="7">PPN
-                            ({{ number_format($quotation->ppn_percentage, 2, ',', '.') }}%)</td>
-                        <td class="value">Rp
-                            {{ number_format($grandSubtotal * ($quotation->ppn_percentage / 100), 2, ',', '.') }}</td>
-                    </tr>
-                @endif
-                @if ($quotation->pph_percentage > 0)
-                    <tr>
-                        <td class="label" colspan="7">PPH
-                            ({{ number_format($quotation->pph_percentage, 2, ',', '.') }}%)</td>
-                        <td class="value">Rp
-                            {{ number_format($grandSubtotal * ($quotation->pph_percentage / 100), 2, ',', '.') }}</td>
-                    </tr>
-                @endif
-                <tr class="total-row">
-                    <td class="label" colspan="7">TOTAL AKHIR</td>
-                    <td class="value" style="">
-                        Rp
-                        {{ number_format(
-                            $grandSubtotal -
-                                ($grandSubtotal * ($quotation->discount_percentage ?? 0)) / 100 +
-                                ($grandSubtotal * ($quotation->ppn_percentage ?? 0)) / 100 -
-                                ($grandSubtotal * ($quotation->pph_percentage ?? 0)) / 100,
-                            2,
-                            ',',
-                            '.',
-                        ) }}
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-
-
-        <div class="terms">
-            <h4>
-                Syarat & Ketentuan Pembayaran:
-            </h4>
-            {!! $quotation->additional_description ?? 'Tidak ada syarat dan ketentuan pembayaran tambahan.' !!}
+                $korpBase64 = '';
+                if (file_exists($korpPath)) {
+                    $korpData = file_get_contents($korpPath);
+                    $korpType = pathinfo($korpPath, PATHINFO_EXTENSION);
+                    $korpBase64 = 'data:image/' . $korpType . ';base64,' . base64_encode($korpData);
+                }
+            @endphp
+            @if ($korpBase64)
+                <img src="{{ $korpBase64 }}" alt="Kop Surat">
+            @endif
         </div>
 
-        <div class="signature-section">
-            <div class="left-col">
-                <p>Hormat kami,</p>
-                <div class="signature-box"></div>
-                <p style="margin-top: 5px;">
-                    <strong>{{ $quotation->personel->full_name ?? 'Nama Personil Lab' }}</strong>
-                </p>
-                <p>Posisi: {{ $quotation->personel->position ?? 'Posisi Personil Lab' }}</p>
+        <div class="container">
+            <!-- Header Info Box -->
+            <div class="header-info">
+                <div class="info-row">
+                    <div class="info-col">
+                        <span class="info-label">PIC</span>
+                        <span>:</span>
+                        <span>{{ $quotation->personel->full_name ?? '-' }}</span>
+                    </div>
+                    <div class="info-col">
+                        <span class="info-label">Tanggal</span>
+                        <span>:</span>
+                        <span>{{ \Carbon\Carbon::parse($quotation->quotation_date)->format('d F Y') }}</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-col">
+                        <span class="info-label">Telp</span>
+                        <span>:</span>
+                        <span>{{ $quotation->personel->phone_number ?? '-' }}</span>
+                    </div>
+                    <div class="info-col">
+                        <span class="info-label">Reff</span>
+                        <span>:</span>
+                        <span>{{ $quotation->quotation_number ?? '-' }}</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-col">
+                        <span class="info-label">Email</span>
+                        <span>:</span>
+                        <span>{{ $quotation->personel->email ?? '-' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Greeting -->
+            <div class="greeting">Dengan Hormat;</div>
+
+            <!-- Introduction -->
+            <div class="intro-text">
+                Terima kasih sudah memberi kepercayaan kepada {{ $company->name ?? 'Laboratorium Kami' }}.
+                Menindaklanjuti permintaan dari <strong>{{ $quotation->customer->name ?? '-' }}</strong>
+                perihal {{ $quotation->quotation_name ?? 'pengujian laboratorium' }},
+                maka harga yang kami tawarkan adalah sebesar
+                <span class="price-highlight">
+                    Rp
+                    {{ number_format(
+                        $quotation->total_price -
+                            ($quotation->total_price * ($quotation->discount_percentage ?? 0)) / 100 +
+                            ($quotation->total_price * ($quotation->ppn_percentage ?? 0)) / 100 -
+                            ($quotation->total_price * ($quotation->pph_percentage ?? 0)) / 100,
+                        0,
+                        ',',
+                        '.',
+                    ) }},-
+                </span>
+                dengan rincian anggaran biaya selengkapnya pada halaman berikutnya.
+            </div>
+
+            <div class="intro-text">
+                Apabila ada hal yang perlu ditanyakan terkait penawaran kami ini, dapat menghubungi kami
+                di {{ $company->phone ?? '-' }} atau melalui email di: {{ $company->email ?? '-' }}.
+            </div>
+
+            <div class="intro-text">
+                Selanjutnya, mohon untuk dapat membaca terlebih dahulu dan memahami kebijakan perihal administrasi
+                penerimaan contoh uji di halaman terakhir dari penawaran ini. Persetujuan penawaran ini berarti juga
+                menyatakan bahwa kebijakan {{ $company->name ?? 'Laboratorium' }} dapat dimengerti dan disetujui.
+            </div>
+
+            <div class="closing-text">
+                <p>Demikianlah yang dapat kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+            </div>
+
+            <!-- Signature -->
+            <div class="signature-page1">
+                <p><strong>Hormat Kami,</strong></p>
+                <p><strong>{{ $company->name ?? 'Laboratorium' }}</strong></p>
+                <div class="signature-box-page1"></div>
+                <p><strong><u>{{ $quotation->personel->full_name ?? 'Nama Personil' }}</u></strong></p>
+                <p>{{ $quotation->personel->position ?? 'Marketing' }}</p>
             </div>
         </div>
     </div>
 
-    <div class="footer">
-        <p>Dokumen ini dibuat secara otomatis dan berlaku tanpa tanda tangan basah.</p>
-        <p>&copy; {{ date('Y') }} [{{ $company->name }}]. Hak Cipta Dilindungi.</p>
+    <!-- HALAMAN 2: Detail Penawaran -->
+    <div class="page">
+        <div class="header">
+            @if ($korpBase64)
+                <img src="{{ $korpBase64 }}" alt="Kop Surat">
+            @endif
+        </div>
+
+        <div class="container">
+            <!-- Section Title -->
+            <div class="section-title">
+                DAFTAR RINCIAN, JUMLAH DAN HARGA BARANG/PEKERJAAN<br>
+                {{ strtoupper($quotation->quotation_name ?? 'PENAWARAN') }}
+            </div>
+
+            <!-- Items Table -->
+            <div class="table-wrapper">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th class="col-no">No</th>
+                            <th class="col-name">Nama Pekerjaan</th>
+                            <th class="col-reg">Baku Mutu</th>
+                            <th class="col-param">Parameter</th>
+                            <th class="col-qty">Jml</th>
+                            <th class="col-unit">Satuan</th>
+                            <th class="col-freq">Frek</th>
+                            <th class="col-price">Harga (Rp)</th>
+                            <th class="col-total">Total (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $grandSubtotal = $quotation->total_price;
+                            $groupedItems = $quotation->quotationItems->groupBy('group');
+                            $groupLabels = [
+                                'A' => 'A. Biaya Pengambilan dan Analisis Contoh Uji',
+                                'B' => 'B. Biaya Operasional',
+                                'C' => 'C. Biaya Lainnya',
+                                'D' => 'D. Biaya Tambahan',
+                                'E' => 'E. Biaya Ekstra',
+                            ];
+                            $itemNumber = 1;
+                        @endphp
+
+                        @foreach ($groupedItems as $group => $items)
+                            {{-- Group Header --}}
+                            <tr class="section-header">
+                                <td colspan="9"><strong>{{ $groupLabels[$group] ?? $group }}</strong></td>
+                            </tr>
+
+                            @php $groupSubtotal = 0; @endphp
+
+                            {{-- Items in Group --}}
+                            @foreach ($items as $item)
+                                @php
+                                    $itemTotal = ($item->quantity ?? 0) * $item->price * ($item->frequency ?? 1);
+                                    $groupSubtotal += $itemTotal;
+                                @endphp
+                                <tr>
+                                    <td class="text-center">{{ $itemNumber++ }}</td>
+                                    <td>
+                                        <strong>{{ $item->description ?? '-' }}</strong>
+                                        @if ($item->location)
+                                            <br><small>{{ $item->location }}</small>
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->regulation_name ?? '-' }}</td>
+                                    <td>
+                                        @if ($item->parameterQuotationItems->isNotEmpty())
+                                            {{ $item->parameterQuotationItems->pluck('parameter_name')->implode(', ') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="text-center">{{ $item->quantity ?? 0 }}</td>
+                                    <td class="text-center">{{ $item->unit ?? '-' }}</td>
+                                    <td class="text-center">{{ $item->frequency ?? 1 }}</td>
+                                    <td class="text-right">{{ number_format($item->price, 0, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($itemTotal, 0, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+
+                            {{-- Group Subtotal --}}
+                            <tr style="background-color: #f0f0f0;">
+                                <td colspan="8" class="text-right"><strong>Sub Total {{ $group }}</strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>{{ number_format($groupSubtotal, 0, ',', '.') }}</strong></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary-section">
+                <table class="summary-table">
+                    <tr>
+                        <td class="label">Total A+B</td>
+                        <td class="value">Rp {{ number_format($grandSubtotal, 0, ',', '.') }}</td>
+                    </tr>
+                    @if ($quotation->ppn_percentage > 0)
+                        <tr>
+                            <td class="label">PPN ({{ number_format($quotation->ppn_percentage, 0) }}%)</td>
+                            <td class="value">Rp
+                                {{ number_format($grandSubtotal * ($quotation->ppn_percentage / 100), 0, ',', '.') }}
+                            </td>
+                        </tr>
+                    @endif
+                    @if ($quotation->pph_percentage > 0)
+                        <tr>
+                            <td class="label">PPH 23 ({{ number_format($quotation->pph_percentage, 0) }}%)</td>
+                            <td class="value">Rp
+                                {{ number_format($grandSubtotal * ($quotation->pph_percentage / 100), 0, ',', '.') }}
+                            </td>
+                        </tr>
+                    @endif
+                    <tr class="total-row">
+                        <td class="label">TOTAL</td>
+                        <td class="value">
+                            Rp
+                            {{ number_format(
+                                $grandSubtotal -
+                                    ($grandSubtotal * ($quotation->discount_percentage ?? 0)) / 100 +
+                                    ($grandSubtotal * ($quotation->ppn_percentage ?? 0)) / 100 -
+                                    ($grandSubtotal * ($quotation->pph_percentage ?? 0)) / 100,
+                                0,
+                                ',',
+                                '.',
+                            ) }}
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="terbilang">
+                    Terbilang:
+                    {{ $quotation->total_in_words ?? 'Tujuh puluh enam juta seratus sembilan puluh satu ribu rupiah' }}
+                </div>
+            </div>
+
+            <!-- Signature -->
+            <div class="signature-section">
+                <div class="signature-flex">
+                    <div class="signature-col">
+                        <strong>Persetujuan biaya yang kami tawarkan</strong>
+                        <div class="signature-box"></div>
+                        <p style="font-size: 7.5pt; margin: 2px 0;">Nama: ........................</p>
+                        <p style="font-size: 7.5pt; margin: 2px 0;">Jabatan: ........................</p>
+                        <p style="margin-top: 5px; font-size: 7.5pt;"><strong>Tanda tangan & cap perusahaan</strong></p>
+                    </div>
+                    <div class="signature-col">
+                        <strong>Hormat Kami</strong><br>
+                        <strong>{{ $company->name ?? 'Laboratorium' }}</strong>
+                        <div class="signature-box"></div>
+                        <p style="font-size: 7.5pt; margin: 2px 0;">
+                            <strong><u>{{ $quotation->personel->full_name ?? 'Nama Personil' }}</u></strong></p>
+                        <p style="font-size: 7.5pt; margin: 2px 0;">{{ $quotation->personel->position ?? 'Marketing' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN 3: Syarat & Ketentuan -->
+    <div class="page">
+        <div class="header">
+            @if ($korpBase64)
+                <img src="{{ $korpBase64 }}" alt="Kop Surat">
+            @endif
+        </div>
+
+        <div class="container">
+            <!-- Policy -->
+            <div class="policy-section">
+                <div class="policy-title">Kebijakan Administrasi Pengujian</div>
+                <ol>
+                    <li>Harga yang kami tawarkan berdasarkan jumlah contoh uji yang tertera dan dapat berubah sesuai
+                        dengan jumlah yang sebenarnya;</li>
+                    <li>Penawaran harga berlaku untuk 1 (satu) bulan;</li>
+                    <li>Jangka waktu analisis adalah 10 (sepuluh) hari kerja untuk parameter rutin dan 16 (enam belas)
+                        hari kerja untuk parameter subkontrak, kecuali tanah;</li>
+                    <li>Untuk permintaan analisis ulang (re-analisis) akan dikenakan biaya lagi sesuai harga analisis
+                        dengan ketentuan bahwa sampel tersebut masih cukup untuk dianalisis ulang;</li>
+                    <li>Laporan hasil analisis akan dikirim melalui email (sebagai draft), sedangkan hasil analisis asli
+                        akan dikirimkan bersamaan dengan tagihan;</li>
+                    <li>{{ $company->name ?? 'Laboratorium' }} akan mengeluarkan laporan akhir dari hasil pengujian
+                        berupa Laporan Hasil Pengujian (LHP) berdasarkan atas semua informasi yang diberikan. Untuk itu
+                        pihak pelanggan diminta untuk meyakinkan bahwa semua informasi yang diberikan sudah sah dan
+                        benar; dan</li>
+                    <li>Bagi pelanggan yang tidak menerbitkan Purchase Order (PO) atau Surat Perintah Kerja (SPK) dapat
+                        menanda tangani penawaran ini dan mengirimkannya kembali melalui alamat email
+                        {{ $company->name ?? 'Laboratorium' }}.</li>
+                </ol>
+
+                <div class="policy-title">Syarat Pembayaran</div>
+                <ol>
+                    <li>Untuk nominal tagihan di atas Rp10.000.000,00 wajib membayarkan DP sebesar 50% sebelum kegiatan
+                        dilaksanakan;</li>
+                    <li>Pembayaran dilakukan sebelum hasil analisa diterima; dan</li>
+                    <li>Pembayaran dilakukan secara transfer ke Rekening {{ $company->name ?? 'Perusahaan' }}; yaitu
+                    </li>
+                </ol>
+
+                <div class="bank-info">
+                    <div class="bank-row">
+                        <span class="bank-label"><strong>Nama Bank</strong></span>
+                        <span>: {{ $company->bank_name ?? 'Bank BNI' }}</span>
+                    </div>
+                    <div class="bank-row">
+                        <span class="bank-label"><strong>Nomor Rekening Giro</strong></span>
+                        <span>: {{ $company->bank_account_number ?? '-' }}</span>
+                    </div>
+                    <div class="bank-row">
+                        <span class="bank-label"><strong>Nama</strong></span>
+                        <span>: {{ $company->bank_account_name ?? strtoupper($company->name) }}</span>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px; font-size: 8pt;">
+                    <p>-------End-------</p>
+                </div>
+
+                <div class="footer-note">
+                    <p><em>Untuk informasi Sertifikat Akreditasi Laboratorium, Ruang Lingkup Akreditasi,</em></p>
+                    <p><em>Registrasi KLHK, SKP PJK3, serta Company Profile {{ $company->name ?? 'Laboratorium' }}</em>
+                    </p>
+                    <p><em>dapat menghubungi kami atau mengunjungi website resmi.</em></p>
+                    <p style="margin-top: 10px;">&copy; {{ date('Y') }} {{ $company->name ?? 'Laboratorium' }}.
+                        Hak Cipta Dilindungi.</p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

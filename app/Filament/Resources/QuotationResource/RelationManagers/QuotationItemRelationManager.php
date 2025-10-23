@@ -242,9 +242,7 @@ class QuotationItemRelationManager extends RelationManager
                     ->size(TextSize::Small)
                     ->summarize(
                         Summarizer::make()
-
                             ->prefix('Total : ')
-                            // --- PERBAIKAN DI SINI: Gunakan closure kustom untuk menjumlahkan ---
                             ->using(
                                 fn(QueryBuilder $query): string =>
                                 // Hitung total dari kuantitas * harga satuan untuk semua item yang difilter
