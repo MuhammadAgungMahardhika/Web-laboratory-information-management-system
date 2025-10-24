@@ -331,25 +331,69 @@
             margin-top: 20px;
         }
 
-        .signature-flex {
-            display: flex;
-            gap: 10px;
-            border: 1px solid #333;
+        .signature-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            table-layout: fixed;
         }
 
-        .signature-col {
-            flex: 1;
-            padding: 8px;
-            border-right: 1px solid #333;
+        .signature-table td {
+            width: 50%;
+            vertical-align: top;
+            padding: 10px 12px;
+            border-right: 1px solid #000;
         }
 
-        .signature-col:last-child {
+        .signature-table td:last-child {
             border-right: none;
         }
 
         .signature-box {
-            height: 50px;
-            margin: 8px 0;
+            border-bottom: 1px solid #000;
+            box-sizing: border-box;
+            height: 100px;
+            position: relative;
+            margin: 0;
+        }
+
+        /* placeholder teks di tengah kotak */
+        .signature-box .placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* centra horizontal + vertical */
+            margin: 0;
+            font-size: 7.5pt;
+            color: #666;
+            /* warna abu agar terlihat seperti placeholder */
+            line-height: 1;
+            white-space: nowrap;
+            /* jangan pecah baris */
+            pointer-events: none;
+            /* agar tidak mempengaruhi interaksi */
+        }
+
+
+        .signature-table strong {
+            font-size: 9pt;
+        }
+
+        .signature-table p {
+            font-size: 8pt;
+            margin: 2px 0;
+        }
+
+        .signature-table .name {
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 8pt;
+            margin-top: 5px;
+        }
+
+        .signature-table .position {
+            font-size: 8pt;
         }
 
         /* Policy */
@@ -705,26 +749,27 @@
 
             <!-- Signature -->
             <div class="signature-section">
-                <div class="signature-flex">
-                    <div class="signature-col">
-                        <strong>Persetujuan biaya yang kami tawarkan</strong>
-                        <div class="signature-box"></div>
-                        <p style="font-size: 7.5pt; margin: 2px 0;">Nama: ........................</p>
-                        <p style="font-size: 7.5pt; margin: 2px 0;">Jabatan: ........................</p>
-                        <p style="margin-top: 5px; font-size: 7.5pt;"><strong>Tanda tangan & cap perusahaan</strong></p>
-                    </div>
-                    <div class="signature-col">
-                        <strong>Hormat Kami</strong><br>
-                        <strong>{{ $company->name ?? 'Laboratorium' }}</strong>
-                        <div class="signature-box"></div>
-                        <p style="font-size: 7.5pt; margin: 2px 0;">
-                            <strong><u>{{ $quotation->personel->fullname ?? 'Nama Personil' }}</u></strong>
-                        </p>
-                        <p style="font-size: 7.5pt; margin: 2px 0;">
-                            {{ $quotation->personel->position->name ?? 'Marketing' }}
-                        </p>
-                    </div>
-                </div>
+                <table class="signature-table">
+                    <tr>
+                        <!-- Kolom Kiri -->
+                        <td>
+                            <strong>Persetujuan biaya yang kami tawarkan</strong>
+                            <div class="signature-box">
+                                <p class="placeholder">Tanda tangan & cap perusahaan</p>
+                            </div>
+                            <p>Nama: ........................</p>
+                            <p>Jabatan: ........................</p>
+                        </td>
+                        <!-- Kolom Kanan -->
+                        <td>
+                            <strong>Hormat Kami</strong><br>
+                            <strong>{{ $company->name ?? 'PT. Nama Perusahaan' }}</strong>
+                            <div class="signature-box"></div>
+                            <p class="name">{{ $quotation->personel->fullname ?? 'Nama Personil' }}</p>
+                            <p class="position">{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
