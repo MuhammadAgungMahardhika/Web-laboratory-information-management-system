@@ -27,7 +27,7 @@
         /* Page Break */
         .page {
             page-break-after: always;
-            padding: 210px 0px;
+            margin: 210px 60px;
             min-height: 100vh;
             position: relative;
         }
@@ -39,7 +39,8 @@
         .container {
             max-width: 100%;
             margin: 0;
-            padding: 0 10px 10px 10px;
+            padding: 0 0 5px 5px;
+
         }
 
         /* Header */
@@ -48,10 +49,9 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 80px;
-            padding: 5px 10px;
+            height: auto;
+            margin: 5px 60px;
             text-align: center;
-            background: white;
             z-index: 1000;
         }
 
@@ -84,7 +84,6 @@
         }
 
         /* Fixed Footer */
-        /* Fixed Footer - Image Full Width */
         .footer-fixed {
             position: fixed;
             bottom: 0;
@@ -93,7 +92,7 @@
             height: 50px;
             background: white;
             z-index: 1000;
-            padding: 0;
+            padding: 0px 60px;
             margin: 0;
             display: flex;
         }
@@ -173,8 +172,18 @@
         }
 
         /* Signature for Page 1 */
+        .signature-container {
+            width: 100%;
+            text-align: right;
+            /* Geser seluruh blok ke kanan */
+            margin-top: 40px;
+        }
+
         .signature-page1 {
-            margin-top: 50px;
+            display: inline-block;
+            /* Supaya lebarnya hanya selebar konten */
+            text-align: left;
+            /* Isi teks di dalam tetap mulai dari kiri */
         }
 
         .signature-page1 p {
@@ -183,7 +192,10 @@
 
         .signature-box-page1 {
             height: 60px;
-            margin: 15px 0;
+            width: 150px;
+            margin: 10px 0;
+            border-bottom: 1px solid #000;
+            /* Garis tanda tangan */
         }
 
         .section-title {
@@ -206,13 +218,15 @@
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 6.5pt;
+            font-size: 6pt;
+            table-layout: fixed;
+            word-wrap: break-word;
         }
 
         .items-table th,
         .items-table td {
             border: 1px solid #333;
-            padding: 3px;
+            padding: 2px 3px;
             vertical-align: top;
             word-break: break-word;
         }
@@ -541,12 +555,14 @@
             </div>
 
             <!-- Signature -->
-            <div class="signature-page1">
-                <p><strong>Hormat Kami,</strong></p>
-                <p><strong>{{ $company->name ?? 'Laboratorium' }}</strong></p>
-                <div class="signature-box-page1"></div>
-                <p><strong><u>{{ $quotation->personel->fullname ?? 'Nama Personil' }}</u></strong></p>
-                <p>{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
+            <div class="signature-container">
+                <div class="signature-page1">
+                    <p><strong>Hormat Kami,</strong></p>
+                    <p><strong>{{ $company->name ?? 'Laboratorium' }}</strong></p>
+                    <div class="signature-box-page1"></div>
+                    <p><strong><u>{{ $quotation->personel->fullname ?? 'Nama Personil' }}</u></strong></p>
+                    <p>{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
+                </div>
             </div>
         </div>
     </div>
