@@ -290,9 +290,15 @@
             line-height: 1.4;
         }
 
+
         .policy-section li {
             margin-bottom: 5px;
             font-style: italic;
+        }
+
+        .policy-section li p {
+            margin: 0;
+            display: inline;
         }
 
         .bank-info {
@@ -369,7 +375,7 @@
                     <div class="info-col">
                         <span class="info-label">PIC</span>
                         <span>:</span>
-                        <span>{{ $quotation->personel->full_name ?? '-' }}</span>
+                        <span>{{ $quotation->personel->fullname ?? '-' }}</span>
                     </div>
                     <div class="info-col">
                         <span class="info-label">Tanggal</span>
@@ -442,8 +448,8 @@
                 <p><strong>Hormat Kami,</strong></p>
                 <p><strong>{{ $company->name ?? 'Laboratorium' }}</strong></p>
                 <div class="signature-box-page1"></div>
-                <p><strong><u>{{ $quotation->personel->full_name ?? 'Nama Personil' }}</u></strong></p>
-                <p>{{ $quotation->personel->position ?? 'Marketing' }}</p>
+                <p><strong><u>{{ $quotation->personel->fullname ?? 'Nama Personil' }}</u></strong></p>
+                <p>{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
             </div>
         </div>
     </div>
@@ -536,7 +542,8 @@
                                 <td colspan="8" class="text-right"><strong>Sub Total {{ $group }}</strong>
                                 </td>
                                 <td class="text-right">
-                                    <strong>{{ number_format($groupSubtotal, 0, ',', '.') }}</strong></td>
+                                    <strong>{{ number_format($groupSubtotal, 0, ',', '.') }}</strong>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -604,8 +611,10 @@
                         <strong>{{ $company->name ?? 'Laboratorium' }}</strong>
                         <div class="signature-box"></div>
                         <p style="font-size: 7.5pt; margin: 2px 0;">
-                            <strong><u>{{ $quotation->personel->full_name ?? 'Nama Personil' }}</u></strong></p>
-                        <p style="font-size: 7.5pt; margin: 2px 0;">{{ $quotation->personel->position ?? 'Marketing' }}
+                            <strong><u>{{ $quotation->personel->fullname ?? 'Nama Personil' }}</u></strong>
+                        </p>
+                        <p style="font-size: 7.5pt; margin: 2px 0;">
+                            {{ $quotation->personel->position->name ?? 'Marketing' }}
                         </p>
                     </div>
                 </div>
@@ -624,50 +633,60 @@
         <div class="container">
             <!-- Policy -->
             <div class="policy-section">
-                <div class="policy-title">Kebijakan Administrasi Pengujian</div>
-                <ol>
-                    <li>Harga yang kami tawarkan berdasarkan jumlah contoh uji yang tertera dan dapat berubah sesuai
-                        dengan jumlah yang sebenarnya;</li>
-                    <li>Penawaran harga berlaku untuk 1 (satu) bulan;</li>
-                    <li>Jangka waktu analisis adalah 10 (sepuluh) hari kerja untuk parameter rutin dan 16 (enam belas)
-                        hari kerja untuk parameter subkontrak, kecuali tanah;</li>
-                    <li>Untuk permintaan analisis ulang (re-analisis) akan dikenakan biaya lagi sesuai harga analisis
-                        dengan ketentuan bahwa sampel tersebut masih cukup untuk dianalisis ulang;</li>
-                    <li>Laporan hasil analisis akan dikirim melalui email (sebagai draft), sedangkan hasil analisis asli
-                        akan dikirimkan bersamaan dengan tagihan;</li>
-                    <li>{{ $company->name ?? 'Laboratorium' }} akan mengeluarkan laporan akhir dari hasil pengujian
-                        berupa Laporan Hasil Pengujian (LHP) berdasarkan atas semua informasi yang diberikan. Untuk itu
-                        pihak pelanggan diminta untuk meyakinkan bahwa semua informasi yang diberikan sudah sah dan
-                        benar; dan</li>
-                    <li>Bagi pelanggan yang tidak menerbitkan Purchase Order (PO) atau Surat Perintah Kerja (SPK) dapat
-                        menanda tangani penawaran ini dan mengirimkannya kembali melalui alamat email
-                        {{ $company->name ?? 'Laboratorium' }}.</li>
-                </ol>
+                @if ($quotation->additional_description)
+                    {!! $quotation->additional_description !!}
+                @else
+                    <div class="policy-title">Kebijakan Administrasi Pengujian</div>
+                    <ol>
+                        <li>Harga yang kami tawarkan berdasarkan jumlah contoh uji yang tertera dan dapat berubah sesuai
+                            dengan jumlah yang sebenarnya;</li>
+                        <li>Penawaran harga berlaku untuk 1 (satu) bulan;</li>
+                        <li>Jangka waktu analisis adalah 10 (sepuluh) hari kerja untuk parameter rutin dan 16 (enam
+                            belas)
+                            hari kerja untuk parameter subkontrak, kecuali tanah;</li>
+                        <li>Untuk permintaan analisis ulang (re-analisis) akan dikenakan biaya lagi sesuai harga
+                            analisis
+                            dengan ketentuan bahwa sampel tersebut masih cukup untuk dianalisis ulang;</li>
+                        <li>Laporan hasil analisis akan dikirim melalui email (sebagai draft), sedangkan hasil analisis
+                            asli
+                            akan dikirimkan bersamaan dengan tagihan;</li>
+                        <li>{{ $company->name ?? 'Laboratorium' }} akan mengeluarkan laporan akhir dari hasil pengujian
+                            berupa Laporan Hasil Pengujian (LHP) berdasarkan atas semua informasi yang diberikan. Untuk
+                            itu
+                            pihak pelanggan diminta untuk meyakinkan bahwa semua informasi yang diberikan sudah sah dan
+                            benar; dan</li>
+                        <li>Bagi pelanggan yang tidak menerbitkan Purchase Order (PO) atau Surat Perintah Kerja (SPK)
+                            dapat
+                            menanda tangani penawaran ini dan mengirimkannya kembali melalui alamat email
+                            {{ $company->name ?? 'Laboratorium' }}.</li>
+                    </ol>
 
-                <div class="policy-title">Syarat Pembayaran</div>
-                <ol>
-                    <li>Untuk nominal tagihan di atas Rp10.000.000,00 wajib membayarkan DP sebesar 50% sebelum kegiatan
-                        dilaksanakan;</li>
-                    <li>Pembayaran dilakukan sebelum hasil analisa diterima; dan</li>
-                    <li>Pembayaran dilakukan secara transfer ke Rekening {{ $company->name ?? 'Perusahaan' }}; yaitu
-                    </li>
-                </ol>
+                    <div class="policy-title">Syarat Pembayaran</div>
+                    <ol>
+                        <li>Untuk nominal tagihan di atas Rp10.000.000,00 wajib membayarkan DP sebesar 50% sebelum
+                            kegiatan
+                            dilaksanakan;</li>
+                        <li>Pembayaran dilakukan sebelum hasil analisa diterima; dan</li>
+                        <li>Pembayaran dilakukan secara transfer ke Rekening {{ $company->name ?? 'Perusahaan' }};
+                            yaitu
+                        </li>
+                    </ol>
 
-                <div class="bank-info">
-                    <div class="bank-row">
-                        <span class="bank-label"><strong>Nama Bank</strong></span>
-                        <span>: {{ $company->bank_name ?? 'Bank BNI' }}</span>
+                    <div class="bank-info">
+                        <div class="bank-row">
+                            <span class="bank-label"><strong>Nama Bank</strong></span>
+                            <span>: {{ $company->bank_name ?? 'Bank BNI' }}</span>
+                        </div>
+                        <div class="bank-row">
+                            <span class="bank-label"><strong>Nomor Rekening Giro</strong></span>
+                            <span>: {{ $company->bank_account_number ?? '-' }}</span>
+                        </div>
+                        <div class="bank-row">
+                            <span class="bank-label"><strong>Nama</strong></span>
+                            <span>: {{ $company->bank_account_name ?? strtoupper($company->name) }}</span>
+                        </div>
                     </div>
-                    <div class="bank-row">
-                        <span class="bank-label"><strong>Nomor Rekening Giro</strong></span>
-                        <span>: {{ $company->bank_account_number ?? '-' }}</span>
-                    </div>
-                    <div class="bank-row">
-                        <span class="bank-label"><strong>Nama</strong></span>
-                        <span>: {{ $company->bank_account_name ?? strtoupper($company->name) }}</span>
-                    </div>
-                </div>
-
+                @endif
                 <div style="text-align: center; margin-top: 20px; font-size: 8pt;">
                     <p>-------End-------</p>
                 </div>

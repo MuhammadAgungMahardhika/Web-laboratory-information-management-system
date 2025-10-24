@@ -253,7 +253,7 @@ class QuotationResource extends Resource
                                 ->reactive()
                                 ->afterStateUpdated(function (?string $state, Get $get, Set $set) {
                                     if ($state === 'kosong') {
-                                        $set('additional_description', ''); // Kosongkan jika 'kosong' dipilih
+                                        $set('additional_description', null); // Kosongkan jika 'kosong' dipilih
                                     } elseif ($state) {
                                         // --- Mengambil KONTEN template dari database berdasarkan ID yang dipilih ---
                                         $template = TermTemplate::find($state);
@@ -261,7 +261,7 @@ class QuotationResource extends Resource
                                             $set('additional_description', $template->content);
                                         } else {
                                             // Fallback jika template tidak ditemukan (misal: ID tidak valid)
-                                            $set('additional_description', '');
+                                            $set('additional_description', null);
                                         }
                                     } else {
                                         // Jika pilihan dikosongkan tanpa memilih 'kosong'
