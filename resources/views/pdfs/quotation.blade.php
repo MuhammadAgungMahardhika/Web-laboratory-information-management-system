@@ -42,6 +42,7 @@
             padding: 0 10px 10px 10px;
         }
 
+        /* Header */
         .header {
             position: fixed;
             top: 0;
@@ -60,24 +61,70 @@
             object-fit: contain;
         }
 
+        /* Fixed Footer */
+        /* Fixed Footer - Image Full Width */
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: white;
+            z-index: 1000;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .footer-image {
+            width: 90%;
+            height: 100%;
+        }
+
+        .footer-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .footer-page-number {
+            width: 10%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #333;
+            font-weight: bold;
+            font-size: 12pt;
+            background: white;
+        }
+
+
         /* Header Info */
         .header-info {
+            width: 100%;
             border: 2px solid #333;
-            padding: 5px;
-            margin-bottom: 10px;
+            /* outline luar */
+            border-collapse: collapse;
             font-size: 8pt;
+            margin-bottom: 10px;
         }
 
-        .info-row {
-            display: flex;
-            margin-bottom: 2px;
+        .header-info td {
+            padding: 3px 5px;
+            vertical-align: top;
         }
 
-        .info-col {
-            flex: 1;
-            display: flex;
-            gap: 5px;
+        .header-info td:first-child,
+        .header-info td:nth-child(3) {
+            width: 15%;
+            /* label kolom */
+            font-weight: bold;
         }
+
+
+
 
         .info-label {
             font-weight: bold;
@@ -293,7 +340,6 @@
 
         .policy-section li {
             margin-bottom: 5px;
-            font-style: italic;
         }
 
         .policy-section li p {
@@ -329,6 +375,7 @@
 
         @page {
             margin: 0.5in;
+            padding: 0.5in;
             size: A4;
         }
 
@@ -347,6 +394,39 @@
 </head>
 
 <body>
+    <!-- Fixed Footer - Image 80% + Page Number 20% -->
+    <div class="footer-fixed">
+        <div class="footer-image">
+            @php
+                $footerPath = $company->active_setting?->footer_path ?? public_path('images/quotation-footer.png');
+                $footerBase64 = '';
+                if (file_exists($footerPath)) {
+                    $footerData = file_get_contents($footerPath);
+                    $footerType = pathinfo($footerPath, PATHINFO_EXTENSION);
+                    $footerBase64 = 'data:image/' . $footerType . ';base64,' . base64_encode($footerData);
+                }
+            @endphp
+            @if ($footerBase64)
+                <img src="{{ $footerBase64 }}" alt="Footer">
+            @endif
+        </div>
+        <div class="footer-page-number">
+            <span class="page-number"></span>
+        </div>
+    </div>
+
+    <script>
+        // Auto page numbering
+        document.addEventListener('DOMContentLoaded', function() {
+            const pages = document.querySelectorAll('.page');
+            const pageNumbers = document.querySelectorAll('.page-number');
+            const totalPages = pages.length;
+
+            if (pageNumbers.length > 0) {
+                pageNumbers[0].textContent = '1 / ' + totalPages;
+            }
+        });
+    </script>
     <!-- HALAMAN 1: Surat Pengantar -->
     <div class="page">
         <div class="header">
@@ -370,39 +450,25 @@
 
         <div class="container">
             <!-- Header Info Box -->
-            <div class="header-info">
-                <div class="info-row">
-                    <div class="info-col">
-                        <span class="info-label">PIC</span>
-                        <span>:</span>
-                        <span>{{ $quotation->personel->fullname ?? '-' }}</span>
-                    </div>
-                    <div class="info-col">
-                        <span class="info-label">Tanggal</span>
-                        <span>:</span>
-                        <span>{{ \Carbon\Carbon::parse($quotation->quotation_date)->format('d F Y') }}</span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-col">
-                        <span class="info-label">Telp</span>
-                        <span>:</span>
-                        <span>{{ $quotation->personel->phone_number ?? '-' }}</span>
-                    </div>
-                    <div class="info-col">
-                        <span class="info-label">Reff</span>
-                        <span>:</span>
-                        <span>{{ $quotation->quotation_number ?? '-' }}</span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-col">
-                        <span class="info-label">Email</span>
-                        <span>:</span>
-                        <span>{{ $quotation->personel->email ?? '-' }}</span>
-                    </div>
-                </div>
-            </div>
+            <table class="header-info">
+                <tr>
+                    <td><strong>PIC</strong></td>
+                    <td>: {{ $quotation->personel->fullname ?? '-' }}</td>
+                    <td><strong>Tanggal</strong></td>
+                    <td>: {{ \Carbon\Carbon::parse($quotation->quotation_date)->format('d F Y') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Telp</strong></td>
+                    <td>: {{ $quotation->personel->phone_number ?? '-' }}</td>
+                    <td><strong>Reff</strong></td>
+                    <td>: {{ $quotation->quotation_number ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td colspan="3">: {{ $quotation->personel->email ?? '-' }}</td>
+                </tr>
+            </table>
+
 
             <!-- Greeting -->
             <div class="greeting">Dengan Hormat;</div>
@@ -452,6 +518,8 @@
                 <p>{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
             </div>
         </div>
+
+
     </div>
 
     <!-- HALAMAN 2: Detail Penawaran -->
@@ -620,6 +688,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- HALAMAN 3: Syarat & Ketentuan -->
