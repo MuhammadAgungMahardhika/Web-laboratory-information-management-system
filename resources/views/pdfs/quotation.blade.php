@@ -27,7 +27,7 @@
         /* Page Break */
         .page {
             page-break-after: always;
-            padding-top: 90px;
+            padding: 210px 0px;
             min-height: 100vh;
             position: relative;
         }
@@ -59,6 +59,28 @@
             max-height: 100%;
             max-width: 100%;
             object-fit: contain;
+        }
+
+        .quotation-info {
+            width: 100%;
+            border: 2px solid #333;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 10pt;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        .quotation-info td {
+            padding: 0px;
+        }
+
+        .quotation-info tr:first-child td {
+            background-color: #bedff3;
+            /* warna langit biru */
+            font-size: 16pt;
+            /* lebih besar dari yang lain */
+            font-weight: bold;
         }
 
         /* Fixed Footer */
@@ -100,7 +122,6 @@
             background: white;
         }
 
-
         /* Header Info */
         .header-info {
             width: 100%;
@@ -108,7 +129,8 @@
             /* outline luar */
             border-collapse: collapse;
             font-size: 8pt;
-            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .header-info td {
@@ -122,9 +144,6 @@
             /* label kolom */
             font-weight: bold;
         }
-
-
-
 
         .info-label {
             font-weight: bold;
@@ -375,7 +394,6 @@
 
         @page {
             margin: 0.5in;
-            padding: 0.5in;
             size: A4;
         }
 
@@ -391,9 +409,41 @@
             }
         }
     </style>
+
 </head>
 
 <body>
+    <div class="header">
+        @php
+            $dynamicKorpPath = $company->active_setting?->letterhead_path;
+            $korpPath = $dynamicKorpPath ? public_path("storage/{$dynamicKorpPath}") : public_path('images/korp.jpg');
+
+            $korpBase64 = '';
+            if (file_exists($korpPath)) {
+                $korpData = file_get_contents($korpPath);
+                $korpType = pathinfo($korpPath, PATHINFO_EXTENSION);
+                $korpBase64 = 'data:image/' . $korpType . ';base64,' . base64_encode($korpData);
+            }
+        @endphp
+        @if ($korpBase64)
+            <img src="{{ $korpBase64 }}" alt="Kop Surat">
+        @endif
+
+        <table class="quotation-info">
+            <tr>
+                <td><strong>Quotation Letter </strong></td>
+            </tr>
+            <tr>
+                <td>No.Quo: {{ $quotation->quotation_number }}</td>
+            </tr>
+            <tr>
+                <td><strong>{{ $quotation->customer->name }}</strong></td>
+            </tr>
+            <tr>
+                <td>{{ $quotation->customer->full_address }}</td>
+            </tr>
+        </table>
+    </div>
     <!-- Fixed Footer - Image 80% + Page Number 20% -->
     <div class="footer-fixed">
         <div class="footer-image">
@@ -429,25 +479,6 @@
     </script>
     <!-- HALAMAN 1: Surat Pengantar -->
     <div class="page">
-        <div class="header">
-            @php
-                $dynamicKorpPath = $company->active_setting?->letterhead_path;
-                $korpPath = $dynamicKorpPath
-                    ? public_path("storage/{$dynamicKorpPath}")
-                    : public_path('images/korp.jpg');
-
-                $korpBase64 = '';
-                if (file_exists($korpPath)) {
-                    $korpData = file_get_contents($korpPath);
-                    $korpType = pathinfo($korpPath, PATHINFO_EXTENSION);
-                    $korpBase64 = 'data:image/' . $korpType . ';base64,' . base64_encode($korpData);
-                }
-            @endphp
-            @if ($korpBase64)
-                <img src="{{ $korpBase64 }}" alt="Kop Surat">
-            @endif
-        </div>
-
         <div class="container">
             <!-- Header Info Box -->
             <table class="header-info">
@@ -518,18 +549,10 @@
                 <p>{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
             </div>
         </div>
-
-
     </div>
 
     <!-- HALAMAN 2: Detail Penawaran -->
     <div class="page">
-        <div class="header">
-            @if ($korpBase64)
-                <img src="{{ $korpBase64 }}" alt="Kop Surat">
-            @endif
-        </div>
-
         <div class="container">
             <!-- Section Title -->
             <div class="section-title">
@@ -693,12 +716,6 @@
 
     <!-- HALAMAN 3: Syarat & Ketentuan -->
     <div class="page">
-        <div class="header">
-            @if ($korpBase64)
-                <img src="{{ $korpBase64 }}" alt="Kop Surat">
-            @endif
-        </div>
-
         <div class="container">
             <!-- Policy -->
             <div class="policy-section">
