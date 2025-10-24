@@ -61,7 +61,7 @@
             object-fit: contain;
         }
 
-        .quotation-info {
+        .header-quotation-info {
             width: 100%;
             border: 2px solid #333;
             border-collapse: collapse;
@@ -71,11 +71,11 @@
             padding-top: 10px;
         }
 
-        .quotation-info td {
+        .header-quotation-info td {
             padding: 0px;
         }
 
-        .quotation-info tr:first-child td {
+        .header-quotation-info tr:first-child td {
             background-color: #bedff3;
             /* warna langit biru */
             font-size: 16pt;
@@ -429,7 +429,7 @@
             <img src="{{ $korpBase64 }}" alt="Kop Surat">
         @endif
 
-        <table class="quotation-info">
+        <table class="header-quotation-info">
             <tr>
                 <td><strong>Quotation Letter </strong></td>
             </tr>
