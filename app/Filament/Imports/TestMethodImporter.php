@@ -16,9 +16,12 @@ class TestMethodImporter extends Importer
     {
         return [
             ImportColumn::make('id')
+                ->requiredMapping()
+                ->helperText('metode uji di update berdasarkan id')
                 ->label('Id metode uji')
                 ->rules(['max:255']),
             ImportColumn::make('name')
+                ->requiredMapping()
                 ->label('Nama metode uji')
                 ->rules(['max:255']),
             ImportColumn::make('description')

@@ -17,10 +17,12 @@ class ParameterImporter extends Importer
         return [
             ImportColumn::make('test_method_id')
                 ->numeric()
+                ->requiredMapping()
                 ->label('Id metode uji')
                 ->rules(['nullable', 'integer']),
             ImportColumn::make('id')
                 ->requiredMapping()
+                ->helperText('parameter di update berdasarkan id')
                 ->label('Id parameter')
                 ->rules(['required', 'integer']),
             ImportColumn::make('name')

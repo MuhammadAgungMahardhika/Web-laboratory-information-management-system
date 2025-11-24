@@ -38,7 +38,6 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Enums\PaginationMode;
 use Filament\Tables\Enums\RecordActionsPosition;
 
 class QuotationResource extends Resource
@@ -104,7 +103,6 @@ class QuotationResource extends Resource
                                 $set('valid_until_date', null);
                             }
                         }),
-
                     DatePicker::make('valid_until_date')
                         ->label('Tanggal berakhir penawaran')
                         ->default(now()->addDays(30)) // Default awal saat form dibuka
@@ -124,12 +122,10 @@ class QuotationResource extends Resource
                     Select::make('request_id')
                         ->label('Nomor permohonan (jika ada)')
                         ->relationship('request', 'request_number'),
-
                     TextInput::make('quotation_name')
                         ->label('Judul penawaran')
                         ->columnSpan(2)
                         ->required(),
-
                     Select::make('customer_id')
                         ->label('Klien')
                         ->required()
