@@ -18,7 +18,11 @@ class ParameterImporter extends Importer
             ImportColumn::make('test_method_id')
                 ->numeric()
                 ->label('Id metode uji')
-                ->rules(['integer']),
+                ->rules(['nullable', 'integer']),
+            ImportColumn::make('id')
+                ->requiredMapping()
+                ->label('Id parameter')
+                ->rules(['required', 'integer']),
             ImportColumn::make('name')
                 ->requiredMapping()
                 ->label('Nama parameter')
@@ -33,7 +37,7 @@ class ParameterImporter extends Importer
                 ->label('Harga')
                 ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'integer']),
+                ->rules(['required', 'numeric', 'min:0']),
             ImportColumn::make('status')
                 ->requiredMapping()
                 ->numeric()
@@ -41,11 +45,11 @@ class ParameterImporter extends Importer
             ImportColumn::make('standard_max_value')
                 ->numeric()
                 ->label('Batas atas baku mutu')
-                ->rules(['integer']),
+                ->rules(['nullable', 'numeric']),
             ImportColumn::make('standard_min_value')
                 ->numeric()
                 ->label('Batas bawah baku mutu')
-                ->rules(['integer']),
+                ->rules(['nullable', 'numeric']),
             ImportColumn::make('standard_unit')
                 ->label('Satuan standar')
                 ->rules(['max:50']),
