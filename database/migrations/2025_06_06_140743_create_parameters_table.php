@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('unit', 50);
 
             $table->text('description')->nullable();
-            $table->decimal('default_price');
+            $table->decimal('default_price', 15, 2);
             $table->tinyInteger('status')->default(1);
 
             // standard value

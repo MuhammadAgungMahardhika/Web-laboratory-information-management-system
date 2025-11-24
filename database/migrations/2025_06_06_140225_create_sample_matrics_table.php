@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code', 10)->unique();
             $table->unsignedBigInteger('sample_type_id');
 
-            $table->string('name', 100)->unique();
+            $table->string('name', 255)->unique();
             $table->tinyInteger('environment_type')->default(1);
             $table->text('description')->nullable();
 

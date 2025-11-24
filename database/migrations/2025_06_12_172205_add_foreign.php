@@ -100,7 +100,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('sample_matrics')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
+
+            $table->foreign('regulation_id', 'fk_test_packages_regulation')
+                ->references('id')
+                ->on('regulations')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
         });
 
         Schema::table('parameter_test_packages', function (Blueprint $table) {
@@ -108,12 +114,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('test_packages')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             $table->foreign('parameter_id', 'fk_parameter_test_packages_parameters')
                 ->references('id')
                 ->on('parameters')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
 
         // labjob
@@ -129,19 +135,25 @@ return new class extends Migration
                 ->references('id')
                 ->on('lab_jobs')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
+
+            $table->foreign('quotation_item_id', 'fk_lab_job_items_quotation_items')
+                ->references('id')
+                ->on('quotation_items')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
 
             $table->foreign('test_package_id', 'fk_lab_job_items_test_packages')
                 ->references('id')
                 ->on('test_packages')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
 
             $table->foreign('regulation_id', 'fk_lab_job_items_regulations')
                 ->references('id')
                 ->on('regulations')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
 
         Schema::table('parameter_lab_job_items', function (Blueprint $table) {
@@ -149,13 +161,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('lab_job_items')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('parameter_id', 'fk_parameter_lab_job_items_parameters')
                 ->references('id')
                 ->on('parameters')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
         });
 
         Schema::table('lab_job_personels', function (Blueprint $table) {
@@ -163,13 +175,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('lab_jobs')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('personel_id', 'fk_lab_job_personel_personels')
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
         });
 
         // akhir labjob

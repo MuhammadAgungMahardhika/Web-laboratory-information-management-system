@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('personel_id')->nullable();
 
             // Quotation details
-            $table->string('quotation_name', 50);
+            $table->string('quotation_name', 255);
             $table->string('quotation_number', 50)->unique();
             $table->date('quotation_date');
             $table->date('valid_until_date');

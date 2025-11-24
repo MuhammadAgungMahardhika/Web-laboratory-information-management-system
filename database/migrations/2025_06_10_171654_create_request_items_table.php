@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('regulation_name');
             $table->integer('quantity');
             $table->string('unit');
-            $table->decimal('price');
+            $table->decimal('price', 15, 2);
             $table->string('location');
 
             $table->string('created_by', 255)->nullable();

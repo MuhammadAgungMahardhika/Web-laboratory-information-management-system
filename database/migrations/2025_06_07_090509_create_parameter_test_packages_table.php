@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('parameter_test_packages', function (Blueprint $table) {
             $table->id(); // Primary Key, auto-increment
             $table->unsignedBigInteger('test_package_id');
-            $table->unsignedBigInteger('parameter_id');
+            $table->unsignedBigInteger('parameter_id')->nullable();
 
 
             // Kolom auditing standar

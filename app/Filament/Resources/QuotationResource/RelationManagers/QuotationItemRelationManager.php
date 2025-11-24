@@ -39,8 +39,6 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 
-use function Filament\Support\format_money;
-
 class QuotationItemRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
@@ -138,8 +136,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->numeric()
                         ->prefix('Rp.')
                         ->required()
-                        ->default(0)
-                        ->step(500),
+                        ->default(0),
                     TextInput::make('location')
                         ->label('Lokasi Pengambilan Sampel')
                         ->maxLength(100)
@@ -189,8 +186,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->numeric()
                         ->required()
                         ->prefix('Rp.')
-                        ->default(0)
-                        ->step(500),
+                        ->default(0),
                 ])->columnSpanFull()->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
             ]);
     }

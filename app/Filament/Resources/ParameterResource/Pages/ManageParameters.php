@@ -3,10 +3,13 @@
 namespace App\Filament\Resources\ParameterResource\Pages;
 
 use App\Filament\Exports\ParameterExporter;
+use App\Filament\Imports\ParameterImporter;
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\ParameterResource;
 use Filament\Actions\ExportAction;
+use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Support\Icons\Heroicon;
 
 class ManageParameters extends ManageRecords
 {
@@ -16,7 +19,8 @@ class ManageParameters extends ManageRecords
     {
         return [
             CreateAction::make()->slideOver(),
-            ExportAction::make('export')->exporter(ParameterExporter::class)
+            ImportAction::make('import')->importer(ParameterImporter::class)->icon(Heroicon::ArrowDown)->slideOver(),
+            ExportAction::make('export')->exporter(ParameterExporter::class)->icon(Heroicon::ArrowUp)->slideOver()
         ];
     }
 }

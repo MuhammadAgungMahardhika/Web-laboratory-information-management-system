@@ -11,11 +11,10 @@ return new class extends Migration
         Schema::create('test_packages', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->unsignedBigInteger('sample_matric_id');
-
-            $table->foreignId('regulation_id')->constrained('regulations')->onDelete('restrict')->onUpdate('cascade');
+            $table->unsignedBigInteger('sample_matric_id')->nullable();
+            $table->unsignedBigInteger('regulation_id')->nullable();
             $table->text('description')->nullable();
-            $table->decimal('price');
+            $table->decimal('price', 15, 2);
             $table->boolean('is_active')->default(true);
 
             $table->string('created_by', 255)->nullable();

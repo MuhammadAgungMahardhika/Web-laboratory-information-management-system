@@ -19,7 +19,7 @@ return new class extends Migration
             // Snapshot Data
             $table->string('description');
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 15, 2);
 
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
