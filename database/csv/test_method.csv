@@ -1,20 +1,111 @@
-1,Gravimetri,Penentuan kadar total padatan dengan metode pengeringan dan penimbangan
-2,Spektrofotometri,Analisis logam berat dengan spektrofotometer serapan atom (AAS)
-3,Titrimetri,Penentuan kadar asam atau basa dengan titrasi
-4,Kromatografi,Identifikasi senyawa dengan kromatografi gas (GC)
-5,Mikrobiologi,Penghitungan koloni mikroorganisme dalam air
-6,FTIR,Identifikasi gugus fungsi senyawa dengan Fourier Transform Infrared
-7,ICP-OES,Penentuan elemen logam menggunakan ICP Optical Emission Spectroscopy
-8,TOC Analyzer,Analisis karbon organik total
-9,UV-Vis,Analisis zat warna menggunakan UV-Visible
-10,Potensiometri,Pengukuran pH menggunakan elektroda pH
-11,Konduktometri,Pengukuran konduktivitas listrik
-12,Flame Photometry,Analisis natrium dan kalium
-13,Colorimetri,Pengukuran konsentrasi berdasarkan intensitas warna
-14,XRF,Analisis unsur logam dalam padatan menggunakan sinar-X
-15,TLC,Kromatografi Lapis Tipis untuk identifikasi senyawa
-16,Voltametri,Analisis elektrokimia untuk logam berat
-17,Gravimetri Filter,Pengukuran debu total dengan filter dan penimbangan
-18,PCR,Deteksi DNA mikroorganisme spesifik
-19,Elisa,Pengujian antigen/antibodi berbasis immunoassay
-20,Penetrometer,Pengujian kekerasan atau penetrasi sampel padat
+1,SNI 7119-7:2017
+2,IKM.JLI-22 (CO meter)
+3,SNI 19-7119.2-2005
+4,SNI 19-7119.8-2005
+5,SNI 7119.13:2009
+6,SNI 7119-3-2017
+7,SNI 7119-15:2016
+8,SNI 7119-14:2016
+9,SNI 7119-4:2017
+10,IKM.JLI-30 (Anemometer)
+11,IKM.JLI-166 (Weather Station)
+12,SNI 19-7119.1-2005
+13,NIOSH 2542 (1994)
+14,IKM-JLI-20 (MASA 701)
+15,OWI-T020 (GC)
+16,NIOSH 1501 (2003)
+17,SNI 8427:2017
+18,IKM.JLI-37 (Vibration meter)
+19,SNI 7118-2: 2018
+20,SNI 19-7117.6-2005
+21,IKM.JLI-73 (Spektrofotometer)
+22,SNI 19-7117.8-2005
+23,SNI 19-7117.9-2005
+24,IKM.JLI-24 (Gas Analyzer)
+25,SNI 19-7117.11-2005
+26,"US-EPA Method 17, 2017"
+27,IKM.JLI-129 (E6000-6DSH)
+28,US-EPA Method 29.2017
+29,IKM.JLI-40 (Infrared Thermometer)
+30,"US-EPA Method 1, 2020"
+31,"US-EPA Method 2, 2017"
+32,"US-EPA Method 3, 2017"
+33,"US-EPA Method 4, 2017"
+34,"US-EPA Methode 17, 2017"
+35,SNI 06-6989.23 2005
+36,IKM.JLI-165 (Thermometer Digital)
+37,IKM.JLI-07 (Elektrometri)
+38,"APHA 24th Edition, 2540-D,2023"
+39,SNI 6989.80:2011
+40,SNI 6989.11:2019
+41,SNI 6989.72:2009
+42,IKM.JLI-12 (Spektrofotometri)
+43,SNI 06-6989.14-2004
+44,APHA 24th Edition 4500-G:2023
+45,SNI 6989.20:2019
+46,SNI 6989.19:2009
+47,SNI 6989.79:2011
+48,SNI 06-6989.9:2004
+49,SNI 06-6989.30-2005
+50,"JIS K 0102-2.2022, Butir 17.3"
+51,SNI 6989-31:2021 butir 5.5.2
+52,SNI 06-6989.29-2005
+53,IKM.JLI 112 (Spektrofotometri)
+54,SNI 6989.77-2011
+55,IKM.JLI-86 (Spektrofotometri)
+56,SNI 6989.40-2005
+57,"APHA 24th Edition, 4500-B,2023"
+58,IKM.JLI.74 (MVU-AAS)
+59,IKM.JLI-85 (HVG-AAS)
+60,IKM.JLI-75 (HVG- AAS)
+61,SNI 6989-84:2019
+62,SNI 6989.38-2005
+63,IKM.JLI-79 (AAS)
+64,SNI 06-6989.48:2005
+65,SNI 6989.66:2009
+66,SNI 6989.46-2009
+67,SNI 6989.53:2010
+68,SNI 6989.10:2011
+69,SNI 06-6989.51:2005
+70,"APHA 24th Edition, 5530-C,2023"
+71,"APHA 24th Edition, 9221-E,C, 2023"
+72,"APHA 24th Edition, 9221-B,C, 2023"
+73,IKM.JLI-150 (Observasi Visual)
+74,SNI 6989.1:2019
+75,SNI 6989.26:2019
+76,SNI 06-6989.25-2005
+77,SNI 6989-31:2021 butir 5.5.1
+78,SNI 6989.65-2009
+79,"APHA 24th Edition 9221-F,C:2023"
+80,APHA 24th Edition 2320.B-2023
+81,IKM.JLI-153 (Visual)
+82,IKM.JLI-32 (Mikroskop)
+83,IKM.JLI-34 (Mikroskop)
+84,IKM.JLI-156 (Spektrofotometri)
+85,"APHA 24th Edition 9221-B,C:2023"
+86,SNI 06.6989.51-2005
+87,SNI 06-6989.21-2004
+88,SNI 6989.71-2009
+89,SNI 6989.84-2019
+90,SNI 6989.46:2009
+91,SNI 6989.64:2009
+92,IKM. JLI-85 (HVG-AAS)
+93,IKM.JLI-75 (HVG-AAS)
+94,IKM. JLI-79 (AAS)
+95,SNI 6989.77:2011
+96,IKM.JLI-112 (Spektrofotometri)
+97,SNI 06-6989.29:2005
+98,SNI 06-6989.23-2005
+99,APHA 24th 3111-B:2023
+100,BS EN ISO 9308-1:2014+A1:2017
+101,SNI 06-6860-2002
+102,IKM.JLI-158 (Spektrofotometri)
+103,IKM.JLI-157 (Spektrofotometri)
+104,SNI 06-6989.30:2005
+105,SNI 6989.31:2021
+106,IKM.JLI-158 (Spektrofometri)
+107,IKM.JLI-157 (Spektrofometri)
+108,IKM.JLI-156 (Spektrofometri)
+109,SNI 06-6989.51-2005
+110,SNI 6989.66-2009
+111,SNI 6989.65:2009
