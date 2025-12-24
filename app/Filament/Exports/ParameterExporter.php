@@ -17,7 +17,8 @@ class ParameterExporter extends Exporter
         return [
             ExportColumn::make('test_method_id')->label('Id metode uji'),
             ExportColumn::make('id')->label('Id parameter'),
-            ExportColumn::make('name')->label('Nama parameter'),
+            ExportColumn::make('name')->label('Kode parameter'),
+            ExportColumn::make('long_name')->label('Nama parameter'),
             ExportColumn::make('unit')->label('Satuan'),
             ExportColumn::make('description')->label('Deskripsi'),
             ExportColumn::make('default_price')->label('Harga'),

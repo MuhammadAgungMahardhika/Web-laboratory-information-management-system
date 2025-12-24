@@ -11,12 +11,13 @@ return new class extends Migration
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('test_method_id')->nullable();
-            $table->string('name', 255)->unique();
+            $table->string('name', 20)->unique();
+            $table->string('long_name', 255)->unique();
             $table->string('unit', 50);
 
             $table->text('description')->nullable();
-            $table->decimal('default_price', 15, 2);
-            $table->tinyInteger('status')->default(1);
+            $table->decimal('default_price', 15, 2)->nullable();
+            $table->tinyInteger('status')->default(1)->nullable();
 
             // standard value
             $table->decimal('standard_max_value', 10, 4)->nullable();
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('name');
+            $table->index('long_name');
             $table->index('status');
         });
     }

@@ -20,7 +20,12 @@ use Filament\Forms\Components\Radio;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 
 class ParameterResource extends Resource
@@ -46,7 +51,13 @@ class ParameterResource extends Resource
                 Section::make([
                     TextInput::make('name')
                         ->required()
-                        ->label('Nama parameter')
+                        ->label('Kode parameter')
+                        ->autocomplete(false)
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(20),
+                    TextInput::make('long_name')
+                        ->required()
+                        ->label('Nama Lengkap parameter')
                         ->autocomplete(false)
                         ->unique(ignoreRecord: true)
                         ->maxLength(255),
@@ -147,12 +158,22 @@ class ParameterResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('name', 'asc')
+            ->groups([
+                Group::make('unit')->label('Satuan')
+            ])
             ->columns([
                 TextColumn::make('name')
+                    ->label('Kode parameter')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('long_name')
                     ->label('Nama parameter uji')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('unit')
                     ->label('Satuan')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('default_price')
                     ->label('Harga')
@@ -165,6 +186,7 @@ class ParameterResource extends Resource
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge()
+                    ->sortable()
                     ->color(fn($state) => ParameterStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => ParameterStatusEnum::labels()[$state]),
                 TextColumn::make('created_by')
@@ -181,8 +203,63 @@ class ParameterResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('test_method_id')
+                    ->label('Metode Uji')
+                    ->relationship('testMethod', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->multiple()
+                    ->columnSpan(2),
+
+                Filter::make('default_price_range')
+                    ->label('Range Harga')
+                    ->schema([
+                        TextInput::make('price_from')
+                            ->label('Harga Minimum')
+                            ->numeric()
+                            ->prefix('Rp'),
+
+                        TextInput::make('price_to')
+                            ->label('Harga Maksimum')
+                            ->numeric()
+                            ->prefix('Rp'),
+                    ])
+                    ->columns(2)
+                    ->columnSpan(3)
+                    ->query(function (Builder $query, array $data) {
+                        $query
+                            ->when(
+                                filled($data['price_from']),
+                                fn($q) => $q->where('default_price', '>=', $data['price_from'])
+                            )
+                            ->when(
+                                filled($data['price_to']),
+                                fn($q) => $q->where('default_price', '<=', $data['price_to'])
+                            );
+                    }),
+
+                Filter::make('initial')
+                    ->label('Inisial')
+                    ->schema([
+                        Radio::make('inisial')
+                            ->options(
+                                ['' => 'Semua'] + collect(range('A', 'Z'))
+                                    ->mapWithKeys(fn($l) => [$l => $l])
+                                    ->toArray()
+                            )
+                            ->inline()
+                            ->default('')
+                            ->inlineLabel(false),
+                    ])
+                    ->columnSpanFull()
+                    ->query(function (Builder $query, array $data) {
+                        if (! filled($data['inisial'])) {
+                            return;
+                        }
+
+                        $query->where('name', 'like', $data['inisial'] . '%');
+                    }),
+            ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 EditAction::make()->slideOver(),
                 DeleteAction::make()->slideOver(),

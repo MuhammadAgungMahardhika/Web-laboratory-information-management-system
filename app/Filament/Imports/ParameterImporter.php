@@ -6,6 +6,7 @@ use App\Models\Parameter;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Number;
 
 class ParameterImporter extends Importer
@@ -26,6 +27,10 @@ class ParameterImporter extends Importer
                 ->label('Id parameter')
                 ->rules(['required', 'integer']),
             ImportColumn::make('name')
+                ->requiredMapping()
+                ->label('Kode parameter')
+                ->rules(['required', 'max:255']),
+            ImportColumn::make('long_name')
                 ->requiredMapping()
                 ->label('Nama parameter')
                 ->rules(['required', 'max:255']),
@@ -58,18 +63,46 @@ class ParameterImporter extends Importer
             ImportColumn::make('standard_notes')
                 ->label('Catatan')
                 ->rules(['max:255']),
-            ImportColumn::make('created_by')
-                ->rules(['max:255']),
-            ImportColumn::make('updated_by')
-                ->rules(['max:255']),
         ];
     }
 
     public function resolveRecord(): Parameter
     {
-        return Parameter::firstOrNew([
+        $parameter = Parameter::firstOrNew([
             'id' => $this->data['id'],
         ]);
+
+        // Set created_by untuk record baru (trait Blameable akan handle ini juga)
+        if (!$parameter->exists) {
+            $parameter->created_by = $this->getImportSource();
+        }
+
+        // Selalu update updated_by
+        $parameter->updated_by = $this->getImportSource();
+
+        return $parameter;
+    }
+
+    /**
+     * Override save method untuk memastikan timestamps di-set
+     */
+    protected function save(): void
+    {
+        $this->record->save();
+    }
+
+    /**
+     * Generate sumber import
+     */
+    protected function getImportSource(): string
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            return "Import by {$user->name}";
+        }
+
+        return 'Import System';
     }
 
     public static function getCompletedNotificationBody(Import $import): string

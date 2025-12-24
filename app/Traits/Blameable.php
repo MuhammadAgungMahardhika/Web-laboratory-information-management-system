@@ -8,17 +8,19 @@ trait Blameable
 {
     protected static function bootBlameable()
     {
-        // Event saat model pertama kali dibuat
+
+
         static::creating(function ($model) {
-            if (Auth::check()) { // Pastikan ada user yang login
+            // Jangan overwrite jika sudah diset (misalnya dari import)
+            if (empty($model->created_by) && Auth::check()) {
                 $model->created_by = Auth::user()->name;
             }
         });
 
-        // Event saat model diperbarui
         static::updating(function ($model) {
-            if (Auth::check()) { // Pastikan ada user yang login
-                $model->updated_by =  Auth::user()->name;
+            // Jangan overwrite jika sudah diset (misalnya dari import)
+            if (empty($model->updated_by) && Auth::check()) {
+                $model->updated_by = Auth::user()->name;
             }
         });
     }

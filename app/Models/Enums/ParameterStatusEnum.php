@@ -17,7 +17,7 @@ enum ParameterStatusEnum: int
     {
         return [
             self::Accredited->value => 'A',
-            self::Unaccredited->value => 'N/A',
+            self::Unaccredited->value => 'NA',
             self::Sub->value => 'S',
         ];
     }
