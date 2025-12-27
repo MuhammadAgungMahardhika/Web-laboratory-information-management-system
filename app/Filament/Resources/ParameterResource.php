@@ -257,7 +257,7 @@ class ParameterResource extends Resource
                             return;
                         }
 
-                        $query->where('name', 'like', $data['inisial'] . '%');
+                        $query->where('code', 'like', $data['inisial'] . '%');
                     }),
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
