@@ -15,6 +15,7 @@ use App\Filament\Resources\CityResource\Pages;
 use App\Filament\Resources\CityResource\RelationManagers;
 use App\Models\City;
 use App\Traits\HasAuthorization;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
@@ -95,6 +96,7 @@ class CityResource extends Resource
                     ->searchable(),
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
+                ViewAction::make()->slideOver(),
                 EditAction::make()->slideOver(),
                 DeleteAction::make(),
             ])

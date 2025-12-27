@@ -15,6 +15,7 @@ use App\Filament\Resources\ProvinceResource\Pages;
 use App\Filament\Resources\ProvinceResource\RelationManagers;
 use App\Models\Province;
 use App\Traits\HasAuthorization;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -73,6 +74,7 @@ class ProvinceResource extends Resource
             ])
             ->recordActions([
                 EditAction::make()->slideOver(),
+                ViewAction::make()->slideOver(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([

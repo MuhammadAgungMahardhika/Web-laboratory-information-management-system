@@ -54,7 +54,7 @@ class TestResultForm
                         Select::make('parameter_id')
                             ->label('Parameter')
                             ->required()
-                            ->relationship('parameter', 'name', modifyQueryUsing: function ($query, Get $get) {
+                            ->relationship('parameter', 'code', modifyQueryUsing: function ($query, Get $get) {
                                 $sampleId =   $get('sample_id');
 
                                 $query->whereHas('parameterLabJobItems', function ($q) use ($sampleId) {

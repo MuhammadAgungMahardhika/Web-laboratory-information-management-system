@@ -125,7 +125,7 @@
                 <tbody>
                     @foreach ($sample->testResults as $result)
                         <tr>
-                            <td>{{ $result->parameter->name ?? '-' }}</td>
+                            <td>{{ $result->parameter->code ?? '-' }}</td>
                             <td>{{ $result->tested_value ?? '-' }}</td>
                             <td>{{ $result->unit ?? '-' }}</td>
                             <td>{{ $result->standard_value_ref_min ?? '-' }} -

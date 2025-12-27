@@ -18,6 +18,7 @@ use App\Filament\Resources\SampleMatricResource\RelationManagers;
 use App\Models\Enums\EnvironmentTypeEnum;
 use App\Models\SampleMatric;
 use App\Traits\HasAuthorization;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -107,8 +108,9 @@ class SampleMatricResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
+                DeleteAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

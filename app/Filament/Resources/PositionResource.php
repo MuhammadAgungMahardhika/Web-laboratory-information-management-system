@@ -14,6 +14,7 @@ use App\Filament\Resources\PositionResource\Pages\ManagePositions;
 use App\Filament\Resources\PositionResource\Pages;
 use App\Filament\Resources\PositionResource\RelationManagers;
 use App\Models\Position;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -74,6 +75,7 @@ class PositionResource extends Resource
                 //
             ])
             ->recordActions([
+                ViewAction::make()->slideOver(),
                 EditAction::make()->slideOver(),
                 DeleteAction::make(),
             ])

@@ -33,7 +33,7 @@ class QuotationItemService
             ParameterQuotationItem::create([
                 'quotation_item_id' => $quotationItem->id,
                 'parameter_id' => $parameter->id,
-                'parameter_name' => $parameter->name,
+                'parameter_code' => $parameter->code,
                 'parameter_unit' => $parameter->unit,
                 'parameter_default_price' => $parameter->default_price,
                 'parameter_default_test_method_name' => $parameter->testMethod?->name,

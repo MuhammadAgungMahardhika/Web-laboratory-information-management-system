@@ -16,6 +16,7 @@ use App\Filament\Resources\TestMethodResource\Pages;
 use App\Filament\Resources\TestMethodResource\RelationManagers;
 use App\Models\TestMethod;
 use App\Traits\HasAuthorization;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -78,7 +79,8 @@ class TestMethodResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([

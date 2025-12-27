@@ -88,16 +88,12 @@ class TestPackageResource extends Resource
                     ])
                     ->createOptionModalHeading('Buat Matrix Sampel')
                     ->preload(),
+
                 Select::make('regulation_id')
-                    ->label('Regulasi')
-                    ->required()
+                    ->label('Regulasi/Standar')
                     ->relationship('regulation', 'name')
-                    ->searchable()
-                    ->createOptionForm([
-                        TextInput::make('name')
-                            ->required(),
-                    ])->createOptionModalHeading('Buat Regulasi')
                     ->preload(),
+
                 Toggle::make('is_active')
                     ->label('Aktif ?')
                     ->default(true)
@@ -105,7 +101,7 @@ class TestPackageResource extends Resource
                 Select::make('parameters')
                     ->label('Parameter')
                     ->multiple()
-                    ->relationship('parameters', 'name')
+                    ->relationship('parameters', 'code')
                     ->searchable()
                     ->reactive()
                     ->columnSpanFull()
@@ -118,9 +114,14 @@ class TestPackageResource extends Resource
                         $set('price', $totalParameterPrice);
                     })
                     ->createOptionForm([
-                        TextInput::make('name')
+                        TextInput::make('code')
                             ->required()
                             ->label('Nama parameter uji')
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(20),
+                        TextInput::make('long_name')
+                            ->required()
+                            ->label('Nama Lengkap parameter uji')
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
                         TextInput::make('unit')
@@ -182,7 +183,7 @@ class TestPackageResource extends Resource
                     ->label('Matrix sampel')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('regulation.name')
+                TextColumn::make('regulation.code')
                     ->label('Regulasi')
                     ->searchable()
                     ->sortable(),
@@ -192,7 +193,7 @@ class TestPackageResource extends Resource
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
-                TextColumn::make('parameters.name')
+                TextColumn::make('parameters.code')
                     ->label('Parameter')
                     ->listWithLineBreaks()
                     ->searchable()

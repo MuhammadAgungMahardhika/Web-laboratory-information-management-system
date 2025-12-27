@@ -2,17 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-
+use App\Models\Enums\RegulationTypeEnum;
 
 class RegulationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         // Path ke file CSV
@@ -24,8 +20,9 @@ class RegulationSeeder extends Seeder
             $csvData = array_map('str_getcsv', file($csvFile));
             foreach ($csvData as $row) {
                 DB::table('regulations')->insert([
-                    'id' => $row[0],
+                    'regulation_type_id' => $row[0],
                     'name' => $row[1],
+                    'long_name' => $row[2],
                 ]);
             }
         }

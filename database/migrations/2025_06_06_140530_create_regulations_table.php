@@ -10,13 +10,17 @@ return new class extends Migration
     {
         Schema::create('regulations', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255)->unique();
+            $table->unsignedBigInteger('regulation_type_id')->nullable();
+            $table->string('name')->unique();
+            $table->text('long_name')->nullable();
+            $table->boolean('is_active')->default(true);
 
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
             $table->index('name');
+            $table->index('is_active');
         });
     }
 

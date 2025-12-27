@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('test_method_id')->nullable();
-            $table->string('name', 20)->unique();
+            $table->string('code', 20)->unique();
             $table->string('long_name', 255)->unique();
             $table->string('unit', 50);
 
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
-            $table->index('name');
+            $table->index('code');
             $table->index('long_name');
             $table->index('status');
         });

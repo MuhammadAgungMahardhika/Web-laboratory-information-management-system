@@ -41,7 +41,7 @@ class SpecializationResource extends Resource
                     ->columnSpanFull(),
                 Select::make('parameters')
                     ->columnSpanFull()
-                    ->relationship('parameters', 'name')
+                    ->relationship('parameters', 'code')
                     ->multiple()
                     ->preload()
             ]);
@@ -77,7 +77,7 @@ class SpecializationResource extends Resource
                 SelectFilter::make('parameters')
                     ->label('Parameter')
                     ->searchable()
-                    ->relationship('parameters', 'name')
+                    ->relationship('parameters', 'code')
                     ->preload()
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([

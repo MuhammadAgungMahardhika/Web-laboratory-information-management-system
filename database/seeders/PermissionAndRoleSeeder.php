@@ -107,6 +107,13 @@ class PermissionAndRoleSeeder extends Seeder
             'update-regulation',
             'delete-regulation',
         ];
+        $regulationTypePermissions = [
+            'view-any-regulation-type',
+            'view-regulation-type',
+            'create-regulation-type',
+            'update-regulation-type',
+            'delete-regulation-type',
+        ];
         $sampleMatricPermissions = [
             'view-any-sample-matric',
             'view-sample-matric',
@@ -226,6 +233,7 @@ class PermissionAndRoleSeeder extends Seeder
             $rolePermissions,
             $parameterPermissions,
             $regulationPermissions,
+            $regulationTypePermissions,
             $sampleMatricPermissions,
             $sampleTypePermissions,
             $samplePermissions,

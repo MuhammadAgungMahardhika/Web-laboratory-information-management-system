@@ -26,6 +26,7 @@ use App\Models\Enums\RoleEnum;
 use App\Models\Enums\UserStatusEnum;
 use App\Models\Province;
 use App\Traits\HasAuthorization;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -399,6 +400,7 @@ class CustomerResource extends Resource
             ->recordActions([
                 ViewAction::make()->slideOver(),
                 EditAction::make()->slideOver(),
+                DeleteAction::make()
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

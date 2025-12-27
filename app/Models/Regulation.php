@@ -17,4 +17,9 @@ class Regulation extends Model
     {
         return $this->hasMany(TestPackage::class);
     }
+
+    public function regulationType()
+    {
+        return $this->belongsTo(RegulationType::class);
+    }
 }

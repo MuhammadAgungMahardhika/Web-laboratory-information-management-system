@@ -13,6 +13,7 @@ use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\CustomerTypeResource\Pages\ManageCustomerTypes;
 use App\Models\CustomerType;
 use App\Traits\HasAuthorization;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -64,6 +65,7 @@ class CustomerTypeResource extends Resource
                 //
             ])
             ->recordActions([
+                ViewAction::make()->slideOver(),
                 EditAction::make()->slideOver(),
                 DeleteAction::make()->slideOver(),
             ])

@@ -63,7 +63,7 @@ class LabJobService
                 ParameterLabJobItem::create([
                     'lab_job_item_id' => $labJobItem->id,
                     'parameter_id' => $paramSnapshot->parameter_id,
-                    'parameter_name' => $paramSnapshot->parameter_name,
+                    'parameter_code' => $paramSnapshot->parameter_code,
                     'parameter_unit' => $paramSnapshot->parameter_unit,
                     'parameter_default_price' => $paramSnapshot->parameter_default_price,
                     'parameter_default_test_method_name' => $paramSnapshot->parameter_default_test_method_name,
@@ -119,7 +119,7 @@ class LabJobService
                     ParameterLabJobItem::create([
                         'lab_job_item_id' => $labJobItem->id,
                         'parameter_id' => $paramSnapshot->parameter_id,
-                        'parameter_name' => $paramSnapshot->parameter_name,
+                        'parameter_code' => $paramSnapshot->parameter_code,
                         'parameter_unit' => $paramSnapshot->parameter_unit,
                         'parameter_default_price' => $paramSnapshot->parameter_default_price,
                         'parameter_default_test_method_name' => $paramSnapshot->parameter_default_test_method_name,

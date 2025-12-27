@@ -20,6 +20,7 @@ use App\Models\Enums\RoleEnum;
 use App\Models\Enums\UserStatusEnum;
 use App\Models\Personel;
 use App\Traits\HasAuthorization;
+use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -251,6 +252,7 @@ class PersonelResource extends Resource
             ->recordActions([
                 ViewAction::make()->slideOver(),
                 EditAction::make()->slideOver(),
+                DeleteAction::make()
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

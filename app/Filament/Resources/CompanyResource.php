@@ -24,6 +24,7 @@ use App\Filament\Resources\CompanyResource\RelationManagers\SettingsRelationMana
 use App\Models\Company;
 use App\Traits\HasAuthorization;
 use Config;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -213,6 +214,7 @@ class CompanyResource extends Resource
             ->recordActions([
                 ViewAction::make()->slideOver()->size(Size::ExtraLarge),
                 EditAction::make()->slideOver()->size(Size::ExtraLarge),
+                DeleteAction::make()
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

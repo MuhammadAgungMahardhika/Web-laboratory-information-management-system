@@ -49,7 +49,7 @@ class ParameterResource extends Resource
             ->components([
                 // Section::make([
                 Section::make([
-                    TextInput::make('name')
+                    TextInput::make('code')
                         ->required()
                         ->label('Kode parameter')
                         ->autocomplete(false)
@@ -158,12 +158,12 @@ class ParameterResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('name', 'asc')
+            ->defaultSort('code', 'asc')
             ->groups([
                 Group::make('unit')->label('Satuan')
             ])
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('code')
                     ->label('Kode parameter')
                     ->sortable()
                     ->searchable(),

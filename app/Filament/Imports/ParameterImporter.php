@@ -26,7 +26,7 @@ class ParameterImporter extends Importer
                 ->helperText('parameter di update berdasarkan id')
                 ->label('Id parameter')
                 ->rules(['required', 'integer']),
-            ImportColumn::make('name')
+            ImportColumn::make('code')
                 ->requiredMapping()
                 ->label('Kode parameter')
                 ->rules(['required', 'max:255']),

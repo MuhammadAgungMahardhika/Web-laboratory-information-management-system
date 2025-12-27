@@ -358,6 +358,13 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
+        Schema::table('regulations', function (Blueprint $table) {
+            $table->foreign('regulation_type_id', 'fk_regulations_regulation_type')
+                ->references('id')
+                ->on('regulation_types')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+        });
     }
 
     /**

@@ -675,7 +675,7 @@
                                     <td>{{ $item->regulation_name ?? '-' }}</td>
                                     <td>
                                         @if ($item->parameterQuotationItems->isNotEmpty())
-                                            {{ $item->parameterQuotationItems->pluck('parameter_name')->implode(', ') }}
+                                            {{ $item->parameterQuotationItems->pluck('parameter_code')->implode(', ') }}
                                         @else
                                             -
                                         @endif

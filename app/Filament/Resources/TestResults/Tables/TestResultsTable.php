@@ -133,7 +133,7 @@ class TestResultsTable
                     ->preload(),
                 SelectFilter::make('parameter_id')
                     ->label('Parameter uji')
-                    ->relationship('parameter', 'name')
+                    ->relationship('parameter', 'code')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('method_id')
@@ -161,7 +161,7 @@ class TestResultsTable
                     ->extraModalFooterActions([
                         TestResultAction::requestValidate()->cancelParentActions(),
                         TestResultAction::validate()->cancelParentActions()
-                    ])->modalHeading(fn($record) => "{$record->parameter->name} - Sampel {$record->sample->sample_code}")->modalIcon(Heroicon::Beaker)->modalIconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
+                    ])->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->sample_code}")->modalIcon(Heroicon::Beaker)->modalIconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
                 ViewAction::make()->slideOver()->modalFooterActions([
                     TestResultAction::requestValidate()->cancelParentActions(),
                     TestResultAction::validate()->cancelParentActions(),
@@ -169,7 +169,7 @@ class TestResultsTable
                     TestResultAction::reject()->cancelParentActions(),
                 ])
                     ->modalWidth(Width::SixExtraLarge)
-                    ->modalHeading(fn($record) => "{$record->parameter->name} - Sampel {$record->sample->sample_code}")->modalIcon(Heroicon::Beaker)->modalIconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
+                    ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->sample_code}")->modalIcon(Heroicon::Beaker)->modalIconColor(fn($record) =>  $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
 
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([

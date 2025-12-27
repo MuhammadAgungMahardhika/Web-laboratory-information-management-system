@@ -118,7 +118,7 @@ class QuotationItemRelationManager extends RelationManager
                     Select::make('parameters')
                         ->searchable()
                         ->multiple()
-                        ->relationship('parameters', 'name')
+                        ->relationship('parameters', 'code')
                         ->preload(),
 
                     TextInput::make('quantity')
@@ -214,7 +214,7 @@ class QuotationItemRelationManager extends RelationManager
                 TextColumn::make('parameterQuotationItems')
                     ->badge()
                     ->listWithLineBreaks()
-                    ->formatStateUsing(fn($state) => $state->parameter_name . " " . Number::currency($state->parameter_default_price, 'RP.'))
+                    ->formatStateUsing(fn($state) => $state->parameter_code . " " . Number::currency($state->parameter_default_price, 'RP.'))
                     ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
                     ->size(TextSize::Small)
                     ->label('Parameter'),

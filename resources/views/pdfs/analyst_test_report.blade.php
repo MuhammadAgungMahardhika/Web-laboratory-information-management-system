@@ -310,7 +310,7 @@
                                 if (!$uniqueParameters->where('id', $paramKey)->count()) {
                                     $uniqueParameters->push([
                                         'id' => $paramKey,
-                                        'name' => $result->parameter->name,
+                                        'name' => $result->parameter->code,
                                         'unit' => $result->parameter->unit,
                                     ]);
                                 }

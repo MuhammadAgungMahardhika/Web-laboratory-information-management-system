@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             SampleTypeSeeder::class,
             SampleMatricSeeder::class,
+            RegulationTypeSeeder::class,
             RegulationSeeder::class,
             TestMethodSeeder::class,
             ParameterSeeder::class,

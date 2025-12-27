@@ -20,17 +20,17 @@ class ParameterSeeder extends Seeder
 
         foreach ($csvData as $row) {
 
-            $name = isset($row[1]) ? trim($row[1]) : null;
+            $code = isset($row[1]) ? trim($row[1]) : null;
             $testMethodId = isset($row[6]) && $row[6] !== '' ? $row[6] : null;
 
             // Skip jika name kosong (ini satu-satunya validasi)
-            if ($name === null || $name === '') {
+            if ($code === null || $code === '') {
                 continue;
             }
 
             // Cek duplikat
             $exists = DB::table('parameters')
-                ->where('name', $name)
+                ->where('code', $code)
                 ->where(function ($q) use ($testMethodId) {
                     if ($testMethodId === null) {
                         $q->whereNull('test_method_id');
@@ -50,7 +50,7 @@ class ParameterSeeder extends Seeder
 
             // Prepare data untuk insert
             $data = [
-                'name'           => $name,
+                'code'           => $code,
                 'long_name'      => isset($row[2]) && $row[2] !== '' ? trim($row[2]) : null,
                 'unit'           => isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null,
                 'status'         => $status,
