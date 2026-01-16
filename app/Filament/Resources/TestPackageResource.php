@@ -91,6 +91,7 @@ class TestPackageResource extends Resource
 
                 Select::make('regulation_id')
                     ->label('Regulasi/Standar')
+                    ->searchable()
                     ->relationship('regulation', 'name')
                     ->preload(),
 

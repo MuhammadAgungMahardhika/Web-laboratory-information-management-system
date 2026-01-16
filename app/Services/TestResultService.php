@@ -42,9 +42,6 @@ class TestResultService
                 'analyst_personel_id' => null, // Nanti ditugaskan
                 'status' => TestResultStatusEnum::Raw->value, // Status awal
                 // --- SALIN NILAI STANDAR DI SINI ---
-                'standard_max_value_ref' =>  $paramSnapshot->parameter->standard_max_value,
-                'standard_min_value_ref' =>  $paramSnapshot->parameter->standard_min_value,
-                'standard_unit_ref' =>  $paramSnapshot->parameter->standard_unit,
                 'standard_notes_ref' =>  $paramSnapshot->parameter->standard_notes,
             ]);
         }

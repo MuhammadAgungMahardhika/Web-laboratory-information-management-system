@@ -96,7 +96,7 @@ class TestResultsTable
                 TextColumn::make('standard_unit_ref')
                     ->label('Satuan Standar'),
                 TextColumn::make('standard_notes_ref')
-                    ->label('Catatan Standar'),
+                    ->label('Baku Mutu (BML)'),
                 TextColumn::make('analystPersonel.fullname')->label('Analis')
                     ->searchable()
                     ->sortable(),

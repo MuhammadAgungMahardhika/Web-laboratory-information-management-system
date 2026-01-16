@@ -371,9 +371,6 @@ namespace App\Models{
  * @property string|null $description
  * @property string|null $default_price
  * @property int|null $status
- * @property string|null $standard_max_value
- * @property string|null $standard_min_value
- * @property string|null $standard_unit
  * @property string|null $standard_notes
  * @property string|null $created_by
  * @property string|null $updated_by

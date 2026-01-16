@@ -20,12 +20,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1)->nullable();
 
             // standard value
-            $table->decimal('standard_max_value', 10, 4)->nullable();
-            $table->decimal('standard_min_value', 10, 4)->nullable();
-            $table->string('standard_unit', 50)->nullable();
             $table->string('standard_notes', 255)->nullable();
-
-
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();

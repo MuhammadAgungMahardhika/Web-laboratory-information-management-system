@@ -128,16 +128,8 @@ class TestResultForm
 
                     ])->columns(1)->inlineLabel(),
                     Section::make([
-                        TextInput::make('standard_max_value_ref')
-                            ->label('Nilai Standar Maksimum')
-                            ->numeric(),
-                        TextInput::make('standard_min_value_ref')
-                            ->label('Nilai Standar Minimum')
-                            ->numeric(),
-                        TextInput::make('standard_unit_ref')
-                            ->label('Satuan Standar'),
                         TextInput::make('standard_notes_ref')
-                            ->label('Catatan Standar')
+                            ->label('Baku Mutu (BML)')
                     ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
                 ])->columnSpanFull()->columns(2)->heading(
                     'Hasil Uji'

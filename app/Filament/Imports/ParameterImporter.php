@@ -49,19 +49,8 @@ class ParameterImporter extends Importer
                 ->requiredMapping()
                 ->numeric()
                 ->rules(['required', 'integer']),
-            ImportColumn::make('standard_max_value')
-                ->numeric()
-                ->label('Batas atas baku mutu')
-                ->rules(['nullable', 'numeric']),
-            ImportColumn::make('standard_min_value')
-                ->numeric()
-                ->label('Batas bawah baku mutu')
-                ->rules(['nullable', 'numeric']),
-            ImportColumn::make('standard_unit')
-                ->label('Satuan standar')
-                ->rules(['max:50']),
             ImportColumn::make('standard_notes')
-                ->label('Catatan')
+                ->label('BML')
                 ->rules(['max:255']),
         ];
     }

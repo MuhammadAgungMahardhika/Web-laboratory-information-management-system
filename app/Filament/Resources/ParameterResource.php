@@ -43,111 +43,76 @@ class ParameterResource extends Resource
         return $schema
             ->columns([
                 'sm' => 2,
-                'md' => 3,
-                'xl' => 4,
+                'md' => 2,
+                'xl' => 2,
             ])
             ->components([
                 // Section::make([
-                Section::make([
-                    TextInput::make('code')
-                        ->required()
-                        ->label('Kode parameter')
-                        ->autocomplete(false)
-                        ->unique(ignoreRecord: true)
-                        ->maxLength(20),
-                    TextInput::make('long_name')
-                        ->required()
-                        ->label('Nama Lengkap parameter')
-                        ->autocomplete(false)
-                        ->unique(ignoreRecord: true)
-                        ->maxLength(255),
+                TextInput::make('code')
+                    ->required()
+                    ->label('Kode parameter')
+                    ->autocomplete(false)
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(20),
+                TextInput::make('long_name')
+                    ->required()
+                    ->label('Nama Lengkap parameter')
+                    ->autocomplete(false)
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(255),
 
-                    TextInput::make('unit')
-                        ->required()
-                        ->label('Satuan')
-                        ->autocomplete(false)
-                        ->maxLength(50)
-                        ->belowContent(
-                            Schema::end([
-                                Action::make('open_char_modal')
-                                    ->label('Spesial karakter')
-                                    ->modalHeading('Pilih Karakter Khusus')
-                                    ->modalSubmitActionLabel('Tutup')
-                                    ->modalCancelActionLabel('Batal')
-                                    ->link()
-                                    ->modalWidth('4xl')
-                                    ->modalContent(
-                                        fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
+                TextInput::make('unit')
+                    ->required()
+                    ->label('Satuan')
+                    ->autocomplete(false)
+                    ->maxLength(50)
+                    ->belowContent(
+                        Schema::end([
+                            Action::make('open_char_modal')
+                                ->label('Spesial karakter')
+                                ->modalHeading('Pilih Karakter Khusus')
+                                ->modalSubmitActionLabel('Tutup')
+                                ->modalCancelActionLabel('Batal')
+                                ->link()
+                                ->modalWidth('4xl')
+                                ->modalContent(
+                                    fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
                                         <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
                                     </div>')
-                                    ),
-                            ])
-                        ),
+                                ),
+                        ])
+                    ),
 
-                    TextInput::make('default_price')
-                        ->label('Harga standar')
-                        ->required()
-                        ->numeric()
-                        ->label('Harga')
-                        ->prefix('Rp. '),
-                    Select::make('test_method_id')
-                        ->label('Metode uji')
-                        ->relationship('testMethod', 'name')
-                        ->searchable()
-                        ->required()
-                        ->preload()
-                        ->createOptionForm([
-                            TextInput::make('code')
-                                ->label('Kode')
-                                ->required(),
-                            TextInput::make('name')
-                                ->label('Nama metode uji')
-                                ->required(),
-                            Textarea::make('description')
-                                ->label('Keterangan')
-                                ->columnSpanFull(),
-                        ])->createOptionModalHeading('Buat Metode uji'),
-                    Radio::make('status')
-                        ->inline()
-                        ->options(ParameterStatusEnum::labels())
-                        ->default(ParameterStatusEnum::default())
-                        ->required(),
-                ])->heading('Parameter uji')->columns(1)->inlineLabel()->columnSpan(2),
-                // Standar nilai
-                Section::make([
-                    TextInput::make('standard_max_value')
-                        ->numeric()
-                        ->label('Nilai standar maksimum'),
-                    TextInput::make('standard_min_value')
-                        ->numeric()
-                        ->label('Nilai standar minimum'),
-                    TextInput::make('standard_unit')
-                        ->label('Satuan standar')
-                        ->maxLength(50)
-                        ->belowContent(
-                            Schema::end([
-                                Action::make('open_char_modal')
-                                    ->label('Spesial karakter')
-                                    ->modalHeading('Pilih Karakter Khusus')
-                                    ->modalSubmitActionLabel('Tutup')
-                                    ->modalCancelActionLabel('Batal')
-                                    ->link()
-                                    ->modalWidth('4xl')
-                                    ->modalContent(
-                                        fn() => new HtmlString('<div style="width: 100%; height: 600px; overflow: hidden; border-radius: 8px;">
-                                        <iframe src="https://copychar.cc/" style="width: 100%; height: 100%; border: none;"></iframe>
-                                    </div>')
-                                    ),
-                            ])
-                        ),
-
-                    Textarea::make('standard_notes')
-                        ->label('Catatan standar')
-                        ->maxLength(255)
-                        ->columnSpanFull(),
-                ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel()->columnSpan(2),
-                // ])->columnSpanFull()->columns(2),
-
+                TextInput::make('default_price')
+                    ->label('Harga standar')
+                    ->required()
+                    ->numeric()
+                    ->label('Harga')
+                    ->prefix('Rp. '),
+                Select::make('test_method_id')
+                    ->label('Metode uji')
+                    ->relationship('testMethod', 'name')
+                    ->searchable()
+                    ->required()
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('code')
+                            ->label('Kode')
+                            ->required(),
+                        TextInput::make('name')
+                            ->label('Nama metode uji')
+                            ->required(),
+                        Textarea::make('description')
+                            ->label('Keterangan')
+                            ->columnSpanFull(),
+                    ])->createOptionModalHeading('Buat Metode uji'),
+                TextInput::make('standard_notes')
+                    ->label('Baku Mutu (BML)'),
+                Radio::make('status')
+                    ->inline()
+                    ->options(ParameterStatusEnum::labels())
+                    ->default(ParameterStatusEnum::default())
+                    ->required(),
                 Textarea::make('description')
                     ->label('Keterangan')
                     ->columnSpanFull(),
