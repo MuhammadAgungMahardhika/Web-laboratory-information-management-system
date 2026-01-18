@@ -323,8 +323,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereQuotationItemId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereRegulationCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereRegulationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereRegulationName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereTestPackageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereUpdatedAt($value)
@@ -371,7 +371,7 @@ namespace App\Models{
  * @property string|null $description
  * @property string|null $default_price
  * @property int|null $status
- * @property string|null $standard_notes
+ * @property array<array-key, mixed>|null $standard_notes
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -406,10 +406,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereLongName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardMaxValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardMinValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardNotes($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereTestMethodId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereUnit($value)
@@ -787,8 +784,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereQuotationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereRegulationCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereRegulationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereRegulationName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereTestPackageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationItem whereUpdatedAt($value)
@@ -832,6 +829,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $name
+ * @property string $long_name
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -845,6 +843,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RegulationType whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RegulationType whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RegulationType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RegulationType whereLongName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RegulationType whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RegulationType whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RegulationType whereUpdatedBy($value)
@@ -930,7 +929,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem whereLocation($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem whereQuantity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem whereRegulationCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem whereRegulationName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem whereRequestId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem whereTestPackageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RequestItem whereUnit($value)

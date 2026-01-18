@@ -12,7 +12,9 @@ use Illuminate\Support\ServiceProvider;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Facades\FilamentAsset;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Model::unguard();
+        TextColumn::configureUsing(fn(TextColumn $column) => $column
+            ->size(TextSize::ExtraSmall));
         Table::configureUsing(fn(Table $table) => $table
             ->recordActions([], position: RecordActionsPosition::BeforeColumns)
             ->modifyUngroupedRecordActionsUsing(fn(Action $action) => $action->iconButton())

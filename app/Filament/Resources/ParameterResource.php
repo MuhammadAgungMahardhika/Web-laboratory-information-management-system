@@ -17,6 +17,7 @@ use App\Models\Enums\ParameterStatusEnum;
 use App\Models\Parameter;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\TagsInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
@@ -106,7 +107,11 @@ class ParameterResource extends Resource
                             ->label('Keterangan')
                             ->columnSpanFull(),
                     ])->createOptionModalHeading('Buat Metode uji'),
-                TextInput::make('standard_notes')
+                TextInput::make('tested_time')
+                    ->label('Waktu pengujian (menit)')
+                    ->numeric(),
+                TagsInput::make('standard_notes')
+                    ->placeholder('Baku Mutu Boleh Lebih dari Satu')
                     ->label('Baku Mutu (BML)'),
                 Radio::make('status')
                     ->inline()
@@ -154,6 +159,15 @@ class ParameterResource extends Resource
                     ->sortable()
                     ->color(fn($state) => ParameterStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => ParameterStatusEnum::labels()[$state]),
+                TextColumn::make('tested_time')
+                    ->label('Waktu Uji (menit)')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('standard_notes')
+                    ->searchable()
+                    ->label('Baku Mutu (BML)')
+                    ->listWithLineBreaks()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_by')
                     ->searchable(),
                 TextColumn::make('updated_by')
