@@ -108,8 +108,7 @@ class ParameterResource extends Resource
                             ->columnSpanFull(),
                     ])->createOptionModalHeading('Buat Metode uji'),
                 TextInput::make('tested_time')
-                    ->label('Waktu pengujian (menit)')
-                    ->numeric(),
+                    ->label('Waktu pengujian'),
                 TagsInput::make('standard_notes')
                     ->placeholder('Baku Mutu Boleh Lebih dari Satu')
                     ->label('Baku Mutu (BML)'),
@@ -160,7 +159,7 @@ class ParameterResource extends Resource
                     ->color(fn($state) => ParameterStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => ParameterStatusEnum::labels()[$state]),
                 TextColumn::make('tested_time')
-                    ->label('Waktu Uji (menit)')
+                    ->label('Waktu Pengujian')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('standard_notes')
