@@ -57,6 +57,7 @@ class ParameterSeeder extends Seeder
                 'default_price'  => isset($row[5]) && $row[5] !== '' ? trim($row[5]) : null,
                 'test_method_id' => $testMethodId,
                 'description'    => isset($row[7]) && $row[7] !== '' ? trim($row[7]) : null,
+                "standard_notes"  => isset($row[8]) && $row[8] !== '' ? json_encode(array_map('trim', explode(';', $row[8]))) : null,
             ];
 
             DB::table('parameters')->insert($data);
