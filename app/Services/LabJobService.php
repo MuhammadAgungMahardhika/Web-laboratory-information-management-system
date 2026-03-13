@@ -65,8 +65,8 @@ class LabJobService
                     'parameter_id' => $paramSnapshot->parameter_id,
                     'parameter_code' => $paramSnapshot->parameter_code,
                     'parameter_unit' => $paramSnapshot->parameter_unit,
-                    'parameter_default_price' => $paramSnapshot->parameter_default_price,
-                    'parameter_default_test_method_name' => $paramSnapshot->parameter_default_test_method_name,
+                    'parameter_price' => $paramSnapshot->parameter_price,
+                    'parameter_test_method_name' => $paramSnapshot->parameter_test_method_name,
                     'parameter_description' => $paramSnapshot->parameter_description,
                     'parameter_status' => $paramSnapshot->parameter_status,
                 ]);
@@ -121,8 +121,8 @@ class LabJobService
                         'parameter_id' => $paramSnapshot->parameter_id,
                         'parameter_code' => $paramSnapshot->parameter_code,
                         'parameter_unit' => $paramSnapshot->parameter_unit,
-                        'parameter_default_price' => $paramSnapshot->parameter_default_price,
-                        'parameter_default_test_method_name' => $paramSnapshot->parameter_default_test_method_name,
+                        'parameter_price' => $paramSnapshot->parameter_price,
+                        'parameter_test_method_name' => $paramSnapshot->parameter_test_method_name,
                         'parameter_description' => $paramSnapshot->parameter_description,
                         'parameter_status' => $paramSnapshot->parameter_status,
                     ]);

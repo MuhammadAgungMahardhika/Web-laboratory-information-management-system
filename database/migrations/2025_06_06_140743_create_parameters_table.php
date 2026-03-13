@@ -21,7 +21,7 @@ return new class extends Migration
 
             // standard value
             $table->integer('tested_time')->nullable();
-            $table->json('standard_notes')->nullable();
+            $table->string('standard_notes')->nullable();
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();

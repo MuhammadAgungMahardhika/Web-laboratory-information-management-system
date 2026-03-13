@@ -13,9 +13,7 @@ class Parameter extends Model
     use HasFactory;
     use Blameable;
 
-    protected $casts = [
-        'standard_notes' => 'array',
-    ];
+
     public function specializations()
     {
         return $this->belongsToMany(Specialization::class, 'specialisasi_parameters');

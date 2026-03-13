@@ -214,7 +214,7 @@ class QuotationItemRelationManager extends RelationManager
                 TextColumn::make('parameterQuotationItems')
                     ->badge()
                     ->listWithLineBreaks()
-                    ->formatStateUsing(fn($state) => $state->parameter_code . " " . Number::currency($state->parameter_default_price, 'RP.'))
+                    ->formatStateUsing(fn($state) => $state->parameter_code . " " . Number::currency($state->parameter_price, 'RP.'))
                     ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
                     ->size(TextSize::Small)
                     ->label('Parameter'),

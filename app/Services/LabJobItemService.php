@@ -34,8 +34,9 @@ class LabJobItemService
                 'parameter_id' => $parameter->id,
                 'parameter_code' => $parameter->code,
                 'parameter_unit' => $parameter->unit,
-                'parameter_default_price' => $parameter->default_price,
-                'parameter_default_test_method_name' => $parameter->testMethod?->name,
+                'parameter_price' => $parameter->default_price,
+                'parameter_test_method_name' => $parameter->testMethod?->name,
+                'parameter_standard_notes' => $parameter->standard_notes,
                 'parameter_description' => $parameter->description,
                 'parameter_status' => $parameter->status,
             ]);

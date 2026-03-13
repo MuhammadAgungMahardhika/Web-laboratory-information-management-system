@@ -166,6 +166,11 @@
             text-decoration: underline;
         }
 
+        .price-inword {
+            font-weight: bold;
+
+        }
+
         .closing-text {
             margin-top: 30px;
             font-size: 8.5pt;
@@ -570,15 +575,17 @@
                 maka harga yang kami tawarkan adalah sebesar
                 <span class="price-highlight">
                     Rp
-                    {{ number_format(
-                        $quotation->total_price -
+                    @php
+                        $totalHarga =
+                            $quotation->total_price -
                             ($quotation->total_price * ($quotation->discount_percentage ?? 0)) / 100 +
                             ($quotation->total_price * ($quotation->ppn_percentage ?? 0)) / 100 -
-                            ($quotation->total_price * ($quotation->pph_percentage ?? 0)) / 100,
-                        0,
-                        ',',
-                        '.',
-                    ) }},-
+                            ($quotation->total_price * ($quotation->pph_percentage ?? 0)) / 100;
+                    @endphp
+                    {{ number_format($totalHarga, 0, ',', '.') }},-
+                </span>
+                <span class="price-inword">
+                    ({{ rupiahInWords($totalHarga) }})
                 </span>
                 dengan rincian anggaran biaya selengkapnya pada halaman berikutnya.
             </div>

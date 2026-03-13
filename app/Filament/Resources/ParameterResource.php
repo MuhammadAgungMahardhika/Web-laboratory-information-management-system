@@ -110,7 +110,7 @@ class ParameterResource extends Resource
                 TextInput::make('tested_time')
                     ->label('Waktu pengujian (menit)')
                     ->numeric(),
-                TagsInput::make('standard_notes')
+                TextInput::make('standard_notes')
                     ->placeholder('Baku Mutu Boleh Lebih dari Satu')
                     ->label('Baku Mutu (BML)'),
                 Radio::make('status')
@@ -165,9 +165,7 @@ class ParameterResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('standard_notes')
                     ->searchable()
-                    ->label('Baku Mutu (BML)')
-                    ->listWithLineBreaks()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Baku Mutu (BML)'),
                 TextColumn::make('created_by')
                     ->searchable(),
                 TextColumn::make('updated_by')
