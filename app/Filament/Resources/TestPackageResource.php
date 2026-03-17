@@ -42,8 +42,8 @@ class TestPackageResource extends Resource
     protected static ?string $cluster = MasterCluster::class;
 
     protected static ?string $model = TestPackage::class;
-    protected static ?string $navigationLabel = 'Paket Pengujian';
-    protected static ?string $label = 'Paket Pengujian';
+    protected static ?string $navigationLabel = 'Produk Uji';
+    protected static ?string $label = 'Produk Uji';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::ArchiveBox;
     protected static ?int $navigationSort = 6;
 
@@ -102,7 +102,7 @@ class TestPackageResource extends Resource
                 Select::make('parameters')
                     ->label('Parameter')
                     ->multiple()
-                    ->relationship('parameters', 'code')
+                    ->relationship('parameters', 'code_standard_notes')
                     ->searchable()
                     ->reactive()
                     ->columnSpanFull()
@@ -194,7 +194,7 @@ class TestPackageResource extends Resource
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
-                TextColumn::make('parameters.code')
+                TextColumn::make('parameters.code_standard_notes')
                     ->label('Parameter')
                     ->listWithLineBreaks()
                     ->searchable()

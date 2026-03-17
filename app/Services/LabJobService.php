@@ -58,7 +58,7 @@ class LabJobService
                 'location' => $quotationItem->location,
             ]);
 
-            // 3. Salin rincian parameter (snapshot) (Paket Pengujian)
+            // 3. Salin rincian parameter (snapshot) (Produk Uji)
             foreach ($quotationItem->parameterQuotationItems as $paramSnapshot) {
                 ParameterLabJobItem::create([
                     'lab_job_item_id' => $labJobItem->id,

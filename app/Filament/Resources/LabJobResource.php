@@ -118,6 +118,8 @@ class LabJobResource extends Resource
                         DatePicker::make('start_date')
                             ->label('Tanggal Mulai')
                             ->live()
+                            ->disabledOn('edit')
+                            ->dehydrated()
                             ->default(now()),
                         DatePicker::make('end_date')
                             ->label('Tanggal Selesai')

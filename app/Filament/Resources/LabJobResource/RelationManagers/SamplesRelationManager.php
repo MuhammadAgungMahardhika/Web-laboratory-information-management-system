@@ -62,6 +62,10 @@ class SamplesRelationManager extends RelationManager
     {
         return $ownerRecord->status !== JobStatusEnum::PendingStart->value;
     }
+    public static function getBadge(Model $ownerRecord, string $pageClass): ?string
+    {
+        return $ownerRecord->samples->count();
+    }
 
     protected static function isAuthorized(string $permission): bool
     {
@@ -75,7 +79,7 @@ class SamplesRelationManager extends RelationManager
             ->components([
                 Section::make([
                     Select::make('lab_job_item_id')
-                        ->label('Item Job')
+                        ->label('Produk Uji')
                         ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) {
                             return $query
                                 ->where('group', 'A')

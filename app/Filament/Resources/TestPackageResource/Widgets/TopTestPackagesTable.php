@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class TopTestPackagesTable extends TableWidget
 {
-    protected static ?string $heading = '5 Paket Pengujian Terpopuler';
+    protected static ?string $heading = '5 Produk Uji Terpopuler';
     // protected static ?int $sort = 2; // Atur urutan setelah widget pertama
-    protected int | string | array $columnSpan = ['xl' => 3,  'md' => 2, 'sm' => 1,'lg' => 3];
+    protected int | string | array $columnSpan = ['xl' => 3,  'md' => 2, 'sm' => 1, 'lg' => 3];
     protected static ?string $pollingInterval = null;
     protected function getTableQuery(): Builder
     {
@@ -36,7 +36,7 @@ class TopTestPackagesTable extends TableWidget
     {
         return [
             TextColumn::make('testPackage.name')
-                ->label('Nama Paket Pengujian')
+                ->label('Nama Produk Uji')
                 ->sortable()
                 ->searchable(),
             TextColumn::make('total_requests')
@@ -49,7 +49,7 @@ class TopTestPackagesTable extends TableWidget
 
     protected function getTableHeading(): ?string
     {
-        return 'Top 5 Paket Pengujian Terpopuler';
+        return 'Top 5 Produk Uji Terpopuler';
     }
 
     protected function getTableRecordsPerPageSelectOptions(): array

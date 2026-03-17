@@ -54,7 +54,7 @@ class SpecializationResource extends Resource
                 TextColumn::make('name')
                     ->label('Nama sertifikasi')
                     ->searchable(),
-                TextColumn::make('parameters.name')
+                TextColumn::make('parameters.code_standard_notes')
                     ->label('Parameter')
                     ->listWithLineBreaks()
                     ->limitList(4)

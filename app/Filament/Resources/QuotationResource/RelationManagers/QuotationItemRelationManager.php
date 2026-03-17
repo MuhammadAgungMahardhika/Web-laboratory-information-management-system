@@ -55,11 +55,20 @@ class QuotationItemRelationManager extends RelationManager
                 Radio::make('group')
                     ->label('Jenis Item')
                     ->options([
-                        'A' => 'A. Paket Pengujian',
+                        'A' => 'A. Produk Uji',
                         'B' => 'B. Biaya Pengambilan Sampel',
                         'C' => 'C. Lainnya',
                     ])
                     ->inline()
+                    ->afterStateUpdated(function ($state, Set $set) {
+                        if ($state === 'A') {
+                            $set('unit', 'Titik');
+                        } else if ($state === 'B') {
+                            $set('unit', 'Hari');
+                        } else {
+                            $set('unit', null);
+                        }
+                    })
                     ->required()
                     ->columnSpanFull()
                     ->default('A')
@@ -67,7 +76,7 @@ class QuotationItemRelationManager extends RelationManager
                 // -------------------------------
                 Section::make([
                     Select::make('test_package_id')
-                        ->label('Paket Pengujian')
+                        ->label('Produk Uji')
                         // ->required()
                         ->relationship('testPackage', 'name', modifyQueryUsing: fn(Builder $query) => $query->with('regulation'))
                         ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} ({$record->regulation->name})")
@@ -99,10 +108,14 @@ class QuotationItemRelationManager extends RelationManager
                         ->label('Keterangan')
                         ->autocomplete(false)
                         ->required()
+                        ->disabled(fn(Get $get) => $get('group') === 'A')
+                        ->dehydrated()
                         ->maxLength(255)
-                        ->placeholder('Deskripsi akan otomatis terisi dari Paket Pengujian'),
+                        ->placeholder('Deskripsi akan otomatis terisi dari Produk Uji'),
                     TextInput::make('regulation_name')
-                        ->label('Nama Regulasi')
+                        ->label('Regulasi')
+                        ->disabled()
+                        ->dehydrated()
                         ->autocomplete(false)
                         ->maxLength(255),
 
@@ -118,7 +131,7 @@ class QuotationItemRelationManager extends RelationManager
                     Select::make('parameters')
                         ->searchable()
                         ->multiple()
-                        ->relationship('parameters', 'code')
+                        ->relationship('parameters', 'code_standard_notes')
                         ->preload(),
 
                     TextInput::make('quantity')
@@ -126,16 +139,22 @@ class QuotationItemRelationManager extends RelationManager
                         ->numeric()
                         ->required()
                         ->default(1),
-                    TextInput::make('unit')
+                    Select::make('unit')
                         ->label('Satuan')
                         ->required()
-                        ->autocomplete(false)
-                        ->maxLength(50),
+                        ->searchable()
+                        ->default(fn(Get $get) => $get('group') === 'A' ? 'Titik' : '')
+                        ->options([
+                            'Titik' => 'Titik',
+                            'Hari' => 'Hari',
+                            'Ls' => 'Ls',
+                        ]),
                     TextInput::make('price')
                         ->label('Harga')
                         ->numeric()
                         ->prefix('Rp.')
                         ->required()
+                        ->readOnly()
                         ->default(0),
                     TextInput::make('location')
                         ->label('Lokasi Pengambilan Sampel')
@@ -162,25 +181,17 @@ class QuotationItemRelationManager extends RelationManager
                         ->autocomplete(false)
                         ->required()
                         ->default(1),
-                    TextInput::make('unit')
+                    Select::make('unit')
                         ->label('Satuan')
-                        ->datalist(function (Get $get) {
-                            $itemTypeSelector = $get('group');
-                            if ($itemTypeSelector === 'B') {
-                                return [
-                                    'Hari',
-                                    'Jam'
-                                ];
-                            } else {
-                                return [
-                                    'Sampel',
-                                    'Ls'
-                                ];
-                            }
-                        })
                         ->required()
-                        ->autocomplete(false)
-                        ->maxLength(50),
+                        ->reactive()
+                        ->searchable()
+                        ->default(fn(Get $get) => $get('group') === 'B' ? 'Hari' : '')
+                        ->options([
+                            'Titik' => 'Titik',
+                            'Hari' => 'Hari',
+                            'Ls' => 'Ls',
+                        ]),
                     TextInput::make('price')
                         ->label('Harga')
                         ->numeric()
@@ -214,7 +225,12 @@ class QuotationItemRelationManager extends RelationManager
                 TextColumn::make('parameterQuotationItems')
                     ->badge()
                     ->listWithLineBreaks()
-                    ->formatStateUsing(fn($state) => $state->parameter_code . " " . Number::currency($state->parameter_price, 'RP.'))
+                    ->formatStateUsing(
+                        fn($state) =>
+                        $state->parameter_standard_notes
+                            ? $state->parameter_code . ' (' . $state->parameter_standard_notes . ')'
+                            : $state->parameter_code
+                    )
                     ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
                     ->size(TextSize::Small)
                     ->label('Parameter'),

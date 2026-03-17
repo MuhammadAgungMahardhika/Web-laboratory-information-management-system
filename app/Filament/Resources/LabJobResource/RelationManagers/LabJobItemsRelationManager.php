@@ -44,8 +44,8 @@ class LabJobItemsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
     protected static string $relationship = 'labJobItems';
-    protected static ?string $label = 'Detail Job';
-    protected static ?string $title = "Detail Job";
+    protected static ?string $label = 'Produk Uji';
+    protected static ?string $title = "Produk Uji";
 
 
     public static function canCreateForRecord(Model $ownerRecord, string $pageClass): bool
@@ -72,7 +72,7 @@ class LabJobItemsRelationManager extends RelationManager
                 // -------------------------------
                 Section::make([
                     Select::make('test_package_id')
-                        ->label('Paket Pengujian')
+                        ->label('Produk Uji')
                         ->relationship('testPackage', 'name')
                         ->searchable()
                         ->live()
@@ -100,12 +100,16 @@ class LabJobItemsRelationManager extends RelationManager
 
                     TextInput::make('description')
                         ->label('Keterangan')
+                        ->disabled()
+                        ->dehydrated()
                         ->autocomplete(false)
                         ->required()
                         ->maxLength(255)
-                        ->placeholder('Deskripsi akan otomatis terisi dari Paket Pengujian'),
+                        ->placeholder('Deskripsi akan otomatis terisi dari Produk Uji'),
                     TextInput::make('regulation_name')
                         ->label('Nama Regulasi')
+                        ->disabled()
+                        ->dehydrated()
                         ->autocomplete(false)
                         ->maxLength(255),
 
@@ -121,14 +125,21 @@ class LabJobItemsRelationManager extends RelationManager
                         ->numeric()
                         ->required()
                         ->default(1),
-                    TextInput::make('unit')
+                    Select::make('unit')
                         ->label('Satuan')
                         ->required()
-                        ->autocomplete(false)
-                        ->maxLength(50),
+                        ->searchable()
+                        ->default(fn(Get $get) => $get('group') === 'A' ? 'Titik' : '')
+                        ->options([
+                            'Titik' => 'Titik',
+                            'Hari' => 'Hari',
+                            'Ls' => 'Ls',
+                        ]),
                     TextInput::make('price')
                         ->label('Harga')
                         ->numeric()
+                        ->disabled()
+                        ->dehydrated()
                         ->prefix('Rp.')
                         ->required()
                         ->default(0),
