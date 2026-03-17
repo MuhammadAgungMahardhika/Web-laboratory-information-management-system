@@ -119,8 +119,8 @@ class InvoiceItemsRelationManager extends RelationManager
                 Textarea::make('description')
                     ->label('Deskripsi')
                     ->required()
-
-                    ->readOnly(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->disabled(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->dehydrated()
                     ->columnSpanFull(),
 
                 TextInput::make('quantity')
@@ -128,14 +128,16 @@ class InvoiceItemsRelationManager extends RelationManager
                     ->numeric()
                     ->required()
 
-                    ->readOnly(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->disabled(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->dehydrated()
                     ->minValue(1),
 
                 TextInput::make('price')
                     ->label('Harga Satuan')
                     ->numeric()
                     ->required()
-                    ->readOnly(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->disabled(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->dehydrated()
                     ->prefix('Rp'),
             ]);
     }
