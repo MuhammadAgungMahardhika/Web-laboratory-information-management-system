@@ -38,7 +38,7 @@ class TermTemplateResource extends Resource
     protected static ?string $navigationLabel = 'Template syarat & ketentuan';
     protected static ?string $label = 'Template syarat & ketentuan';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::DocumentCurrencyDollar;
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 9;
     public static function form(Schema $schema): Schema
     {
         return $schema

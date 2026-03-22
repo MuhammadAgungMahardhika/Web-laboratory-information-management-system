@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             RegulationTypeSeeder::class,
             RegulationSeeder::class,
             TestMethodSeeder::class,
+            ParamSeeder::class,
             ParameterSeeder::class,
             CustomerTypeSeeder::class,
             CustomerSeeder::class,

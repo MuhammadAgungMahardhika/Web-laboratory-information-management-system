@@ -89,6 +89,11 @@ return new class extends Migration
 
 
         Schema::table('parameters', function (Blueprint $table) {
+            $table->foreign('code', 'fk_parameters_params')
+                ->references('code')
+                ->on('params')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
             $table->foreign('test_method_id', 'fk_parameters_test_method')
                 ->references('id')
                 ->on('test_methods')

@@ -14,6 +14,10 @@ class Parameter extends Model
     use Blameable;
 
 
+    public function param()
+    {
+        return $this->belongsTo(Param::class, 'code', 'code');
+    }
     public function specializations()
     {
         return $this->belongsToMany(Specialization::class, 'specialisasi_parameters');

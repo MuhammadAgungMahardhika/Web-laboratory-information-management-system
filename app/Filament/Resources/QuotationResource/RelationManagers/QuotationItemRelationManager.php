@@ -131,7 +131,7 @@ class QuotationItemRelationManager extends RelationManager
                     Select::make('parameters')
                         ->searchable()
                         ->multiple()
-                        ->relationship('parameters', 'code_standard_notes')
+                        ->relationship('parameters', 'long_name_standard_notes')
                         ->preload(),
 
                     TextInput::make('quantity')

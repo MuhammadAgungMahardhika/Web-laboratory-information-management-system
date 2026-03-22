@@ -37,7 +37,7 @@ class ParameterResource extends Resource
     protected static ?string $navigationLabel = 'Parameter Uji';
     protected static ?string $label = 'Parameter Uji';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedBeaker;
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 7;
 
     public static function form(Schema $schema): Schema
     {
@@ -49,12 +49,12 @@ class ParameterResource extends Resource
             ])
             ->components([
                 // Section::make([
-                TextInput::make('code')
+                Select::make('code')
+                    ->relationship('param', 'code')
+                    ->searchable()
                     ->required()
                     ->label('Kode parameter')
-                    ->autocomplete(false)
-                    ->unique(ignoreRecord: true)
-                    ->maxLength(20),
+                    ->preload(),
                 TextInput::make('long_name')
                     ->required()
                     ->label('Nama Lengkap parameter')

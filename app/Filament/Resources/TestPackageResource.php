@@ -23,6 +23,7 @@ use App\Filament\Resources\TestPackageResource\Pages\ViewTestPackage;
 use App\Filament\Resources\TestPackageResource\Pages\EditTestPackage;
 use App\Filament\Resources\TestPackageResource\Pages;
 use App\Filament\Resources\TestPackageResource\RelationManagers;
+use App\Filament\Resources\TestPackageResource\RelationManagers\ParameterTestPackagesRelationManager;
 use App\Models\Enums\EnvironmentTypeEnum;
 use App\Models\Enums\ParameterStatusEnum;
 use App\Models\TestPackage;
@@ -33,6 +34,8 @@ use Filament\Forms\Components\Radio;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -45,7 +48,7 @@ class TestPackageResource extends Resource
     protected static ?string $navigationLabel = 'Produk Uji';
     protected static ?string $label = 'Produk Uji';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::ArchiveBox;
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 8;
 
     public static function form(Schema $schema): Schema
     {
@@ -99,68 +102,7 @@ class TestPackageResource extends Resource
                     ->label('Aktif ?')
                     ->default(true)
                     ->required(),
-                Select::make('parameters')
-                    ->label('Parameter')
-                    ->multiple()
-                    ->relationship('parameters', 'code_standard_notes')
-                    ->searchable()
-                    ->reactive()
-                    ->columnSpanFull()
-                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                        // Ambil ID parameter yang dipilih
-                        $parameterIds = $state;
-                        // Ambil total harga dari parameter
-                        $totalParameterPrice = Parameter::whereIn('id', $parameterIds)->sum('default_price');
-                        // Set harga baru = harga awal + total harga dari parameter
-                        $set('price', $totalParameterPrice);
-                    })
-                    ->createOptionForm([
-                        TextInput::make('code')
-                            ->required()
-                            ->label('Nama parameter uji')
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(20),
-                        TextInput::make('long_name')
-                            ->required()
-                            ->label('Nama Lengkap parameter uji')
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255),
-                        TextInput::make('unit')
-                            ->required()
-                            ->label('Satuan')
-                            ->maxLength(50),
-                        TextInput::make('default_price')
-                            ->required()
-                            ->label('Harga standar')
-                            ->numeric(),
-                        Select::make('test_method_id')
-                            ->label('Metode uji')
-                            ->relationship('testMethod', 'name')
-                            ->searchable()
-                            ->required()
-                            ->preload()
-                            ->createOptionForm([
-                                TextInput::make('code')
-                                    ->label('Kode')
-                                    ->required(),
-                                TextInput::make('name')
-                                    ->label('Nama metode uji')
-                                    ->required(),
-                                Textarea::make('description')
-                                    ->label('Keterangan')
-                                    ->columnSpanFull(),
-                            ])->createOptionModalHeading('Buat Metode uji'),
-                        Textarea::make('description')
-                            ->label('Keterangan')
-                            ->columnSpanFull(),
-                        Radio::make('status')
-                            ->inline()
-                            ->options(ParameterStatusEnum::labels())
-                            ->default(ParameterStatusEnum::default())
-                            ->required(),
-                    ])
-                    ->required()
-                    ->preload(),
+
                 Textarea::make('description')
                     ->label('Keterangan'),
                 TextInput::make('price')
@@ -194,7 +136,7 @@ class TestPackageResource extends Resource
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
-                TextColumn::make('parameters.code_standard_notes')
+                TextColumn::make('parameters.long_name_standard_notes')
                     ->label('Parameter')
                     ->listWithLineBreaks()
                     ->searchable()
@@ -214,8 +156,23 @@ class TestPackageResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('sample_matric_id')
+                    ->label('Matrix sampel')
+                    ->relationship('sampleMatric', 'name')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('regulation_id')
+                    ->label('Regulasi')
+                    ->relationship('regulation', 'name')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('is_active')
+                    ->label('Aktif ?')
+                    ->options([
+                        1 => 'Ya',
+                        0 => 'Tidak',
+                    ]),
+            ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 ViewAction::make()->slideOver(),
                 EditAction::make()->slideOver(),
@@ -230,7 +187,7 @@ class TestPackageResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ParameterTestPackagesRelationManager::class
         ];
     }
 
@@ -238,9 +195,9 @@ class TestPackageResource extends Resource
     {
         return [
             'index' => ListTestPackages::route('/'),
-            // 'create' => CreateTestPackage::route('/create'),
-            // 'view' => ViewTestPackage::route('/{record}'),
-            // 'edit' => EditTestPackage::route('/{record}/edit'),
+            'create' => CreateTestPackage::route('/create'),
+            'view' => ViewTestPackage::route('/{record}'),
+            'edit' => EditTestPackage::route('/{record}/edit'),
         ];
     }
 }

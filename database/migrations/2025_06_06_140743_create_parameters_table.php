@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('test_method_id')->nullable();
-            $table->string('code', 20)->unique();
+            $table->string('code', 20)->nullable();
             $table->string('long_name', 255)->unique();
-            $table->string('code_standard_notes')->virtualAs("IF(standard_notes IS NULL OR standard_notes = '', code, CONCAT(code, ' (', standard_notes, ')'))");
+            $table->string('long_name_standard_notes')->virtualAs("IF(standard_notes IS NULL OR standard_notes = '', long_name, CONCAT(long_name, ' (', standard_notes, ')'))");
             $table->string('unit', 50);
 
             $table->text('description')->nullable();
