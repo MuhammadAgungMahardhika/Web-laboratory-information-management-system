@@ -62,7 +62,7 @@ class TestPackageResource extends Resource
                 TextInput::make('name')
                     ->label('Nama paket pengujian')
                     ->required(),
-                Select::make('sample_matric_id')
+                Select::make('sample_matric_code')
                     ->label('Matrix sampel')
                     ->required()
                     ->relationship('sampleMatric', 'code_name')
@@ -156,7 +156,7 @@ class TestPackageResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('sample_matric_id')
+                SelectFilter::make('sample_matric_code')
                     ->label('Matrix sampel')
                     ->relationship('sampleMatric', 'code_name')
                     ->searchable()

@@ -50,6 +50,7 @@ class SampleMatricResource extends Resource
                 TextInput::make('code')
                     ->label('Kode')
                     ->required()
+                    ->unique(ignoreRecord: true)
                     ->maxLength(10),
                 Select::make('sample_type_id')
                     ->label('Jenis sampel')
@@ -59,6 +60,7 @@ class SampleMatricResource extends Resource
                     ->preload(),
                 TextInput::make('name')
                     ->label('Nama')
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(100),
                 Select::make('environment_type')
