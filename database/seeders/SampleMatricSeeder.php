@@ -24,11 +24,10 @@ class SampleMatricSeeder extends Seeder
             $csvData = array_map('str_getcsv', file($csvFile));
             foreach ($csvData as $row) {
                 DB::table('sample_matrics')->insert([
-                    'id' => $row[0],
                     'sample_type_id' => $row[1],
                     'code' => $row[2],
                     'name' => $row[3],
-                    'description' => $row[4],
+                    'environment_type' => $row[4],
                 ]);
             }
         }

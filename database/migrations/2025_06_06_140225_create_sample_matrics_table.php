@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sample_matrics', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 12)->unique();
+            $table->string('code', 12)->unique()->primary();
             $table->unsignedBigInteger('sample_type_id')->nullable();
 
             $table->string('name', 255)->unique();

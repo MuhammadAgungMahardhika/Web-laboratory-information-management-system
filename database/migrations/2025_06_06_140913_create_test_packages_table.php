@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('test_packages', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->unsignedBigInteger('sample_matric_id')->nullable();
+            $table->string('sample_matric_code', 12)->nullable();
             $table->unsignedBigInteger('regulation_id')->nullable();
             $table->text('description')->nullable();
             $table->decimal('price', 15, 2);

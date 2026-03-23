@@ -23,6 +23,8 @@ use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -74,6 +76,8 @@ class SampleMatricResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('code')
+            ->defaultSort('code', 'asc')
             ->columns([
                 TextColumn::make('code')
                     ->label('Kode')
@@ -105,8 +109,15 @@ class SampleMatricResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('environment_type')
+                    ->label('Jenis lingkungan')
+                    ->options(EnvironmentTypeEnum::labels()),
+                SelectFilter::make('sample_type_id')
+                    ->label('Jenis sampel')
+                    ->searchable()
+                    ->relationship('sampleType', 'name')
+                    ->preload(),
+            ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 ViewAction::make()->slideOver(),
                 EditAction::make()->slideOver(),

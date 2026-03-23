@@ -10,10 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 class SampleMatric extends Model
 {
     /** @use HasFactory<SampleMatricFactory> */
+    protected $primaryKey = 'code';
     use HasFactory;
-
     use Blameable;
 
+    protected $casts = [
+        'code' => 'string',
+    ];
     public function samples()
     {
         return $this->hasMany(Sample::class);
@@ -25,6 +28,6 @@ class SampleMatric extends Model
 
     public function sampleMatrics()
     {
-        return $this->hasMany(TestPackage::class);
+        return $this->hasMany(TestPackage::class, 'sample_matric_code', 'code');
     }
 }
