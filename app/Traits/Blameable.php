@@ -8,8 +8,6 @@ trait Blameable
 {
     protected static function bootBlameable()
     {
-
-
         static::creating(function ($model) {
             // Jangan overwrite jika sudah diset (misalnya dari import)
             if (empty($model->created_by) && Auth::check()) {

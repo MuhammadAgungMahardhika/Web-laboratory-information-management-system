@@ -65,7 +65,7 @@ class TestPackageResource extends Resource
                 Select::make('sample_matric_id')
                     ->label('Matrix sampel')
                     ->required()
-                    ->relationship('sampleMatric', 'name')
+                    ->relationship('sampleMatric', 'code_name')
                     ->searchable()
                     ->createOptionForm([
                         TextInput::make('code')
@@ -158,7 +158,7 @@ class TestPackageResource extends Resource
             ->filters([
                 SelectFilter::make('sample_matric_id')
                     ->label('Matrix sampel')
-                    ->relationship('sampleMatric', 'name')
+                    ->relationship('sampleMatric', 'code_name')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('regulation_id')

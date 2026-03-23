@@ -88,7 +88,13 @@ class PermissionAndRoleSeeder extends Seeder
             'update-company',
             'delete-company',
         ];
-
+        $paramPermissions = [
+            'view-any-param',
+            'view-param',
+            'create-param',
+            'update-param',
+            'delete-param',
+        ];
         $parameterPermissions = [
             'view-chart-accreditation-status-parameter',
 
@@ -231,6 +237,7 @@ class PermissionAndRoleSeeder extends Seeder
             $cityPermissions,
             $customerPermissions,
             $rolePermissions,
+            $paramPermissions,
             $parameterPermissions,
             $regulationPermissions,
             $regulationTypePermissions,

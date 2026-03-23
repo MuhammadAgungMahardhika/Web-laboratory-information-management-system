@@ -48,21 +48,26 @@ class ParameterTestPackagesRelationManager extends RelationManager
                 TextColumn::make('parameter.long_name_standard_notes')
                     ->label('Nama parameter uji')
                     ->searchable(),
-                TextColumn::make('parameter.standard_notes')
-                    ->label('Baku mutu')
-                    ->searchable(),
-                TextColumn::make('parameter.method')
-                    ->label('Metode uji')
-                    ->searchable(),
-                TextColumn::make('parameter.unit')
-                    ->label('Satuan')
-                    ->searchable(),
                 TextColumn::make('parameter.status')
                     ->label('Status')
                     ->formatStateUsing(fn($state) => ParameterStatusEnum::labels()[$state] ?? 'Unknown')
                     ->color(fn($state) => ParameterStatusEnum::color($state))
                     ->badge()
                     ->searchable(),
+                TextColumn::make('parameter.tested_time')
+                    ->label('Waktu pengukuran')
+                    ->searchable(),
+                TextColumn::make('parameter.standard_notes')
+                    ->label('Baku mutu')
+                    ->searchable(),
+                TextColumn::make('parameter.unit')
+                    ->label('Satuan')
+                    ->searchable(),
+
+                TextColumn::make('parameter.method')
+                    ->label('Metode uji')
+                    ->searchable(),
+
                 TextColumn::make('parameter.default_price')
                     ->label('Harga')
                     ->money('IDR', true)

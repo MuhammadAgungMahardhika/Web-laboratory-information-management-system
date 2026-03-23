@@ -64,7 +64,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('sample_types')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('set null');
         });
 
         // sample

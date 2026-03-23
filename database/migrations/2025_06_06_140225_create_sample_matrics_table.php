@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('sample_matrics', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 10)->unique();
-            $table->unsignedBigInteger('sample_type_id');
+            $table->string('code', 12)->unique();
+            $table->unsignedBigInteger('sample_type_id')->nullable();
 
             $table->string('name', 255)->unique();
+
+            $table->string('code_name', 255)->virtualAs("IF(name IS NULL OR name = '', code, CONCAT(code, ' (', name, ')'))");
             $table->tinyInteger('environment_type')->default(1);
             $table->text('description')->nullable();
 
