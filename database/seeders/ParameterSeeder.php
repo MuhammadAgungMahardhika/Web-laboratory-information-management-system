@@ -54,7 +54,7 @@ class ParameterSeeder extends Seeder
                 'long_name'      => isset($row[2]) && $row[2] !== '' ? trim($row[2]) : null,
                 'unit'           => isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null,
                 'status'         => $status,
-                'default_price'  => isset($row[5]) && $row[5] !== '' ? trim($row[5]) : null,
+                'default_price'  => $this->parseDecimal($row[5] ?? null),
                 'test_method_id' => $testMethodId,
                 'description'    => isset($row[7]) && $row[7] !== '' ? trim($row[7]) : null,
                 "standard_notes"  => isset($row[8]) && $row[8] !== '' ? json_encode(array_map('trim', explode(';', $row[8]))) : null,
@@ -64,6 +64,23 @@ class ParameterSeeder extends Seeder
         }
     }
 
+    private function parseDecimal(?string $value): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        // Hapus tanda kutip & spasi
+        $value = trim($value);
+
+        // Hapus pemisah ribuan (.)
+        $value = str_replace('.', '', $value);
+
+        // Ganti koma jadi titik
+        $value = str_replace(',', '.', $value);
+
+        return is_numeric($value) ? (float) $value : null;
+    }
     /**
      * Konversi status dari string ke integer
      * A = 1, N/A = 2, S = 3

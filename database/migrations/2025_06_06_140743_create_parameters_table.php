@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('test_method_id')->nullable();
-            $table->string('code', 20)->nullable();
+            $table->string('code', 50)->nullable();
             $table->string('long_name', 255)->unique();
             $table->string('long_name_standard_notes')->virtualAs("IF(standard_notes IS NULL OR standard_notes = '', long_name, CONCAT(long_name, ' (', standard_notes, ')'))");
             $table->string('unit', 50);

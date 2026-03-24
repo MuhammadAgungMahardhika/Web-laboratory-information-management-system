@@ -24,7 +24,7 @@ class ParamSeeder extends Seeder
 
         foreach ($csvData as $row) {
 
-            $code = isset($row[1]) ? trim($row[1]) : null;
+            $code = isset($row[0]) ? trim($row[0]) : null;
 
             // Skip jika name kosong (ini satu-satunya validasi)
             if ($code === null || $code === '') {
