@@ -180,13 +180,17 @@ class ParameterResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('code')
+                    ->relationship('param', 'code')
+                    ->searchable()
+                    ->label('Kode parameter')
+                    ->preload(),
                 SelectFilter::make('test_method_id')
                     ->label('Metode Uji')
                     ->relationship('testMethod', 'name')
                     ->searchable()
                     ->preload()
-                    ->multiple()
-                    ->columnSpan(2),
+                    ->multiple(),
 
                 Filter::make('default_price_range')
                     ->label('Range Harga')
