@@ -27,8 +27,8 @@ return new class extends Migration
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
-            $table->index('code');
             $table->index('long_name');
+            $table->index('long_name_standard_notes');
             $table->index('status');
         });
     }

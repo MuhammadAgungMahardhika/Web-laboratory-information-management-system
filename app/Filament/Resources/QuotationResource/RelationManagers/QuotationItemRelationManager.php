@@ -131,6 +131,8 @@ class QuotationItemRelationManager extends RelationManager
                     Select::make('parameters')
                         ->searchable()
                         ->multiple()
+                        ->columnSpanFull()
+                        ->label('Parameter Uji')
                         ->relationship('parameters', 'long_name_standard_notes')
                         ->preload(),
 
@@ -225,6 +227,9 @@ class QuotationItemRelationManager extends RelationManager
                 TextColumn::make('parameterQuotationItems')
                     ->badge()
                     ->listWithLineBreaks()
+                    ->limitList(5)
+                    ->columnSpan(1)
+                    ->expandableLimitedList()
                     ->formatStateUsing(
                         fn($state) =>
                         $state->parameter_standard_notes

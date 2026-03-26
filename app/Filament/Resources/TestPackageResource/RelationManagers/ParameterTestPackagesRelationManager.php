@@ -17,6 +17,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\PaginationMode;
 use Filament\Tables\Table;
 
 class ParameterTestPackagesRelationManager extends RelationManager
@@ -30,7 +31,7 @@ class ParameterTestPackagesRelationManager extends RelationManager
             ->components([
                 Select::make('parameter_id')
                     ->relationship('parameter', 'long_name_standard_notes')
-                    ->label('Kode parameter')
+                    ->label('Parameter Uji')
                     ->required()
                     ->searchable()
                     ->preload()
@@ -41,6 +42,8 @@ class ParameterTestPackagesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('code')
+            ->paginationPageOptions([25, 50, 100])
+            ->paginationMode(PaginationMode::Simple)
             ->columns([
                 TextColumn::make('parameter.code')
                     ->label('Kode parameter')
@@ -64,7 +67,7 @@ class ParameterTestPackagesRelationManager extends RelationManager
                     ->label('Satuan')
                     ->searchable(),
 
-                TextColumn::make('parameter.method')
+                TextColumn::make('parameter.testMethod.name')
                     ->label('Metode uji')
                     ->searchable(),
 
