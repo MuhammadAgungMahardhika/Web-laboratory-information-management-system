@@ -20,7 +20,7 @@ class ParameterSeeder extends Seeder
 
         foreach ($csvData as $row) {
 
-            $code = isset($row[1]) ? trim($row[1]) : null;
+            $code = isset($row[0]) ? trim($row[0]) : null;
             $testMethodId = isset($row[6]) && $row[6] !== '' ? $row[6] : null;
 
             // Skip jika name kosong (ini satu-satunya validasi)
@@ -28,36 +28,20 @@ class ParameterSeeder extends Seeder
                 continue;
             }
 
-            // Cek duplikat
-            $exists = DB::table('parameters')
-                ->where('code', $code)
-                ->where(function ($q) use ($testMethodId) {
-                    if ($testMethodId === null) {
-                        $q->whereNull('test_method_id');
-                    } else {
-                        $q->where('test_method_id', $testMethodId);
-                    }
-                })
-                ->exists();
-
-            if ($exists) {
-                continue;
-            }
 
             // Konversi status dari string ke integer
-            $statusRaw = isset($row[4]) ? trim($row[4]) : null;
+            $statusRaw = isset($row[2]) ? trim($row[2]) : null;
             $status = $this->convertStatus($statusRaw);
 
             // Prepare data untuk insert
             $data = [
                 'code'           => $code,
-                'long_name'      => isset($row[2]) && $row[2] !== '' ? trim($row[2]) : null,
-                'unit'           => isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null,
+                'long_name'      => isset($row[1]) && $row[1] !== '' ? trim($row[1]) : null,
+                'unit'           => isset($row[4]) && $row[4] !== '' ? trim($row[4]) : null,
                 'status'         => $status,
                 'default_price'  => $this->parseDecimal($row[5] ?? null),
                 'test_method_id' => $testMethodId,
-                'description'    => isset($row[7]) && $row[7] !== '' ? trim($row[7]) : null,
-                "standard_notes"  => isset($row[8]) && $row[8] !== '' ? json_encode(array_map('trim', explode(';', $row[8]))) : null,
+                "standard_notes"  => isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null,
             ];
 
             DB::table('parameters')->insert($data);

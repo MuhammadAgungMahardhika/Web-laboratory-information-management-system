@@ -351,11 +351,7 @@ Alkalinity , Alkalinitas/Alkalinity  , NA ,,mg/L," Rp 40.000,00 ",
  ARANEAE  , ARANEAE  , A ,,,,
  Araneus sp , Araneus sp , A ,, Ind/L ,,
  HEMIPTERA  , HEMIPTERA  , A ,,,,
-" Aquarius sp
-
- "," Aquarius sp
-
- ", A ,, Ind/L ,,
+"Aquarius sp"," Aquarius sp", A ,, Ind/L ,,
  Gerris sp. , Gerris sp. , A ,, Ind/L ,,
  TRICHOPTERA  , TRICHOPTERA  , A ,,,,
  Rhyacophila sp. , Rhyacophila sp. , A ,, Ind/L ,,
@@ -571,14 +567,10 @@ Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,5,mg/L," Rp 125.000,00 ",
 Resistivity,Resistivity (daya tahan listrik) ,S,,"MΩ-cm, suhu 25°C "," Rp 35.000,00 ",
 Conductivity,Conductivity (daya hantar listrik),A,,µS/cm," Rp 35.000,00 ",
 pH,"Derajat Keasaman/Potential of Hydrogen, (pH)",A,,"-,  suhu 25°C "," Rp 12.500,00 ",
-TOC,"Senyawa organic total Total Organic Carbon, (TOC)",S,,"µg/l 
-"," Rp 750.000,00 ",
-Sodium,Natrium/Sodium,A,,"µg/l 
-"," Rp 77.500,00 ",
-Silica,Silika/Silica,S,,"µg/l 
-",,
-Chloride,Khlorida/ Chloride,A,,"µg/l 
-"," Rp 40.000,00 ",
+TOC,"Senyawa organic total Total Organic Carbon, (TOC)",S,,"µg/l "," Rp 750.000,00 ",
+Sodium,Natrium/Sodium,A,,"µg/l"," Rp 77.500,00 ",
+Silica,Silika/Silica,S,,"µg/l",,
+Chloride,Khlorida/ Chloride,A,,"µg/l"," Rp 40.000,00 ",
 Escherichia Coli,Escherichia coli ,A,0,CFU/100 mL," Rp 145.000,00 ",
 Total Coliform,Total coliform,A,0,CFU/100 mL," Rp 145.000,00 ",
 Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC," Rp 12.500,00 ",
