@@ -12,6 +12,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Infolists\Components\TextEntry;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Filament\Support\Colors\Color;
@@ -113,13 +114,39 @@ class LabJobStatusAction
                     DatePicker::make('start_date')
                         ->label('Tanggal Mulai Aktual')
                         ->live()
+                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                            // Jika start_date diubah secara manual, update count_days
+                            if ($state && $get('end_date')) {
+                                $startDate = \Carbon\Carbon::parse($state);
+                                $endDate = \Carbon\Carbon::parse($get('end_date'));
+                                $countDays = $startDate->diffInDays($endDate);
+                                $set('count_days', $countDays . " hari");
+                            }
+                        })
                         ->default(now()->toDateString())
                         ->required(),
                     DatePicker::make('end_date')
                         ->label('Tenggat Waktu Selesai')
+                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                            // Jika end_date diubah secara manual, update count_days
+                            if ($state && $get('start_date')) {
+                                $startDate = \Carbon\Carbon::parse($get('start_date'));
+                                $endDate = \Carbon\Carbon::parse($state);
+                                $countDays = $startDate->diffInDays($endDate);
+                                $set('count_days', $countDays . " hari");
+                            }
+                        })
+                        ->default(now()->addDays(30)->toDateString())
+                        ->hint('Default 30 hari dari tanggal mulai')
                         ->after('start_date')
+                        ->live()
                         ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
                         ->required(),
+                    TextEntry::make('count_days')
+                        ->label('Total Hari Pengerjaan')
+                        ->disabled()
+                        ->default(fn(callable $get) => $get('start_date') && $get('end_date') ? \Carbon\Carbon::parse($get('start_date'))->diffInDays(\Carbon\Carbon::parse($get('end_date'))) . " hari" : '')
+                        ->live(),
                 ];
 
                 // Tambahkan checkbox konfirmasi jika tidak ada personel

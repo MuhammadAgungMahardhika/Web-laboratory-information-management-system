@@ -73,7 +73,8 @@ class LabJobItemsRelationManager extends RelationManager
                 Section::make([
                     Select::make('test_package_id')
                         ->label('Produk Uji')
-                        ->relationship('testPackage', 'name')
+                        ->relationship('testPackage', 'name', modifyQueryUsing: fn(Builder $query) => $query->with('regulation'))
+                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} ({$record->regulation->name})")
                         ->searchable()
                         ->live()
                         ->afterStateUpdated(function ($state, Set $set) {
@@ -117,7 +118,9 @@ class LabJobItemsRelationManager extends RelationManager
                     Select::make('parameters')
                         ->searchable()
                         ->multiple()
-                        ->relationship('parameters', 'code')
+                        ->columnSpanFull()
+                        ->label('Parameter Uji')
+                        ->relationship('parameters', 'long_name_standard_notes')
                         ->preload(),
 
                     TextInput::make('quantity')
@@ -207,47 +210,47 @@ class LabJobItemsRelationManager extends RelationManager
             ->paginated(false)
             ->columns([
                 TextColumn::make('description')
-                    ->label('Deskripsi')
-                    ->size(TextSize::Small),
+                    ->label('Deskripsi'),
                 TextColumn::make('regulation_name')
-                    ->label('Regulasi')
-                    ->size(TextSize::Small),
+                    ->label('Regulasi'),
                 TextColumn::make('parameterLabJobItems')
                     ->badge()
                     ->listWithLineBreaks()
-                    ->formatStateUsing(fn($state) => $state->parameter_code . " " . Number::currency($state->parameter_price, 'RP.'))
+                    ->limitList(5)
+                    ->expandableLimitedList()
+                    ->formatStateUsing(fn($state) => $state->parameter_code . " " . $state->parameter_price ?? Number::currency($state->parameter_price, 'RP.'))
                     ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
-                    ->size(TextSize::Small)
-                    ->label('Parameter'),
+
+                    ->label('Parameter Uji'),
 
                 TextColumn::make('quantity')
-                    ->size(TextSize::Small)
+
                     ->alignEnd()
                     ->label('Kuantitas'),
                 TextColumn::make('unit')
-                    ->size(TextSize::Small)
+
                     ->label('Satuan'),
                 TextColumn::make('price')
                     ->label('Harga')
                     ->alignEnd()
-                    ->size(TextSize::Small)
+
                     ->money('IDR')
                     ->sortable(),
                 TextColumn::make('item_total')
                     ->label('Harga Total')
                     ->alignEnd()
-                    ->size(TextSize::Small)
+
                     ->money('IDR'),
                 TextColumn::make('location')
-                    ->size(TextSize::Small)
+
                     ->label('Lokasi pengambilan sampel')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
                 TextColumn::make('created_by')
-                    ->size(TextSize::Small)
+
                     ->toggleable(),
                 TextColumn::make('updated_by')
-                    ->size(TextSize::Small)
+
                     ->toggleable(),
             ])
             ->filters([

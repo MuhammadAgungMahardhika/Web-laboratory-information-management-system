@@ -25,6 +25,7 @@ use App\Models\Enums\JobStatusEnum;
 use App\Models\Enums\QuotationStatusEnum;
 use App\Services\LabJobService;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -128,9 +129,15 @@ class LabJobResource extends Resource
 
                     ])->columnSpanFull()->columns(2),
                 Repeater::make('labJobPersonels')
+                    ->label('ppc')
+                    ->addActionLabel('Tambah ppc')
                     ->relationship()
                     ->hiddenLabel()
                     ->visibleOn(['view', 'edit'])
+                    ->table([
+                        TableColumn::make('Nama Petugas'),
+                        TableColumn::make('Peran'),
+                    ])
                     ->components([
                         Select::make('personel_id')
                             ->required()
@@ -144,7 +151,7 @@ class LabJobResource extends Resource
                                 //         fn(Builder $query) => $query->whereIn('name', [PositionEnum::Ppc->value, PositionEnum::KepalaPpc->value])
                                 //     )->whereDoesntHave('labJobPersonels', fn(Builder $q) => $q->where('lab_job_id', $this->ownerRecord->id))
                             )
-                            ->label('Personel')
+                            ->label('Nama Petugas')
                             ->preload(),
                         Select::make('position')
                             ->required()

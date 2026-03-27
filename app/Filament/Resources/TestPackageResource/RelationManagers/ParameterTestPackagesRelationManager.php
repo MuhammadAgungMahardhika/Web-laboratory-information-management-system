@@ -32,6 +32,7 @@ class ParameterTestPackagesRelationManager extends RelationManager
                 Select::make('parameter_id')
                     ->relationship('parameter', 'long_name_standard_notes')
                     ->label('Parameter Uji')
+                    ->unique(ignoreRecord: true)
                     ->required()
                     ->searchable()
                     ->preload()

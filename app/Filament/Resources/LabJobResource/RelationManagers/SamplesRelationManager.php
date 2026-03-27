@@ -104,7 +104,8 @@ class SamplesRelationManager extends RelationManager
                         ->label('Kode Sampel')
                         ->unique()
                         ->live()
-                        ->readOnly() // Kode sampel tidak bisa diubah manual
+                        ->disabled()
+                        ->dehydrated()
                         ->required(),
                     Select::make('status')
                         ->label('Status')
