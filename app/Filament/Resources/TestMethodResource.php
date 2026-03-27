@@ -32,8 +32,9 @@ class TestMethodResource extends Resource
     protected static ?string $model = TestMethod::class;
     protected static ?string $navigationLabel = 'Metode Uji';
     protected static ?string $label = 'Metode Uji';
+    protected static string | \UnitEnum | null $navigationGroup = 'Parameter';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::Scale;
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

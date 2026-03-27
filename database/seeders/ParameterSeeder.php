@@ -23,25 +23,35 @@ class ParameterSeeder extends Seeder
             $code = isset($row[0]) ? trim($row[0]) : null;
             $testMethodId = isset($row[6]) && $row[6] !== '' ? $row[6] : null;
 
-            // Skip jika name kosong (ini satu-satunya validasi)
             if ($code === null || $code === '') {
                 continue;
             }
 
-
-            // Konversi status dari string ke integer
             $statusRaw = isset($row[2]) ? trim($row[2]) : null;
             $status = $this->convertStatus($statusRaw);
 
-            // Prepare data untuk insert
+            $longName = isset($row[1]) && $row[1] !== '' ? trim($row[1]) : null;
+            $standardNotes = isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null;
+
+            // 🔥 CEK DUPLIKAT BERDASARKAN 3 FIELD
+            $exists = DB::table('parameters')
+                ->where('long_name', $longName)
+                ->where('status', $status)
+                ->where('standard_notes', $standardNotes)
+                ->exists();
+
+            if ($exists) {
+                continue; // skip jika sama persis
+            }
+
             $data = [
                 'code'           => $code,
-                'long_name'      => isset($row[1]) && $row[1] !== '' ? trim($row[1]) : null,
+                'long_name'      => $longName,
                 'unit'           => isset($row[4]) && $row[4] !== '' ? trim($row[4]) : null,
                 'status'         => $status,
                 'default_price'  => $this->parseDecimal($row[5] ?? null),
                 'test_method_id' => $testMethodId,
-                "standard_notes"  => isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null,
+                'standard_notes' => $standardNotes,
             ];
 
             DB::table('parameters')->insert($data);

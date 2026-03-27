@@ -36,6 +36,7 @@ class SampleMatricResource extends Resource
     protected static ?string $model = SampleMatric::class;
     protected static ?string $navigationLabel = 'Matrix Sampel';
     protected static ?string $label = 'Matrix Sampel';
+    protected static string | \UnitEnum | null $navigationGroup = 'Sampel';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::NumberedList;
     protected static ?int $navigationSort = 2;
     public static function form(Schema $schema): Schema

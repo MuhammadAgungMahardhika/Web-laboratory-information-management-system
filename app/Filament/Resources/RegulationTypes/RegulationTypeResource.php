@@ -23,6 +23,7 @@ class RegulationTypeResource extends Resource
     protected static ?string $model = RegulationType::class;
     protected static ?string $navigationLabel = 'Jenis Regulasi';
     protected static ?string $label = 'Jenis Regulasi';
+    protected static string | \UnitEnum | null $navigationGroup = 'Regulasi';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public static function form(Schema $schema): Schema

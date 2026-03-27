@@ -31,6 +31,7 @@ class SampleTypeResource extends Resource
     protected static ?string $model = SampleType::class;
     protected static ?string $navigationLabel = 'Jenis Sampel';
     protected static ?string $label = 'Jenis Sampel';
+    protected static string | \UnitEnum | null $navigationGroup = 'Sampel';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::QueueList;
     protected static ?int $navigationSort = 1;
     public static function form(Schema $schema): Schema

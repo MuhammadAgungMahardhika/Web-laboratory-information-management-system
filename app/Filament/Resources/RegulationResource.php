@@ -42,6 +42,7 @@ class RegulationResource extends Resource
     protected static ?string $model = Regulation::class;
     protected static ?string $navigationLabel = 'Regulasi';
     protected static ?string $label = 'Regulasi';
+    protected static string | \UnitEnum | null $navigationGroup = 'Regulasi';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::DocumentChartBar;
     protected static ?int $navigationSort = 3;
     public static function form(Schema $schema): Schema

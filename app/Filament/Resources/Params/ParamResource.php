@@ -30,10 +30,11 @@ class ParamResource extends Resource
 {
     protected static ?string $cluster = MasterCluster::class;
     protected static ?string $model = Param::class;
-    protected static ?string $navigationLabel = 'Parameter';
-    protected static ?string $label = 'Parameter';
+    protected static ?string $navigationLabel = 'Kode Parameter';
+    protected static ?string $label = 'Kode Parameter';
+    protected static string | \UnitEnum | null $navigationGroup = 'Parameter';
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedBeaker;
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'code';
 
     public static function form(Schema $schema): Schema

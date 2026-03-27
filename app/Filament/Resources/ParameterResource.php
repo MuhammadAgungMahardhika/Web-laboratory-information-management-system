@@ -36,8 +36,9 @@ class ParameterResource extends Resource
     protected static ?string $model = Parameter::class;
     protected static ?string $navigationLabel = 'Parameter Uji';
     protected static ?string $label = 'Parameter Uji';
+    protected static string | \UnitEnum | null $navigationGroup = 'Parameter';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedBeaker;
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {
