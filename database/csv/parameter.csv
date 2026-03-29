@@ -1,689 +1,691 @@
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",A,150,µg/m3," Rp 185.000,00 ",
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",NA,75,µg/m3," Rp 185.000,00 ",
-CO,"Karbon Monoksida/ Carbon Monoxide, (CO) ",A,10000,µg/m3," Rp 185.000,00 ",
-CO,"Karbon Monoksida/ Carbon Monoxide, (CO) ",A,4000,µg/m3," Rp 185.000,00 ",
-NO2,"Nitrogen Dioksida/ Nitrogen Dioxide, (NO2) ",A,200,µg/m3," Rp 185.000,00 ",
-NO2,"Nitrogen Dioksida/ Nitrogen Dioxide, (NO2) ",NA,65,µg/m3," Rp 185.000,00 ",
-O3,"Oksidan Fotokimia Sebagai Ozon/ Photochemical Oxidant (Ox) As Ozone,  (O3) ",A,150,µg/m3," Rp 185.000,00 ",
-O4,"Oksidan Fotokimia Sebagai Ozon/ Photochemical Oxidant (Ox) As Ozone,  (O3) ",NA,100,µg/m3," Rp 185.000,00 ",
-NMHC,"Hidrokarbon non Metana/Non-Methane Hydrocarbons, (NMHC)",S,160,µg/m3," Rp 2.015.000,00 ",
-TSP,"Partikulat Debu <100µm/ Particulate Matter < 100µm, (TSP)",A,230,µg/m3," Rp 450.000,00 ",
-PM10,"Partikulat Debu <10µm/ Particulate Matter < 10µm, (PM10",A,75,µg/m3," Rp 250.000,00 ",
-PM2.5,"Partikulat Debu <2.5µm/ Particulate Matter < 2.5µm, (PM2.5)",A,55,µg/m3," Rp 200.000,00 ",
-Pb,"Timbal/Lead, (Pb)",A,2,µg/m3," Rp 185.000,00 ",
-Wind Speed,Kecepatan Angin/ Wind Speed ,A,-,m/dtk, Rp -   ,
-Pressure,Tekanan Udara/ Pressure ,A,-,mmHg, Rp -   ,
-Humidity,Kelembaban Udara/Humidity ,A,-,%, Rp -   ,
-Air Temperature,Suhu Udara/ Air Temperature ,A,-, °C, Rp -   ,
-Wind Direction,Arah Angin/Wind Direction ,A,-,-, Rp -   ,
-Weather,Kondisi Cuaca/Weather,A,-,-, Rp -   ,
-NH3,"Amoniak/Ammonia, (NH3)  ",A,2.0,ppm," Rp 187.500,00 ",
-CH3SH," Metil Merkaptana/Methyl Mercaptane, (CH3SH)",S,0.002,ppm," Rp 187.500,00 ",
-H2S,"Hidrogen Sulfida/Hydrogen Sulphide, (H2S)",A,0.02,ppm," Rp 225.000,00 ",
-(CH3)2S,Metil Sulfida/Methyl Sulphide ((CH3)2)S),S,0.01,ppm," Rp 225.000,00 ",
-C6H8CHCH2,Stirena/Styrene (C6H8CHCH2),S,0.1,ppm," Rp 225.000,00 ",
-Wind Speed,Kecepatan Angin/ Wind Speed ,A,-,m/dtk, Rp -   ,
-Pressure,Tekanan Udara/ Pressure ,A,-,mmHg, Rp -   ,
-Humidity,Kelembaban Udara/Humidity ,A,-,%, Rp -   ,
-Air Temperature,Suhu Udara/ Air Temperature ,A,-, °C, Rp -   ,
-Wind Direction,Arah Angin/Wind Direction ,A,-,-, Rp -   ,
-Weather,Kondisi Cuaca/Weather,A,-,-, Rp -   ,
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Perumahan dan pemukiman",A,55,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Perdagangan dan Jasa",A,70,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM)  Perkantoran dan Perdagangan",A,65,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Ruang terbuka hijau",A,50,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Industri",A,70,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Pemerintahan dan fasilitas umum",A,60,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Rekreasi",A,70,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Khusus Pelabuhan Laut",A,70,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Khusus Cagar Budaya",A,60,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Rumah sakit dan sejenisnya",A,55,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Sekolah Atau sejenisnya",A,55,dB(A)," Rp 250.000,00 ",
-LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Tempat Ibadah atau Sejenisnya",A,55,dB(A)," Rp 250.000,00 ",
-Lavg," Tingkat Kebisingan Rata-Rata/Noise Level Average, (Lavg)",A,,," Rp 100.000,00 ",
-Leq,"Tingkat Kebisingan Ekuivalen/Noise Level Equivalent, (Leq)",A,,," Rp 100.000,00 ",
-LS," Tingkat Kebisingan Siang/Day Noise Level , (LS)",A,-,dB(A)," Rp 250.000,00 ",
-LM," Tingkat Kebisingan Malam/Evening Noise Level , (LM)",A,-,dB(A)," Rp 250.000,00 ",
-Wind Speed,Kecepatan Angin/ Wind Speed ,A,-,m/dtk, Rp -   ,
-Pressure,Tekanan Udara/ Pressure ,A,-,mmHg, Rp -   ,
-Humidity,Kelembaban Udara/Humidity ,A,-,%, Rp -   ,
-Air Temperature,Suhu Udara/ Air Temperature ,A,-, °C, Rp -   ,
-Wind Direction ,Arah Angin/Wind Direction ,A,-,-, Rp -   ,
-Weather,Kondisi Cuaca/Weather,A,-,-, Rp -   ,
-Shock Vibration ,Getaran Kejut/Shock Vibration ,NA,2,mm/detik," Rp 100.000,00 ",
-Shock Vibration,Getaran Kejut/Shock Vibration (Peruntukan dan bangunan kuno yang memiliki nilai sejarah yang  tinggi),NA,5,mm/detik," Rp 100.000,00 ",
-Shock Vibration,"Getaran Kejut/Shock Vibration (Bangunan untuk dalam kondisi teknis yang baik, ada kerusakan-kerusakan kecil seperti : plasteran yang retak)",NA,10,mm/detik," Rp 100.000,00 ",
-Shock Vibration ,"Getaran Kejut/Shock Vibration (Bangunan ""kuat"" ( misalnya : bangunan industri terbuat danri beton atau baja )",NA,10-40,mm/detik," Rp 100.000,00 ",
-,Kecepatan Angin/ Wind Speed ,A,-,m/dtk, Rp -   ,
-Pressure ,Tekanan Udara/ Pressure ,A,-,mmHg, Rp -   ,
-Humidity ,Kelembaban Udara/Humidity ,A,-,%, Rp -   ,
-Air Temperature ,Suhu Udara/ Air Temperature ,A,-, °C, Rp -   ,
-Wind Direction ,Arah Angin/Wind Direction ,A,-,-, Rp -   ,
-Weather,Kondisi Cuaca/Weather,A,-,-, Rp -   ,
-CO,CO (<2007) Mobil berpenggerak motor bakar cetus api (bensin),NA,"M = 4, N = 4 , O = 4",%," Rp 275.000,00 ",
-CO ,CO (2007-2018) Mobil berpenggerak motor bakar cetus api (bensin),NA," M=1, N=1, O=1",%," Rp 275.000,00 ",
-CO,CO (>2018) Mobil berpenggerak motor bakar cetus api (bensin),NA,"M = 0.5, N=0.5, O=0.5",%," Rp 275.000,00 ",
-CO,CO (<2010 (2 langkah)) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,L = 4.5,%," Rp 275.000,00 ",
-CO ,CO (<2010 (4 langkah) ) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,"L = 5,5",%," Rp 275.000,00 ",
-CO ,CO (2010-2016) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,L = 4,%," Rp 275.000,00 ",
-CO ,CO (>2016) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,L = 3,%," Rp 275.000,00 ",
-HC,HC <2007 (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=-,M=1000,N=1100,O=1100",ppm," Rp 275.000,00 ",
-HC,HC 2007-2018 (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=-,M=150,N=200,O=200",ppm," Rp 275.000,00 ",
-HC,HC >2018 (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=-,M=1100,N=150,O=150",ppm," Rp 275.000,00 ",
-HC,HC <2010 (2 langkah) (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=6000,M=-,N=-,O=-",ppm," Rp 275.000,00 ",
-HC,HC <2010 (4 langkah) (Sepeda motor berpenggerak penyalaan cetus api (bensin)),NA,"L=2200,M=1,N=-,O=-",ppm," Rp 275.000,00 ",
-HC,HC 2010-2016 (Sepeda motor berpenggerak penyalaan cetus api (bensin)),NA,"L=1800,M=-,N=-,O=-",ppm," Rp 275.000,00 ",
-HC,HC >2016 (Sepeda motor berpenggerak penyalaan cetus api (bensin)),NA,"L=1000,M=-,N=-,O=-",ppm," Rp 275.000,00 ",
-Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) JBB ≤ 3.5 ton),A,"M=65,N=65,0=65",% HSU," Rp 550.000,00 ",
-Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) JBB ≤ 3.5 ton),A,"M=40,N=40,O=40",% HSU," Rp 550.000,00 ",
-Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) JBB ≤ 3.5 ton),A,"M=30,N=30,O=30",% HSU," Rp 550.000,00 ",
-Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) GVW > 3.5 ton),A,"M=65,N=65,0=65",% HSU," Rp 550.000,00 ",
-Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) GVW > 3.5 ton),A,"M=40,N=40,O=40",% HSU," Rp 550.000,00 ",
-Opasitas,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) GVW > 3.5 ton),A,"M=35,N=35,O=35",% HSU," Rp 550.000,00 ",
-NH3,"Amoniak/Ammonia, (NH₃)",A,"0,5",mg/m³, Rp -   ,
-Cl2,Klorin/Chlorine (Cl₂),NA,10,mg/m³, Rp -   ,
-HCL,"Hidrogen Klorida/ Hydrogen Chloride, (HCl)",A,5,mg/m³, Rp -   ,
-HF,"Hidrogen Fluorida/ Hydrogen Fluoride, (HF)",A,10,mg/m³, Rp -   ,
-NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,1000,mg/m³, Rp -   ,
-Opacity,Opasitas/Opacity ,A,35,%, Rp -   ,
-Particulate ,Partikulat/Particulate ,A,350,mg/m³, Rp -   ,
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,800,mg/m³, Rp -   ,
-H2S,"Total Sulfur Tereduksi/Total Reduced Sulfur, (H₂S)",NA,35,mg/m³, Rp -   ,
-HG,"Air Raksa/Mercury, (Hg)",NA,5,mg/m³, Rp -   ,
-AS,"Arsen/Arsenic, (As)",NA,8,mg/m³, Rp -   ,
-Sb,"Antimon/Antimony, (Sb)",NA,8,mg/m³, Rp -   ,
-Cd,"Kadmium/Cadmium, (Cd)",NA,8,mg/m³, Rp -   ,
-Zn,"Seng/Zinc, (Zn)",NA,50,mg/m³, Rp -   ,
-Pb,"Timah Hitam/Lead, (Pb)",NA,12,mg/m³, Rp -   ,
-Particulate ,Partikulat/Particulate ,A,300,mg/m³, Rp -   ,
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,600,mg/m³, Rp -   ,
-NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,800,mg/m³, Rp -   ,
-HCL,"Hidrogen Klorida/ Hydrogen Chloride, (HCl)",A,5,mg/m³, Rp -   ,
-Cl2,Klorin/Chlorine (Cl₂),NA,5,mg/m³, Rp -   ,
-NH3,"Amoniak/Ammonia, (NH₃)",A,1,mg/m³, Rp -   ,
-HF,"Hidrogen Fluorida/ Hydrogen Fluoride, (HF)",A,8,mg/m³, Rp -   ,
-Opacity,Opasitas/Opacity ,A,30,%, Rp -   ,
-Particulate ,Partikulat/Particulate ,A,350,mg/m³, Rp -   ,
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,800,mg/m³, Rp -   ,
-NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,1000,mg/m³, Rp -   ,
-HCL,"Hidrogen Klorida/ Hydrogen Chloride, (HCl)",A,5,mg/m³, Rp -   ,
-Cl2,Klorin/Chlorine (Cl₂),NA,10,mg/m³, Rp -   ,
-NH3,"Amoniak/Ammonia, (NH₃)",A,"0,5",mg/m³, Rp -   ,
-HF,"Hidrogen Fluorida/ Hydrogen Fluoride, (HF)",A,10,mg/m³, Rp -   ,
-Opacity,Opasitas/Opacity ,A,30,%, Rp -   ,
-H2S,"Total Sulfur Tereduksi/Total Reduced Sulfur, (H₂S)",NA,35,mg/m³, Rp -   ,
-Hg,"Air Raksa/Mercury, (Hg)",NA,5,mg/m³, Rp -   ,
-As,"Arsen/Arsenic, (As)",NA,8,mg/m³, Rp -   ,
-Sb,"Antimon/Antimony, (Sb)",NA,8,mg/m³, Rp -   ,
-Cd,"Kadmium/Cadmium, (Cd)",NA,8,mg/m³, Rp -   ,
-Zn,"Seng/Zinc, (Zn)",NA,50,mg/m³, Rp -   ,
-Pb,"Timah Hitam/Lead, (Pb)",NA,12,mg/m³, Rp -   ,
-Particulate ,Partikulat/Particulate ,A,230,mg/m³, Rp -   ,
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,750,mg/m³, Rp -   ,
-NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,825,mg/m³, Rp -   ,
-Opacity,Opasitas/Opacity ,A,20,%, Rp -   ,
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,150,mg/m³, Rp -   ,
-NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,650,mg/m³, Rp -   ,
-Stack Code,Kode Cerobong/ Stack Code,A,-,-, Rp -   ,
-Air Temperature ,Suhu Udara/ Air Temperature,A,-, °C, Rp -   ,
-Stack Temperature,Suhu Cerobong/ Stack Temperature,A,-, °C, Rp -   ,
-Pressure ,Tekanan Udara/ Pressure,A,-,mmHg, Rp -   ,
-NO Value,Nilai NO/NO Value,A,-,mg/Nm3, Rp -   ,
-O2 Value,Nilai O2/ O2 Value ,A,-,%, Rp -   ,
-CO2,"Karbon Monoksida/ Carbon Monoxide, (CO)",A,-,mg/Nm3, Rp -   ,
-CO2 Value,Nilai CO2/ CO2 Value ,A,-,%, Rp -   ,
-Traverse Ponts,Jumlah Titik Lintas/Traverse Points,A,-,Titik, Rp -   ,
-Qact,"Laju Alir Gas Aktual, (Qact)",A,-, m3/detik, Rp -   ,
-Md,"Bobot Molekul Gas Kering/Dry Molecular Weight, (Md)",A,-, g/gmol, Rp -   ,
-Bws,"Kadar Uap Air/Moisture Content, (Bws)",A,-,-, Rp -   ,
-%I,"Persen Isokinetik/Percent Isokineticity, (%I)",A,-,%, Rp -   ,
-Temperature ,Suhu/Temperature ,A,"Kelas 1 = Dev3, Kelas 2 = Dev3, Kelas 3 = Dev3",ºC," Rp 12.500,00 ",
-Temperature ,Suhu/Temperature ,NA,"Kelas 1 = Dev3, Kelas 2 = Dev3, Kelas 3 = Dev3",ºC," Rp 12.500,00 ",
-TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,"Kelas 1 = 1000, Kelas 2 = 1000, Kelas 3 = 1000, Kelas 4 = 2000",mg/L," Rp 35.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,"Kelas 1 = 40, Kelas 2 = 50, Kelas 3 = 100, Kelas 4 = 400",mg/L," Rp 35.000,00 ",
-Color,Warna/Color ,A,"Kelas 1 = 15, Kelas 2 = 50, Kelas 3 = 100, Kelas 4 = ",Pt-Co Unit," Rp 35.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH) ",A,"Kelas 1 = 6-9, Kelas 2 = 6-9, Kelas 3 = 6-9, Kelas 4 = 6-9",-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/Biochemical Oxygen Demand, (BOD)  ",A,,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,,mg/L," Rp 75.000,00 ",
-DO,"Oksigen Terlarut/ Dissolved Oxygen, (DO) ",A,,mg/L," Rp 40.000,00 ",
-SO4-2,"Sulfat/Sulfate, (SO4-2) ",A,,mg/L," Rp 40.000,00 ",
-Cl-,"Klorida/ Chloride, (Cl-)",A,,mg/L," Rp 40.000,00 ",
-NO3-N,"Nitrat sebagai N/ Nitrate as N, (NO3-N) ",A,,mg/L," Rp 40.000,00 ",
-NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N)",A,,mg/L," Rp 40.000,00 ",
-NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,,mg/L," Rp 75.000,00 ",
-Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,,mg/L," Rp 115.000,00 ",
-Total Phospate as P,Total Fosfat sebagai P/ Total Phosphate as P,A,,mg/L," Rp 45.000,00 ",
-F-,"Fluorida/Fluoride, (F-)",A,,mg/L," Rp 40.000,00 ",
-Sulfur as H2S,Belerang sebagai H2S/ Sulfur as H2S ,A,,mg/L," Rp 40.000,00 ",
-CN-,"Sianida/ Cyanide, (CN-) ",A,,mg/L," Rp 55.000,00 ",
-CL2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,,mg/L," Rp 40.000,00 ",
-Ba,"Barium Terlarut/ Dissolved Barium, (Ba)",A,,mg/L," Rp 77.500,00 ",
-B,"Boron Terlarut/Dissolved Boron, (B) ",A,,mg/L," Rp 77.500,00 ",
-Hg,"Raksa Terlarut/ Dissolved Mercury, (Hg) ",A,,mg/L," Rp 175.000,00 ",
-As,"Arsen Terlarut, Dissolved Arsenic, (As) ",A,,mg/L," Rp 115.000,00 ",
-Se,"Selenium Terlarut/ Dissolved Selenium, (Se)",A,,mg/L," Rp 115.000,00 ",
-Fe,"Besi Terlarut/ Dissolved Iron, (Fe) ",A,,mg/L," Rp 77.500,00 ",
-Cd,Kadmium Terlarut/ Dissolved Cadmium (Cd) ,A,,mg/L," Rp 115.000,00 ",
-Co,"Kobalt Terlarut/ Dissolved Cobalt, (Co)  ",A,,mg/L," Rp 115.000,00 ",
-Mn,"Mangan Terlarut/ Dissolved Manganese, (Mn)",A,,mg/L," Rp 77.500,00 ",
-Ni,"Nikel Terlarut/ Dissolved Nickel, (Ni) ",A,,mg/L," Rp 77.500,00 ",
-Zn,"Seng Terlarut/ Dissolved Zinc, (Zn) ",A,,mg/L," Rp 77.500,00 ",
-Cu,"Tembaga Terlarut/ Dissolved Copper, (Cu)",A,,mg/L," Rp 77.500,00 ",
-Pb,Timbal Terlarut/ Dissolved Lead (Pb),A,,mg/L," Rp 115.000,00 ",
-Cr+6,Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium (Cr+6),A,,mg/L," Rp 115.000,00 ",
-Oil and Grease,Minyak dan Lemak/ Oil and Grease ,NA,,mg/L," Rp 125.000,00 ",
-Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactants as MBAS ,A,,mg/L," Rp 80.000,00 ",
-Phenol,Fenol/ Phenol ,A,,mg/L," Rp 85.000,00 ",
-Dieldrin,Aldrin/Dieldrin,S,,µg/L," Rp 1.850.000,00 ",
-BHC,BHC,S,,µg/L," Rp 1.850.000,00 ",
-Chlordane,Chlordane,S,,µg/L," Rp 1.850.000,00 ",
-DDT,DDT,S,,µg/L," Rp 1.850.000,00 ",
-Endrin,Endrin,S,,µg/L," Rp 1.850.000,00 ",
-Heptachlor,Heptachlor,S,,µg/L," Rp 1.850.000,00 ",
-Lindane,Lindane,S,,µg/L," Rp 1.850.000,00 ",
-Methoxychlor,Methoxychlor,S,,µg/L," Rp 1.850.000,00 ",
-Toxapan,Toxapan,S,,µg/L," Rp 1.850.000,00 ",
-Fecal Coliform,Fecal Coliform,A,,MPN/100 mL," Rp 145.000,00 ",
-Total Coliform,Total Coliform,A,,MPN/100 mL," Rp 145.000,00 ",
-Rubbish ,Sampah/Rubbish ,A,,-," Rp 15.000,00 ",
-Radioaktivitas Gross A,Radioaktivitas Gross A,S,,Bq/L," Rp 2.420.000,00 ",
-Radioaktivitas Gross B ,Radioaktivitas Gross B ,S,,Bq/L," Rp 2.420.000,00 ",
-Conductivity ,Daya Hantar Listrik/ Conductivity ,A,,µS/cm," Rp 12.500,00 ",
-TS,"Total Padatan/Total Solids,(TS)",A,,mg/L," Rp 35.000,00 ",
-Turbidity,Kekeruhan/Turbidity,A,,NTU," Rp 20.000,00 ",
-Salinity ,Salinitas/Salinity ,A,,%," Rp 12.500,00 ",
-Orthophosphate ,Orthopospat/ Orthophosphate ,A,,mg/L," Rp 45.000,00 ",
-Cr,"Krom terlarut / Dissolved Chromium, (Cr) ",A,,mg/L," Rp 115.000,00 ",
-Escherichia coli ,Escherichia coli ,A,,MPN/100 mL," Rp 145.000,00 ",
-Alkalinity ,Alkalinitas/Alkalinity ,NA,,mg/L," Rp 40.000,00 ",
-Temperature,Suhu/Temperature ,A,,ºC," Rp 12.500,00 ",
-Temperature,Suhu/Temperature ,NA,,ºC," Rp 12.500,00 ",
-TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,,mg/L," Rp 35.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,,mg/L," Rp 35.000,00 ",
-Transparency,Transparasi/ Transparency  ,A,,m," Rp 15.000,00 ",
-Color,Warna/Color ,A,,Pt-Co Unit," Rp 35.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH) ",A,,," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,,mg/L," Rp 75.000,00 ",
-DO,"Oksigen Terlarut/ Dissolved Oxygen, (DO) ",A,,mg/L," Rp 40.000,00 ",
-SO4-2,"Sulfat/Sulfate, (SO4-2) ",A,,mg/L," Rp 40.000,00 ",
-Cl-," Klorida/ Chloride, (Cl-) ",A,,mg/L," Rp 40.000,00 ",
-Total Nitrogen, Total Nitrogen/ Total Nitrogen ,A,,mg/L," Rp 115.000,00 ",
-Total Phosphate as P ,Total Fosfat sebagai P/ Total Phosphate as P ,A,,mg/L," Rp 45.000,00 ",
-F-,"Fluorida/Fluoride, (F-)",A,,mg/L," Rp 40.000,00 ",
-Sulfur as H2S ,Belerang sebagai H2S/ Sulfur as H2S ,A,,mg/L," Rp 40.000,00 ",
-CN-,"Sianida/ Cyanide, (CN-) ",A,,mg/L," Rp 55.000,00 ",
-CL2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,,mg/L," Rp 40.000,00 ",
-Ba,"Barium Terlarut/ Dissolved Barium, (Ba) ",A,,mg/L," Rp 77.500,00 ",
-B,"Boron Terlarut/Dissolved Boron, (B) ",A,,mg/L," Rp 77.500,00 ",
-Hg,"Raksa Terlarut/ Dissolved Mercury, (Hg) ",A,,mg/L," Rp 175.000,00 ",
-As,"Arsen Terlarut, Dissolved Arsenic, (As) ",A,,mg/L," Rp 115.000,00 ",
-Se,"Selenium Terlarut/ Dissolved Selenium, (Se)",A,,mg/L," Rp 115.000,00 ",
-Fe,"Besi Terlarut/ Dissolved Iron, (Fe) ",A,,mg/L," Rp 77.500,00 ",
-Cd, Kadmium Terlarut/ Dissolved Cadmium (Cd)  , A ,,mg/L," Rp 115.000,00 ",
-Co," Kobalt Terlarut/ Dissolved Cobalt, (Co)   ", A ,,mg/L," Rp 115.000,00 ",
-Mn," Mangan Terlarut/ Dissolved Manganese, (Mn) ", A ,,mg/L," Rp 77.500,00 ",
-Ni," Nikel Terlarut/ Dissolved Nickel, (Ni)  ", A ,,mg/L," Rp 77.500,00 ",
-Zn," Seng Terlarut/ Dissolved Zinc, (Zn)  ", A ,,mg/L," Rp 77.500,00 ",
-Cu," Tembaga Terlarut/ Dissolved Copper, (Cu) ", A ,,mg/L," Rp 77.500,00 ",
-Pb, Timbal Terlarut/ Dissolved Lead (Pb) , A ,,mg/L," Rp 115.000,00 ",
-Cr+6, Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium (Cr+6) , A ,,mg/L," Rp 115.000,00 ",
-Oil and Grease, Minyak dan Lemak/ Oil and Grease  , NA ,,mg/L," Rp 125.000,00 ",
-Anionic Surfactants as MBAS , Surfaktan Anionik sebagai MBAS /Anionic Surfactants as MBAS  , A ,,mg/L," Rp 80.000,00 ",
-Phenol, Fenol/ Phenol  , A ,,mg/L," Rp 85.000,00 ",
-Dieldrin, Aldrin/Dieldrin , S ,,µg/L," Rp 1.850.000,00 ",
-BHC, BHC , S ,,µg/L," Rp 1.850.000,00 ",
-Chlordane, Chlordane , S ,,µg/L," Rp 1.850.000,00 ",
-DDT, DDT , S ,,µg/L," Rp 1.850.000,00 ",
-Endrin, Endrin , S ,,µg/L," Rp 1.850.000,00 ",
-Heptachlor, Heptachlor , S ,,µg/L," Rp 1.850.000,00 ",
-Lindane, Lindane , S ,,µg/L," Rp 1.850.000,00 ",
-Methoxychlor,  Methoxychlor , S ,,µg/L," Rp 1.850.000,00 ",
-Toxapan, Toxapan , S ,,µg/L," Rp 1.850.000,00 ",
-Fecal Coliform, Fecal Coliform , A ,,MPN/100 mL," Rp 145.000,00 ",
-Total Coliform, Total Coliform , A ,,MPN/100 mL," Rp 145.000,00 ",
-Klorofil-a, Klorofil-a , A ,,mg/m³, Rp -   ,
-Rubbish , Sampah/Rubbish  , A ,,," Rp 15.000,00 ",
-Radioaktivitas Gross A, Radioaktivitas Gross A , S ,,Bq/L," Rp 2.420.000,00 ",
-Radioaktifitas Gross B, Radioaktivitas Gross B  , S ,,Bq/L," Rp 2.420.000,00 ",
-Conductivity , Daya Hantar Listrik/ Conductivity  , A ,,µS/cm," Rp 12.500,00 ",
-TS," Total Padatan/Total Solids,(TS) ", A ,,mg/L," Rp 35.000,00 ",
-Turbidity, Kekeruhan/Turbidity , A ,,NTU," Rp 20.000,00 ",
-Salinity , Salinitas/Salinity  , A ,,%," Rp 12.500,00 ",
-Orthophosphate , Orthopospat/ Orthophosphate  , A ,,mg/L," Rp 45.000,00 ",
-Cr," Krom terlarut / Dissolved Chromium, (Cr)  ", A ,,mg/L," Rp 115.000,00 ",
-Escherichia coli , Escherichia coli  , A ,,MPN/100 mL," Rp 145.000,00 ",
-Alkalinity , Alkalinitas/Alkalinity  , NA ,,mg/L," Rp 40.000,00 ",
- Phytoplankton , Phytoplankton , A ,,," Rp 500.000,00 ",
- BACILLARIOPHYCEAE: , BACILLARIOPHYCEAE: , A ,,,,
- Achnanthes sp. , Achnanthes sp. , A ,, Ind/L ,,
- Actinocyclus sp. , Actinocyclus sp. , A ,, Ind/L ,,
- Fragilaria sp. , Fragilaria sp. , A ,, Ind/L ,,
- Navicula sp. , Navicula sp. , A ,, Ind/L ,,
- Nitzschia sp. , Nitzschia sp. , A ,, Ind/L ,,
- Pinnularia sp. , Pinnularia sp. , A ,, Ind/L ,,
- Pleurosigma sp. , Pleurosigma sp. , A ,, Ind/L ,,
- Surirella sp. , Surirella sp. , A ,, Ind/L ,,
- Tabellaria sp. , Tabellaria sp. , A ,, Ind/L ,,
- Frustulia sp. , Frustulia sp. , A ,, Ind/L ,,
- Neidium sp. , Neidium sp. , A ,, Ind/L ,,
- Microspora sp. , Microspora sp. , A ,, Ind/L ,,
- CHLOROPHYCEAE: , CHLOROPHYCEAE: , A ,,,,
- Chodatella sp. , Chodatella sp. , A ,, Ind/L ,,
- Pediastrum sp. , Pediastrum sp. , A ,, Ind/L ,,
- Euastrum sp. , Euastrum sp. , A ,, Ind/L ,,
- Eudorina sp. , Eudorina sp. , A ,, Ind/L ,,
- Golenkinia sp. , Golenkinia sp. , A ,, Ind/L ,,
- Scenedemus sp. , Scenedemus sp. , A ,, Ind/L ,,
- Sphaerocytis sp. , Sphaerocytis sp. , A ,, Ind/L ,,
- Ulothrix sp. , Ulothrix sp. , A ,, Ind/L ,,
- Tetraedron sp. , Tetraedron sp. , A ,, Ind/L ,,
- CYANOPHYCEAE: , CYANOPHYCEAE: , A ,,,,
- Anabaena sp. , Anabaena sp. , A ,, Ind/L ,,
- Merismopedia sp. , Merismopedia sp. , A ,, Ind/L ,,
- Oscillatoria sp. , Oscillatoria sp. , A ,, Ind/L ,,
- Spirulina sp. , Spirulina sp. , A ,, Ind/L ,,
- DINOPHYCEAE : , DINOPHYCEAE : , A ,,,,
- Ceratium sp. , Ceratium sp. , A ,, Ind/L ,,
- Dinobryon sp. , Dinobryon sp. , A ,, Ind/L ,,
- EUGLENOPHYCEAE: , EUGLENOPHYCEAE: , A ,,,,
- Phacus sp. , Phacus sp. , A ,, Ind/L ,,
- Euglena sp. , Euglena sp. , A ,, Ind/L ,,
- Trachelomonas sp. , Trachelomonas sp. , A ,, Ind/L ,,
- ZYGNEMATOPHYCEAE , ZYGNEMATOPHYCEAE , A ,,,,
- Cosmarium sp. , Cosmarium sp. , A ,, Ind/L ,,
- Closterium sp. , Closterium sp. , A ,, Ind/L ,,
- Staurastrum sp. , Staurastrum sp. , A ,, Ind/L ,,
- Micrasterias sp. , Micrasterias sp. , A ,, Ind/L ,,
- Desmidium sp. , Desmidium sp. , A ,, Ind/L ,,
- Spirogyra sp. , Spirogyra sp. , A ,, Ind/L ,,
- Zygnemopsis sp. , Zygnemopsis sp. , A ,, Ind/L ,,
- Mougeotia sp. , Mougeotia sp. , A ,, Ind/L ,,
- Gonatozygon sp. , Gonatozygon sp. , A ,, Ind/L ,,
- Ind./L , Kelimpahan (Ind./L) , A ,,,,
- S , Taksa (S) , A ,,,,
- H' , Keanekaragaman (H') , A ,,,,
- E , Pemerataan (E) , A ,,,,
- D , Dominasi (D) , A ,,,,
- Zooplankton , Zooplankton , A ,,," Rp 500.000,00 ",
- CRUSTACEAE: , CRUSTACEAE: , A ,,,,
- Harpacticus sp. , Harpacticus sp. , A ,, Ind/L ,,
- Copepedia sp. , Copepedia sp. , A ,, Ind/L ,,
- Nauplius sp. , Nauplius sp. , A ,, Ind/L ,,
- Alona sp. , Alona sp. , A ,, Ind/L ,,
- Ceriodaphina sp. , Ceriodaphina sp. , A ,, Ind/L ,,
- NEMATODA: , NEMATODA: , A ,,,,
- Nematoda worm (sp) , Nematoda worm (sp) , A ,, Ind/L ,,
- PROTOZOA: , PROTOZOA: , A ,,,,
- Arcella sp. , Arcella sp. , A ,, Ind/L ,,
- Difflugia sp. , Difflugia sp. , A ,, Ind/L ,,
- Centropyxis sp. , Centropyxis sp. , A ,,,,
- Euglypha sp. , Euglypha sp. , A ,, Ind/L ,,
- Paramecium sp. , Paramecium sp. , A ,, Ind/L ,,
- Vorticella sp. , Vorticella sp. , A ,, Ind/L ,,
- Wailesella sp. , Wailesella sp. , A ,, Ind/L ,,
- ROTIFERA: , ROTIFERA: , A ,,,,
- Brachionus sp. , Brachionus sp. , A ,, Ind/L ,,
- Monostylla sp. , Monostylla sp. , A ,, Ind/L ,,
- Philodina sp. , Philodina sp. , A ,, Ind/L ,,
- Squatinella sp. , Squatinella sp. , A ,, Ind/L ,,
- Kelimpahan (Ind./L) , Kelimpahan (Ind./L) , A ,,,,
- Taksa (S) , Taksa (S) , A ,,,,
- Keanekaragaman (H') , Keanekaragaman (H') , A ,,,,
- Pemerataan (E) , Pemerataan (E) , A ,,,,
- Dominasi (D) , Dominasi (D) , A ,,,,
- Macrozoobenthos , Macrozoobenthos , A ,,," Rp 500.000,00 ",
- EPHEMEROPTERA : , EPHEMEROPTERA : , A ,,,,
- Ameletus sp , Ameletus sp , A ,, Ind/L ,,
- Lumbriculus sp , Lumbriculus sp , A ,, Ind/L ,,
- Chironomus sp , Chironomus sp , A ,, Ind/L ,,
- Medetera sp , Medetera sp , A ,, Ind/L ,,
- Psychodidae sp , Psychodidae sp , A ,, Ind/L ,,
- GASTROPODA  , GASTROPODA  , A ,,,,
- Melanoides sp , Melanoides sp , A ,, Ind/L ,,
- ORTHOPTERA  , ORTHOPTERA  , A ,,,,
- Periplaneta sp , Periplaneta sp , A ,, Ind/L ,,
- ODONATA , ODONATA , A ,,,,
- Pachydiplax sp , Pachydiplax sp , A ,, Ind/L ,,
- CRUSTACEAE , CRUSTACEAE , A ,,,,
- Mysis sp , Mysis sp , A ,, Ind/L ,,
- Eriocheir sp. , Eriocheir sp. , A ,, Ind/L ,,
- ARANEAE  , ARANEAE  , A ,,,,
- Araneus sp , Araneus sp , A ,, Ind/L ,,
- HEMIPTERA  , HEMIPTERA  , A ,,,,
-"Aquarius sp"," Aquarius sp", A ,, Ind/L ,,
- Gerris sp. , Gerris sp. , A ,, Ind/L ,,
- TRICHOPTERA  , TRICHOPTERA  , A ,,,,
- Rhyacophila sp. , Rhyacophila sp. , A ,, Ind/L ,,
- HYMENOPTERA  , HYMENOPTERA  , A ,,,,
- Monomorium sp. , Monomorium sp. , A ,, Ind/L ,,
- Kelimpahan (Ind./L) , Kelimpahan (Ind./L) , A ,,,,
- Taksa (S) , Taksa (S) , A ,,,,
- Keanekaragaman (H') , Keanekaragaman (H') , A ,,,,
- Pemerataan (E) , Pemerataan (E) , A ,,,,
- Dominasi (D) , Dominasi (D) , A ,,,,
- Pb , Pb , S ,, mg/kg ," Rp 660.000,00 ",
- Cu  , Cu  , S ,, mg/kg ," Rp 660.000,00 ",
- Zn , Zn , S ,, mg/kg ," Rp 660.000,00 ",
- Fe , Fe , S ,, mg/kg ," Rp 660.000,00 ",
- Mn , Mn , S ,, mg/kg ," Rp 660.000,00 ",
- Total Bahan Organik , Total Bahan Organik , S ,, mg/kg ," Rp 750.000,00 ",
- Total Karbon , Total Karbon , S ,, mg/kg ," Rp 750.000,00 ",
-pH," Derajat Keasaman/ Potential of Hydrogen, (pH) ", A ,6 – 9,-," Rp 12.500,00 ",
-BOD," Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD)  ", A ,30,mg/L," Rp 75.000,00 ",
-COD," Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD)  ", A ,100,mg/L," Rp 75.000,00 ",
-TSS," Total Padatan Tersuspensi/Total Suspended Solids, (TSS)  ", A ,30,mg/L," Rp 35.000,00 ",
-NH3," Amoniak/Ammonia, (NH₃) ", A ,10,mg/L," Rp 75.000,00 ",
-Oil and Grease, Minyak dan Lemak/ Oil and Grease , A ,5,mg/L," Rp 125.000,00 ",
-Total Coliform, Total Coliform , A ,3.000,Jumlah/100 mL," Rp 145.000,00 ",
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",A,150,µg/m3,"185.000,00",SNI 7119-7:2017 
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",NA,75,µg/m3,"185.000,00",SNI 7119-7:2017 
+CO,"Karbon Monoksida/ Carbon Monoxide, (CO) ",A,10000,µg/m3,"185.000,00",IKM.JLI-22 (CO meter)
+CO,"Karbon Monoksida/ Carbon Monoxide, (CO) ",A,4000,µg/m3,"185.000,00",IKM.JLI-22 (CO meter)
+NO2,"Nitrogen Dioksida/ Nitrogen Dioxide, (NO2) ",A,200,µg/m3,"185.000,00",SNI 19-7119.2-2005
+NO2,"Nitrogen Dioksida/ Nitrogen Dioxide, (NO2) ",NA,65,µg/m3,"185.000,00",SNI 19-7119.2-2005
+O3,"Oksidan Fotokimia Sebagai Ozon/ Photochemical Oxidant (Ox) As Ozone,  (O3) ",A,150,µg/m3,"185.000,00",SNI 19-7119.8-2005
+O4,"Oksidan Fotokimia Sebagai Ozon/ Photochemical Oxidant (Ox) As Ozone,  (O3) ",NA,100,µg/m3,"185.000,00",SNI 19-7119.8-2005
+NMHC,"Hidrokarbon non Metana/Non-Methane Hydrocarbons, (NMHC)",S,160,µg/m3,"2.015.000,00",SNI 7119.13:2009
+TSP,"Partikulat Debu <100µm/ Particulate Matter < 100µm, (TSP)",A,230,µg/m3,"450.000,00",SNI 7119-3-2017 
+PM10,"Partikulat Debu <10µm/ Particulate Matter < 10µm, (PM10",A,75,µg/m3,"250.000,00",SNI 7119-15:2016 
+PM2.5,"Partikulat Debu <2.5µm/ Particulate Matter < 2.5µm, (PM2.5)",A,55,µg/m3,"200.000,00",SNI 7119-14:2016
+Pb,"Timbal/Lead, (Pb)",A,2,µg/m3,"185.000,00",SNI 7119-4:2017
+Wind Speed,Kecepatan Angin/ Wind Speed ,A,-,m/dtk,"0,00",IKM.JLI-30 (Anemometer) 
+Pressure,Tekanan Udara/ Pressure ,A,-,mmHg,"0,00",IKM.JLI-30 (Anemometer) 
+Humidity,Kelembaban Udara/Humidity ,A,-,%,"0,00",IKM.JLI-30 (Anemometer) 
+Air Temperature,Suhu Udara/ Air Temperature ,A,-, °C,"0,00",IKM.JLI-30 (Anemometer) 
+Wind Direction,Arah Angin/Wind Direction ,A,-,-,"0,00",IKM.JLI-166 (Weather Station)
+Weather,Kondisi Cuaca/Weather,A,-,-,"0,00",--
+NH3,"Amoniak/Ammonia, (NH3)  ",A,2.0,ppm,"187.500,00",SNI 19-7119.1-2005
+CH3SH," Metil Merkaptana/Methyl Mercaptane, (CH3SH)",S,0.002,ppm,"187.500,00", NIOSH 2542 (1994)
+H2S,"Hidrogen Sulfida/Hydrogen Sulphide, (H2S)",A,0.02,ppm,"225.000,00",IKM-JLI-20 (MASA 701)
+(CH3)2S,Metil Sulfida/Methyl Sulphide ((CH3)2)S),S,0.01,ppm,"225.000,00", OWI-T020 (GC)
+C6H8CHCH2,Stirena/Styrene (C6H8CHCH2),S,0.1,ppm,"225.000,00", NIOSH 1501 (2003)
+Wind Speed,Kecepatan Angin/ Wind Speed ,A,-,m/dtk,"0,00",IKM.JLI-30 (Anemometer) 
+Pressure,Tekanan Udara/ Pressure ,A,-,mmHg,"0,00",IKM.JLI-30 (Anemometer) 
+Humidity,Kelembaban Udara/Humidity ,A,-,%,"0,00",IKM.JLI-30 (Anemometer) 
+Air Temperature,Suhu Udara/ Air Temperature ,A,-, °C,"0,00",IKM.JLI-30 (Anemometer) 
+Wind Direction,Arah Angin/Wind Direction ,A,-,-,"0,00",IKM.JLI-166 (Weather Station)
+Weather,Kondisi Cuaca/Weather,A,-,-,"0,00",--
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Perumahan dan pemukiman",A,55,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Perdagangan dan Jasa",A,70,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM)  Perkantoran dan Perdagangan",A,65,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Ruang terbuka hijau",A,50,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Industri",A,70,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Pemerintahan dan fasilitas umum",A,60,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Rekreasi",A,70,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Khusus Pelabuhan Laut",A,70,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Khusus Cagar Budaya",A,60,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Rumah sakit dan sejenisnya",A,55,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Sekolah Atau sejenisnya",A,55,dB(A),"250.000,00",SNI 8427:2017 
+LSM,"Tingkat Kebisingan Siang Malam/Day & Evening Noise Level, (LSM) Tempat Ibadah atau Sejenisnya",A,55,dB(A),"250.000,00",SNI 8427:2017 
+Lavg," Tingkat Kebisingan Rata-Rata/Noise Level Average, (Lavg)",A,,,"100.000,00",SNI 8427:2017 
+Leq,"Tingkat Kebisingan Ekuivalen/Noise Level Equivalent, (Leq)",A,,,"100.000,00",
+LS," Tingkat Kebisingan Siang/Day Noise Level , (LS)",A,-,dB(A),"250.000,00",SNI 8427:2017 
+LM," Tingkat Kebisingan Malam/Evening Noise Level , (LM)",A,-,dB(A),"250.000,00",SNI 8427:2017 
+Wind Speed,Kecepatan Angin/ Wind Speed ,A,-,m/dtk,"0,00",IKM.JLI-30 (Anemometer) 
+Pressure,Tekanan Udara/ Pressure ,A,-,mmHg,"0,00",IKM.JLI-30 (Anemometer) 
+Humidity,Kelembaban Udara/Humidity ,A,-,%,"0,00",IKM.JLI-30 (Anemometer) 
+Air Temperature,Suhu Udara/ Air Temperature ,A,-, °C,"0,00",IKM.JLI-30 (Anemometer) 
+Wind Direction ,Arah Angin/Wind Direction ,A,-,-,"0,00",IKM.JLI-166 (Weather Station)
+Weather,Kondisi Cuaca/Weather,A,-,-,"0,00",--
+Shock Vibration ,Getaran Kejut/Shock Vibration ,NA,2,mm/detik,"100.000,00",IKM.JLI-37 (Vibration meter)
+Shock Vibration,Getaran Kejut/Shock Vibration (Peruntukan dan bangunan kuno yang memiliki nilai sejarah yang  tinggi),NA,5,mm/detik,"100.000,00",IKM.JLI-37 (Vibration meter)
+Shock Vibration,"Getaran Kejut/Shock Vibration (Bangunan untuk dalam kondisi teknis yang baik, ada kerusakan-kerusakan kecil seperti : plasteran yang retak)",NA,10,mm/detik,"100.000,00",IKM.JLI-37 (Vibration meter)
+Shock Vibration ,"Getaran Kejut/Shock Vibration (Bangunan ""kuat"" ( misalnya : bangunan industri terbuat danri beton atau baja )",NA,10-40,mm/detik,"100.000,00",IKM.JLI-37 (Vibration meter)
+Wind Speed,Kecepatan Angin/ Wind Speed ,A,-,m/dtk,"0,00",IKM.JLI-30 (Anemometer) 
+Pressure ,Tekanan Udara/ Pressure ,A,-,mmHg,"0,00",IKM.JLI-30 (Anemometer) 
+Humidity ,Kelembaban Udara/Humidity ,A,-,%,"0,00",IKM.JLI-30 (Anemometer) 
+Air Temperature ,Suhu Udara/ Air Temperature ,A,-, °C,"0,00",IKM.JLI-30 (Anemometer) 
+Wind Direction ,Arah Angin/Wind Direction ,A,-,-,"0,00",IKM.JLI-166 (Weather Station)
+Weather,Kondisi Cuaca/Weather,A,-,-,"0,00",--
+CO,CO (<2007) Mobil berpenggerak motor bakar cetus api (bensin),NA,"M = 4, N = 4 , O = 4",%,"275.000,00",
+CO ,CO (2007-2018) Mobil berpenggerak motor bakar cetus api (bensin),NA," M=1, N=1, O=1",%,"275.000,00",
+CO,CO (>2018) Mobil berpenggerak motor bakar cetus api (bensin),NA,"M = 0.5, N=0.5, O=0.5",%,"275.000,00",
+CO,CO (<2010 (2 langkah)) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,L = 4.5,%,"275.000,00",
+CO ,CO (<2010 (4 langkah) ) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,"L = 5,5",%,"275.000,00",
+CO ,CO (2010-2016) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,L = 4,%,"275.000,00",
+CO ,CO (>2016) Sepeda motor berpenggerak penyalaan cetus api (bensin),NA,L = 3,%,"275.000,00",
+HC,HC <2007 (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=-,M=1000,N=1100,O=1100",ppm,"275.000,00",
+HC,HC 2007-2018 (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=-,M=150,N=200,O=200",ppm,"275.000,00",
+HC,HC >2018 (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=-,M=1100,N=150,O=150",ppm,"275.000,00",
+HC,HC <2010 (2 langkah) (Mobil berpenggerak motor bakar cetus api (bensin)),NA,"L=6000,M=-,N=-,O=-",ppm,"275.000,00",
+HC,HC <2010 (4 langkah) (Sepeda motor berpenggerak penyalaan cetus api (bensin)),NA,"L=2200,M=1,N=-,O=-",ppm,"275.000,00",
+HC,HC 2010-2016 (Sepeda motor berpenggerak penyalaan cetus api (bensin)),NA,"L=1800,M=-,N=-,O=-",ppm,"275.000,00",
+HC,HC >2016 (Sepeda motor berpenggerak penyalaan cetus api (bensin)),NA,"L=1000,M=-,N=-,O=-",ppm,"275.000,00",
+Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) JBB ≤ 3.5 ton),A,"M=65,N=65,0=65",% HSU,"550.000,00",SNI 7118-2: 2018 
+Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) JBB ≤ 3.5 ton),A,"M=40,N=40,O=40",% HSU,"550.000,00",SNI 7118-2: 2018 
+Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) JBB ≤ 3.5 ton),A,"M=30,N=30,O=30",% HSU,"550.000,00",SNI 7118-2: 2018 
+Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) GVW > 3.5 ton),A,"M=65,N=65,0=65",% HSU,"550.000,00",SNI 7118-2: 2018 
+Opacity,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) GVW > 3.5 ton),A,"M=40,N=40,O=40",% HSU,"550.000,00",SNI 7118-2: 2018 
+Opasitas,Opasitas (Mobil berpenggerak motor bakar penyalaan kompresi (diesel) GVW > 3.5 ton),A,"M=35,N=35,O=35",% HSU,"550.000,00",SNI 7118-2: 2018 
+NH3,"Amoniak/Ammonia, (NH₃)",A,"0,5",mg/m³,"0,00",SNI 19-7117.6-2005 
+Cl2,Klorin/Chlorine (Cl₂),NA,10,mg/m³,"0,00",IKM.JLI-73 (Spektrofotometer) 
+HCL,"Hidrogen Klorida/ Hydrogen Chloride, (HCl)",A,5,mg/m³,"0,00",SNI 19-7117.8-2005 
+HF,"Hidrogen Fluorida/ Hydrogen Fluoride, (HF)",A,10,mg/m³,"0,00",SNI 19-7117.9-2005
+NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,1000,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+Opacity,Opasitas/Opacity ,A,35,%,"0,00",SNI 19-7117.11-2005 
+Particulate ,Partikulat/Particulate ,A,350,mg/m³,"0,00","US-EPA Method 17, 2017 "
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,800,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+H2S,"Total Sulfur Tereduksi/Total Reduced Sulfur, (H₂S)",NA,35,mg/m³,"0,00",IKM.JLI-129 (E6000-6DSH)
+HG,"Air Raksa/Mercury, (Hg)",NA,5,mg/m³,"0,00",US-EPA Method 29.2017
+AS,"Arsen/Arsenic, (As)",NA,8,mg/m³,"0,00",US-EPA Method 29.2017
+Sb,"Antimon/Antimony, (Sb)",NA,8,mg/m³,"0,00",US-EPA Method 29.2017
+Cd,"Kadmium/Cadmium, (Cd)",NA,8,mg/m³,"0,00",US-EPA Method 29.2017
+Zn,"Seng/Zinc, (Zn)",NA,50,mg/m³,"0,00",US-EPA Method 29.2017
+Pb,"Timah Hitam/Lead, (Pb)",NA,12,mg/m³,"0,00",US-EPA Method 29.2017
+Particulate ,Partikulat/Particulate ,A,300,mg/m³,"0,00","US-EPA Method 17, 2017 "
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,600,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,800,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+HCL,"Hidrogen Klorida/ Hydrogen Chloride, (HCl)",A,5,mg/m³,"0,00",SNI 19-7117.8-2005 
+Cl2,Klorin/Chlorine (Cl₂),NA,5,mg/m³,"0,00",IKM.JLI-73 (Spektrofotometer) 
+NH3,"Amoniak/Ammonia, (NH₃)",A,1,mg/m³,"0,00",SNI 19-7117.6-2005 
+HF,"Hidrogen Fluorida/ Hydrogen Fluoride, (HF)",A,8,mg/m³,"0,00",SNI 19-7117.9-2005
+Opacity,Opasitas/Opacity ,A,30,%,"0,00",SNI 19-7117.11-2005 
+Particulate ,Partikulat/Particulate ,A,350,mg/m³,"0,00","US-EPA Method 17, 2017 "
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,800,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,1000,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+HCL,"Hidrogen Klorida/ Hydrogen Chloride, (HCl)",A,5,mg/m³,"0,00",SNI 19-7117.8-2005 
+Cl2,Klorin/Chlorine (Cl₂),NA,10,mg/m³,"0,00",IKM.JLI-73 (Spektrofotometer) 
+NH3,"Amoniak/Ammonia, (NH₃)",A,"0,5",mg/m³,"0,00",SNI 19-7117.6-2005 
+HF,"Hidrogen Fluorida/ Hydrogen Fluoride, (HF)",A,10,mg/m³,"0,00",SNI 19-7117.9-2005
+Opacity,Opasitas/Opacity ,A,30,%,"0,00",SNI 19-7117.11-2005 
+H2S,"Total Sulfur Tereduksi/Total Reduced Sulfur, (H₂S)",NA,35,mg/m³,"0,00",IKM.JLI-129 (E6000-6DSH)
+Hg,"Air Raksa/Mercury, (Hg)",NA,5,mg/m³,"0,00",US-EPA Method 29.2017
+As,"Arsen/Arsenic, (As)",NA,8,mg/m³,"0,00",US-EPA Method 29.2017
+Sb,"Antimon/Antimony, (Sb)",NA,8,mg/m³,"0,00",US-EPA Method 29.2017
+Cd,"Kadmium/Cadmium, (Cd)",NA,8,mg/m³,"0,00",US-EPA Method 29.2017
+Zn,"Seng/Zinc, (Zn)",NA,50,mg/m³,"0,00",US-EPA Method 29.2017
+Pb,"Timah Hitam/Lead, (Pb)",NA,12,mg/m³,"0,00",US-EPA Method 29.2017
+Particulate ,Partikulat/Particulate ,A,230,mg/m³,"0,00","US-EPA Method 17, 2017 "
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,750,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,825,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+Opacity,Opasitas/Opacity ,A,20,%,"0,00",SNI 19-7117.11-2005 
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO₂)",A,150,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+NO2,"Nitrogen Oksida/ Nitrogen Oxides, (NO₂)",A,650,mg/m³,"0,00",IKM.JLI-24 (Gas Analyzer) 
+Stack Code,Kode Cerobong/ Stack Code,A,-,-,"0,00",--
+Air Temperature ,Suhu Udara/ Air Temperature,A,-, °C,"0,00",IKM.JLI-30 (Anemometer)
+Stack Temperature,Suhu Cerobong/ Stack Temperature,A,-, °C,"0,00",IKM.JLI-40 (Infrared Thermometer) 
+Pressure ,Tekanan Udara/ Pressure,A,-,mmHg,"0,00",IKM.JLI-30 (Anemometer)
+NO Value,Nilai NO/NO Value,A,-,mg/Nm3,"0,00",IKM.JLI-24 (Gas Analyzer)
+O2 Value,Nilai O2/ O2 Value ,A,-,%,"0,00",IKM.JLI-24 (Gas Analyzer)
+CO2,"Karbon Monoksida/ Carbon Monoxide, (CO)",A,-,mg/Nm3,"0,00",IKM.JLI-24 (Gas Analyzer) 
+CO2 Value,Nilai CO2/ CO2 Value ,A,-,%,"0,00",IKM.JLI-24 (Gas Analyzer) 
+Traverse Ponts,Jumlah Titik Lintas/Traverse Points,A,-,Titik,"0,00","US-EPA Method 1, 2020 "
+Qact,"Laju Alir Gas Aktual, (Qact)",A,-, m3/detik,"0,00","US-EPA Method 2, 2017 "
+Md,"Bobot Molekul Gas Kering/Dry Molecular Weight, (Md)",A,-, g/gmol,"0,00","US-EPA Method 3, 2017 "
+Bws,"Kadar Uap Air/Moisture Content, (Bws)",A,-,-,"0,00","US-EPA Method 4, 2017"
+%I,"Persen Isokinetik/Percent Isokineticity, (%I)",A,-,%,"0,00"," US-EPA Methode 17, 2017"
+Temperature ,Suhu/Temperature ,A,"Kelas 1 = Dev3, Kelas 2 = Dev3, Kelas 3 = Dev3",ºC,"12.500,00","SNI 06-6989.23-2005"
+Temperature ,Suhu/Temperature ,NA,"Kelas 1 = Dev3, Kelas 2 = Dev3, Kelas 3 = Dev3",ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,"Kelas 1 = 1000, Kelas 2 = 1000, Kelas 3 = 1000, Kelas 4 = 2000",mg/L,"35.000,00",IKM.JLI-07 (Elektrometri) 
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,"Kelas 1 = 40, Kelas 2 = 50, Kelas 3 = 100, Kelas 4 = 400",mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023 "
+Color,Warna/Color ,A,"Kelas 1 = 15, Kelas 2 = 50, Kelas 3 = 100, Kelas 4 = ",Pt-Co Unit,"35.000,00",SNI 6989.80:2011
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH) ",A,"Kelas 1 = 6-9, Kelas 2 = 6-9, Kelas 3 = 6-9, Kelas 4 = 6-9",-,"12.500,00",SNI 6989.11:2019 
+BOD,"Kebutuhan Oksigen Biokimiawi/Biochemical Oxygen Demand, (BOD)  ",A,,mg/L,"75.000,00",SNI 6989.72:2009
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri) 
+DO,"Oksigen Terlarut/ Dissolved Oxygen, (DO) ",A,,mg/L,"40.000,00",SNI 06-6989.14-2004 
+DO,"Oksigen Terlarut/ Dissolved Oxygen, (DO) ",A,,mg/L,"40.000,00",APHA 24th Edition 4500-G:2023
+SO4-2,"Sulfat/Sulfate, (SO4-2) ",A,,mg/L,"40.000,00",SNI 6989.20:2019 
+Cl-,"Klorida/ Chloride, (Cl-)",A,,mg/L,"40.000,00",SNI 6989.19:2009
+NO3-N,"Nitrat sebagai N/ Nitrate as N, (NO3-N) ",A,,mg/L,"40.000,00",SNI 6989.79:2011 
+NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N)",A,,mg/L,"40.000,00",SNI 06-6989.9:2004 
+NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,,mg/L,"75.000,00",SNI 06-6989.30-2005 
+Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,,mg/L,"115.000,00","JIS K 0102-2.2022, Butir 17.3 "
+Total Phospate as P,Total Fosfat sebagai P/ Total Phosphate as P,A,,mg/L,"45.000,00",SNI 6989-31:2021 butir 5.5.2 
+F-,"Fluorida/Fluoride, (F-)",A,,mg/L,"40.000,00",SNI 06-6989.29-2005 
+Sulfur as H2S,Belerang sebagai H2S/ Sulfur as H2S ,A,,mg/L,"40.000,00",IKM.JLI 112 (Spektrofotometri) 
+CN-,"Sianida/ Cyanide, (CN-) ",A,,mg/L,"55.000,00",SNI 6989.77-2011 
+CL2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri) 
+Ba,"Barium Terlarut/ Dissolved Barium, (Ba)",A,,mg/L,"77.500,00",SNI 6989.40-2005 
+B,"Boron Terlarut/Dissolved Boron, (B) ",A,,mg/L,"77.500,00","APHA 24th Edition, 4500-B,2023"
+Hg,"Raksa Terlarut/ Dissolved Mercury, (Hg) ",A,,mg/L,"175.000,00",IKM.JLI.74 (MVU-AAS)
+As,"Arsen Terlarut, Dissolved Arsenic, (As) ",A,,mg/L,"115.000,00",IKM.JLI-85 (HVG-AAS) 
+Se,"Selenium Terlarut/ Dissolved Selenium, (Se)",A,,mg/L,"115.000,00",IKM.JLI-75 (HVG- AAS)
+Fe,"Besi Terlarut/ Dissolved Iron, (Fe) ",A,,mg/L,"77.500,00",SNI 6989-84:2019
+Cd,Kadmium Terlarut/ Dissolved Cadmium (Cd) ,A,,mg/L,"115.000,00",SNI 6989.38-2005 
+Co,"Kobalt Terlarut/ Dissolved Cobalt, (Co)  ",A,,mg/L,"115.000,00",IKM.JLI-79 (AAS)
+Mn,"Mangan Terlarut/ Dissolved Manganese, (Mn)",A,,mg/L,"77.500,00",SNI 6989-84:2019 
+Ni,"Nikel Terlarut/ Dissolved Nickel, (Ni) ",A,,mg/L,"77.500,00",SNI 06-6989.48:2005 
+Zn,"Seng Terlarut/ Dissolved Zinc, (Zn) ",A,,mg/L,"77.500,00",SNI 6989-84:2019 
+Cu,"Tembaga Terlarut/ Dissolved Copper, (Cu)",A,,mg/L,"77.500,00",SNI 6989.66:2009 
+Pb,Timbal Terlarut/ Dissolved Lead (Pb),A,,mg/L,"115.000,00",SNI 6989.46-2009 
+Cr+6,Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium (Cr+6),A,,mg/L,"115.000,00",SNI 6989.53:2010
+Oil and Grease,Minyak dan Lemak/ Oil and Grease ,NA,,mg/L,"125.000,00",SNI 6989.10:2011 
+Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactants as MBAS ,A,,mg/L,"80.000,00",SNI 06-6989.51:2005 
+Phenol,Fenol/ Phenol ,A,,mg/L,"85.000,00","APHA 24th Edition, 5530-C,2023 "
+Dieldrin,Aldrin/Dieldrin,S,,µg/L,"1.850.000,00",
+BHC,BHC,S,,µg/L,"1.850.000,00",
+Chlordane,Chlordane,S,,µg/L,"1.850.000,00",
+DDT,DDT,S,,µg/L,"1.850.000,00",
+Endrin,Endrin,S,,µg/L,"1.850.000,00",
+Heptachlor,Heptachlor,S,,µg/L,"1.850.000,00",
+Lindane,Lindane,S,,µg/L,"1.850.000,00",
+Methoxychlor,Methoxychlor,S,,µg/L,"1.850.000,00",
+Toxapan,Toxapan,S,,µg/L,"1.850.000,00",
+Fecal Coliform,Fecal Coliform,A,,MPN/100 mL,"145.000,00","APHA 24th Edition, 9221-E,C, 2023 "
+Total Coliform,Total Coliform,A,,MPN/100 mL,"145.000,00","APHA 24th Edition, 9221-B,C, 2023"
+Rubbish ,Sampah/Rubbish ,A,,-,"15.000,00",IKM.JLI-150 (Observasi Visual)
+Radioaktivitas Gross A,Radioaktivitas Gross A,S,,Bq/L,"2.420.000,00",
+Radioaktivitas Gross B ,Radioaktivitas Gross B ,S,,Bq/L,"2.420.000,00",
+Conductivity ,Daya Hantar Listrik/ Conductivity ,A,,µS/cm,"12.500,00",SNI 6989.1:2019
+TS,"Total Padatan/Total Solids,(TS)",A,,mg/L,"35.000,00",SNI 6989.26:2019 
+Turbidity,Kekeruhan/Turbidity,A,,NTU,"20.000,00",SNI 06-6989.25-2005 
+Salinity ,Salinitas/Salinity ,A,,%,"12.500,00",IKM.JLI-07 (Elektrometri) 
+Orthophosphate ,Orthopospat/ Orthophosphate ,A,,mg/L,"45.000,00",SNI 6989-31:2021 butir 5.5.1 
+Cr,"Krom terlarut / Dissolved Chromium, (Cr) ",A,,mg/L,"115.000,00",SNI 6989.65-2009 
+Escherichia coli ,Escherichia coli ,A,,MPN/100 mL,"145.000,00","APHA 24th Edition 9221-F,C:2023 "
+Alkalinity ,Alkalinitas/Alkalinity ,NA,,mg/L,"40.000,00",APHA 24th Edition 2320.B-2023 
+Temperature,Suhu/Temperature ,A,,ºC,"12.500,00","SNI 06-6989.23-2005"
+Temperature,Suhu/Temperature ,NA,,ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,,mg/L,"35.000,00",IKM.JLI-07 (Elektrometri) 
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023 "
+Transparency,Transparasi/ Transparency  ,A,,m,"15.000,00",IKM.JLI-153 (Visual) 
+Color,Warna/Color ,A,,Pt-Co Unit,"35.000,00",SNI 6989.80:2011 
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH) ",A,,,"12.500,00",SNI 6989.11:2019 
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,,mg/L,"75.000,00",SNI 6989.72:2009
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri) 
+DO,"Oksigen Terlarut/ Dissolved Oxygen, (DO) ",A,,mg/L,"40.000,00",SNI 06-6989.14-2004 
+DO,"Oksigen Terlarut/ Dissolved Oxygen, (DO) ",A,,mg/L,"40.000,00",APHA 24th Edition 4500-G:2023 
+SO4-2,"Sulfat/Sulfate, (SO4-2) ",A,,mg/L,"40.000,00",SNI 6989.20:2019 
+Cl-," Klorida/ Chloride, (Cl-) ",A,,mg/L,"40.000,00",SNI 6989.19:2009 
+Total Nitrogen, Total Nitrogen/ Total Nitrogen ,A,,mg/L,"115.000,00","JIS K 0102-2.2022, Butir 17.3 "
+Total Phosphate as P ,Total Fosfat sebagai P/ Total Phosphate as P ,A,,mg/L,"45.000,00",SNI 6989-31:2021 butir 5.5.2 
+F-,"Fluorida/Fluoride, (F-)",A,,mg/L,"40.000,00",SNI 06-6989.29-2005 
+Sulfur as H2S ,Belerang sebagai H2S/ Sulfur as H2S ,A,,mg/L,"40.000,00",IKM.JLI 112 (Spektrofotometri) 
+CN-,"Sianida/ Cyanide, (CN-) ",A,,mg/L,"55.000,00",SNI 6989.77-2011 
+CL2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri) 
+Ba,"Barium Terlarut/ Dissolved Barium, (Ba) ",A,,mg/L,"77.500,00",SNI 6989.40-2005 
+B,"Boron Terlarut/Dissolved Boron, (B) ",A,,mg/L,"77.500,00","APHA 24th Edition, 4500-B,2023 "
+Hg,"Raksa Terlarut/ Dissolved Mercury, (Hg) ",A,,mg/L,"175.000,00",IKM.JLI.74 (MVU-AAS) 
+As,"Arsen Terlarut, Dissolved Arsenic, (As) ",A,,mg/L,"115.000,00",IKM.JLI-85 (HVG-AAS)
+Se,"Selenium Terlarut/ Dissolved Selenium, (Se)",A,,mg/L,"115.000,00",IKM.JLI-75 (HVG- AAS)
+Fe,"Besi Terlarut/ Dissolved Iron, (Fe) ",A,,mg/L,"77.500,00",SNI 6989-84:2019
+Cd, Kadmium Terlarut/ Dissolved Cadmium (Cd)  , A ,,mg/L,"115.000,00",SNI 6989.38-2005 
+Co," Kobalt Terlarut/ Dissolved Cobalt, (Co)   ", A ,,mg/L,"115.000,00",IKM.JLI-79 (AAS)
+Mn," Mangan Terlarut/ Dissolved Manganese, (Mn) ", A ,,mg/L,"77.500,00",SNI 6989-84:2019 
+Ni," Nikel Terlarut/ Dissolved Nickel, (Ni)  ", A ,,mg/L,"77.500,00",SNI 06-6989.48:2005 
+Zn," Seng Terlarut/ Dissolved Zinc, (Zn)  ", A ,,mg/L,"77.500,00",SNI 6989-84:2019 
+Cu," Tembaga Terlarut/ Dissolved Copper, (Cu) ", A ,,mg/L,"77.500,00",SNI 6989.66:2009 
+Pb, Timbal Terlarut/ Dissolved Lead (Pb) , A ,,mg/L,"115.000,00",SNI 6989.46-2009 
+Cr+6, Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium (Cr+6) , A ,,mg/L,"115.000,00",SNI 6989.53:2010
+Oil and Grease, Minyak dan Lemak/ Oil and Grease  , NA ,,mg/L,"125.000,00",SNI 6989.10:2011 
+Anionic Surfactants as MBAS , Surfaktan Anionik sebagai MBAS /Anionic Surfactants as MBAS  , A ,,mg/L,"80.000,00",SNI 06-6989.51:2005 
+Phenol, Fenol/ Phenol  , A ,,mg/L,"85.000,00","APHA 24th Edition, 5530-C,2023 "
+Dieldrin, Aldrin/Dieldrin , S ,,µg/L,"1.850.000,00",
+BHC, BHC , S ,,µg/L,"1.850.000,00",
+Chlordane, Chlordane , S ,,µg/L,"1.850.000,00",
+DDT, DDT , S ,,µg/L,"1.850.000,00",
+Endrin, Endrin , S ,,µg/L,"1.850.000,00",
+Heptachlor, Heptachlor , S ,,µg/L,"1.850.000,00",
+Lindane, Lindane , S ,,µg/L,"1.850.000,00",
+Methoxychlor,  Methoxychlor , S ,,µg/L,"1.850.000,00",
+Toxapan, Toxapan , S ,,µg/L,"1.850.000,00",
+Fecal Coliform, Fecal Coliform , A ,,MPN/100 mL,"145.000,00","APHA 24th Edition, 9221-E,C, 2023 "
+Total Coliform, Total Coliform , A ,,MPN/100 mL,"145.000,00","APHA 24th Edition, 9221-B,C, 2023"
+Klorofil-a, Klorofil-a , A ,,mg/m³,"0,00",
+Rubbish , Sampah/Rubbish  , A ,,,"15.000,00",IKM.JLI-150 (Observasi Visual)
+Radioaktivitas Gross A, Radioaktivitas Gross A , S ,,Bq/L,"2.420.000,00",
+Radioaktifitas Gross B, Radioaktivitas Gross B  , S ,,Bq/L,"2.420.000,00",
+Conductivity , Daya Hantar Listrik/ Conductivity  , A ,,µS/cm,"12.500,00",SNI 6989.1:2019
+TS," Total Padatan/Total Solids,(TS) ", A ,,mg/L,"35.000,00",SNI 6989.26:2019 
+Turbidity, Kekeruhan/Turbidity , A ,,NTU,"20.000,00",SNI 06-6989.25-2005 
+Salinity , Salinitas/Salinity  , A ,,%,"12.500,00",IKM.JLI-07 (Elektrometri) 
+Orthophosphate , Orthopospat/ Orthophosphate  , A ,,mg/L,"45.000,00",SNI 6989-31:2021 butir 5.5.1 
+Cr," Krom terlarut / Dissolved Chromium, (Cr)  ", A ,,mg/L,"115.000,00",SNI 6989.65-2009 
+Escherichia coli , Escherichia coli  , A ,,MPN/100 mL,"145.000,00","APHA 24th Edition 9221-F,C:2023 "
+Alkalinity , Alkalinitas/Alkalinity  , NA ,,mg/L,"40.000,00",APHA 24th Edition 2320.B-2023 
+ Phytoplankton , Phytoplankton , A ,,,"500.000,00",IKM.JLI-32 (Mikroskop) 
+ BACILLARIOPHYCEAE: , BACILLARIOPHYCEAE: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Achnanthes sp. , Achnanthes sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Actinocyclus sp. , Actinocyclus sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Fragilaria sp. , Fragilaria sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Navicula sp. , Navicula sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Nitzschia sp. , Nitzschia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Pinnularia sp. , Pinnularia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Pleurosigma sp. , Pleurosigma sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Surirella sp. , Surirella sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Tabellaria sp. , Tabellaria sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Frustulia sp. , Frustulia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Neidium sp. , Neidium sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Microspora sp. , Microspora sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ CHLOROPHYCEAE: , CHLOROPHYCEAE: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Chodatella sp. , Chodatella sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Pediastrum sp. , Pediastrum sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Euastrum sp. , Euastrum sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Eudorina sp. , Eudorina sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Golenkinia sp. , Golenkinia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Scenedemus sp. , Scenedemus sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Sphaerocytis sp. , Sphaerocytis sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Ulothrix sp. , Ulothrix sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Tetraedron sp. , Tetraedron sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ CYANOPHYCEAE: , CYANOPHYCEAE: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Anabaena sp. , Anabaena sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Merismopedia sp. , Merismopedia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Oscillatoria sp. , Oscillatoria sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Spirulina sp. , Spirulina sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ DINOPHYCEAE : , DINOPHYCEAE : , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Ceratium sp. , Ceratium sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Dinobryon sp. , Dinobryon sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ EUGLENOPHYCEAE: , EUGLENOPHYCEAE: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Phacus sp. , Phacus sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Euglena sp. , Euglena sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Trachelomonas sp. , Trachelomonas sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ ZYGNEMATOPHYCEAE , ZYGNEMATOPHYCEAE , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Cosmarium sp. , Cosmarium sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Closterium sp. , Closterium sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Staurastrum sp. , Staurastrum sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Micrasterias sp. , Micrasterias sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Desmidium sp. , Desmidium sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Spirogyra sp. , Spirogyra sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Zygnemopsis sp. , Zygnemopsis sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Mougeotia sp. , Mougeotia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Gonatozygon sp. , Gonatozygon sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Ind./L , Kelimpahan (Ind./L) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ S , Taksa (S) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ H' , Keanekaragaman (H') , A ,,,,IKM.JLI-32 (Mikroskop) 
+ E , Pemerataan (E) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ D , Dominasi (D) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Zooplankton , Zooplankton , A ,,,"500.000,00",IKM.JLI-32 (Mikroskop) 
+ CRUSTACEAE: , CRUSTACEAE: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Harpacticus sp. , Harpacticus sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Copepedia sp. , Copepedia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Nauplius sp. , Nauplius sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Alona sp. , Alona sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Ceriodaphina sp. , Ceriodaphina sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ NEMATODA: , NEMATODA: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Nematoda worm (sp) , Nematoda worm (sp) , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ PROTOZOA: , PROTOZOA: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Arcella sp. , Arcella sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Difflugia sp. , Difflugia sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Centropyxis sp. , Centropyxis sp. , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Euglypha sp. , Euglypha sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Paramecium sp. , Paramecium sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Vorticella sp. , Vorticella sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Wailesella sp. , Wailesella sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ ROTIFERA: , ROTIFERA: , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Brachionus sp. , Brachionus sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Monostylla sp. , Monostylla sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Philodina sp. , Philodina sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Squatinella sp. , Squatinella sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Kelimpahan (Ind./L) , Kelimpahan (Ind./L) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Taksa (S) , Taksa (S) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Keanekaragaman (H') , Keanekaragaman (H') , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Pemerataan (E) , Pemerataan (E) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Dominasi (D) , Dominasi (D) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Macrozoobenthos , Macrozoobenthos , A ,,,"500.000,00",IKM.JLI-32 (Mikroskop) 
+ EPHEMEROPTERA : , EPHEMEROPTERA : , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Ameletus sp , Ameletus sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Lumbriculus sp , Lumbriculus sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Chironomus sp , Chironomus sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Medetera sp , Medetera sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Psychodidae sp , Psychodidae sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ GASTROPODA  , GASTROPODA  , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Melanoides sp , Melanoides sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ ORTHOPTERA  , ORTHOPTERA  , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Periplaneta sp , Periplaneta sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ ODONATA , ODONATA , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Pachydiplax sp , Pachydiplax sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ CRUSTACEAE , CRUSTACEAE , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Mysis sp , Mysis sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Eriocheir sp. , Eriocheir sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ ARANEAE  , ARANEAE  , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Araneus sp , Araneus sp , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ HEMIPTERA  , HEMIPTERA  , A ,,,,IKM.JLI-32 (Mikroskop) 
+" Aquarius sp"," Aquarius sp", A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Gerris sp. , Gerris sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ TRICHOPTERA  , TRICHOPTERA  , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Rhyacophila sp. , Rhyacophila sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ HYMENOPTERA  , HYMENOPTERA  , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Monomorium sp. , Monomorium sp. , A ,, Ind/L ,,IKM.JLI-32 (Mikroskop) 
+ Kelimpahan (Ind./L) , Kelimpahan (Ind./L) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Taksa (S) , Taksa (S) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Keanekaragaman (H') , Keanekaragaman (H') , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Pemerataan (E) , Pemerataan (E) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Dominasi (D) , Dominasi (D) , A ,,,,IKM.JLI-32 (Mikroskop) 
+ Pb , Pb , S ,, mg/kg ,"660.000,00",SNI 6989.11:2019
+ Cu  , Cu  , S ,, mg/kg ,"660.000,00",SNI 6989.72:2009 
+ Zn , Zn , S ,, mg/kg ,"660.000,00",IKM.JLI-12 (Spektrofotometri)
+ Fe , Fe , S ,, mg/kg ,"660.000,00","APHA 24th Edition, 2540-D,2023"
+ Mn , Mn , S ,, mg/kg ,"660.000,00",IKM.JLI-156 (Spektrofotometri) 
+ Total Bahan Organik , Total Bahan Organik , S ,, mg/kg ,"750.000,00",SNI 6989.10:2011 
+ Total Karbon , Total Karbon , S ,, mg/kg ,"750.000,00","APHA 24th Edition 9221-B,C:2023  "
+pH," Derajat Keasaman/ Potential of Hydrogen, (pH) ", A ,6 – 9,-,"12.500,00",
+BOD," Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD)  ", A ,30,mg/L,"75.000,00",SNI 6989.11:2019
+COD," Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD)  ", A ,100,mg/L,"75.000,00",SNI 6989.72:2009 
+TSS," Total Padatan Tersuspensi/Total Suspended Solids, (TSS)  ", A ,30,mg/L,"35.000,00",IKM.JLI-12 (Spektrofotometri)
+NH3," Amoniak/Ammonia, (NH₃) ", A ,10,mg/L,"75.000,00","APHA 24th Edition, 2540-D,2023"
+Oil and Grease, Minyak dan Lemak/ Oil and Grease , A ,5,mg/L,"125.000,00",SNI 06-6989.30-2005 
+Total Coliform, Total Coliform , A ,3.000,Jumlah/100 mL,"145.000,00","APHA 24th Edition, 9221-E,C, 2023"
 Debit, Debit , NA ,100,L/orang/hari,,
-pH," Derajat Keasaman/ Potential of Hydrogen, (pH) ", A ,6 – 9,-," Rp 12.500,00 ",
-BOD," Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD)  ", A ,150,mg/L," Rp 75.000,00 ",
-COD," Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD)  ", A ,300,mg/L," Rp 75.000,00 ",
-TSS," Total Padatan Tersuspensi/Total Suspended Solids, (TSS)  ", A ,100,mg/L," Rp 35.000,00 ",
-NH3-N," Amoniak sebagai N/Ammonia as N, (NH₃-N) ", A ,50,mg/L," Rp 75.000,00 ",
-Fecal Coliform, Fecal coliform , A ,1000,MPN/100 mL," Rp 145.000,00 ",
-pH," Derajat Keasaman/ Potential of Hydrogen, (pH) ", A ,"x > 50 = 6-9, 3 < x <= 50 = 6-9, 3 < x <= 50 = 6-9",-," Rp 12.500,00 ",
-BOD," Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD)  ", A ,"x > 50 = 30, 3 < x <= 50 = 50, 3 < x <= 50 = 75",mg/L," Rp 75.000,00 ",
-COD," Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD)  ", A ,"x > 50 = 100, 3 < x <= 50 = 100, 3 < x <= 50 = -",mg/L," Rp 75.000,00 ",
-TSS," Total Padatan Tersuspensi/Total Suspended Solids, (TSS)  ", A ,"x > 50 = 30, 3 < x <= 50 = 50, 3 < x <= 50 = -",mg/L," Rp 35.000,00 ",
-NH3-N," Amoniak sebagai N/Ammonia as N, (NH₃-N) ", A ,"x > 50 = 10, 3 < x <= 50 = 20, 3 < x <= 50 = -",mg/L," Rp 75.000,00 ",
-Anionic Surfactants as MBAS , Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS  , A ,"x > 50 = 5, 3 < x <= 50 = 10, 3 < x <= 50 = -",mg/L," Rp 80.000,00 ",
-Oil and Grease, Minyak dan Lemak/ Oil and Grease , A ,"x > 50 = 5, 3 < x <= 50 = 10, 3 < x <= 50 = 10",mg/L," Rp 125.000,00 ",
-Cl2," Sisa Klorin/Residual Chlorine, (Cl2)  ", A ,"x > 50 = 1, 3 < x <= 50 = 1, 3 < x <= 50 = 1",mg/L," Rp 40.000,00 ",
+pH," Derajat Keasaman/ Potential of Hydrogen, (pH) ", A ,6 – 9,-,"12.500,00",SNI 6989.11:2019
+BOD," Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD)  ", A ,150,mg/L,"75.000,00",SNI 6989.72:2009 
+COD," Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD)  ", A ,300,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS," Total Padatan Tersuspensi/Total Suspended Solids, (TSS)  ", A ,100,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+NH3-N," Amoniak sebagai N/Ammonia as N, (NH₃-N) ", A ,50,mg/L,"75.000,00",SNI 06-6989.30-2005 
+Fecal Coliform, Fecal coliform , A ,1000,MPN/100 mL,"145.000,00","APHA 24th Edition, 9221-E,C, 2023"
+pH," Derajat Keasaman/ Potential of Hydrogen, (pH) ", A ,"x > 50 = 6-9, 3 < x <= 50 = 6-9, 3 < x <= 50 = 6-9",-,"12.500,00",SNI 6989.11:2019
+BOD," Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD)  ", A ,"x > 50 = 30, 3 < x <= 50 = 50, 3 < x <= 50 = 75",mg/L,"75.000,00",SNI 6989.72:2009 
+COD," Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD)  ", A ,"x > 50 = 100, 3 < x <= 50 = 100, 3 < x <= 50 = -",mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS," Total Padatan Tersuspensi/Total Suspended Solids, (TSS)  ", A ,"x > 50 = 30, 3 < x <= 50 = 50, 3 < x <= 50 = -",mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+NH3-N," Amoniak sebagai N/Ammonia as N, (NH₃-N) ", A ,"x > 50 = 10, 3 < x <= 50 = 20, 3 < x <= 50 = -",mg/L,"75.000,00",SNI 06-6989.30-2005 
+Anionic Surfactants as MBAS , Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS  , A ,"x > 50 = 5, 3 < x <= 50 = 10, 3 < x <= 50 = -",mg/L,"80.000,00",SNI 06.6989.51-2005 
+Oil and Grease, Minyak dan Lemak/ Oil and Grease , A ,"x > 50 = 5, 3 < x <= 50 = 10, 3 < x <= 50 = 10",mg/L,"125.000,00",SNI 6989.10:2011 
+Cl2," Sisa Klorin/Residual Chlorine, (Cl2)  ", A ,"x > 50 = 1, 3 < x <= 50 = 1, 3 < x <= 50 = 1",mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri)
 Salmonela, Salmonela , S ,"x > 50 = Negatif, 3 < x <= 50 = Negatif, 3 < x <= 50 = Negatif",-,,
 Shigela, Shigela , S ,"x > 50 = Negatif, 3 < x <= 50 = Negatif, 3 < x <= 50 = Negatif",-,,
 Vibrio cholera, Vibrio cholera , S ,"x > 50 = Negatif, 3 < x <= 50 = Negatif, 3 < x <= 50 = Negatif",-,,
 Streptococus,Streptococus,S,"x > 50 = Negatif, 3 < x <= 50 = Negatif, 3 < x <= 50 = Negatif",-,,
-Fecal Coliform,Fecal coliform,A,"x > 50 = 1000, 3 < x <= 50 = 1000, 3 < x <= 50 = 1000",MPN/100 mL," Rp 145.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L," Rp 75.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L," Rp 35.000,00 ",
-Fecal Coliform,Fecal coliform,A,200,mg/L," Rp 145.000,00 ",
-Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL," Rp 40.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L," Rp 75.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L," Rp 35.000,00 ",
-Fecal Coliform,Fecal coliform,A,200,mg/L," Rp 145.000,00 ",
-Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL," Rp 40.000,00 ",
+Fecal Coliform,Fecal coliform,A,"x > 50 = 1000, 3 < x <= 50 = 1000, 3 < x <= 50 = 1000",MPN/100 mL,"145.000,00","APHA 24th Edition, 9221-E,C, 2023 "
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-,"12.500,00",SNI 6989.11:2019
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+Fecal Coliform,Fecal coliform,A,200,mg/L,"145.000,00","APHA 24th Edition, 9221-E,C, 2023 "
+Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL,"40.000,00",IKM.JLI-86 (Spektrofotometri)
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-,"12.500,00",SNI 6989.11:2019
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+Fecal Coliform,Fecal coliform,A,200,mg/L,"145.000,00","APHA 24th Edition, 9221-E,C, 2023 "
+Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL,"40.000,00",IKM.JLI-86 (Spektrofotometri)
 Salmonela,Salmonela,S,Negatif,-,,
 Shigela,Shigela,S,Negatif,-,,
 Vibrio cholera,Vibrio cholera,S,Negatif,-,,
 Streptococus,Streptococus,S,Negatif,-,,
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,45817,-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L," Rp 75,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L," Rp 35,00 ",
-Fecal Coliform,Fecal coliform,A,200,mg/L," Rp 145.000,00 ",
-Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL," Rp 40.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L," Rp 75.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L," Rp 35.000,00 ",
-Fecal Coliform,Fecal coliform,A,200,mg/L," Rp 145.000,00 ",
-Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL," Rp 40.000,00 ",
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,45817,-,"12.500,00",SNI 6989.11:2019
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L,"75,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L,"35,00","APHA 24th Edition, 2540-D,2023"
+Fecal Coliform,Fecal coliform,A,200,mg/L,"145.000,00","APHA 24th Edition, 9221-E,C, 2023 "
+Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL,"40.000,00",IKM.JLI-86 (Spektrofotometri)
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-,"12.500,00",SNI 6989.11:2019
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,12,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,80,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,30,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+Fecal Coliform,Fecal coliform,A,200,mg/L,"145.000,00","APHA 24th Edition, 9221-E,C, 2023 "
+Cl2,"Sisa Klorin/Residual Chlorine, (Cl2) ",A,1,MPN/100 mL,"40.000,00",IKM.JLI-86 (Spektrofotometri)
 Salmonela,Salmonela,S,Negatif,-,,
 Shigela,Shigela,S,Negatif,-,,
 Vibrio cholera,Vibrio cholera,S,Negatif,-,,
 Streptococus,Streptococus,S,Negatif,-,,
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,100,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,350,mg/L," Rp 75.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,150,mg/L," Rp 35.000,00 ",
-Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,25,mg/L," Rp 125.000,00 ",
-NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,10,mg/L," Rp 75.000,00 ",
-Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,50,mg/L," Rp 115.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 - 9,-," Rp 12.500,00 ",
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,100,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,350,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,150,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,25,mg/L,"125.000,00",SNI 6989.10:2011 
+NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,10,mg/L,"75.000,00",SNI 06-6989.30-2005 
+Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,50,mg/L,"115.000,00","JIS K 0102-2.2022, Butir 17.3 "
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 - 9,-,"12.500,00",SNI 6989.11:2019
 Debit,Debit limbah paling tinggi/Debit,N/A,"2,5",m3/ton CPO,,
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,100,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,250,mg/L," Rp 75.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,100,mg/L," Rp 35.000,00 ",
-NH3-N,"Amonia Total/Total Ammonia, (NH₃-N)",A,15,mg/L," Rp 75.000,00 ",
-Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,25,mg/L," Rp 115.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 - 9,-," Rp 12.500,00 ",
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,100,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,250,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,100,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+NH3-N,"Amonia Total/Total Ammonia, (NH₃-N)",A,15,mg/L,"75.000,00",SNI 06-6989.30-2005 
+Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,25,mg/L,"115.000,00","JIS K 0102-2.2022, Butir 17.3 "
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 - 9,-,"12.500,00",SNI 6989.11:2019
 Debit,Debit limbah paling tinggi/Debit,N/A,40,m3/ton produk,,
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,75,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,125,mg/L," Rp 75.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,50,mg/L," Rp 35.000,00 ",
-Phenol,Fenol/ Phenol ,A,"0,25",mg/L," Rp 85.000,00 ",
-NH3-N,"Amonia Total/Total Ammonia,  (NH₃-N)",A,4,mg/L," Rp 75.000,00 ",
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-,"12.500,00",SNI 6989.11:2019
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,75,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,125,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,50,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+Phenol,Fenol/ Phenol ,A,"0,25",mg/L,"85.000,00",SNI 06-6989.21-2004 
+NH3-N,"Amonia Total/Total Ammonia,  (NH₃-N)",A,4,mg/L,"75.000,00",SNI 06-6989.30-2005 
 Debit,Debit limbah paling tinggi/ Debit,N/A,"0,30 ",m³/m³ kayu lapis,,
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-," Rp 12.500,00 ",
-Fe,"Besi Terlarut/Dissolved Iron, (Fe)",A,5,mg/L," Rp 77.500,00 ",
-Mn,"Mangan Terlarut/Dissolved Manganese, (Mn)",A,2,mg/L," Rp 77.500,00 ",
-BACILLARIOPHYCEAE:,"Barium Total/ Total Barium, (Ba) ",A,2,mg/L," Rp 77.500,00 ",
-Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,2,mg/L," Rp 77.500,00 ",
-Zn,"Seng Total/ Total Zinc, (Zn)",A,5,mg/L," Rp 77.500,00 ",
-Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,1",mg/L," Rp 115.000,00 ",
-Cr,"Krom Total / Total Chromium, (Cr) ",A,"0,5",mg/L," Rp 115.000,00 ",
-Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,"0,05",mg/L," Rp 115.000,00 ",
-Hg,"Raksa Total/ Total Mercury, (Hg) ",A,"0,002",mg/L," Rp 175.000,00 ",
-Pb,"Timbal Total/ Total Lead, (Pb) ",A,"0,1",mg/L," Rp 115.000,00 ",
-Sn,"Timah Total/Total Tin, (Sn) ",A,2,mg/L," Rp 115.000,00 ",
-As,"Arsen Total/Total Arsenic, (As)",A,"0,1",mg/L," Rp 115.000,00 ",
-Se,"Selenium Total/Total Selenium, (Se) ",A,"0,05",mg/L," Rp 115.000,00 ",
-Ni,"Nikel Total/ Total Nickel, (Ni)",A,"0,2",mg/L," Rp 77.500,00 ",
-Co,"Kobalt Total/ Total Cobalt, (Co)",A,"0,4",mg/L," Rp 115.000,00 ",
-CN-,"Sianida/ Cyanide, (CN-) ",A,"0,05",mg/L," Rp 55.000,00 ",
-H2S,"Belerang Terlarut/ Dissolved Sulfur, (H2S) ",A,"0,05",mg/L," Rp 40.000,00 ",
-F-,"Fluorida/Fluoride, (F-) ",A,2,mg/L," Rp 40.000,00 ",
-Cl2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,1,mg/L," Rp 40.000,00 ",
-NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,1,mg/L," Rp 75.000,00 ",
-NO3-N,Nitrat Sebagai N/ Nitrate as N (NO3-N),A,20,mg/L," Rp 40.000,00 ",
-NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N) ",A,1,mg/L," Rp 40.000,00 ",
-Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS ,A,5,mg/L," Rp 80.000,00 ",
-Phenol,Fenol/ Phenol ,A,"0,5",mg/L," Rp 85.000,00 ",
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-,"12.500,00",SNI 6989.11:2019
+Fe,"Besi Terlarut/Dissolved Iron, (Fe)",A,5,mg/L,"77.500,00",SNI 6989-84:2019 
+Mn,"Mangan Terlarut/Dissolved Manganese, (Mn)",A,2,mg/L,"77.500,00",SNI 6989-84:2019 
+BACILLARIOPHYCEAE:,"Barium Total/ Total Barium, (Ba) ",A,2,mg/L,"77.500,00",SNI 6989.40-2005 
+Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,2,mg/L,"77.500,00",SNI 6989-84:2019 
+Zn,"Seng Total/ Total Zinc, (Zn)",A,5,mg/L,"77.500,00",SNI 6989-84:2019 
+Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,1",mg/L,"115.000,00",SNI 6989.71-2009 
+Cr,"Krom Total / Total Chromium, (Cr) ",A,"0,5",mg/L,"115.000,00",SNI 6989.84-2019 
+Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,"0,05",mg/L,"115.000,00",SNI 6989.38-2005 
+Hg,"Raksa Total/ Total Mercury, (Hg) ",A,"0,002",mg/L,"175.000,00",IKM.JLI.74 (MVU-AAS)
+Pb,"Timbal Total/ Total Lead, (Pb) ",A,"0,1",mg/L,"115.000,00",SNI 6989.46:2009
+Sn,"Timah Total/Total Tin, (Sn) ",A,2,mg/L,"115.000,00",SNI 6989.64:2009 
+As,"Arsen Total/Total Arsenic, (As)",A,"0,1",mg/L,"115.000,00",IKM. JLI-85 (HVG-AAS)
+Se,"Selenium Total/Total Selenium, (Se) ",A,"0,05",mg/L,"115.000,00",IKM.JLI-75 (HVG-AAS)
+Ni,"Nikel Total/ Total Nickel, (Ni)",A,"0,2",mg/L,"77.500,00",SNI 6989.84-2019 
+Co,"Kobalt Total/ Total Cobalt, (Co)",A,"0,4",mg/L,"115.000,00",IKM. JLI-79 (AAS) 
+CN-,"Sianida/ Cyanide, (CN-) ",A,"0,05",mg/L,"55.000,00",SNI 6989.77:2011
+H2S,"Belerang Terlarut/ Dissolved Sulfur, (H2S) ",A,"0,05",mg/L,"40.000,00",IKM.JLI-112 (Spektrofotometri)  
+F-,"Fluorida/Fluoride, (F-) ",A,2,mg/L,"40.000,00",SNI 06-6989.29:2005 
+Cl2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,1,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri)
+NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,1,mg/L,"75.000,00",SNI 06-6989.30-2005 
+NO3-N,Nitrat Sebagai N/ Nitrate as N (NO3-N),A,20,mg/L,"40.000,00",SNI 6989.79:2011
+NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N) ",A,1,mg/L,"40.000,00",SNI 06-6989.9:2004 
+Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS ,A,5,mg/L,"80.000,00",SNI 06.6989.51-2005 
+Phenol,Fenol/ Phenol ,A,"0,5",mg/L,"85.000,00",SNI 06-6989.30-2005 
 AOX,AOX,S,"0,5",mg/L,,
 PCBs,PCBs,S,"0,005",mg/L,,
 PCDFs,PCDFs,S,10,mg/L,,
 PCDDs,PCDDs,S,10,mg/L,,
-Temperature,Suhu/Temperature,A,38,-," Rp 12.500,00 ",
-Temperature,Suhu/Temperature,NA,38,-," Rp 12.500,00 ",
-TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,2000,mg/L," Rp 35.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,200,mg/L," Rp 35.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6.0-9.0,mg/L," Rp 12.500,00 ",
-Fe,"Besi Terlarut/Dissolved Iron, (Fe)",A,5,mg/L," Rp 77.500,00 ",
-Mn,"Mangan Terlarut/Dissolved Manganese, (Mn)",A,2,mg/L," Rp 77.500,00 ",
-Ba,"Barium Total/ Total Barium, (Ba) ",A,2,mg/L," Rp 77.500,00 ",
-Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,2,mg/L," Rp 77.500,00 ",
-Zn,"Seng Total/ Total Zinc, (Zn)",A,5,mg/L," Rp 77.500,00 ",
-Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,1",mg/L," Rp 115.000,00 ",
-Cr,"Krom Total / Total Chromium, (Cr) ",A,"0,5",mg/L," Rp 115.000,00 ",
-Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,"0,05",mg/L," Rp 115.000,00 ",
-Hg,"Raksa Total/ Total Mercury, (Hg) ",A,"0,002",mg/L," Rp 175.000,00 ",
-Pb,"Timbal Total/ Total Lead, (Pb) ",A,"0,1",mg/L," Rp 115.000,00 ",
-Sn,"Timah Total/Total Tin, (Sn) ",A,2,mg/L," Rp 115.000,00 ",
-As,"Arsen Total/Total Arsenic, (As)",A,"0,1",mg/L," Rp 115.000,00 ",
-Se,"Selenium Total/Total Selenium, (Se) ",A,"0,05",mg/L," Rp 115.000,00 ",
-Ni,"Nikel Total/ Total Nickel, (Ni)",A,"0,2",mg/L," Rp 115.000,00 ",
-Co,"Kobalt Total/ Total Cobalt, (Co)",A,"0,4",mg/L," Rp 115.000,00 ",
-CN-,"Sianida/ Cyanide, (CN-) ",A,"0,05",mg/L," Rp 55.000,00 ",
-H2S,"Belerang Terlarut/ Dissolved Sulfur, (H2S) ",A,"0,5",mg/L," Rp 40.000,00 ",
-F-,"Fluorida/Fluoride, (F-) ",A,2,mg/L," Rp 40.000,00 ",
-Cl2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,1,mg/L," Rp 40.000,00 ",
-NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,5,mg/L," Rp 75.000,00 ",
-NO3-N,Nitrat Sebagai N/ Nitrate as N (NO3-N),A,20,mg/L," Rp 40.000,00 ",
-NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N) ",A,1,mg/L," Rp 40.000,00 ",
-Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,30,mg/L," Rp 115.000,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,50,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,100,mg/L," Rp 75.000,00 ",
-Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS ,A,5,mg/L," Rp 80.000,00 ",
-Phenol,Fenol/ Phenol ,A,"0,5",mg/L," Rp 85.000,00 ",
-Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,10,mg/L," Rp 125.000,00 ",
-Total Coliform,Total coliform ,A,10000,MPN/100mL," Rp 145.000,00 ",
-Temperature,Suhu/Temperature,A,40,-," Rp 12.500,00 ",
-Temperature,Suhu/Temperature,NA,40,-," Rp 12.500,00 ",
-TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,4000,mg/L," Rp 35.000,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,400,mg/L," Rp 35.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6.0-9.0,mg/L," Rp 12.500,00 ",
-Fe,"Besi Terlarut/Dissolved Iron, (Fe)",A,10,mg/L," Rp 77.500,00 ",
-Mn,"Mangan Terlarut/Dissolved Manganese, (Mn)",A,5,mg/L," Rp 77.500,00 ",
-Ba,"Barium Total/ Total Barium, (Ba) ",A,3,mg/L," Rp 77.500,00 ",
-Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,3,mg/L," Rp 77.500,00 ",
-Zn,"Seng Total/ Total Zinc, (Zn)",A,10,mg/L," Rp 77.500,00 ",
-Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,5",mg/L," Rp 115.000,00 ",
-Cr,"Krom Total / Total Chromium, (Cr) ",A,1,mg/L," Rp 115.000,00 ",
-Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,"0,1",mg/L," Rp 115.000,00 ",
-Hg,"Raksa Total/ Total Mercury, (Hg) ",A,"0,005",mg/L," Rp 175.000,00 ",
-Pb,"Timbal Total/ Total Lead, (Pb) ",A,1,mg/L," Rp 115.000,00 ",
-Sn,"Timah Total/Total Tin, (Sn) ",A,3,mg/L," Rp 115.000,00 ",
-As,"Arsen Total/Total Arsenic, (As)",A,"0,5",mg/L," Rp 115.000,00 ",
-Se,"Selenium Total/Total Selenium, (Se) ",A,"0,5",mg/L," Rp 115.000,00 ",
-Ni,"Nikel Total/ Total Nickel, (Ni)",A,"0,5",mg/L," Rp 77.500,00 ",
-Co,"Kobalt Total/ Total Cobalt, (Co)",A,"0,6",mg/L," Rp 115.000,00 ",
-CN-,"Sianida/ Cyanide, (CN-) ",A,"0,5",mg/L," Rp 55.000,00 ",
-H2S,"Belerang Terlarut/ Dissolved Sulfur, (H2S) ",A,1,mg/L," Rp 40.000,00 ",
-F-,"Fluorida/Fluoride, (F-) ",A,3,mg/L," Rp 40.000,00 ",
-Cl2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,2,mg/L," Rp 40.000,00 ",
-NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,10,mg/L," Rp 75.000,00 ",
-NO3-N,Nitrat Sebagai N/ Nitrate as N (NO3-N),A,30,mg/L," Rp 40.000,00 ",
-NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N) ",A,3,mg/L," Rp 40.000,00 ",
-Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,60,mg/L," Rp 115.000,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,150,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,300,mg/L," Rp 75.000,00 ",
-Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS ,A,10,mg/L," Rp 80.000,00 ",
-Phenol,Fenol/ Phenol ,A,1,mg/L," Rp 85.000,00 ",
-Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,20,mg/L," Rp 125.000,00 ",
-Total Coliform,Total coliform ,A,1000,MPN/100mL," Rp 145.000,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-," Rp 12.500,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,400,mg/L," Rp 35.000,00 ",
-Fe,"Besi Total/Total Iron, (Fe) ",A,7,mg/L," Rp 35.000,00 ",
-Mn,"Mangan Total/ Total Manganese, (Mn) ",A,4,mg/L," Rp 77.500,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,<5000,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,-,mg/L," Rp 75.000,00 ",
-Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,-,mg/L," Rp 125.000,00 ",
-Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,-,mg/L," Rp 115.000,00 ",
-Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,-,mg/L," Rp 77.500,00 ",
-Pb,"Timbal Total/ Total Lead, (Pb) ",A,-,mg/L," Rp 115.000,00 ",
-Zn,"Seng Total/ Total Zinc, (Zn)",A,-,mg/L," Rp 77.500,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-," Rp 12.500,00 ",
-BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,75,mg/L," Rp 75,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,150,mg/L," Rp 75,00 ",
-TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,60,mg/L," Rp 35.000,00 ",
-Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,5,mg/L," Rp 125.000,00 ",
-Resistivity,Resistivity (daya tahan listrik) ,S,,"MΩ-cm, suhu 25°C "," Rp 35.000,00 ",
-Conductivity,Conductivity (daya hantar listrik),A,,µS/cm," Rp 35.000,00 ",
-pH,"Derajat Keasaman/Potential of Hydrogen, (pH)",A,,"-,  suhu 25°C "," Rp 12.500,00 ",
-TOC,"Senyawa organic total Total Organic Carbon, (TOC)",S,,"µg/l "," Rp 750.000,00 ",
-Sodium,Natrium/Sodium,A,,"µg/l"," Rp 77.500,00 ",
-Silica,Silika/Silica,S,,"µg/l",,
-Chloride,Khlorida/ Chloride,A,,"µg/l"," Rp 40.000,00 ",
-Escherichia Coli,Escherichia coli ,A,0,CFU/100 mL," Rp 145.000,00 ",
-Total Coliform,Total coliform,A,0,CFU/100 mL," Rp 145.000,00 ",
-Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC," Rp 12.500,00 ",
-Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC," Rp 12.500,00 ",
-TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,<300,mg/L," Rp 35.000,00 ",
-Turbidity,Kekeruhan/Turbidity ,A,<3,mg/L," Rp 20.000,00 ",
-Color,Warna/Color ,A,10,mg/L," Rp 35.000,00 ",
-Odor,Bau/Odor ,A,Tidak berbau,-," Rp 12.500,00 ",
-pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6.5-8.5,mg/L," Rp 12.500,00 ",
-NO3,"Nitrat Sebagai NO3/Nitrate as NO3, (NO3)",A,20,mg/L," Rp 40.000,00 ",
-NO2,"Nitrit Sebagai NO2/ Nitrate as NO2, (NO2)",A,3,mg/L," Rp 40.000,00 ",
-Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,01",mg/L," Rp 115.000,00 ",
-Fe,"Besi Terlarut/ Dissolved Iron, (Fe) ",A,"0,2",mg/L," Rp 77.500,00 ",
-Mn,"Mangan Terlarut/ Dissolved Manganese, (Mn)  ",A,"0,1",mg/L," Rp 77.500,00 ",
-TSS,"Padatan Tersuspensi Total/Total Suspended Solids, (TSS)",A,-,mg/L," Rp 35.000,00 ",
-pH,"Derajat Keasaman/Potential of Hydrogen, (pH)",A,6.5-8.5,--," Rp 12.500,00 ",
-BOD5,"Kebutuhan Oksigen Biokimia/Biochemical Oxygen Demand, (BOD5)",A,-,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/Chemical Oxygen Demand, (COD)",A,-,mg/L," Rp 75.000,00 ",
-DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L," Rp 40.000,00 ",
-DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L," Rp 40.000,00 ",
-NO3,"Nitrat Sebagai NO3/Nitrate as NO3, (NO3)",A,20,mg/L," Rp 40.000,00 ",
-NO2,"Nitrit Sebagai NO2/Nitrite as NO2, (NO2)",A,3,mg/L," Rp 40.000,00 ",
-Total Phosphate as P,Total Fosfat sebagai P/Total Phosphate as P,A,-,mg/L," Rp 45.000,00 ",
-Oil and Grease,Minyak dan Lemak/Oil and Grease,,-,mg/L," Rp 125.000,00 ",
-Zn,"Seng Terlarut/Dissolved Zinc, (Zn)",A,-,mg/L," Rp 77.500,00 ",
-Cu ,"Tembaga Terlarut/ Dissolved Copper, (Cu) ",A,-,mg/L," Rp 77.500,00 ",
-Cd,Kadmium Terlarut/ Dissolved Cadmium (Cd),A,-,mg/L," Rp 115.000,00 ",
-Pb,Timbal Terlarut/ Dissolved Lead (Pb),A,-,mg/L," Rp 115.000,00 ",
-Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC," Rp 12.500,00 ",
-Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC," Rp 12.500,00 ",
-NH3-N,"Ammonia/Ammonia, (NH3-N)",A,-,mg/L," Rp 75.000,00 ",
-Cl-,"Klorida/Chlorida, (Cl-",A,-,mg/L," Rp 40.000,00 ",
-SO4 2-,"Sulfat/Sulfate, (SO4 2-)  ",A,-,mg/L," Rp 40.000,00 ",
-Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC," Rp 12.500,00 ",
-Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC," Rp 12.500,00 ",
-Odor,Bau/Odor ,A,Tidak berbau,-," Rp 12.500,00 ",
-Color,Warna/Color ,A,10,mg/L," Rp 35.000,00 ",
-TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,<300,mg/L," Rp 35.000,00 ",
-TSS,"Padatan Tersuspensi Total/Total Suspended Solids, (TSS)",A,-,mg/L," Rp 35.000,00 ",
-Turbidity,Kekeruhan/Turbidity ,A,<3,mg/L," Rp 20.000,00 ",
-Salinity,Salinitas/Salinity,A,,%," Rp 35.000,00 ",
-Rubbish,Sampah/Rubbish,,,," Rp 15.000,00 ",
-pH,"Derajat Keasaman/Potential of Hydrogen, (pH)",A,6.5-8.5,--," Rp 12.500,00 ",
-BOD5,"Kebutuhan Oksigen Biokimia/Biochemical Oxygen Demand, (BOD5)",A,-,mg/L," Rp 75.000,00 ",
-COD,"Kebutuhan Oksigen Kimiawi/Chemical Oxygen Demand, (COD)",A,-,mg/L," Rp 75.000,00 ",
-DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L," Rp 40.000,00 ",
-DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L," Rp 40.000,00 ",
-TS,"Total Padatan/Total Solids, (TS)",A,-,mg/L," Rp 35.000,00 ",
-PO4 3-,"Orthopospat/Orthophosphate, (PO4 3-)",A,-,mg/L," Rp 45.000,00 ",
-F,"Fluorida/Flouride, (F)",A,-,mg/L," Rp 40.000,00 ",
-NO3,"Nitrat sebagai NO3/Nitrate as NO3, (NO3)",A,20,mg/L," Rp 40.000,00 ",
-NO2,"Nitrit sebagai NO2/Nitrite as NO2, (NO2)",A,3,mg/L," Rp 40.000,00 ",
-NO3-N,"Nitrat sebagai N/Nitrate as N, (NO3-N) ",A,-,mg/L," Rp 40.000,00 ",
-NO2-N,"Nitrit sebagai N/Nitrite as N, (NO2-N) ",A,-,mg/L," Rp 40.000,00 ",
-CN-,"Sianida/Cyanide, (CN-)",A,-,mg/L," Rp 40.000,00 ",
-Cl-," Klorida/Chlorida, (Cl-)",A,-,mg/L," Rp 55.000,00 ",
-SO4-2,"Sulfat/Sulfate, (SO4-2)",A,-,mg/L," Rp 40.000,00 ",
-NH3-N,"Amoniak Sebagai N/Ammonia as N, (NH3-N)",A,-,mg/L," Rp 75.000,00 ",
-NH3,"Amoniak/Ammonia, (NH3)",A,-,mg/L," Rp 75.000,00 ",
-MBAS,"Deterjen/Detergent, (MBAS)",A,-,mg/L," Rp 80.000,00 ",
-As,"Arsen/Arsen, (As)",A,-,mg/L," Rp 115.000,00 ",
-B,"Boron/Boron, (B) ",A,-,mg/L," Rp 77.500,00 ",
-Se,"Selenium/Selenium, (Se)",A,-,mg/L," Rp 115.000,00 ",
-Ba," Barium/Barium, (Ba) ",A,-,mg/L," Rp 77.500,00 ",
-Hg," Merkuri/Mercury, (Hg)",A,-,mg/L," Rp 17.500,00 ",
-Cd,"Kadmium/Cadmium, (Cd)",A,-,mg/L," Rp 115.000,00 ",
-Cu ,"Tembaga/Copper, (Cu) ",A,-,mg/L," Rp 77.500,00 ",
-Fe,"Besi/Iron, (Fe)",A,"0,2",mg/L," Rp 77.500,00 ",
-Mn,"Mangan/Manganese, (Mn)",A,"0,1",mg/L," Rp 77.500,00 ",
-Zn,"Seng/Zinc, (Zn)",A,-,mg/L," Rp 77.500,00 ",
-Co,"Kobalt/Cobalt, (Co)",A,-,mg/L," Rp 115.000,00 ",
-Pb,"Timbal/Lead, (Pb)",A,-,mg/L," Rp 115.000,00 ",
-Cr,"Krom/Chromium, (Cr)",A,-,mg/L," Rp 115.000,00 ",
-Cr6+,"Krom Heksavalen/Hexavalent Chromium, (Cr6+)",A,-,mg/L," Rp 115.000,00 ",
-Escherichia Coli,Escherichia coli,A,0,CFU/100 mL," Rp 145.000,00 ",
-Total Coliform,Total coliform,A,0,CFU/100 mL," Rp 145.000,00 ",
-Bau,Bau,A,Tidak Berbau,-," Rp 12.500,00 ",
-Kekeruhan,Kekeruhan,A,"0,5",NTU," Rp 20.000,00 ",
-Kejernihan,Kejernihan,A,16-40,ºC," Rp 15.000,00 ",
-Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC," Rp 12.500,00 ",
-Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC," Rp 12.500,00 ",
-Kepadatan Perenang  (Kedalaman  <1 m),Kepadatan Perenang  (Kedalaman  <1 m),NA,"2,2",M2/perenang,,
-Kepadatan Perenang  (Kedalaman  1-1.5 m),Kepadatan Perenang  (Kedalaman  1-1.5 m),NA,"2,7",M2/perenang,,
-Kepadatan Perenang  (Kedalaman  >1.5 m),Kepadatan Perenang  (Kedalaman  >1.5 m),NA,4,M2/perenang,,
-Escherichia Coli,Escherichia coli,A,<1,CFU/100 mL," Rp 145.000,00 ",
-HPC,Heterotrophic Plate Count (HPC),S,100,CFU/100 mL,,
-Pseudomonasaeru aureus,Pseudomonasaeru aureus,S,<1,-,,
-Staphylococcus,Staphylococcus,S,<100,CFU/100 mL,,
-Legionella spp,Legionella spp,S,<1,CFU/100 mL,,
-pH,pH,A,7-7.80,-," Rp 12.500,00 ",
-pH,pH,A,7-8,-," Rp 12.500,00 ",
-Alkalinitas,Alkalinitas,NA,80-200,mg/L," Rp 40.000,00 ",
-Sisa Khlor Bebas,Sisa Khlor Bebas,A,1-1.5,mg/L," Rp 40.000,00 ",
-Sisa Khlor Bebas,Sisa Khlor Bebas,A,2-3,mg/L," Rp 40.000,00 ",
-Sisa Khlor Terikat,Sisa Khlor Terikat,S,3,mg/L,,
-Total Bromide,Total Bromide,S,2-2.5,mg/L," Rp 1.600.000,00 ",
-Total Bromide,Total Bromide,S,4-5,mg/L," Rp 1.600.000,00 ",
-Sisa Bromine,Sisa Bromine,S,3-4,mg/L,,
-Bau,Bau,A,Tidak Berbau,-," Rp 12.500,00 ",
-Kekeruhan,Kekeruhan,A,"0,5",NTU," Rp 20.000,00 ",
-Kejernihan,Kejernihan,A,-,Piringan Terlihat Jelas," Rp 15.000,00 ",
-Suhu/Temperature,Suhu/Temperature,A,<40,ºC," Rp 12.500,00 ",
-Suhu/Temperature,Suhu/Temperature,NA,<41,ºC," Rp 12.500,00 ",
-Escherichia coli,Escherichia coli,A,<1,CFU/100 mL," Rp 145.000,00 ",
-HPC,Heterotrophic Plate Count (HPC),S,<200,CFU/100 mL,,
-Pseudomonas Aeruginosa,Pseudomonas Aeruginosa,S,<1,CFU/100 mL,,
+Temperature,Suhu/Temperature,A,38,-,"12.500,00",SNI 06-6989.23-2005
+Temperature,Suhu/Temperature,NA,38,-,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,2000,mg/L,"35.000,00",IKM.JLI-07 (Elektrometri) 
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,200,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6.0-9.0,mg/L,"12.500,00",SNI 6989.11:2019
+Fe,"Besi Terlarut/Dissolved Iron, (Fe)",A,5,mg/L,"77.500,00",SNI 6989-84:2019 
+Mn,"Mangan Terlarut/Dissolved Manganese, (Mn)",A,2,mg/L,"77.500,00",SNI 6989-84:2019 
+Ba,"Barium Total/ Total Barium, (Ba) ",A,2,mg/L,"77.500,00",SNI 6989.40-2005 
+Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,2,mg/L,"77.500,00",SNI 6989-84:2019 
+Zn,"Seng Total/ Total Zinc, (Zn)",A,5,mg/L,"77.500,00",SNI 6989-84:2019 
+Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,1",mg/L,"115.000,00",SNI 6989.71-2009 
+Cr,"Krom Total / Total Chromium, (Cr) ",A,"0,5",mg/L,"115.000,00",SNI 6989.84-2019 
+Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,"0,05",mg/L,"115.000,00",SNI 6989.38-2005 
+Hg,"Raksa Total/ Total Mercury, (Hg) ",A,"0,002",mg/L,"175.000,00",IKM.JLI.74 (MVU-AAS)
+Pb,"Timbal Total/ Total Lead, (Pb) ",A,"0,1",mg/L,"115.000,00",SNI 6989.46:2009
+Sn,"Timah Total/Total Tin, (Sn) ",A,2,mg/L,"115.000,00",SNI 6989.64:2009 
+As,"Arsen Total/Total Arsenic, (As)",A,"0,1",mg/L,"115.000,00",IKM. JLI-85 (HVG-AAS)
+Se,"Selenium Total/Total Selenium, (Se) ",A,"0,05",mg/L,"115.000,00",IKM.JLI-75 (HVG-AAS)
+Ni,"Nikel Total/ Total Nickel, (Ni)",A,"0,2",mg/L,"115.000,00",SNI 6989.84-2019 
+Co,"Kobalt Total/ Total Cobalt, (Co)",A,"0,4",mg/L,"115.000,00",IKM. JLI-79 (AAS) 
+CN-,"Sianida/ Cyanide, (CN-) ",A,"0,05",mg/L,"55.000,00",SNI 6989.77:2011
+H2S,"Belerang Terlarut/ Dissolved Sulfur, (H2S) ",A,"0,5",mg/L,"40.000,00",IKM.JLI-112 (Spektrofotometri)  
+F-,"Fluorida/Fluoride, (F-) ",A,2,mg/L,"40.000,00",SNI 06-6989.29:2005 
+Cl2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,1,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri)
+NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,5,mg/L,"75.000,00",SNI 06-6989.30-2005 
+NO3-N,Nitrat Sebagai N/ Nitrate as N (NO3-N),A,20,mg/L,"40.000,00",SNI 6989.79:2011
+NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N) ",A,1,mg/L,"40.000,00",SNI 06-6989.9:2004 
+Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,30,mg/L,"115.000,00","JIS K 0102-2.2022, Butir 17.3"
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,50,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,100,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS ,A,5,mg/L,"80.000,00",SNI 06.6989.51-2005 
+Phenol,Fenol/ Phenol ,A,"0,5",mg/L,"85.000,00",SNI 06-6989.30-2005 
+Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,10,mg/L,"125.000,00",SNI 6989.10:2011 
+Total Coliform,Total coliform ,A,10000,MPN/100mL,"145.000,00","APHA 24th Edition 9221-B,C:2023  "
+Temperature,Suhu/Temperature,A,40,-,"12.500,00",SNI 06-6989.23-2005
+Temperature,Suhu/Temperature,NA,40,-,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,4000,mg/L,"35.000,00",IKM.JLI-07 (Elektrometri) 
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,400,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6.0-9.0,mg/L,"12.500,00",SNI 6989.11:2019
+Fe,"Besi Terlarut/Dissolved Iron, (Fe)",A,10,mg/L,"77.500,00",SNI 6989-84:2019 
+Mn,"Mangan Terlarut/Dissolved Manganese, (Mn)",A,5,mg/L,"77.500,00",SNI 6989-84:2019 
+Ba,"Barium Total/ Total Barium, (Ba) ",A,3,mg/L,"77.500,00",SNI 6989.40-2005 
+Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,3,mg/L,"77.500,00",SNI 6989-84:2019 
+Zn,"Seng Total/ Total Zinc, (Zn)",A,10,mg/L,"77.500,00",SNI 6989-84:2019 
+Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,5",mg/L,"115.000,00",SNI 6989.71-2009 
+Cr,"Krom Total / Total Chromium, (Cr) ",A,1,mg/L,"115.000,00",SNI 6989.84-2019 
+Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,"0,1",mg/L,"115.000,00",SNI 6989.38-2005 
+Hg,"Raksa Total/ Total Mercury, (Hg) ",A,"0,005",mg/L,"175.000,00",IKM.JLI.74 (MVU-AAS)
+Pb,"Timbal Total/ Total Lead, (Pb) ",A,1,mg/L,"115.000,00",SNI 6989.46:2009
+Sn,"Timah Total/Total Tin, (Sn) ",A,3,mg/L,"115.000,00",SNI 6989.64:2009 
+As,"Arsen Total/Total Arsenic, (As)",A,"0,5",mg/L,"115.000,00",IKM. JLI-85 (HVG-AAS)
+Se,"Selenium Total/Total Selenium, (Se) ",A,"0,5",mg/L,"115.000,00",IKM.JLI-75 (HVG-AAS)
+Ni,"Nikel Total/ Total Nickel, (Ni)",A,"0,5",mg/L,"77.500,00",SNI 6989.84-2019 
+Co,"Kobalt Total/ Total Cobalt, (Co)",A,"0,6",mg/L,"115.000,00",IKM. JLI-79 (AAS) 
+CN-,"Sianida/ Cyanide, (CN-) ",A,"0,5",mg/L,"55.000,00",SNI 6989.77:2011
+H2S,"Belerang Terlarut/ Dissolved Sulfur, (H2S) ",A,1,mg/L,"40.000,00",IKM.JLI-112 (Spektrofotometri)  
+F-,"Fluorida/Fluoride, (F-) ",A,3,mg/L,"40.000,00",SNI 06-6989.29:2005 
+Cl2,"Klorin Bebas/Free Chlorine, (Cl2) ",A,2,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri)
+NH3-N,"Amoniak sebagai N/Ammonia as N, (NH₃-N)",A,10,mg/L,"75.000,00",SNI 06-6989.30-2005 
+NO3-N,Nitrat Sebagai N/ Nitrate as N (NO3-N),A,30,mg/L,"40.000,00",SNI 6989.79:2011
+NO2-N,"Nitrit sebagai N/ Nitrate as N, (NO2-N) ",A,3,mg/L,"40.000,00",SNI 06-6989.9:2004 
+Total Nitrogen,Total Nitrogen/ Total Nitrogen ,A,60,mg/L,"115.000,00","JIS K 0102-2.2022, Butir 17.3"
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,150,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,300,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+Anionic Surfactants as MBAS ,Surfaktan Anionik sebagai MBAS /Anionic Surfactantsas as MBAS ,A,10,mg/L,"80.000,00",SNI 06.6989.51-2005 
+Phenol,Fenol/ Phenol ,A,1,mg/L,"85.000,00",SNI 06-6989.30-2005 
+Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,20,mg/L,"125.000,00",SNI 6989.10:2011 
+Total Coliform,Total coliform ,A,1000,MPN/100mL,"145.000,00","APHA 24th Edition 9221-B,C:2023  "
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-,"12.500,00",SNI 6989.11:2019
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,400,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+Fe,"Besi Total/Total Iron, (Fe) ",A,7,mg/L,"35.000,00", SNI 6989.84-2019
+Mn,"Mangan Total/ Total Manganese, (Mn) ",A,4,mg/L,"77.500,00", SNI 6989.84-2019
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6-9,-,"12.500,00",SNI 6989.11:2019
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,<5000,mg/L,"75.000,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,-,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri)
+Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,-,mg/L,"125.000,00",SNI 6989.10:2011 
+Cd,Kadmium Total/ Total Cadmium. (Cd) ,A,-,mg/L,"115.000,00",SNI 6989.38-2005 
+Cu ,"Tembaga Total/ Total Copper, (Cu) ",A,-,mg/L,"77.500,00",SNI 6989-84:2019 
+Pb,"Timbal Total/ Total Lead, (Pb) ",A,-,mg/L,"115.000,00",SNI 6989.46:2009
+Zn,"Seng Total/ Total Zinc, (Zn)",A,-,mg/L,"77.500,00",SNI 6989-84:2019 
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6 – 9,-,"12.500,00",SNI 6989.11:2019
+BOD,"Kebutuhan Oksigen Biokimiawi/ Biochemical Oxygen Demand, (BOD) ",A,75,mg/L,"75,00",SNI 6989.72:2009 
+COD,"Kebutuhan Oksigen Kimiawi/ Chemical Oxygen Demand, (COD) ",A,150,mg/L,"75,00",IKM.JLI-12 (Spektrofotometri)
+TSS,"Total Padatan Tersuspensi/Total Suspended Solids, (TSS) ",A,60,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023"
+Oil and Grease,Minyak dan Lemak/ Oil and Grease,A,5,mg/L,"125.000,00",SNI 6989.10:2011 
+Resistivity,Resistivity (daya tahan listrik) ,S,,"MΩ-cm, suhu 25°C ","35.000,00",-
+Conductivity,Conductivity (daya hantar listrik),A,,µS/cm,"35.000,00",SNI 6989.1:2019
+pH,"Derajat Keasaman/Potential of Hydrogen, (pH)",A,,"-,  suhu 25°C ","12.500,00",SNI 6989.11:2019 
+TOC,"Senyawa organic total Total Organic Carbon, (TOC)",S,,"µg/l ","750.000,00",-
+Sodium,Natrium/Sodium,A,,"µg/l ","77.500,00",APHA 24th 3111-B:2023 
+Silica,Silika/Silica,S,,"µg/l ",,-
+Chloride,Khlorida/ Chloride,A,,"µg/l ","40.000,00", SNI 6989.19:2009
+Escherichia Coli,Escherichia coli ,A,0,CFU/100 mL,"145.000,00",BS EN ISO 9308-1:2014+A1:2017  
+Total Coliform,Total coliform,A,0,CFU/100 mL,"145.000,00",BS EN ISO 9308-1:2014+A1:2017  
+Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC,"12.500,00",SNI 06-6989.23-2005 
+Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,<300,mg/L,"35.000,00",IKM.JLI-07 (Elektrometri) 
+Turbidity,Kekeruhan/Turbidity ,A,<3,mg/L,"20.000,00",SNI 06-6989.25-2005 
+Color,Warna/Color ,A,10,mg/L,"35.000,00",SNI 6989.80:2011
+Odor,Bau/Odor ,A,Tidak berbau,-,"12.500,00",SNI 06-6860-2002 
+pH,"Derajat Keasaman/ Potential of Hydrogen, (pH)",A,6.5-8.5,mg/L,"12.500,00",SNI 6989.11:2019 
+NO3,"Nitrat Sebagai NO3/Nitrate as NO3, (NO3)",A,20,mg/L,"40.000,00",IKM.JLI-158 (Spektrofotometri) 
+NO2,"Nitrit Sebagai NO2/ Nitrate as NO2, (NO2)",A,3,mg/L,"40.000,00",IKM.JLI-157 (Spektrofotometri) 
+Cr+6,"Krom Heksavalen Terlarut/ Dissolved Hexavalent Chromium, (Cr+6) ",A,"0,01",mg/L,"115.000,00",SNI 6989.53:2010 
+Fe,"Besi Terlarut/ Dissolved Iron, (Fe) ",A,"0,2",mg/L,"77.500,00",SNI 6989-84:2019 
+Mn,"Mangan Terlarut/ Dissolved Manganese, (Mn)  ",A,"0,1",mg/L,"77.500,00",SNI 6989-84:2019 
+TSS,"Padatan Tersuspensi Total/Total Suspended Solids, (TSS)",A,-,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023 "
+pH,"Derajat Keasaman/Potential of Hydrogen, (pH)",A,6.5-8.5,--,"12.500,00",SNI 6989.11:2019 
+BOD5,"Kebutuhan Oksigen Biokimia/Biochemical Oxygen Demand, (BOD5)",A,-,mg/L,"75.000,00",SNI 6989.72:2009
+COD,"Kebutuhan Oksigen Kimiawi/Chemical Oxygen Demand, (COD)",A,-,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri) 
+DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L,"40.000,00",SNI 06-6989.14-2004 
+DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L,"40.000,00",APHA 24th Edition 4500-G:2023 
+NO3,"Nitrat Sebagai NO3/Nitrate as NO3, (NO3)",A,20,mg/L,"40.000,00",IKM.JLI-158 (Spektrofotometri) 
+NO2,"Nitrit Sebagai NO2/Nitrite as NO2, (NO2)",A,3,mg/L,"40.000,00",IKM.JLI-157 (Spektrofotometri) 
+Total Phosphate as P,Total Fosfat sebagai P/Total Phosphate as P,A,-,mg/L,"45.000,00",SNI 6989-31:2021 butir 5.5.2 
+Oil and Grease,Minyak dan Lemak/Oil and Grease,,-,mg/L,"125.000,00",SNI 6989.10:2011 
+Zn,"Seng Terlarut/Dissolved Zinc, (Zn)",A,-,mg/L,"77.500,00",SNI 6989-84:2019 
+Cu ,"Tembaga Terlarut/ Dissolved Copper, (Cu) ",A,-,mg/L,"77.500,00",SNI 6989.84-2019 
+Cd,Kadmium Terlarut/ Dissolved Cadmium (Cd),A,-,mg/L,"115.000,00",SNI 6989.38-2005 
+Pb,Timbal Terlarut/ Dissolved Lead (Pb),A,-,mg/L,"115.000,00",SNI 6989.46:2009 
+Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC,"12.500,00",SNI 06-6989.23-2005 
+Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+NH3-N,"Ammonia/Ammonia, (NH3-N)",A,-,mg/L,"75.000,00",SNI 06-6989.30:2005 
+Cl-,"Klorida/Chlorida, (Cl-",A,-,mg/L,"40.000,00",SNI 6989.19:2009 
+SO4 2-,"Sulfat/Sulfate, (SO4 2-)  ",A,-,mg/L,"40.000,00",SNI 6989.20:2019 
+Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC,"12.500,00",SNI 06-6989.23-2005 
+Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+Odor,Bau/Odor ,A,Tidak berbau,-,"12.500,00",SNI 06-6860-2002 
+Color,Warna/Color ,A,10,mg/L,"35.000,00",SNI 6989.80:2011
+TDS,"Total Padatan Terlarut/Total Dissolved Solids, (TDS) ",A,<300,mg/L,"35.000,00",IKM.JLI-07 (Elektrometri) 
+TSS,"Padatan Tersuspensi Total/Total Suspended Solids, (TSS)",A,-,mg/L,"35.000,00","APHA 24th Edition, 2540-D,2023 "
+Turbidity,Kekeruhan/Turbidity ,A,<3,mg/L,"20.000,00",SNI 06-6989.25-2005 
+Salinity,Salinitas/Salinity,A,,%,"35.000,00", IKM.JLI-07 (Elektrometri)
+Rubbish,Sampah/Rubbish,,,,"15.000,00", IKM.JLI-150 (Observasi Visual)
+pH,"Derajat Keasaman/Potential of Hydrogen, (pH)",A,6.5-8.5,--,"12.500,00",SNI 6989.11:2019 
+BOD5,"Kebutuhan Oksigen Biokimia/Biochemical Oxygen Demand, (BOD5)",A,-,mg/L,"75.000,00",SNI 6989.72:2009
+COD,"Kebutuhan Oksigen Kimiawi/Chemical Oxygen Demand, (COD)",A,-,mg/L,"75.000,00",IKM.JLI-12 (Spektrofotometri) 
+DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L,"40.000,00",SNI 06-6989.14-2004 
+DO,"Oksigen Terlarut/Dissolved Oxygen, (DO)",A,-,mg/L,"40.000,00",APHA 24th Edition 4500-G:2023 
+TS,"Total Padatan/Total Solids, (TS)",A,-,mg/L,"35.000,00", SNI 6989.26:2019
+PO4 3-,"Orthopospat/Orthophosphate, (PO4 3-)",A,-,mg/L,"45.000,00", SNI 6989.31:2021
+F,"Fluorida/Flouride, (F)",A,-,mg/L,"40.000,00", SNI 06-6989.29-2005
+NO3,"Nitrat sebagai NO3/Nitrate as NO3, (NO3)",A,20,mg/L,"40.000,00",IKM.JLI-158 (Spektrofometri)
+NO2,"Nitrit sebagai NO2/Nitrite as NO2, (NO2)",A,3,mg/L,"40.000,00", IKM.JLI-157 (Spektrofometri)
+NO3-N,"Nitrat sebagai N/Nitrate as N, (NO3-N) ",A,-,mg/L,"40.000,00", SNI 6989.79:2011
+NO2-N,"Nitrit sebagai N/Nitrite as N, (NO2-N) ",A,-,mg/L,"40.000,00", SNI 06-6989.9:2004
+CN-,"Sianida/Cyanide, (CN-)",A,-,mg/L,"40.000,00", SNI 6989.77-2011
+Cl-," Klorida/Chlorida, (Cl-)",A,-,mg/L,"55.000,00", SNI 6989.19:2009
+SO4-2,"Sulfat/Sulfate, (SO4-2)",A,-,mg/L,"40.000,00", SNI 6989.20:2019
+NH3-N,"Amoniak Sebagai N/Ammonia as N, (NH3-N)",A,-,mg/L,"75.000,00", SNI 06-6989.30-2005
+NH3,"Amoniak/Ammonia, (NH3)",A,-,mg/L,"75.000,00", IKM.JLI-156 (Spektrofometri)
+MBAS,"Deterjen/Detergent, (MBAS)",A,-,mg/L,"80.000,00", SNI 06-6989.51-2005
+As,"Arsen/Arsen, (As)",A,-,mg/L,"115.000,00",IKM.JLI-85 (HVG-AAS) 
+B,"Boron/Boron, (B) ",A,-,mg/L,"77.500,00","APHA 24th Edition, 4500-B,2023 "
+Se,"Selenium/Selenium, (Se)",A,-,mg/L,"115.000,00",IKM.JLI-75 (HVG-AAS) 
+Ba," Barium/Barium, (Ba) ",A,-,mg/L,"77.500,00",SNI 6989.40-2005
+Hg," Merkuri/Mercury, (Hg)",A,-,mg/L,"17.500,00",IKM.JLI.74 (MVU-AAS) 
+Cd,"Kadmium/Cadmium, (Cd)",A,-,mg/L,"115.000,00",SNI 6989.38-2005 
+Cu ,"Tembaga/Copper, (Cu) ",A,-,mg/L,"77.500,00", SNI 6989.66-2009
+Fe,"Besi/Iron, (Fe)",A,"0,2",mg/L,"77.500,00",SNI 6989-84:2019 
+Mn,"Mangan/Manganese, (Mn)",A,"0,1",mg/L,"77.500,00",SNI 6989-84:2019 
+Zn,"Seng/Zinc, (Zn)",A,-,mg/L,"77.500,00",SNI 6989-84:2019 
+Co,"Kobalt/Cobalt, (Co)",A,-,mg/L,"115.000,00",IKM. JLI-79 (AAS) 
+Pb,"Timbal/Lead, (Pb)",A,-,mg/L,"115.000,00", SNI 6989.46:2009
+Cr,"Krom/Chromium, (Cr)",A,-,mg/L,"115.000,00", SNI 6989.65:2009
+Cr6+,"Krom Heksavalen/Hexavalent Chromium, (Cr6+)",A,-,mg/L,"115.000,00",SNI 6989.53:2010 
+Escherichia Coli,Escherichia coli,A,0,CFU/100 mL,"145.000,00",BS EN ISO 9308-1:2014+A1:2017  
+Total Coliform,Total coliform,A,0,CFU/100 mL,"145.000,00",BS EN ISO 9308-1:2014+A1:2017  
+Bau,Bau,A,Tidak Berbau,-,"12.500,00",SNI 06-6860-2002 
+Kekeruhan,Kekeruhan,A,"0,5",NTU,"20.000,00",SNI 06-6989.25-2005 
+Kejernihan,Kejernihan,A,16-40,ºC,"15.000,00",IKM.JLI-153 (Visual)
+Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC,"12.500,00",SNI 06-6989.23-2005 
+Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+Kepadatan Perenang  (Kedalaman  <1 m),Kepadatan Perenang  (Kedalaman  <1 m),NA,"2,2",M2/perenang,,-
+Kepadatan Perenang  (Kedalaman  1-1.5 m),Kepadatan Perenang  (Kedalaman  1-1.5 m),NA,"2,7",M2/perenang,,-
+Kepadatan Perenang  (Kedalaman  >1.5 m),Kepadatan Perenang  (Kedalaman  >1.5 m),NA,4,M2/perenang,,-
+Escherichia Coli,Escherichia coli,A,<1,CFU/100 mL,"145.000,00",BS EN ISO 9308-1:2014+A1:2017
+HPC,Heterotrophic Plate Count (HPC),S,100,CFU/100 mL,,-
+Pseudomonasaeru aureus,Pseudomonasaeru aureus,S,<1,-,,-
+Staphylococcus,Staphylococcus,S,<100,CFU/100 mL,,-
+Legionella spp,Legionella spp,S,<1,CFU/100 mL,,-
+pH,pH,A,7-7.80,-,"12.500,00",SNI 6989.11:2019 
+pH,pH,A,7-8,-,"12.500,00",SNI 6989.11:2019 
+Alkalinitas,Alkalinitas,NA,80-200,mg/L,"40.000,00",APHA 24th Edition 2320.B-2023 
+Sisa Khlor Bebas,Sisa Khlor Bebas,A,1-1.5,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri) 
+Sisa Khlor Bebas,Sisa Khlor Bebas,A,2-3,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri) 
+Sisa Khlor Terikat,Sisa Khlor Terikat,S,3,mg/L,,-
+Total Bromide,Total Bromide,S,2-2.5,mg/L,"1.600.000,00",-
+Total Bromide,Total Bromide,S,4-5,mg/L,"1.600.000,00",-
+Sisa Bromine,Sisa Bromine,S,3-4,mg/L,,-
+Bau,Bau,A,Tidak Berbau,-,"12.500,00",SNI 06-6860-2002 
+Kekeruhan,Kekeruhan,A,"0,5",NTU,"20.000,00",SNI 06-6989.25-2005 
+Kejernihan,Kejernihan,A,-,Piringan Terlihat Jelas,"15.000,00",IKM.JLI-153 (Visual)
+Suhu/Temperature,Suhu/Temperature,A,<40,ºC,"12.500,00",SNI 06-6989.23-2005 
+Suhu/Temperature,Suhu/Temperature,NA,<41,ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
+Escherichia coli,Escherichia coli,A,<1,CFU/100 mL,"145.000,00",BS EN ISO 9308-1:2014+A1:2017
+HPC,Heterotrophic Plate Count (HPC),S,<200,CFU/100 mL,,-
+Pseudomonas Aeruginosa,Pseudomonas Aeruginosa,S,<1,CFU/100 mL,,-
 Pseudomonas Aeruginosa,Pseudomonas Aeruginosa,S,<100,CFU/100 mL,,
-Legionella spp,Legionella spp,S,<1,CFU/100 mL,,
-pH,pH,A,7.2-7.80,-," Rp 12.500,00 ",
-pH,pH,A,7.2-8.0,-," Rp 125.000,00 ",
-Alkalinitas,Alkalinitas,NA,80-200,mg/L," Rp 40.000,00 ",
-Sisa Khlor Bebas,Sisa Khlor Bebas,A,1-1.5,mg/L," Rp 40.000,00 ",
-Sisa Khlor Bebas,Sisa Khlor Bebas,A,2-3,mg/L," Rp 40.000,00 ",
-Sisa Khlor Bebas,Sisa Khlor Bebas,S,3,mg/L," Rp 40.000,00 ",
-Total Bromide,Total Bromide,S,2-2.5,mg/L,,
-Sisa Bromine,Sisa Bromine,S,3-4,mg/L,,
+Legionella spp,Legionella spp,S,<1,CFU/100 mL,,-
+pH,pH,A,7.2-7.80,-,"12.500,00",SNI 6989.11:2019 
+pH,pH,A,7.2-8.0,-,"125.000,00",SNI 6989.11:2019 
+Alkalinitas,Alkalinitas,NA,80-200,mg/L,"40.000,00",APHA 24th Edition 2320.B-2023 
+Sisa Khlor Bebas,Sisa Khlor Bebas,A,1-1.5,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri) 
+Sisa Khlor Bebas,Sisa Khlor Bebas,A,2-3,mg/L,"40.000,00",IKM.JLI-86 (Spektrofotometri) 
+Sisa Khlor Bebas,Sisa Khlor Bebas,S,3,mg/L,"40.000,00",-
+Total Bromide,Total Bromide,S,2-2.5,mg/L,,-
+Sisa Bromine,Sisa Bromine,S,3-4,mg/L,,-

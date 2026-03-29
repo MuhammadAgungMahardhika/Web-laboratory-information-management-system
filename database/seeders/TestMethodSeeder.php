@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class TestMethodSeeder extends Seeder
 {
@@ -18,10 +19,29 @@ class TestMethodSeeder extends Seeder
 
         $csvData = array_map('str_getcsv', file($csvFile));
 
-        foreach ($csvData as $row) {
-            // Skip jika name sudah ada
+        foreach ($csvData as $index => $row) {
+
+            // Skip header (optional)
+            if ($index === 0) {
+                continue;
+            }
+
+            // Validasi minimal kolom
+            if (!isset($row[1])) {
+                continue;
+            }
+
+            // Bersihkan data
+            $name = trim($row[1]);
+            $name = preg_replace('/\s+/', ' ', $name); // hapus spasi double
+
+            if (empty($name)) {
+                continue;
+            }
+
+            // Cek duplikasi (case insensitive)
             $exists = DB::table('test_methods')
-                ->where('name', trim($row[1]))
+                ->whereRaw('LOWER(name) = ?', [strtolower($name)])
                 ->exists();
 
             if ($exists) {
@@ -29,9 +49,8 @@ class TestMethodSeeder extends Seeder
             }
 
             DB::table('test_methods')->insert([
-                'id'          => $row[0],
-                'name'        => trim($row[1]),
-                'description' => $row[2] ?? null,
+                'name'        => $name,
+                'description' => isset($row[2]) ? trim($row[2]) : null,
             ]);
         }
     }
