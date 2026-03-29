@@ -20,72 +20,108 @@ class ParameterSeeder extends Seeder
 
         foreach ($csvData as $index => $row) {
 
-            // Skip header (optional)
-            if ($index === 0) {
-                continue;
-            }
+            $code = $this->clean($row[0] ?? null);
+            if (empty($code)) continue;
 
-            $code = isset($row[0]) ? trim($row[0]) : null;
+            $longName = $this->clean($row[1] ?? null);
+            $status = $this->convertStatus($this->clean($row[2] ?? null));
+            $standardNotes = $this->clean($row[3] ?? null);
+            $unit = $this->clean($row[4] ?? null);
+            $price = $this->parseDecimal($row[5] ?? null);
 
-            if (empty($code)) {
-                continue;
-            }
-
-            // 🔥 Ambil nama metode dari CSV (kolom 6)
-            $testMethodName = isset($row[6]) ? trim($row[6]) : null;
+            // 🔥 Test Method
+            $testMethodName = $this->clean($row[6] ?? null);
             $testMethodId = null;
 
             if (!empty($testMethodName)) {
-
-                // Normalisasi spasi
-                $testMethodName = preg_replace('/\s+/', ' ', $testMethodName);
-
                 $method = DB::table('test_methods')
-                    ->whereRaw('LOWER(name) = ?', [strtolower($testMethodName)])
+                    ->whereRaw('LOWER(TRIM(name)) = ?', [strtolower($testMethodName)])
                     ->first();
 
                 if ($method) {
                     $testMethodId = $method->id;
                 } else {
-                    // ⚠️ Optional: skip atau log jika metode tidak ditemukan
-                    continue;
+                    logger("Test method tidak ditemukan: " . $testMethodName);
                 }
             }
 
-            $statusRaw = isset($row[2]) ? trim($row[2]) : null;
-            $status = $this->convertStatus($statusRaw);
-
-            $longName = isset($row[1]) && $row[1] !== '' ? trim($row[1]) : null;
-            $standardNotes = isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null;
-
-            // 🔥 Cek duplikat
-            $exists = DB::table('parameters')
+            // 🔥 Cek duplikat (FULL MATCH)
+            $query = DB::table('parameters')
                 ->where('long_name', $longName)
-                ->where('status', $status)
-                ->where('standard_notes', $standardNotes)
-                ->exists();
+                ->where('status', $status);
 
-            if ($exists) {
+            $query->when(
+                $standardNotes === null,
+                fn($q) => $q->whereNull('standard_notes'),
+                fn($q) => $q->where('standard_notes', $standardNotes)
+            );
+
+            $query->when(
+                $unit === null,
+                fn($q) => $q->whereNull('unit'),
+                fn($q) => $q->where('unit', $unit)
+            );
+
+            $query->when(
+                $testMethodId === null,
+                fn($q) => $q->whereNull('test_method_id'),
+                fn($q) => $q->where('test_method_id', $testMethodId)
+            );
+
+            if ($query->exists()) {
                 continue;
             }
 
             DB::table('parameters')->insert([
                 'code'           => $code,
                 'long_name'      => $longName,
-                'unit'           => isset($row[4]) ? trim($row[4]) : null,
+                'unit'           => $unit,
                 'status'         => $status,
-                'default_price'  => $this->parseDecimal($row[5] ?? null),
+                'default_price'  => $price,
                 'test_method_id' => $testMethodId,
                 'standard_notes' => $standardNotes,
             ]);
         }
     }
 
+    /**
+     * 🔥 CLEANER SUPER PENTING
+     */
+    private function clean(?string $value): ?string
+    {
+        if ($value === null) return null;
+
+        // Remove BOM & invisible chars
+        $value = preg_replace('/[\x00-\x1F\x7F\xA0]/u', ' ', $value);
+
+        // Normalize unicode symbols
+        $replace = [
+            'µ' => 'u',
+            '²' => '2',
+            '³' => '3',
+            '₀' => '0',
+            '₁' => '1',
+            '₂' => '2',
+            '₃' => '3',
+            '₄' => '4',
+            '₅' => '5',
+            '₆' => '6',
+            '₇' => '7',
+            '₈' => '8',
+            '₉' => '9',
+        ];
+
+        $value = str_replace(array_keys($replace), array_values($replace), $value);
+
+        // Normalize spacing
+        $value = preg_replace('/\s+/', ' ', $value);
+
+        return trim($value) !== '' ? trim($value) : null;
+    }
+
     private function parseDecimal(?string $value): ?float
     {
-        if ($value === null || $value === '') {
-            return null;
-        }
+        if ($value === null || $value === '') return null;
 
         $value = trim($value);
         $value = str_replace('.', '', $value);
@@ -96,13 +132,9 @@ class ParameterSeeder extends Seeder
 
     private function convertStatus(?string $status): ?int
     {
-        if ($status === null || $status === '') {
-            return null;
-        }
+        if ($status === null) return null;
 
-        $statusClean = strtoupper(trim($status));
-
-        return match ($statusClean) {
+        return match (strtoupper($status)) {
             'A' => 1,
             'NA' => 2,
             'S' => 3,

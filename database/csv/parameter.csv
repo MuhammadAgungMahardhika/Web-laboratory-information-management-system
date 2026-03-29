@@ -1,11 +1,11 @@
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",A,150,µg/m3,"185.000,00",SNI 7119-7:2017 
-SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",NA,75,µg/m3,"185.000,00",SNI 7119-7:2017 
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",A,150,µg/m3,"185.000,00",SNI 7119-7:2017
+SO2,"Sulfur Dioksida/ Sulphur Dioxide, (SO2) ",NA,75,µg/m3,"185.000,00",SNI 7119-7:2017
 CO,"Karbon Monoksida/ Carbon Monoxide, (CO) ",A,10000,µg/m3,"185.000,00",IKM.JLI-22 (CO meter)
 CO,"Karbon Monoksida/ Carbon Monoxide, (CO) ",A,4000,µg/m3,"185.000,00",IKM.JLI-22 (CO meter)
 NO2,"Nitrogen Dioksida/ Nitrogen Dioxide, (NO2) ",A,200,µg/m3,"185.000,00",SNI 19-7119.2-2005
 NO2,"Nitrogen Dioksida/ Nitrogen Dioxide, (NO2) ",NA,65,µg/m3,"185.000,00",SNI 19-7119.2-2005
 O3,"Oksidan Fotokimia Sebagai Ozon/ Photochemical Oxidant (Ox) As Ozone,  (O3) ",A,150,µg/m3,"185.000,00",SNI 19-7119.8-2005
-O4,"Oksidan Fotokimia Sebagai Ozon/ Photochemical Oxidant (Ox) As Ozone,  (O3) ",NA,100,µg/m3,"185.000,00",SNI 19-7119.8-2005
+O3,"Oksidan Fotokimia Sebagai Ozon/ Photochemical Oxidant (Ox) As Ozone,  (O3) ",NA,100,µg/m3,"185.000,00",SNI 19-7119.8-2005
 NMHC,"Hidrokarbon non Metana/Non-Methane Hydrocarbons, (NMHC)",S,160,µg/m3,"2.015.000,00",SNI 7119.13:2009
 TSP,"Partikulat Debu <100µm/ Particulate Matter < 100µm, (TSP)",A,230,µg/m3,"450.000,00",SNI 7119-3-2017 
 PM10,"Partikulat Debu <10µm/ Particulate Matter < 10µm, (PM10",A,75,µg/m3,"250.000,00",SNI 7119-15:2016 
@@ -654,9 +654,9 @@ Kekeruhan,Kekeruhan,A,"0,5",NTU,"20.000,00",SNI 06-6989.25-2005
 Kejernihan,Kejernihan,A,16-40,ºC,"15.000,00",IKM.JLI-153 (Visual)
 Temperature,Suhu/Temperature,A,Suhu udara ± 3,ºC,"12.500,00",SNI 06-6989.23-2005 
 Temperature,Suhu/Temperature,NA,Suhu udara ± 4,ºC,"12.500,00",IKM.JLI-165 (Thermometer Digital) 
-Kepadatan Perenang  (Kedalaman  <1 m),Kepadatan Perenang  (Kedalaman  <1 m),NA,"2,2",M2/perenang,,-
-Kepadatan Perenang  (Kedalaman  1-1.5 m),Kepadatan Perenang  (Kedalaman  1-1.5 m),NA,"2,7",M2/perenang,,-
-Kepadatan Perenang  (Kedalaman  >1.5 m),Kepadatan Perenang  (Kedalaman  >1.5 m),NA,4,M2/perenang,,-
+Kepadatan Perenang,Kepadatan Perenang  (Kedalaman  <1 m),NA,"2,2",M2/perenang,,-
+Kepadatan Perenang,Kepadatan Perenang  (Kedalaman  1-1.5 m),NA,"2,7",M2/perenang,,-
+Kepadatan Perenang,Kepadatan Perenang  (Kedalaman  >1.5 m),NA,4,M2/perenang,,-
 Escherichia Coli,Escherichia coli,A,<1,CFU/100 mL,"145.000,00",BS EN ISO 9308-1:2014+A1:2017
 HPC,Heterotrophic Plate Count (HPC),S,100,CFU/100 mL,,-
 Pseudomonasaeru aureus,Pseudomonasaeru aureus,S,<1,-,,-
