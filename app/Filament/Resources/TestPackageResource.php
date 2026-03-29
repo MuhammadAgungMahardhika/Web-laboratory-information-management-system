@@ -138,6 +138,8 @@ class TestPackageResource extends Resource
                     ->boolean(),
                 TextColumn::make('parameters.long_name_standard_notes')
                     ->label('Parameter')
+                    ->limitList(5)
+                    ->expandableLimitedList()
                     ->listWithLineBreaks()
                     ->searchable()
                     ->badge()
