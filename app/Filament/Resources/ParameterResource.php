@@ -95,7 +95,6 @@ class ParameterResource extends Resource
                     ->label('Metode uji')
                     ->relationship('testMethod', 'name')
                     ->searchable()
-                    ->required()
                     ->preload()
                     ->createOptionForm([
                         TextInput::make('code')

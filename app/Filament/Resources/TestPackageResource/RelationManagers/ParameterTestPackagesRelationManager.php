@@ -19,6 +19,7 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\PaginationMode;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rule;
 
 class ParameterTestPackagesRelationManager extends RelationManager
 {
@@ -32,7 +33,11 @@ class ParameterTestPackagesRelationManager extends RelationManager
                 Select::make('parameter_id')
                     ->relationship('parameter', 'long_name_standard_notes')
                     ->label('Parameter Uji')
-                    ->unique(ignoreRecord: true)
+                    ->rule(function ($record) {
+                        return Rule::unique('parameter_test_packages', 'parameter_id')
+                            ->where('test_package_id', $this->ownerRecord->id)
+                            ->ignore($record?->id);
+                    })
                     ->required()
                     ->searchable()
                     ->preload()

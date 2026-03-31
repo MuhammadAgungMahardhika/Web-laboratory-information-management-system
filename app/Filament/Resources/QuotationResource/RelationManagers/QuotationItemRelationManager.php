@@ -79,7 +79,11 @@ class QuotationItemRelationManager extends RelationManager
                         ->label('Produk Uji')
                         // ->required()
                         ->relationship('testPackage', 'name', modifyQueryUsing: fn(Builder $query) => $query->with('regulation'))
-                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} ({$record->regulation->name})")
+                        ->getOptionLabelFromRecordUsing(
+                            fn(Model $record) =>
+                            $record->name .
+                                ($record->regulation ? " ({$record->regulation->name})" : '')
+                        )
                         ->searchable()
                         ->reactive()
                         ->afterStateUpdated(function ($state, Set $set) {

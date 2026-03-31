@@ -94,8 +94,8 @@ class TestPackageResource extends Resource
 
                 Select::make('regulation_id')
                     ->label('Regulasi/Standar')
-                    ->searchable()
-                    ->relationship('regulation', 'name')
+                    ->searchable(['long_name', 'name'])
+                    ->relationship('regulation', 'long_name')
                     ->preload(),
 
                 Toggle::make('is_active')
@@ -126,8 +126,9 @@ class TestPackageResource extends Resource
                     ->label('Matrix sampel')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('regulation.code')
+                TextColumn::make('regulation.long_name')
                     ->label('Regulasi')
+                    ->limit(10)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price')
