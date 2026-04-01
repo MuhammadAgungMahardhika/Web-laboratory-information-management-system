@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TestResults;
 
+use App\Filament\Clusters\Master\MasterCluster;
 use App\Filament\Resources\TestResults\Pages\CreateTestResult;
 use App\Filament\Resources\TestResults\Pages\EditTestResult;
 use App\Filament\Resources\TestResults\Pages\ListTestResults;
@@ -19,6 +20,7 @@ use Filament\Tables\Table;
 
 class TestResultResource extends Resource
 {
+
     protected static ?string $model = TestResult::class;
     protected static ?string $navigationLabel = 'Hasil Pengujian';
     protected static ?string $label = 'Hasil Pengujian';

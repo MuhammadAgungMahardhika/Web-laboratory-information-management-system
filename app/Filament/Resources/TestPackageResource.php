@@ -36,13 +36,14 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestPackageResource extends Resource
 {
-    protected static ?string $cluster = MasterCluster::class;
+    // protected static ?string $cluster = MasterCluster::class;
 
     protected static ?string $model = TestPackage::class;
     protected static ?string $navigationLabel = 'Produk Uji';
@@ -118,6 +119,10 @@ class TestPackageResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultGroup('regulation.name')
+            ->groups([
+                Group::make('regulation.name')->label('')->collapsible(),
+            ])
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama paket pengujian')
@@ -166,8 +171,9 @@ class TestPackageResource extends Resource
                     ->preload(),
                 SelectFilter::make('regulation_id')
                     ->label('Regulasi')
-                    ->relationship('regulation', 'name')
-                    ->searchable()
+                    ->columnSpan(2)
+                    ->relationship('regulation', 'long_name')
+                    ->searchable(['name', 'long_name'])
                     ->preload(),
                 SelectFilter::make('is_active')
                     ->label('Aktif ?')
