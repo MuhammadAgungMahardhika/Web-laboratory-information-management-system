@@ -24,10 +24,9 @@
             color: #333;
         }
 
-        /* Page Break */
         .page {
             page-break-after: always;
-            margin: 210px 60px;
+            margin: 230px 60px 70px 60px;
             min-height: 100vh;
             position: relative;
         }
@@ -40,10 +39,8 @@
             max-width: 100%;
             margin: 0;
             padding: 0 0 5px 5px;
-
         }
 
-        /* Header */
         .header {
             position: fixed;
             top: 0;
@@ -77,13 +74,10 @@
 
         .header-quotation-info tr:first-child td {
             background-color: #bedff3;
-            /* warna langit biru */
             font-size: 16pt;
-            /* lebih besar dari yang lain */
             font-weight: bold;
         }
 
-        /* Fixed Footer */
         .footer-fixed {
             position: fixed;
             bottom: 0;
@@ -94,42 +88,46 @@
             z-index: 1000;
             padding: 0px 60px;
             margin: 0;
-            display: flex;
+            display: table;
+            width: 100%;
         }
 
         .footer-image {
-            width: 90%;
-            height: 100%;
+            display: table-cell;
+            width: 88%;
+            height: 50px;
+            vertical-align: middle;
         }
 
         .footer-image img {
             width: 100%;
-            height: 100%;
+            height: 50px;
             object-fit: cover;
             display: block;
         }
 
         .footer-page-number {
-            width: 10%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: table-cell;
+            width: 12%;
+            height: 50px;
+            vertical-align: middle;
+            text-align: center;
             border: 2px solid #333;
             font-weight: bold;
-            font-size: 12pt;
+            font-size: 11pt;
             background: white;
+            white-space: nowrap;
         }
 
-        /* Header Info */
+        .footer-page-number::after {
+            content: counter(page);
+        }
+
         .header-info {
             width: 100%;
             border: 2px solid #333;
-            /* outline luar */
             border-collapse: collapse;
             font-size: 8pt;
-            padding-top: 10px;
-            padding-bottom: 10px;
         }
 
         .header-info td {
@@ -140,13 +138,7 @@
         .header-info td:first-child,
         .header-info td:nth-child(3) {
             width: 15%;
-            /* label kolom */
             font-weight: bold;
-        }
-
-        .info-label {
-            font-weight: bold;
-            min-width: 50px;
         }
 
         .greeting {
@@ -168,7 +160,6 @@
 
         .price-inword {
             font-weight: bold;
-
         }
 
         .closing-text {
@@ -176,19 +167,15 @@
             font-size: 8.5pt;
         }
 
-        /* Signature for Page 1 */
         .signature-container {
             width: 100%;
             text-align: right;
-            /* Geser seluruh blok ke kanan */
             margin-top: 40px;
         }
 
         .signature-page1 {
             display: inline-block;
-            /* Supaya lebarnya hanya selebar konten */
             text-align: left;
-            /* Isi teks di dalam tetap mulai dari kiri */
         }
 
         .signature-page1 p {
@@ -196,11 +183,10 @@
         }
 
         .signature-box-page1 {
-            height: 60px;
+            height: 50px;
             width: 150px;
             margin: 10px 0;
             border-bottom: 1px solid #000;
-            /* Garis tanda tangan */
         }
 
         .section-title {
@@ -213,7 +199,6 @@
             margin: 10px 0;
         }
 
-        /* Tabel Items */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -291,7 +276,6 @@
             text-align: center;
         }
 
-        /* Summary */
         .summary-section {
             margin-top: 10px;
         }
@@ -331,9 +315,9 @@
             font-size: 8pt;
         }
 
-        /* Signature Page 2 */
         .signature-section {
-            margin-top: 20px;
+            margin-top: 10px;
+            page-break-inside: avoid;
         }
 
         .signature-table {
@@ -346,7 +330,7 @@
         .signature-table td {
             width: 50%;
             vertical-align: top;
-            padding: 10px 12px;
+            padding: 8px 12px;
             border-right: 1px solid #000;
         }
 
@@ -354,32 +338,27 @@
             border-right: none;
         }
 
+        /* Kotak TTD dikecilkan */
         .signature-box {
             border-bottom: 1px solid #000;
             box-sizing: border-box;
-            height: 100px;
+            height: 70px;
             position: relative;
             margin: 0;
         }
 
-        /* placeholder teks di tengah kotak */
         .signature-box .placeholder {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            /* centra horizontal + vertical */
             margin: 0;
             font-size: 7.5pt;
             color: #666;
-            /* warna abu agar terlihat seperti placeholder */
             line-height: 1;
             white-space: nowrap;
-            /* jangan pecah baris */
             pointer-events: none;
-            /* agar tidak mempengaruhi interaksi */
         }
-
 
         .signature-table strong {
             font-size: 9pt;
@@ -401,7 +380,6 @@
             font-size: 8pt;
         }
 
-        /* Policy */
         .policy-section {
             margin-top: 15px;
         }
@@ -418,7 +396,6 @@
             font-size: 7.5pt;
             line-height: 1.4;
         }
-
 
         .policy-section li {
             margin-bottom: 5px;
@@ -472,15 +449,14 @@
             }
         }
     </style>
-
 </head>
 
 <body>
+    <!-- HEADER FIXED -->
     <div class="header">
         @php
             $dynamicKorpPath = $company->active_setting?->letterhead_path;
             $korpPath = $dynamicKorpPath ? public_path("storage/{$dynamicKorpPath}") : public_path('images/korp.jpg');
-
             $korpBase64 = '';
             if (file_exists($korpPath)) {
                 $korpData = file_get_contents($korpPath);
@@ -491,10 +467,9 @@
         @if ($korpBase64)
             <img src="{{ $korpBase64 }}" alt="Kop Surat">
         @endif
-
         <table class="header-quotation-info">
             <tr>
-                <td><strong>Quotation Letter </strong></td>
+                <td><strong>Quotation Letter</strong></td>
             </tr>
             <tr>
                 <td>No.Quo: {{ $quotation->quotation_number }}</td>
@@ -507,7 +482,8 @@
             </tr>
         </table>
     </div>
-    <!-- Fixed Footer - Image 80% + Page Number 20% -->
+
+    <!-- FOOTER FIXED -->
     <div class="footer-fixed">
         <div class="footer-image">
             @php
@@ -523,27 +499,12 @@
                 <img src="{{ $footerBase64 }}" alt="Footer">
             @endif
         </div>
-        <div class="footer-page-number">
-            <span class="page-number"></span>
-        </div>
+        <div class="footer-page-number"></div>
     </div>
 
-    <script>
-        // Auto page numbering
-        document.addEventListener('DOMContentLoaded', function() {
-            const pages = document.querySelectorAll('.page');
-            const pageNumbers = document.querySelectorAll('.page-number');
-            const totalPages = pages.length;
-
-            if (pageNumbers.length > 0) {
-                pageNumbers[0].textContent = '1 / ' + totalPages;
-            }
-        });
-    </script>
-    <!-- HALAMAN 1: Surat Pengantar -->
+    <!-- HALAMAN 1 -->
     <div class="page">
         <div class="container">
-            <!-- Header Info Box -->
             <table class="header-info">
                 <tr>
                     <td><strong>PIC</strong></td>
@@ -563,11 +524,8 @@
                 </tr>
             </table>
 
-
-            <!-- Greeting -->
             <div class="greeting">Dengan Hormat;</div>
 
-            <!-- Introduction -->
             <div class="intro-text">
                 Terima kasih sudah memberi kepercayaan kepada {{ $company->name ?? 'Laboratorium Kami' }}.
                 Menindaklanjuti permintaan dari <strong>{{ $quotation->customer->name ?? '-' }}</strong>
@@ -584,9 +542,7 @@
                     @endphp
                     {{ number_format($totalHarga, 0, ',', '.') }},-
                 </span>
-                <span class="price-inword">
-                    ({{ rupiahInWords($totalHarga) }})
-                </span>
+                <span class="price-inword">({{ rupiahInWords($totalHarga) }})</span>
                 dengan rincian anggaran biaya selengkapnya pada halaman berikutnya.
             </div>
 
@@ -605,7 +561,6 @@
                 <p>Demikianlah yang dapat kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
             </div>
 
-            <!-- Signature -->
             <div class="signature-container">
                 <div class="signature-page1">
                     <p><strong>Hormat Kami,</strong></p>
@@ -618,16 +573,14 @@
         </div>
     </div>
 
-    <!-- HALAMAN 2: Detail Penawaran -->
+    <!-- HALAMAN 2 -->
     <div class="page">
         <div class="container">
-            <!-- Section Title -->
             <div class="section-title">
                 DAFTAR RINCIAN, JUMLAH DAN HARGA BARANG/PEKERJAAN<br>
                 {{ strtoupper($quotation->quotation_name ?? 'PENAWARAN') }}
             </div>
 
-            <!-- Items Table -->
             <div class="table-wrapper">
                 <table class="items-table">
                     <thead>
@@ -658,14 +611,10 @@
                         @endphp
 
                         @foreach ($groupedItems as $group => $items)
-                            {{-- Group Header --}}
                             <tr class="section-header">
                                 <td colspan="9"><strong>{{ $groupLabels[$group] ?? $group }}</strong></td>
                             </tr>
-
                             @php $groupSubtotal = 0; @endphp
-
-                            {{-- Items in Group --}}
                             @foreach ($items as $item)
                                 @php
                                     $itemTotal = ($item->quantity ?? 0) * $item->price * ($item->frequency ?? 1);
@@ -694,21 +643,18 @@
                                     <td class="text-right">{{ number_format($itemTotal, 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
-
-                            {{-- Group Subtotal --}}
                             <tr style="background-color: #f0f0f0;">
                                 <td colspan="8" class="text-right"><strong>Sub Total {{ $group }}</strong>
                                 </td>
                                 <td class="text-right">
-                                    <strong>{{ number_format($groupSubtotal, 0, ',', '.') }}</strong>
-                                </td>
+                                    <strong>{{ number_format($groupSubtotal, 0, ',', '.') }}</strong></td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
-            <!-- Summary -->
+            {{-- Summary mengalir natural, tidak ada page-break paksa --}}
             <div class="summary-section">
                 <table class="summary-table">
                     <tr>
@@ -747,27 +693,24 @@
                         </td>
                     </tr>
                 </table>
-
                 <div class="terbilang">
                     Terbilang:
                     {{ $quotation->total_in_words ?? 'Tujuh puluh enam juta seratus sembilan puluh satu ribu rupiah' }}
                 </div>
             </div>
 
-            <!-- Signature -->
+            {{-- TTD: page-break-inside avoid agar tidak terpotong di tengah --}}
             <div class="signature-section">
                 <table class="signature-table">
                     <tr>
-                        <!-- Kolom Kiri -->
                         <td>
                             <strong>Persetujuan biaya yang kami tawarkan</strong>
                             <div class="signature-box">
-                                <p class="placeholder">Tanda tangan & cap perusahaan</p>
+                                <p class="placeholder">Tanda tangan &amp; cap perusahaan</p>
                             </div>
                             <p>Nama: ........................</p>
                             <p>Jabatan: ........................</p>
                         </td>
-                        <!-- Kolom Kanan -->
                         <td>
                             <strong>Hormat Kami</strong><br>
                             <strong>{{ $company->name ?? 'PT. Nama Perusahaan' }}</strong>
@@ -778,14 +721,13 @@
                     </tr>
                 </table>
             </div>
-        </div>
 
+        </div>
     </div>
 
-    <!-- HALAMAN 3: Syarat & Ketentuan -->
+    <!-- HALAMAN 3 -->
     <div class="page">
         <div class="container">
-            <!-- Policy -->
             <div class="policy-section">
                 @if ($quotation->additional_description)
                     {!! $quotation->additional_description !!}
@@ -796,34 +738,27 @@
                             dengan jumlah yang sebenarnya;</li>
                         <li>Penawaran harga berlaku untuk 1 (satu) bulan;</li>
                         <li>Jangka waktu analisis adalah 10 (sepuluh) hari kerja untuk parameter rutin dan 16 (enam
-                            belas)
-                            hari kerja untuk parameter subkontrak, kecuali tanah;</li>
+                            belas) hari kerja untuk parameter subkontrak, kecuali tanah;</li>
                         <li>Untuk permintaan analisis ulang (re-analisis) akan dikenakan biaya lagi sesuai harga
-                            analisis
-                            dengan ketentuan bahwa sampel tersebut masih cukup untuk dianalisis ulang;</li>
+                            analisis dengan ketentuan bahwa sampel tersebut masih cukup untuk dianalisis ulang;</li>
                         <li>Laporan hasil analisis akan dikirim melalui email (sebagai draft), sedangkan hasil analisis
-                            asli
-                            akan dikirimkan bersamaan dengan tagihan;</li>
+                            asli akan dikirimkan bersamaan dengan tagihan;</li>
                         <li>{{ $company->name ?? 'Laboratorium' }} akan mengeluarkan laporan akhir dari hasil pengujian
                             berupa Laporan Hasil Pengujian (LHP) berdasarkan atas semua informasi yang diberikan. Untuk
-                            itu
-                            pihak pelanggan diminta untuk meyakinkan bahwa semua informasi yang diberikan sudah sah dan
-                            benar; dan</li>
+                            itu pihak pelanggan diminta untuk meyakinkan bahwa semua informasi yang diberikan sudah sah
+                            dan benar; dan</li>
                         <li>Bagi pelanggan yang tidak menerbitkan Purchase Order (PO) atau Surat Perintah Kerja (SPK)
-                            dapat
-                            menanda tangani penawaran ini dan mengirimkannya kembali melalui alamat email
+                            dapat menanda tangani penawaran ini dan mengirimkannya kembali melalui alamat email
                             {{ $company->name ?? 'Laboratorium' }}.</li>
                     </ol>
 
                     <div class="policy-title">Syarat Pembayaran</div>
                     <ol>
                         <li>Untuk nominal tagihan di atas Rp10.000.000,00 wajib membayarkan DP sebesar 50% sebelum
-                            kegiatan
-                            dilaksanakan;</li>
+                            kegiatan dilaksanakan;</li>
                         <li>Pembayaran dilakukan sebelum hasil analisa diterima; dan</li>
                         <li>Pembayaran dilakukan secara transfer ke Rekening {{ $company->name ?? 'Perusahaan' }};
-                            yaitu
-                        </li>
+                            yaitu</li>
                     </ol>
 
                     <div class="bank-info">
@@ -841,6 +776,7 @@
                         </div>
                     </div>
                 @endif
+
                 <div style="text-align: center; margin-top: 20px; font-size: 8pt;">
                     <p>-------End-------</p>
                 </div>
@@ -856,6 +792,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 </html>
