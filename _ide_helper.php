@@ -23538,204 +23538,461 @@ namespace Barryvdh\Debugbar\Facades {
             }
     }
 
-namespace Barryvdh\DomPDF\Facade {
+namespace Barryvdh\Snappy\Facades {
     /**
-     * @method static BasePDF setBaseHost(string $baseHost)
-     * @method static BasePDF setBasePath(string $basePath)
-     * @method static BasePDF setCanvas(\Dompdf\Canvas $canvas)
-     * @method static BasePDF setCallbacks(array<string, mixed> $callbacks)
-     * @method static BasePDF setCss(\Dompdf\Css\Stylesheet $css)
-     * @method static BasePDF setDefaultView(string $defaultView, array<string, mixed> $options)
-     * @method static BasePDF setDom(\DOMDocument $dom)
-     * @method static BasePDF setFontMetrics(\Dompdf\FontMetrics $fontMetrics)
-     * @method static BasePDF setHttpContext(resource|array<string, mixed> $httpContext)
-     * @method static BasePDF setPaper(string|float[] $paper, string $orientation = 'portrait')
-     * @method static BasePDF setProtocol(string $protocol)
-     * @method static BasePDF setTree(\Dompdf\Frame\FrameTree $tree)
      */
-    class Pdf {
+    class SnappyPdf {
         /**
-         * Get the DomPDF instance
+         * Get the Snappy instance.
          *
+         * @return \Knp\Snappy\Pdf
          * @static
          */
-        public static function getDomPDF()
+        public static function snappy()
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->getDomPDF();
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->snappy();
+        }
+
+        /**
+         * Set temporary folder
+         *
+         * @param string $path
+         * @static
+         */
+        public static function setTemporaryFolder($path)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setTemporaryFolder($path);
+        }
+
+        /**
+         * Set the paper size (default A4)
+         *
+         * @param string $paper
+         * @param string $orientation
+         * @return \Barryvdh\Snappy\PdfWrapper
+         * @static
+         */
+        public static function setPaper($paper, $orientation = null)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setPaper($paper, $orientation);
+        }
+
+        /**
+         * Set the orientation (default portrait)
+         *
+         * @param string $orientation
+         * @return \Barryvdh\Snappy\PdfWrapper
+         * @static
+         */
+        public static function setOrientation($orientation)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setOrientation($orientation);
         }
 
         /**
          * Show or hide warnings
          *
+         * @param bool $warnings
+         * @return \Barryvdh\Snappy\PdfWrapper
+         * @deprecated
          * @static
          */
         public static function setWarnings($warnings)
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
             return $instance->setWarnings($warnings);
+        }
+
+        /**
+         * @param string $name
+         * @param mixed $value
+         * @return \Barryvdh\Snappy\PdfWrapper
+         * @static
+         */
+        public static function setOption($name, $value)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setOption($name, $value);
+        }
+
+        /**
+         * @param array $options
+         * @return \Barryvdh\Snappy\PdfWrapper
+         * @static
+         */
+        public static function setOptions($options)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setOptions($options);
         }
 
         /**
          * Load a HTML string
          *
-         * @param string|null $encoding Not used yet
+         * @param Array|string|\Illuminate\Contracts\Support\Renderable $html
+         * @return \Barryvdh\Snappy\PdfWrapper
          * @static
          */
-        public static function loadHTML($string, $encoding = null)
+        public static function loadHTML($html)
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->loadHTML($string, $encoding);
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->loadHTML($html);
         }
 
         /**
          * Load a HTML file
          *
+         * @param string $file
+         * @return \Barryvdh\Snappy\PdfWrapper
          * @static
          */
         public static function loadFile($file)
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
             return $instance->loadFile($file);
-        }
-
-        /**
-         * Add metadata info
-         *
-         * @param array<string, string> $info
-         * @static
-         */
-        public static function addInfo($info)
-        {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->addInfo($info);
         }
 
         /**
          * Load a View and convert to HTML
          *
-         * @param array<string, mixed> $data
-         * @param array<string, mixed> $mergeData
-         * @param string|null $encoding Not used yet
+         * @param string $view
+         * @param array $data
+         * @param array $mergeData
+         * @return \Barryvdh\Snappy\PdfWrapper
          * @static
          */
-        public static function loadView($view, $data = [], $mergeData = [], $encoding = null)
+        public static function loadView($view, $data = [], $mergeData = [])
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->loadView($view, $data, $mergeData, $encoding);
-        }
-
-        /**
-         * Set/Change an option (or array of options) in Dompdf
-         *
-         * @param array<string, mixed>|string $attribute
-         * @param null|mixed $value
-         * @static
-         */
-        public static function setOption($attribute, $value = null)
-        {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->setOption($attribute, $value);
-        }
-
-        /**
-         * Replace all the Options from DomPDF
-         *
-         * @param array<string, mixed> $options
-         * @static
-         */
-        public static function setOptions($options, $mergeWithDefaults = false)
-        {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->setOptions($options, $mergeWithDefaults);
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->loadView($view, $data, $mergeData);
         }
 
         /**
          * Output the PDF as a string.
-         * 
-         * The options parameter controls the output. Accepted options are:
-         * 
-         * 'compress' = > 1 or 0 - apply content stream compression, this is
-         *    on (1) by default
          *
-         * @param array<string, int> $options
          * @return string The rendered PDF as string
+         * @throws \InvalidArgumentException
          * @static
          */
-        public static function output($options = [])
+        public static function output()
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->output($options);
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->output();
         }
 
         /**
          * Save the PDF to a file
          *
+         * @param $filename
+         * @return \Barryvdh\Snappy\PdfWrapper
          * @static
          */
-        public static function save($filename, $disk = null)
+        public static function save($filename, $overwrite = false)
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->save($filename, $disk);
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->save($filename, $overwrite);
         }
 
         /**
          * Make the PDF downloadable by the user
          *
+         * @param string $filename
+         * @return \Illuminate\Http\Response
          * @static
          */
         public static function download($filename = 'document.pdf')
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
             return $instance->download($filename);
         }
 
         /**
          * Return a response with the PDF to show in the browser
          *
+         * @param string $filename
+         * @return \Illuminate\Http\Response
+         * @static
+         */
+        public static function inline($filename = 'document.pdf')
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->inline($filename);
+        }
+
+        /**
+         * Return a response with the PDF to show in the browser
+         *
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\StreamedResponse
+         * @deprecated use inline() instead
          * @static
          */
         public static function stream($filename = 'document.pdf')
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
             return $instance->stream($filename);
         }
 
         /**
-         * Render the PDF
-         *
          * @static
          */
-        public static function render()
+        public static function assertViewIs($value)
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->render();
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewIs($value);
         }
 
         /**
-         * @param array<string> $pc
+         * Assert that the response view has a given piece of bound data.
+         *
+         * @param string|array $key
+         * @param mixed $value
+         * @return \Barryvdh\Snappy\PdfFaker
          * @static
          */
-        public static function setEncryption($password, $ownerpassword = '', $pc = [])
+        public static function assertViewHas($key, $value = null)
         {
-            /** @var \Barryvdh\DomPDF\PDF $instance */
-            return $instance->setEncryption($password, $ownerpassword, $pc);
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewHas($key, $value);
+        }
+
+        /**
+         * Assert that the response view has a given list of bound data.
+         *
+         * @param array $bindings
+         * @return \Barryvdh\Snappy\PdfFaker
+         * @static
+         */
+        public static function assertViewHasAll($bindings)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewHasAll($bindings);
+        }
+
+        /**
+         * Assert that the response view is missing a piece of bound data.
+         *
+         * @param string $key
+         * @return \Barryvdh\Snappy\PdfFaker
+         * @static
+         */
+        public static function assertViewMissing($key)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewMissing($key);
+        }
+
+        /**
+         * Assert that the given string is contained within the response.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker
+         * @static
+         */
+        public static function assertSee($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertSee($value);
+        }
+
+        /**
+         * Assert that the given string is contained within the response text.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker
+         * @static
+         */
+        public static function assertSeeText($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertSeeText($value);
+        }
+
+        /**
+         * Assert that the given string is not contained within the response.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker
+         * @static
+         */
+        public static function assertDontSee($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertDontSee($value);
+        }
+
+        /**
+         * Assert that the given string is not contained within the response text.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker
+         * @static
+         */
+        public static function assertDontSeeText($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertDontSeeText($value);
+        }
+
+        /**
+         * Assert that the given string is equal to the saved filename.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker
+         * @static
+         */
+        public static function assertFileNameIs($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertFileNameIs($value);
         }
 
             }
     /**
-     * @method static BasePDF setBaseHost(string $baseHost)
-     * @method static BasePDF setBasePath(string $basePath)
-     * @method static BasePDF setCanvas(\Dompdf\Canvas $canvas)
-     * @method static BasePDF setCallbacks(array<string, mixed> $callbacks)
-     * @method static BasePDF setCss(\Dompdf\Css\Stylesheet $css)
-     * @method static BasePDF setDefaultView(string $defaultView, array<string, mixed> $options)
-     * @method static BasePDF setDom(\DOMDocument $dom)
-     * @method static BasePDF setFontMetrics(\Dompdf\FontMetrics $fontMetrics)
-     * @method static BasePDF setHttpContext(resource|array<string, mixed> $httpContext)
-     * @method static BasePDF setPaper(string|float[] $paper, string $orientation = 'portrait')
-     * @method static BasePDF setProtocol(string $protocol)
-     * @method static BasePDF setTree(\Dompdf\Frame\FrameTree $tree)
+     */
+    class SnappyImage {
+        /**
+         * Get the Snappy instance.
+         *
+         * @return \Knp\Snappy\Image
+         * @static
+         */
+        public static function snappy()
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->snappy();
+        }
+
+        /**
+         * @static
+         */
+        public static function setOption($name, $value)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->setOption($name, $value);
+        }
+
+        /**
+         * @static
+         */
+        public static function setOptions($options)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->setOptions($options);
+        }
+
+        /**
+         * Load a HTML string
+         *
+         * @param string $string
+         * @return static
+         * @static
+         */
+        public static function loadHTML($string)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->loadHTML($string);
+        }
+
+        /**
+         * Load a HTML file
+         *
+         * @param string $file
+         * @return static
+         * @static
+         */
+        public static function loadFile($file)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->loadFile($file);
+        }
+
+        /**
+         * @static
+         */
+        public static function loadView($view, $data = [], $mergeData = [])
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->loadView($view, $data, $mergeData);
+        }
+
+        /**
+         * Output the PDF as a string.
+         *
+         * @return string The rendered PDF as string
+         * @throws \InvalidArgumentException
+         * @static
+         */
+        public static function output()
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->output();
+        }
+
+        /**
+         * Save the image to a file
+         *
+         * @param $filename
+         * @return static
+         * @static
+         */
+        public static function save($filename, $overwrite = false)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->save($filename, $overwrite);
+        }
+
+        /**
+         * Make the image downloadable by the user
+         *
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\Response
+         * @static
+         */
+        public static function download($filename = 'image.jpg')
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->download($filename);
+        }
+
+        /**
+         * Return a response with the image to show in the browser
+         *
+         * @param string $filename
+         * @return \Illuminate\Http\Response
+         * @static
+         */
+        public static function inline($filename = 'image.jpg')
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->inline($filename);
+        }
+
+        /**
+         * Return a response with the image to show in the browser
+         *
+         * @deprecated Use inline() instead
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\Response
+         * @static
+         */
+        public static function stream($filename = 'image.jpg')
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->stream($filename);
+        }
+
+            }
+    }
+
+namespace Barryvdh\DomPDF\Facade {
+    /**
+     * @method static \Barryvdh\Snappy\PdfWrapper setPaper($paper, $orientation = 'portrait')
+     * @method static \Illuminate\Http\Response inline($filename = 'document.pdf')
      */
     class Pdf {
         /**
@@ -32757,8 +33014,9 @@ namespace  {
     class Vite extends \Illuminate\Support\Facades\Vite {}
     class EloquentSerialize extends \AnourValar\EloquentSerialize\Facades\EloquentSerializeFacade {}
     class Debugbar extends \Barryvdh\Debugbar\Facades\Debugbar {}
-    class PDF extends \Barryvdh\DomPDF\Facade\Pdf {}
+    class PDF extends \Barryvdh\Snappy\Facades\SnappyPdf {}
     class Pdf extends \Barryvdh\DomPDF\Facade\Pdf {}
+    class SnappyImage extends \Barryvdh\Snappy\Facades\SnappyImage {}
     class Livewire extends \Livewire\Livewire {}
 }
 

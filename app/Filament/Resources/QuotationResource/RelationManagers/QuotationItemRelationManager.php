@@ -224,10 +224,10 @@ class QuotationItemRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('description')
                     ->label('Deskripsi')
-                    ->size(TextSize::Small),
+                    ->size(TextSize::ExtraSmall),
                 TextColumn::make('regulation_name')
                     ->label('Regulasi')
-                    ->size(TextSize::Small),
+                    ->size(TextSize::ExtraSmall),
                 TextColumn::make('parameterQuotationItems')
                     ->badge()
                     ->listWithLineBreaks()
@@ -241,26 +241,26 @@ class QuotationItemRelationManager extends RelationManager
                             : $state->parameter_code
                     )
                     ->color(fn($state) => ParameterStatusEnum::color($state->parameter_status))
-                    ->size(TextSize::Small)
+                    ->size(TextSize::ExtraSmall)
                     ->label('Parameter'),
 
                 TextColumn::make('quantity')
-                    ->size(TextSize::Small)
+                    ->size(TextSize::ExtraSmall)
                     ->alignEnd()
                     ->label('Kuantitas'),
                 TextColumn::make('unit')
-                    ->size(TextSize::Small)
+                    ->size(TextSize::ExtraSmall)
                     ->label('Satuan'),
                 TextColumn::make('price')
                     ->label('Harga')
                     ->alignEnd()
-                    ->size(TextSize::Small)
+                    ->size(TextSize::ExtraSmall)
                     ->money('IDR')
                     ->sortable(),
                 TextColumn::make('item_total')
                     ->label('Harga Total')
                     ->alignEnd()
-                    ->size(TextSize::Small)
+                    ->size(TextSize::ExtraSmall)
                     ->summarize(
                         Summarizer::make()
                             ->prefix('Total : ')
@@ -273,7 +273,7 @@ class QuotationItemRelationManager extends RelationManager
                     )
                     ->money('IDR'),
                 TextColumn::make('location')
-                    ->size(TextSize::Small)
+                    ->size(TextSize::ExtraSmall)
                     ->label('Lokasi pengambilan sampel')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
