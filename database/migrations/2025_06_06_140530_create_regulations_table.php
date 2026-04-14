@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('name');
-            $table->index('long_name');
+            $table->fullText('long_name');
             $table->index('is_active');
         });
     }

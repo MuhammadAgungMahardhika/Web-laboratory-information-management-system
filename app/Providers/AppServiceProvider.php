@@ -16,6 +16,7 @@ use Filament\Support\Enums\TextSize;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+
+        Schema::defaultStringLength(191);
+
         Model::unguard();
         TextColumn::configureUsing(fn(TextColumn $column) => $column
             ->size(TextSize::ExtraSmall));
