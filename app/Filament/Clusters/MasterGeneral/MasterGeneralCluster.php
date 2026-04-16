@@ -8,7 +8,7 @@ use Filament\Support\Icons\Heroicon;
 
 class MasterGeneralCluster extends Cluster
 {
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 21;
     protected static ?string $navigationLabel = 'Master Umum';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 }
