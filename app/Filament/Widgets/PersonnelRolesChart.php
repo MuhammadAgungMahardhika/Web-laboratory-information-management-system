@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class PersonnelRolesChart extends ChartWidget
 {
 
-    protected ?string $heading = 'Personel by Hak Akses';
+    protected ?string $heading = 'Personel Berdasarkan Hak Akses';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_ROLE_PERSONEL = 'view-chart-role-personel';
 

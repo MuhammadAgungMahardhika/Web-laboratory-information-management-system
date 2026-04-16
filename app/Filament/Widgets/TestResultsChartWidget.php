@@ -16,7 +16,7 @@ class TestResultsChartWidget extends ChartWidget
     use HasFiltersSchema;
     protected static bool $isLazy = false;
     protected bool $isCollapsible = true;
-    protected ?string $heading = 'Hasil Uji by Status';
+    protected ?string $heading = 'Status Hasil Pengujian';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_SAMPLE = 'view-chart-sample';
 
