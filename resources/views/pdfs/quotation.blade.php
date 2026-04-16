@@ -115,7 +115,7 @@
            HALAMAN
         ============================================= */
         .page {
-            margin: 235px 50px 60px 50px;
+            margin: 90px 50px 60px 50px;
         }
 
         .page-break {
@@ -168,6 +168,44 @@
         .closing-text {
             margin-top: 20px;
             font-size: 8.5pt;
+        }
+
+        /* Tanda tangan halaman 1 — rata kanan */
+        .signature-p1-wrapper {
+            width: 100%;
+            margin-top: 30px;
+            /* page-break-inside: avoid mencegah terpotong */
+            page-break-inside: avoid;
+        }
+
+        .signature-p1-inner {
+            /* float:right tidak selalu stabil di DomPDF,
+               gunakan table dengan cell kosong di kiri */
+            display: table;
+            width: 100%;
+        }
+
+        .sig-p1-spacer {
+            display: table-cell;
+            width: 65%;
+        }
+
+        .sig-p1-content {
+            display: table-cell;
+            width: 35%;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .sig-p1-content p {
+            margin: 2px 0;
+            font-size: 8.5pt;
+        }
+
+        .sig-p1-box {
+            height: 55px;
+            border-bottom: 1px solid #000;
+            margin: 8px 0 4px 0;
         }
 
         /* =============================================
@@ -315,6 +353,7 @@
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
+            line-height: 1.2;
         }
 
         /* Base cell */
@@ -471,20 +510,7 @@
             <img src="{{ $korpBase64 }}" alt="Kop Surat" class="kop-surat">
         @endif
 
-        <table class="header-quotation-info">
-            <tr>
-                <td><strong>Quotation Letter</strong></td>
-            </tr>
-            <tr>
-                <td>No.Quo: {{ $quotation->quotation_number }}</td>
-            </tr>
-            <tr>
-                <td><strong>{{ $quotation->customer->name }}</strong></td>
-            </tr>
-            <tr>
-                <td>{{ $quotation->customer->full_address }}</td>
-            </tr>
-        </table>
+
     </div>
 
     {{-- ================================================
@@ -514,6 +540,20 @@
          HALAMAN 1 — SURAT PENGANTAR
     ================================================ --}}
     <div class="page page-break">
+        <table class="header-quotation-info">
+            <tr>
+                <td><strong>Quotation Letter</strong></td>
+            </tr>
+            <tr>
+                <td>No.Quo: {{ $quotation->quotation_number }}</td>
+            </tr>
+            <tr>
+                <td><strong>{{ $quotation->customer->name }}</strong></td>
+            </tr>
+            <tr>
+                <td>{{ $quotation->customer->full_address }}</td>
+            </tr>
+        </table>
         {{-- Info PIC & Tanggal --}}
         <table class="header-info">
             <tr>
@@ -594,7 +634,7 @@
     ================================================ --}}
     <div class="page page-break">
         <div class="section-title">
-            DAFTAR RINCIAN, JUMLAH DAN HARGA BARANG/PEKERJAAN<br>
+            DAFTAR RINCIAN, JUMLAH DAN HARGA JASA/PEKERJAAN<br>
             {{ strtoupper($quotation->quotation_name ?? 'PENAWARAN') }}
         </div>
 
