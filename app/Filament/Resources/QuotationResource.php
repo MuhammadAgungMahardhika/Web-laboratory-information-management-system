@@ -228,8 +228,25 @@ class QuotationResource extends Resource
                     ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
 
                 Section::make('Syarat & Ketentuan Pembayaran')
-                    ->description('Pilih template atau tulis syarat & ketentuan secara manual.')
+                    ->heading(null)
                     ->schema([
+                        Section::make([
+                            TextInput::make('discount_percentage')
+                                ->label('Diskon (%)')
+                                ->required()
+                                ->numeric()
+                                ->default(0),
+                            TextInput::make('ppn_percentage')
+                                ->label('Ppn (%)')
+                                ->required()
+                                ->numeric()
+                                ->default(11),
+                            TextInput::make('pph_percentage')
+                                ->label('Pph (%)')
+                                ->required()
+                                ->numeric()
+                                ->default(0),
+                        ])->columns(3)->collapsible()->heading('Potongan')->icon(Heroicon::ReceiptPercent)->columnSpanFull(),
                         Section::make([
                             Select::make('template_selector')
                                 ->label('Pilih Template')
@@ -302,39 +319,13 @@ class QuotationResource extends Resource
 
                             RichEditor::make('additional_description')
                                 ->label('')
-                                ->toolbarButtons([ // Atur toolbar RichEditor
-                                    'blockquote',
-                                    'bold',
-                                    'bulletList',
-                                    'codeBlock',
-                                    'h2',
-                                    'h3',
-                                    'italic',
-                                    'link',
-                                    'orderedList',
-                                    'strike',
-                                    'underline',
-                                ]),
-                        ])->columnSpan(1)->columns(1),
-                        Section::make([
-                            TextInput::make('discount_percentage')
-                                ->label('Diskon (%)')
                                 ->required()
-                                ->numeric()
-                                ->default(0),
-                            TextInput::make('ppn_percentage')
-                                ->label('Ppn (%)')
-                                ->required()
-                                ->numeric()
-                                ->default(11),
-                            TextInput::make('pph_percentage')
-                                ->label('Pph (%)')
-                                ->required()
-                                ->numeric()
-                                ->default(0),
-                        ])->columns(3)->collapsible()->heading('Potongan')->icon(Heroicon::ReceiptPercent)->columnSpan(1),
+                                ->autofocus()
+                                ->columnSpanFull(),
+                        ])->columnSpanFull()->collapsible()->collapsed()->heading('Syarat & Ketentuan')->icon(Heroicon::DocumentText)->iconColor('success')->description('Pilih template atau tulis syarat & ketentuan secara manual.'),
 
-                    ])->columnSpanFull()->columns(2)->collapsible()->icon(Heroicon::DocumentCurrencyDollar),
+
+                    ])->columnSpanFull()->columns(2),
 
             ]);
     }

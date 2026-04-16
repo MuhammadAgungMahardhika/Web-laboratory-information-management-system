@@ -25,10 +25,6 @@
 
         /* =============================================
            HEADER FIXED
-           - Tinggi header harus TEPAT agar margin-top
-             .page tidak tumpang tindih.
-           - Ukur total tinggi header Anda (kop + tabel info
-             + jarak bawah) lalu sesuaikan margin-top .page
         ============================================= */
         .header-fixed {
             position: fixed;
@@ -38,8 +34,7 @@
             background: white;
             z-index: 1000;
             padding: 8px 50px 6px 50px;
-            /* border-bottom ringan sebagai pemisah visual */
-            border-bottom: 1px solid #ccc;
+            /* border-bottom: 1px solid #ccc; */
         }
 
         .header-fixed img.kop-surat {
@@ -80,7 +75,6 @@
             z-index: 1000;
             padding: 0 50px;
             border-top: 1px solid #ccc;
-            /* DomPDF: display:table lebih reliable daripada flex */
             display: table;
             width: 100%;
         }
@@ -112,27 +106,18 @@
             white-space: nowrap;
         }
 
-        /* counter(page) hanya berfungsi di DomPDF via CSS */
+        /* Hanya tampilkan nomor halaman tanpa total */
         .footer-page-cell::after {
-            content: "Hal " counter(page) " / " counter(pages);
+            content: "Hal " counter(page);
         }
 
         /* =============================================
            HALAMAN
-           margin-top = tinggi header-fixed + sedikit jarak
-           margin-bottom = tinggi footer-fixed + sedikit jarak
-           CATATAN: Sesuaikan nilai ini jika kop surat Anda
-           lebih tinggi/pendek.
         ============================================= */
         .page {
-            /* Sesuaikan margin-top dengan tinggi aktual header Anda.
-               Rata-rata kop surat tinggi ~160px + tabel info ~65px = ~225px.
-               Tambah 10px buffer => 235px */
             margin: 235px 50px 60px 50px;
         }
 
-        /* Trik DomPDF: page-break-after only pada halaman pertama & kedua,
-           halaman terakhir biarkan auto */
         .page-break {
             page-break-after: always;
         }
@@ -185,50 +170,12 @@
             font-size: 8.5pt;
         }
 
-        /* Tanda tangan halaman 1 — rata kanan */
-        .signature-p1-wrapper {
-            width: 100%;
-            margin-top: 30px;
-            /* page-break-inside: avoid mencegah terpotong */
-            page-break-inside: avoid;
-        }
-
-        .signature-p1-inner {
-            /* float:right tidak selalu stabil di DomPDF,
-               gunakan table dengan cell kosong di kiri */
-            display: table;
-            width: 100%;
-        }
-
-        .sig-p1-spacer {
-            display: table-cell;
-            width: 65%;
-        }
-
-        .sig-p1-content {
-            display: table-cell;
-            width: 35%;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .sig-p1-content p {
-            margin: 2px 0;
-            font-size: 8.5pt;
-        }
-
-        .sig-p1-box {
-            height: 55px;
-            border-bottom: 1px solid #000;
-            margin: 8px 0 4px 0;
-        }
-
         /* =============================================
            KONTEN HALAMAN 2 — TABEL ITEM
+           Kolom frekuensi dihapus
         ============================================= */
         .section-title {
-            background-color: #333;
-            color: white;
+            border: transparent;
             padding: 5px 6px;
             font-weight: bold;
             font-size: 8pt;
@@ -240,7 +187,6 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 6pt;
-            /* table-layout:fixed + word-wrap agar kolom tidak overflow */
             table-layout: fixed;
         }
 
@@ -253,52 +199,46 @@
         }
 
         .items-table th {
-            background-color: #e8e8e8;
+
             font-weight: bold;
             text-align: center;
-            /* Header tabel TIDAK di-repeat di DomPDF secara default,
-               tapi thead akan tetap muncul di halaman baru jika ada */
         }
 
-        /* Lebar kolom */
+        /* Lebar kolom — frekuensi dihapus, lebar didistribusi ulang */
         .col-no {
             width: 22px;
         }
 
         .col-name {
-            width: 110px;
+            width: 120px;
         }
 
         .col-reg {
-            width: 72px;
+            width: 80px;
         }
 
         .col-param {
-            width: 165px;
+            width: 185px;
         }
 
         .col-qty {
-            width: 28px;
+            width: 30px;
         }
 
         .col-unit {
-            width: 38px;
-        }
-
-        .col-freq {
-            width: 28px;
+            width: 42px;
         }
 
         .col-price {
-            width: 65px;
+            width: 70px;
         }
 
         .col-total {
-            width: 72px;
+            width: 78px;
         }
 
         .section-header td {
-            background-color: #f0f0f0;
+
             font-weight: bold;
             font-size: 6.5pt;
         }
@@ -320,36 +260,38 @@
         ============================================= */
         .summary-section {
             margin-top: 8px;
-            /* Cegah summary terpisah dari tabel di atasnya jika masih muat */
             page-break-inside: avoid;
         }
+
 
         .summary-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8pt;
+            table-layout: fixed;
+            border: 1px solid #000;
+            /* border luar */
         }
 
         .summary-table td {
-            padding: 3px 5px;
-            border: 1px solid #333;
+            padding: 4px;
+            font-size: 8pt;
+            border: 1px solid #000;
+            /* border semua cell */
         }
 
         .summary-table .lbl {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            width: 70%;
+            width: 150px;
         }
 
         .summary-table .val {
+            width: 180px;
             text-align: right;
-            font-weight: bold;
-            width: 30%;
         }
 
-        .summary-table .total-row td {
-            background-color: #d9f0ff;
+        .total-row td {
             font-weight: bold;
+            border-top: 1px solid #000;
+
         }
 
         .terbilang {
@@ -361,72 +303,79 @@
 
         /* =============================================
            TANDA TANGAN HALAMAN 2
-           page-break-inside: avoid adalah KUNCI agar
-           tidak terpotong ketika item banyak
+           Selalu mengikuti konten tabel ke halaman berapapun
+           page-break-inside: avoid memastikan tidak terpotong
         ============================================= */
         .signature-section {
-            margin-top: 0px;
+            margin-top: 8px;
             page-break-inside: avoid;
-            /* Jika tanda tangan tidak muat di halaman ini,
-               DomPDF akan pindah ke halaman baru */
-            page-break-before: auto;
         }
 
         .signature-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #333;
             table-layout: fixed;
         }
 
+        /* Base cell */
         .signature-table td {
             width: 50%;
             vertical-align: top;
-            padding: 8px 10px;
-            border-right: 1px solid #333;
+            padding: 4px;
         }
 
-        .signature-table td:last-child {
-            border-right: none;
+        /* KIRI = BOX */
+        .client-box {
+            border: 1px solid #333;
+            padding: 6px;
+            padding-right: 12px;
         }
 
+        .company-box {
+            padding-left: 12px;
+        }
+
+        /* Signature line */
         .sig-box {
-            height: 65px;
+            height: 50px;
+            /* lebih pendek */
             border-bottom: 1px solid #000;
-            position: relative;
             margin: 6px 0 4px 0;
+            position: relative;
         }
 
+        /* Placeholder */
         .sig-box .placeholder {
             position: absolute;
             top: 50%;
             left: 50%;
-            /* DomPDF tidak support transform sepenuhnya,
-               gunakan pendekatan manual */
-            margin-top: -6px;
-            margin-left: -60px;
-            font-size: 7pt;
+            transform: translate(-50%, -50%);
+            /* lebih rapi */
+            font-size: 6.5pt;
             color: #999;
-            white-space: nowrap;
         }
 
+        /* Typography */
         .signature-table strong {
-            font-size: 8.5pt;
+            font-size: 8pt;
         }
 
         .signature-table p {
-            font-size: 7.5pt;
-            margin: 2px 0;
+            font-size: 7pt;
+            margin: 1px 0;
         }
 
+        /* Nama */
         .sig-name {
             font-weight: bold;
             text-decoration: underline;
-            font-size: 7.5pt;
+            font-size: 7pt;
+            margin-top: 2px;
         }
 
+        /* Jabatan */
         .sig-position {
-            font-size: 7.5pt;
+            font-size: 7pt;
         }
 
         /* =============================================
@@ -461,7 +410,6 @@
         }
 
         .bank-row {
-            /* DomPDF: display:flex tidak didukung, gunakan table */
             display: table;
             width: 100%;
             margin-bottom: 3px;
@@ -494,12 +442,10 @@
         }
 
         /* =============================================
-           @PAGE — UKURAN KERTAS
+           @PAGE
         ============================================= */
         @page {
             size: A4 portrait;
-            /* margin dikosongkan karena kita atur manual
-               via .page div */
             margin: 0;
         }
     </style>
@@ -623,13 +569,13 @@
             <p>Demikianlah yang dapat kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
         </div>
 
-        {{-- Tanda tangan halaman 1 — page-break-inside avoid --}}
+        {{-- Tanda tangan halaman 1 --}}
         <div class="signature-p1-wrapper">
             <div class="signature-p1-inner">
                 <div class="sig-p1-spacer"></div>
                 <div class="sig-p1-content">
                     <p><strong>Hormat Kami,</strong></p>
-                    <p><strong>{{ $company->name ?? 'Laboratorium' }}</strong></p>
+                    <p><strong>A.n Kepala Laboratorium</strong></p>
                     <div class="sig-p1-box"></div>
                     <p><strong><u>{{ $quotation->personel->fullname ?? 'Nama Personil' }}</u></strong></p>
                     <p>{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
@@ -640,9 +586,11 @@
 
     {{-- ================================================
          HALAMAN 2 — RINCIAN HARGA
-         Tidak ada page-break-after paksa di sini,
-         biarkan konten mengalir alami. Page break
-         ditangani oleh DomPDF otomatis sesuai tinggi konten.
+         Tanda tangan langsung mengikuti summary di bawah
+         tabel tanpa page-break-after paksa, sehingga
+         apapun jumlah item, tanda tangan selalu melekat
+         tepat setelah tabel & summary di halaman terakhir
+         bagian rincian harga.
     ================================================ --}}
     <div class="page page-break">
         <div class="section-title">
@@ -663,24 +611,24 @@
             $itemNumber = 1;
         @endphp
 
+        {{-- Kolom Frekuensi dihapus: 8 kolom tersisa --}}
         <table class="items-table">
             <thead>
                 <tr>
                     <th class="col-no">No</th>
-                    <th class="col-name">Nama Pekerjaan</th>
-                    <th class="col-reg">Baku Mutu</th>
-                    <th class="col-param">Parameter</th>
+                    <th class="col-name">Bahan / Produk Uji</th>
+                    <th class="col-reg">Baku Mutu (BML)</th>
+                    <th class="col-param">Parameter Uji</th>
                     <th class="col-qty">Jml</th>
                     <th class="col-unit">Satuan</th>
-                    <th class="col-freq">Frek</th>
                     <th class="col-price">Harga (Rp)</th>
-                    <th class="col-total">Total (Rp)</th>
+                    <th class="col-total">Jumlah (Rp)</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($groupedItems as $group => $items)
                     <tr class="section-header">
-                        <td colspan="9"><strong>{{ $groupLabels[$group] ?? $group }}</strong></td>
+                        <td colspan="8"><strong>{{ $groupLabels[$group] ?? $group }}</strong></td>
                     </tr>
                     @php $groupSubtotal = 0; @endphp
                     @foreach ($items as $item)
@@ -706,13 +654,12 @@
                             </td>
                             <td class="text-center">{{ $item->quantity ?? 0 }}</td>
                             <td class="text-center">{{ $item->unit ?? '-' }}</td>
-                            <td class="text-center">{{ $item->frequency ?? 1 }}</td>
                             <td class="text-right">{{ number_format($item->price, 0, ',', '.') }}</td>
                             <td class="text-right">{{ number_format($itemTotal, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
                     <tr class="subtotal-row">
-                        <td colspan="8" class="text-right">
+                        <td colspan="7" class="text-right">
                             <strong>Sub Total {{ $group }}</strong>
                         </td>
                         <td class="text-right">
@@ -723,13 +670,34 @@
             </tbody>
         </table>
 
-        {{-- Summary — page-break-inside avoid agar tidak terpotong --}}
+        {{-- Summary — page-break-inside avoid --}}
+        @php
+            $rowCount = 1; // Total pasti ada
+
+            if (($quotation->discount_percentage ?? 0) > 0) {
+                $rowCount++;
+            }
+            if (($quotation->ppn_percentage ?? 0) > 0) {
+                $rowCount++;
+            }
+            if (($quotation->pph_percentage ?? 0) > 0) {
+                $rowCount++;
+            }
+
+            $rowCount++; // TOTAL KESELURUHAN
+        @endphp
         <div class="summary-section">
             <table class="summary-table">
                 <tr>
+                    <td rowspan="{{ $rowCount }}">
+                        <strong> <i> Terbilang : {{ $quotation->total_in_words ?? rupiahInWords($totalHarga) }}
+                            </i></strong>
+                    </td>
+
                     <td class="lbl">Total</td>
                     <td class="val">Rp {{ number_format($grandSubtotal, 0, ',', '.') }}</td>
                 </tr>
+
                 @if (($quotation->discount_percentage ?? 0) > 0)
                     @php $discAmount = $grandSubtotal * ($quotation->discount_percentage / 100); @endphp
                     <tr>
@@ -737,6 +705,7 @@
                         <td class="val">- Rp {{ number_format($discAmount, 0, ',', '.') }}</td>
                     </tr>
                 @endif
+
                 @if (($quotation->ppn_percentage ?? 0) > 0)
                     @php $ppnAmount = $grandSubtotal * ($quotation->ppn_percentage / 100); @endphp
                     <tr>
@@ -744,6 +713,7 @@
                         <td class="val">Rp {{ number_format($ppnAmount, 0, ',', '.') }}</td>
                     </tr>
                 @endif
+
                 @if (($quotation->pph_percentage ?? 0) > 0)
                     @php $pphAmount = $grandSubtotal * ($quotation->pph_percentage / 100); @endphp
                     <tr>
@@ -751,38 +721,42 @@
                         <td class="val">- Rp {{ number_format($pphAmount, 0, ',', '.') }}</td>
                     </tr>
                 @endif
+
                 <tr class="total-row">
                     <td class="lbl">TOTAL KESELURUHAN</td>
                     <td class="val">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
                 </tr>
             </table>
-
-            <div class="terbilang">
-                Terbilang: {{ $quotation->total_in_words ?? rupiahInWords($totalHarga) }}
-            </div>
         </div>
 
         {{-- ================================================
-             TANDA TANGAN HALAMAN 2
-             page-break-inside: avoid → jika tidak muat di
-             halaman ini, DomPDF otomatis pindah ke halaman baru
-             dan tanda tangan tampil utuh di sana.
+             TANDA TANGAN HALAMAN RINCIAN
+             Melekat langsung setelah summary tanpa page-break
+             paksa. page-break-inside: avoid memastikan blok
+             ini tidak terpotong — jika tidak muat di sisa
+             halaman saat ini, DomPDF otomatis memindahkan
+             seluruh blok ini ke halaman berikutnya sehingga
+             tanda tangan selalu tampil utuh tepat di bawah
+             tabel penawaran, berapapun jumlah item.
         ================================================ --}}
         <div class="signature-section">
             <table class="signature-table">
                 <tr>
-                    <td>
-                        <strong>Persetujuan biaya yang kami tawarkan</strong>
+                    <td class="client-box">
+                        <strong>Persetujuan biaya yang kami tawarkan</strong><br>
                         <div class="sig-box">
                             <p class="placeholder">Tanda tangan &amp; cap perusahaan</p>
                         </div>
-                        <p>Nama &nbsp;&nbsp;: ................................</p>
-                        <p>Jabatan: ................................</p>
+                        <p>Nama &nbsp;&nbsp;: ...............................</p>
+                        <p>Jabatan: ...............................</p>
                     </td>
-                    <td>
+                    <td class="company-box">
                         <strong>Hormat Kami,</strong><br>
-                        <strong>{{ $company->name ?? 'PT. Nama Perusahaan' }}</strong>
+                        <strong>Jalint Lab</strong><br>
+                        <strong>A.n Kepala Laboratorium</strong>
+
                         <div class="sig-box"></div>
+
                         <p class="sig-name">{{ $quotation->personel->fullname ?? 'Nama Personil' }}</p>
                         <p class="sig-position">{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
                     </td>
