@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class ParameterAccreditationChart extends ChartWidget
 {
-    protected ?string $heading = 'Parameter by Status Akreditasi';
+    protected ?string $heading = 'Status Akreditasi Parameter Uji';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_ACCREDITATION_STATUS_PARAMETER = 'view-chart-accreditation-status-parameter';
     public static function canView(): bool

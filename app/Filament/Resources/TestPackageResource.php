@@ -49,7 +49,7 @@ class TestPackageResource extends Resource
     protected static ?string $navigationLabel = 'Produk Uji';
     protected static ?string $label = 'Produk Uji';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::ArchiveBox;
-    protected static ?int $navigationSort = 8;
+    protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema
     {

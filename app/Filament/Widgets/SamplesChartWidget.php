@@ -17,7 +17,7 @@ class SamplesChartWidget extends ChartWidget
     protected static bool $isLazy = false;
     protected bool $isCollapsible = true;
 
-    protected ?string $heading = 'Sampel by Status';
+    protected ?string $heading = 'Status Sampel Uji';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_SAMPLE = 'view-chart-test-sample';
 

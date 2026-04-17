@@ -41,7 +41,7 @@ class LabJobResource extends Resource
     protected static ?string $navigationLabel = 'Lab Job';
     protected static ?string $label = 'Lab Job';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::DocumentDuplicate;
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
     protected static ?string $recordTitleAttribute = 'job_number';
     protected static int $globalSearchResultsLimit = 20;
 

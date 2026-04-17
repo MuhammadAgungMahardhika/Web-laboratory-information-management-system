@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class CustomerStatsChart extends ChartWidget
 {
 
-    protected ?string $heading = 'Pelanggan by Tipe';
+    protected ?string $heading = 'Tipe Pelanggan';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_CUSTOMER = 'view-chart-customer';
     public static function canView(): bool

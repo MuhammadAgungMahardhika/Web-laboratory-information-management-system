@@ -35,16 +35,14 @@ class ParameterImporter extends Importer
                 ->label('Nama parameter')
                 ->rules(['required', 'max:255']),
             ImportColumn::make('unit')
-                ->requiredMapping()
                 ->label('Satuan')
-                ->rules(['required', 'max:50']),
+                ->rules(['max:50']),
             ImportColumn::make('description')
                 ->label('Deskripsi'),
             ImportColumn::make('default_price')
                 ->label('Harga')
-                ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'numeric', 'min:0']),
+                ->rules(['numeric', 'min:0']),
             ImportColumn::make('status')
                 ->requiredMapping()
                 ->numeric()
