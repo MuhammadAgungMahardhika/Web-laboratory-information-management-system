@@ -76,7 +76,7 @@ class TestResultForm
                             ->searchable()
                             ->preload(),
 
-                    ])->columns(3)->heading(fn($record) => $record?->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Status -> Belum dibuat')->collapsible(),
+                    ])->columns(1)->inlineLabel()->heading(fn($record) => $record?->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Status -> Belum dibuat')->collapsible(),
                     Section::make([
                         Radio::make('evaluation_status')
                             // ->visible(fn() => static::isAuthorized(static::PERMISSION_EVALUATE_STATUS_TEST_RESULT))
@@ -93,21 +93,33 @@ class TestResultForm
                             ->relationship('validatorPersonel', 'fullname')
                             ->searchable(),
                         Textarea::make('comment')->label('Komentar')->autosize()->columnSpanFull()
-                    ])->columns(3)->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed()->visibleOn(['view', 'edit']),
+                    ])->columns(1)->inlineLabel()->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed()->visibleOn(['view', 'edit']),
                 ])->columns(2)->columnSpanFull(),
 
                 Section::make([
                     Section::make([
                         Select::make('analyst_personel_id')
                             ->label('Analis')
+                            ->default(Auth::user()->personel_id)
                             ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->where('id', Auth::user()->personel->id))
                             ->searchable()
-                            ->preload(),
+
+                            ->preload()
+                            ->afterStateHydrated(function ($state, callable $set) {
+                                if (empty($state)) {
+                                    $set('analyst_personel_id', Auth::user()->personel_id);
+                                }
+                            }),
                         DatePicker::make('test_date')
                             ->default(now())
                             ->label('Tanggal Uji')
                             ->minDate(now()->toDateString())
-                            ->required(),
+                            ->required()
+                            ->afterStateHydrated(function ($state, callable $set) {
+                                if (empty($state)) {
+                                    $set('test_date', now()->toDateString());
+                                }
+                            }),
 
 
                         TextInput::make('tested_value')

@@ -49,13 +49,13 @@ class SampleAction
             ->color('gray')
             ->openUrlInNewTab();
     }
-    public static function prepare(): Action
+    public static function prepare(LabJob $owner = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
-            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $authorized)
+            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $authorized && $owner?->status === JobStatusEnum::SamplingCompleted->value)
             ->requiresConfirmation()
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {

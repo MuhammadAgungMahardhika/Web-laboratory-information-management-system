@@ -252,6 +252,7 @@ class SamplesRelationManager extends RelationManager
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
                         ->requiresConfirmation()
+                        ->authorize($this->ownerRecord->status === JobStatusEnum::SamplingCompleted->value && static::isAuthorized(SampleAction::PERMISSION_PREPARE))
                         ->action(function (Collection $records) {
                             $sampleService = new SampleService();
                             $successCount = 0;

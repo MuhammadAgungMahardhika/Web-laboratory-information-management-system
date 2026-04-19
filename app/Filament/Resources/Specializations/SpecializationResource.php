@@ -6,6 +6,7 @@ use App\Filament\Clusters\MasterGeneral\MasterGeneralCluster;
 use App\Filament\Resources\Specializations\Pages\ManageSpecializations;
 use App\Models\Specialization;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -43,6 +44,14 @@ class SpecializationResource extends Resource
                     ->columnSpanFull()
                     ->relationship('parameters', 'code')
                     ->multiple()
+                    ->prefixAction(
+                        Action::make('selectAll')
+                            ->label('Select All')
+                            ->icon(Heroicon::ArrowLongLeft)
+                            ->action(function (callable $set) {
+                                $set('parameters', \App\Models\Parameter::pluck('id')->toArray());
+                            }),
+                    )
                     ->preload()
             ]);
     }

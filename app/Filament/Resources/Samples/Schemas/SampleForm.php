@@ -35,7 +35,7 @@ class SampleForm
             ->components([
                 Section::make([
                     Select::make('lab_job_item_id')
-                        ->label('Item Job')
+                        ->label('Produk Uji')
                         ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) {
                             return $query
                                 ->where('group', 'A');
@@ -59,7 +59,8 @@ class SampleForm
                         ->label('Kode Sampel')
                         ->unique()
                         ->live()
-                        ->readOnly()
+                        ->disabled()
+                        ->dehydrated()
                         ->required(),
                     Select::make('status')
                         ->label('Status')
