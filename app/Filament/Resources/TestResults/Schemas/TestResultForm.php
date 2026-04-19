@@ -124,7 +124,6 @@ class TestResultForm
 
                         TextInput::make('tested_value')
                             ->label('Nilai')
-                            ->numeric()
                             ->required()
                             ->copyable()
                             ->live(),
