@@ -225,6 +225,13 @@ class PermissionAndRoleSeeder extends Seeder
             'update-specialization',
             'delete-specialization',
         ];
+        $invoicePermissions = [
+            'view-any-invoice',
+            'view-invoice',
+            'create-invoice',
+            'update-invoice',
+            'delete-invoice',
+        ];
 
 
 
@@ -251,7 +258,8 @@ class PermissionAndRoleSeeder extends Seeder
             $companyPermissions,
             $labJobPermissions,
             $testResultPermissions,
-            $specializationPermissions
+            $specializationPermissions,
+            $invoicePermissions
         );
 
         // Membuat semua permissions
