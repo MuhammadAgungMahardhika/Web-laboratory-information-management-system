@@ -160,7 +160,7 @@ class QuotationItemRelationManager extends RelationManager
                         ->numeric()
                         ->prefix('Rp.')
                         ->required()
-                        ->readOnly()
+
                         ->default(0),
                     TextInput::make('location')
                         ->label('Lokasi Pengambilan Sampel')
