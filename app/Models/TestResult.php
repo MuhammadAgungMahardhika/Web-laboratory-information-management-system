@@ -12,6 +12,9 @@ use function Illuminate\Events\queueable;
 
 class TestResult extends Model
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     /** @use HasFactory<\Database\Factories\TestResultFactory> */
     use HasFactory;
     use Blameable;

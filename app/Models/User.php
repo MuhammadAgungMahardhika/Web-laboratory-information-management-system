@@ -16,6 +16,9 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     use HasApiTokens;
 
     use HasRoles;

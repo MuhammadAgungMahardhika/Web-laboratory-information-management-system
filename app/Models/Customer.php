@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     /** @use HasFactory<CustomerFactory> */
     use HasFactory;
     use Blameable;

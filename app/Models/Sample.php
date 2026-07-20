@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sample extends Model
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     /** @use HasFactory<\Database\Factories\SampleFactory> */
     use HasFactory;
     use Blameable;

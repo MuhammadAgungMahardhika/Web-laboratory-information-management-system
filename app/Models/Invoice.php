@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     /** @use HasFactory<\Database\Factories\InvoiceFactory> */
     use HasFactory;
     use Blameable;

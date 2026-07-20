@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quotation extends Model
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     /** @use HasFactory<QuotationFactory> */
     use Blameable;
     use HasFactory;

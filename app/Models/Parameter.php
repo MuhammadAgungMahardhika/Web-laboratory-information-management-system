@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Parameter extends Model
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     /** @use HasFactory<ParameterFactory> */
     use HasFactory;
     use Blameable;
