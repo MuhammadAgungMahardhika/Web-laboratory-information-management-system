@@ -250,6 +250,7 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property mixed $0
  * @property-read float $total_price
  * @property-read \App\Models\Invoice|null $invoice
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobItem> $labJobItems
@@ -363,12 +364,22 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property string $code
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
  * @property-read int|null $parameters_count
  * @method static \Database\Factories\ParamFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Param newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Param newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Param query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Param whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Param whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Param whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Param whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Param whereUpdatedBy($value)
  */
 	class Param extends \Eloquent {}
 }
@@ -377,10 +388,10 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int|null $test_method_id
- * @property string $code
+ * @property string|null $code
  * @property string $long_name
  * @property string|null $long_name_standard_notes
- * @property string $unit
+ * @property string|null $unit
  * @property string|null $description
  * @property string|null $default_price
  * @property int|null $status
@@ -415,13 +426,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereCodeStandardNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereDefaultPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereLongName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereLongNameStandardNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStandardNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Parameter whereTestMethodId($value)
@@ -1051,10 +1062,10 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * @property int $id
  * @property string $code
- * @property int $sample_type_id
+ * @property int|null $sample_type_id
  * @property string $name
+ * @property string|null $code_name
  * @property int $environment_type
  * @property string|null $description
  * @property string|null $created_by
@@ -1063,7 +1074,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestPackage> $sampleMatrics
  * @property-read int|null $sample_matrics_count
- * @property-read \App\Models\SampleType $sampleType
+ * @property-read \App\Models\SampleType|null $sampleType
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sample> $samples
  * @property-read int|null $samples_count
  * @method static \Database\Factories\SampleMatricFactory factory($count = null, $state = [])
@@ -1071,11 +1082,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereCodeName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereEnvironmentType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereSampleTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleMatric whereUpdatedAt($value)
@@ -1271,7 +1282,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $name
- * @property int|null $sample_matric_id
+ * @property string|null $sample_matric_code
  * @property int|null $regulation_id
  * @property string|null $description
  * @property string $price
@@ -1298,7 +1309,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereRegulationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereSampleMatricId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereSampleMatricCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereUpdatedBy($value)
  */

@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class LabJob extends Model
 {
+    protected $casts = [
+        'status' => 'integer',
+    ];
     /** @use HasFactory<JobFactory> */
     use HasFactory;
     use Blameable;
