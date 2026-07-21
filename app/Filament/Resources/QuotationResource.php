@@ -46,7 +46,7 @@ class QuotationResource extends Resource
     protected static ?string $navigationLabel = 'Penawaran';
     protected static ?string $label = 'Penawaran';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedDocumentDuplicate;
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'quotation_number';
     protected static int $globalSearchResultsLimit = 20;
 

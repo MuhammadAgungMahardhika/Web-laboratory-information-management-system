@@ -2,15 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Clusters\Master\MasterCluster;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use App\Models\Parameter;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Actions\ViewAction;
@@ -21,25 +17,15 @@ use App\Filament\Resources\TestPackageResource\Pages\ListTestPackages;
 use App\Filament\Resources\TestPackageResource\Pages\CreateTestPackage;
 use App\Filament\Resources\TestPackageResource\Pages\ViewTestPackage;
 use App\Filament\Resources\TestPackageResource\Pages\EditTestPackage;
-use App\Filament\Resources\TestPackageResource\Pages;
-use App\Filament\Resources\TestPackageResource\RelationManagers;
 use App\Filament\Resources\TestPackageResource\RelationManagers\ParameterTestPackagesRelationManager;
 use App\Models\Enums\EnvironmentTypeEnum;
-use App\Models\Enums\ParameterStatusEnum;
 use App\Models\TestPackage;
-use App\Traits\HasAuthorization;
-use Closure;
-use Filament\Forms;
-use Filament\Forms\Components\Radio;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestPackageResource extends Resource
 {
@@ -49,7 +35,7 @@ class TestPackageResource extends Resource
     protected static ?string $navigationLabel = 'Produk Uji';
     protected static ?string $label = 'Produk Uji';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::ArchiveBox;
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema
     {

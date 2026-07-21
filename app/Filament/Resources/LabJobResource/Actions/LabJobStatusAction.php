@@ -123,6 +123,7 @@ class LabJobStatusAction
                                 $set('count_days', $countDays . " hari");
                             }
                         })
+                        ->minDate(now()->toDateString())
                         ->default(now()->toDateString())
                         ->required(),
                     DatePicker::make('end_date')
