@@ -44,6 +44,31 @@ class TestResultForm
             ->components([
                 Section::make([
                     Section::make([
+                        TextInput::make('standard_notes_ref')
+                            ->label('Baku Mutu (BML)')
+                    ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
+
+                    Section::make([
+                        Radio::make('evaluation_status')
+                            // ->visible(fn() => static::isAuthorized(static::PERMISSION_EVALUATE_STATUS_TEST_RESULT))
+                            ->options(TestResultEvaluationStatusEnum::labels())->columnSpanFull()
+                            ->inline()->hintIcon(Heroicon::InformationCircle)->hintIconTooltip('Status evaluasi hasil uji, apakah hasil uji memenuhi standar/baku mutu atau tidak.')->label('Status Evaluasi'),
+                        TextInput::make('revision_count')
+                            ->label('Jumlah Revisi')
+                            ->numeric()
+                            ->default(0),
+                        DateTimePicker::make('validation_date')
+                            ->label('Tanggal Validasi'),
+                        Select::make('validator_personel_id')
+                            ->label('Validator')
+                            ->relationship('validatorPersonel', 'fullname')
+                            ->searchable(),
+                        Textarea::make('comment')->label('Komentar')->autosize()->columnSpanFull()
+                    ])->columns(1)->inlineLabel()->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed()->visibleOn(['view', 'edit']),
+                ])->columns(2)->columnSpanFull(),
+
+                Section::make([
+                    Section::make([
                         Select::make('sample_id')
                             ->label('Sampel')
                             ->relationship('sample', 'sample_code')
@@ -78,26 +103,18 @@ class TestResultForm
 
                     ])->columns(1)->inlineLabel()->heading(fn($record) => $record?->status ? 'Status -> ' . TestResultStatusEnum::labels()[$record->status] : 'Status -> Belum dibuat')->collapsible(),
                     Section::make([
-                        Radio::make('evaluation_status')
-                            // ->visible(fn() => static::isAuthorized(static::PERMISSION_EVALUATE_STATUS_TEST_RESULT))
-                            ->options(TestResultEvaluationStatusEnum::labels())->columnSpanFull()
-                            ->inline()->hintIcon(Heroicon::InformationCircle)->hintIconTooltip('Status evaluasi hasil uji, apakah hasil uji memenuhi standar/baku mutu atau tidak.')->label('Status Evaluasi'),
-                        TextInput::make('revision_count')
-                            ->label('Jumlah Revisi')
-                            ->numeric()
-                            ->default(0),
-                        DateTimePicker::make('validation_date')
-                            ->label('Tanggal Validasi'),
-                        Select::make('validator_personel_id')
-                            ->label('Validator')
-                            ->relationship('validatorPersonel', 'fullname')
-                            ->searchable(),
-                        Textarea::make('comment')->label('Komentar')->autosize()->columnSpanFull()
-                    ])->columns(1)->inlineLabel()->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed()->visibleOn(['view', 'edit']),
-                ])->columns(2)->columnSpanFull(),
-
-                Section::make([
-                    Section::make([
+                        DatePicker::make('test_date')
+                            ->default(now())
+                            ->disabled()
+                            ->dehydrated()
+                            ->label('Tanggal Uji')
+                            ->minDate(now()->toDateString())
+                            ->required()
+                            ->afterStateHydrated(function ($state, callable $set) {
+                                if (empty($state)) {
+                                    $set('test_date', now()->toDateString());
+                                }
+                            }),
                         Select::make('analyst_personel_id')
                             ->label('Analis')
                             ->default(Auth::user()->personel_id)
@@ -110,16 +127,7 @@ class TestResultForm
                                     $set('analyst_personel_id', Auth::user()->personel_id);
                                 }
                             }),
-                        DatePicker::make('test_date')
-                            ->default(now())
-                            ->label('Tanggal Uji')
-                            ->minDate(now()->toDateString())
-                            ->required()
-                            ->afterStateHydrated(function ($state, callable $set) {
-                                if (empty($state)) {
-                                    $set('test_date', now()->toDateString());
-                                }
-                            }),
+
 
 
                         TextInput::make('tested_value')
@@ -138,10 +146,7 @@ class TestResultForm
                             ->label('Catatan Pengujian'),
 
                     ])->columns(1)->inlineLabel(),
-                    Section::make([
-                        TextInput::make('standard_notes_ref')
-                            ->label('Baku Mutu (BML)')
-                    ])->heading('Standar Referensi ( Baku Mutu )')->columns(1)->inlineLabel(),
+
                 ])->columnSpanFull()->columns(2)->heading(
                     'Hasil Uji'
                 )->visibleOn(['view', 'edit']),
