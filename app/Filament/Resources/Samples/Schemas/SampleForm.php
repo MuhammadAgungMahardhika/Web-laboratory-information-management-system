@@ -23,7 +23,6 @@ class SampleForm
 {
     public const PERMISSION_COLLECTING_SAMPLE = 'collecting-sample';
     public const PERMISSION_RECEIVING_SAMPLE = 'receiving-sample';
-
     protected static function isAuthorized(string $permission): bool
     {
         return Auth::user()->can($permission);
@@ -90,7 +89,6 @@ class SampleForm
                         Tab::make('pengambilan')
                             ->label('PENGAMBILAN SAMPEL OLEH PPC')
                             ->columnSpanFull()
-
                             ->icon(Heroicon::OutlinedBeaker)
                             ->schema([
                                 Select::make('collected_by_personel_id')

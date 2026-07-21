@@ -98,12 +98,12 @@ class PermissionAndRoleSeeder extends Seeder
         $parameterPermissions = [
             'view-chart-accreditation-status-parameter',
 
-
             'view-any-parameter',
             'view-parameter',
             'create-parameter',
             'update-parameter',
             'delete-parameter',
+
         ];
 
         $regulationPermissions = [
@@ -234,6 +234,10 @@ class PermissionAndRoleSeeder extends Seeder
         ];
 
 
+        $importExportPermissions = [
+            'import-parameter',
+            'export-parameter',
+        ];
 
         // Menggabungkan semua permissions ke dalam satu array untuk proses pembuatan permissions
         $allPermissions = array_merge(
@@ -259,7 +263,8 @@ class PermissionAndRoleSeeder extends Seeder
             $labJobPermissions,
             $testResultPermissions,
             $specializationPermissions,
-            $invoicePermissions
+            $invoicePermissions,
+            $importExportPermissions
         );
 
         // Membuat semua permissions

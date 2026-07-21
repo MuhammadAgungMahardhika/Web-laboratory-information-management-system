@@ -14,6 +14,7 @@ use Filament\Resources\Pages\ManageRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ManageParameters extends ManageRecords
 {
@@ -23,8 +24,8 @@ class ManageParameters extends ManageRecords
     {
         return [
             CreateAction::make()->slideOver(),
-            ImportAction::make('import')->importer(ParameterImporter::class)->icon(Heroicon::ArrowDown)->slideOver(),
-            ExportAction::make('export')->exporter(ParameterExporter::class)->icon(Heroicon::ArrowUp)->slideOver()
+            ImportAction::make('import')->importer(ParameterImporter::class)->icon(Heroicon::ArrowDown)->slideOver()->authorize(fn() => Auth::user()->can('import-parameter')),
+            ExportAction::make('export')->exporter(ParameterExporter::class)->icon(Heroicon::ArrowUp)->slideOver()->authorize(fn() => Auth::user()->can('export-parameter'))
         ];
     }
 
