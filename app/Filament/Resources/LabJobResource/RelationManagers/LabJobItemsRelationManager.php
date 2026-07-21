@@ -74,7 +74,11 @@ class LabJobItemsRelationManager extends RelationManager
                     Select::make('test_package_id')
                         ->label('Produk Uji')
                         ->relationship('testPackage', 'name', modifyQueryUsing: fn(Builder $query) => $query->with('regulation'))
-                        ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->name} ({$record->regulation->name})")
+                        ->getOptionLabelFromRecordUsing(
+                            fn(Model $record) =>
+                            $record->name .
+                                ($record->regulation ? " ({$record->regulation->name})" : '')
+                        )
                         ->searchable()
                         ->live()
                         ->afterStateUpdated(function ($state, Set $set) {
