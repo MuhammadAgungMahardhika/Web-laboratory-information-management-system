@@ -17,6 +17,8 @@ use App\Models\Province;
 use App\Traits\HasAuthorization;
 use Filament\Actions\ViewAction;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
@@ -44,6 +46,20 @@ class ProvinceResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
+
+                Repeater::make('cities')
+                    ->label('Kota / Kabupaten')
+                    ->addActionLabel('Tambah Kota / Kabupaten')
+                    ->relationship()
+                    ->hiddenLabel()
+                    ->visibleOn(['view', 'edit'])
+                    ->table([
+                        TableColumn::make('Kota / Kabupaten'),
+                    ])
+                    ->components([
+                        TextInput::make('name')->label('Kota / Kabupaten')
+                    ])
+                    ->columnSpanFull()
 
             ]);
     }
