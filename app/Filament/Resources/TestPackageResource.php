@@ -29,8 +29,6 @@ use Filament\Tables\Table;
 
 class TestPackageResource extends Resource
 {
-    // protected static ?string $cluster = MasterCluster::class;
-
     protected static ?string $model = TestPackage::class;
     protected static ?string $navigationLabel = 'Produk Uji';
     protected static ?string $label = 'Produk Uji';
@@ -78,18 +76,15 @@ class TestPackageResource extends Resource
                     ])
                     ->createOptionModalHeading('Buat Matrix Sampel')
                     ->preload(),
-
                 Select::make('regulation_id')
                     ->label('Regulasi/Standar')
                     ->searchable(['long_name', 'name'])
                     ->relationship('regulation', 'long_name')
                     ->preload(),
-
                 Toggle::make('is_active')
                     ->label('Aktif ?')
                     ->default(true)
                     ->required(),
-
                 Textarea::make('description')
                     ->label('Keterangan'),
                 TextInput::make('price')
