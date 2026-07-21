@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('unit', 50)->nullable();
 
             $table->text('description')->nullable();
-            $table->decimal('default_price', 15, 2)->nullable()->default(0);
-            $table->tinyInteger('status')->default(1)->nullable();
+            $table->decimal('default_price', 15, 2)->default(0);
+            $table->tinyInteger('status')->default(1);
 
             // standard value
             $table->integer('tested_time')->nullable();

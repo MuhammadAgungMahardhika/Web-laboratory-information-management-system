@@ -18,7 +18,6 @@ class ParameterImporter extends Importer
         return [
             ImportColumn::make('test_method_id')
                 ->numeric()
-                ->requiredMapping()
                 ->label('Id metode uji')
                 ->rules(['nullable', 'integer']),
             ImportColumn::make('id')
@@ -42,10 +41,10 @@ class ParameterImporter extends Importer
             ImportColumn::make('default_price')
                 ->label('Harga')
                 ->numeric()
-                ->rules(['numeric', 'min:0']),
+                ->rules(['required', 'numeric', 'min:0']),
             ImportColumn::make('status')
-                ->requiredMapping()
                 ->numeric()
+                ->requiredMapping()
                 ->rules(['required', 'integer']),
             ImportColumn::make('standard_notes')
                 ->label('BML')

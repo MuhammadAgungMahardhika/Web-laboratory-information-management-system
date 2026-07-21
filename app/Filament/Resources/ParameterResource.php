@@ -89,6 +89,7 @@ class ParameterResource extends Resource
                     ->label('Harga standar')
                     ->required()
                     ->numeric()
+                    ->default(0)
                     ->label('Harga')
                     ->prefix('Rp. '),
                 Select::make('test_method_id')

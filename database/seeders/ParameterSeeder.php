@@ -27,7 +27,7 @@ class ParameterSeeder extends Seeder
             $status = $this->convertStatus($this->clean($row[2] ?? null));
             $standardNotes = $this->clean($row[3] ?? null);
             $unit = $this->clean($row[4] ?? null);
-            $price = $this->parseDecimal($row[5] ?? null);
+            $price = $this->parseDecimal($row[5] ?? 0);
 
             // 🔥 Test Method
             $testMethodName = $this->clean($row[6] ?? null);
@@ -77,7 +77,7 @@ class ParameterSeeder extends Seeder
                 'long_name'      => $longName,
                 'unit'           => $unit,
                 'status'         => $status,
-                'default_price'  => $price,
+                'default_price'  => $price ?? 0,
                 'test_method_id' => $testMethodId,
                 'standard_notes' => $standardNotes,
             ]);
