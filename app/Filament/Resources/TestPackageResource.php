@@ -21,11 +21,15 @@ use App\Filament\Resources\TestPackageResource\RelationManagers\ParameterTestPac
 use App\Models\Enums\EnvironmentTypeEnum;
 use App\Models\TestPackage;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class TestPackageResource extends Resource
 {
@@ -38,61 +42,61 @@ class TestPackageResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->columns([
-                'sm' => 2,
-                'md' => 3,
-                'xl' => 3,
-            ])
             ->components([
-                TextInput::make('name')
-                    ->label('Nama paket pengujian')
-                    ->required(),
-                Select::make('sample_matric_code')
-                    ->label('Matrix sampel')
-                    ->required()
-                    ->relationship('sampleMatric', 'code_name')
-                    ->searchable()
-                    ->createOptionForm([
-                        TextInput::make('code')
-                            ->label('Kode')
-                            ->required()
-                            ->maxLength(10),
-                        Select::make('sample_type_id')
-                            ->label('Jenis sampel')
-                            ->required()
-                            ->relationship('sampleType', 'name')
-                            ->preload(),
-                        TextInput::make('name')
-                            ->label('Nama')
-                            ->required()
-                            ->maxLength(100),
-                        Select::make('environment_type')
-                            ->label('Jenis lingkungan')
-                            ->options(EnvironmentTypeEnum::labels())
-                            ->required(),
-                        Textarea::make('description')
-                            ->label('Keterangan')
-                            ->columnSpanFull(),
-                    ])
-                    ->createOptionModalHeading('Buat Matrix Sampel')
-                    ->preload(),
-                Select::make('regulation_id')
-                    ->label('Regulasi/Standar')
-                    ->searchable(['long_name', 'name'])
-                    ->relationship('regulation', 'long_name')
-                    ->preload(),
-                Toggle::make('is_active')
-                    ->label('Aktif ?')
-                    ->default(true)
-                    ->required(),
-                Textarea::make('description')
-                    ->label('Keterangan'),
-                TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->default(0)
-                    ->label('Harga')
-                    ->prefix('Rp. '),
+                Section::make([
+                    TextInput::make('name')
+                        ->label('Nama paket pengujian')
+                        ->required(),
+                    Select::make('sample_matric_code')
+                        ->label('Matrix sampel')
+                        ->required()
+                        ->relationship('sampleMatric', 'code_name')
+                        ->searchable()
+                        ->createOptionForm([
+                            TextInput::make('code')
+                                ->label('Kode')
+                                ->required()
+                                ->maxLength(10),
+                            Select::make('sample_type_id')
+                                ->label('Jenis sampel')
+                                ->required()
+                                ->relationship('sampleType', 'name')
+                                ->preload(),
+                            TextInput::make('name')
+                                ->label('Nama')
+                                ->required()
+                                ->maxLength(100),
+                            Select::make('environment_type')
+                                ->label('Jenis lingkungan')
+                                ->options(EnvironmentTypeEnum::labels())
+                                ->required(),
+                            Textarea::make('description')
+                                ->label('Keterangan')
+                                ->columnSpanFull(),
+                        ])
+                        ->createOptionModalHeading('Buat Matrix Sampel')
+                        ->preload(),
+                    Select::make('regulation_id')
+                        ->label('Regulasi/Standar')
+                        ->searchable(['long_name', 'name'])
+                        ->relationship('regulation', 'long_name')
+                        ->preload(),
+
+                    TextInput::make('price')
+                        ->required()
+                        ->numeric()
+                        ->default(0)
+                        ->label('Harga')
+                        ->prefix('Rp. '),
+                    Toggle::make('is_active')
+                        ->label('Aktif ?')
+                        ->default(true)
+                        ->required(),
+                    Textarea::make('description')
+                        ->label('Keterangan'),
+
+                ])->columns(1)->inlineLabel()->columnSpanFull()
+
 
             ]);
     }
@@ -100,29 +104,48 @@ class TestPackageResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultGroup('regulation.name')
             ->groups([
-                Group::make('regulation.name')->label('')->collapsible(),
+                Group::make('sampleMatric.name')->label('Matrix')->collapsible(),
+                Group::make('regulation.name')->label('Regulasi')->collapsible(),
             ])
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nama paket pengujian')
-                    ->searchable(),
-                TextColumn::make('sampleMatric.name')
-                    ->label('Matrix sampel')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('regulation.long_name')
-                    ->label('Regulasi')
-                    ->limit(10)
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('price')
-                    ->label('Harga')
-                    ->money('idr')
-                    ->sortable(),
-                IconColumn::make('is_active')
-                    ->boolean(),
+                    ->label('Produk Uji')
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhereHas('sampleMatric', function (Builder $query) use ($search) {
+                                $query->where('name', 'like', "%{$search}%");
+                            })
+                            ->orWhereHas('regulation', function (Builder $query) use ($search) {
+                                $query->where('long_name', 'like', "%{$search}%");
+                            });
+                    })
+                    ->html()
+                    ->size(TextSize::Small)
+                    ->formatStateUsing(function ($state, $record) {
+                        return new HtmlString("
+            <div class='font-medium'>
+                " . e(str($state)->limit(45)) . "
+            </div>
+
+            <div class='text-xs text-gray-500 mt-1'>
+                <div>
+                    <strong>Matrix:</strong>
+                    " . e(str($record->sampleMatric?->name)->limit(30)) . "
+                </div>
+
+                <div>
+                    <strong>Regulasi:</strong>
+                    " . e(str($record->regulation?->long_name)->limit(40)) . "
+                </div>
+            </div>
+        ");
+                    })
+                    ->extraAttributes([
+                        'class' => 'max-w-lg',
+                    ]),
+
                 TextColumn::make('parameters.long_name_standard_notes')
                     ->label('Parameter')
                     ->limitList(5)
@@ -131,6 +154,13 @@ class TestPackageResource extends Resource
                     ->searchable()
                     ->badge()
                     ->sortable(),
+                TextColumn::make('price')
+                    ->label('Harga')
+                    ->money('idr')
+                    ->sortable(),
+                IconColumn::make('is_active')
+                    ->label('Aktif ?')
+                    ->boolean(),
                 TextColumn::make('created_by')
                     ->searchable(),
                 TextColumn::make('updated_by')
@@ -146,7 +176,7 @@ class TestPackageResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('sample_matric_code')
-                    ->label('Matrix sampel')
+                    ->label('Matrix')
                     ->relationship('sampleMatric', 'code_name')
                     ->searchable()
                     ->preload(),

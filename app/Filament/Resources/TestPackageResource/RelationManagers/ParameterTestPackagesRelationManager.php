@@ -24,15 +24,15 @@ use Illuminate\Validation\Rule;
 class ParameterTestPackagesRelationManager extends RelationManager
 {
     protected static string $relationship = 'parameterTestPackages';
-    protected static ?string $label = 'Parameter Uji';
-    protected static ?string $title = "Parameter Uji";
+    protected static ?string $label = 'Daftar Parameter Uji';
+    protected static ?string $title = "Daftar Parameter Uji";
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('parameter_id')
                     ->relationship('parameter', 'long_name_standard_notes')
-                    ->label('Parameter Uji')
+                    ->hiddenLabel()
                     ->rule(function ($record) {
                         return Rule::unique('parameter_test_packages', 'parameter_id')
                             ->where('test_package_id', $this->ownerRecord->id)
