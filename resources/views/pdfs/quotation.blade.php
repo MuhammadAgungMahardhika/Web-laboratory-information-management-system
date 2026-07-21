@@ -244,35 +244,37 @@
 
         /* Lebar kolom — frekuensi dihapus, lebar didistribusi ulang */
         .col-no {
-            width: 22px;
+            width: 4%;
+            text-align: center;
+            white-space: nowrap;
         }
 
         .col-name {
-            width: 120px;
+            width: 19%;
         }
 
         .col-reg {
-            width: 80px;
+            width: 13%;
         }
 
         .col-param {
-            width: 185px;
+            width: 29%;
         }
 
         .col-qty {
-            width: 30px;
+            width: 5%;
         }
 
         .col-unit {
-            width: 42px;
+            width: 7%;
         }
 
         .col-price {
-            width: 70px;
+            width: 11%;
         }
 
         .col-total {
-            width: 78px;
+            width: 12%;
         }
 
         .section-header td {
@@ -653,6 +655,16 @@
 
         {{-- Kolom Frekuensi dihapus: 8 kolom tersisa --}}
         <table class="items-table">
+            <colgroup>
+                <col class="col-no">
+                <col class="col-name">
+                <col class="col-reg">
+                <col class="col-param">
+                <col class="col-qty">
+                <col class="col-unit">
+                <col class="col-price">
+                <col class="col-total">
+            </colgroup>
             <thead>
                 <tr>
                     <th class="col-no">No</th>
