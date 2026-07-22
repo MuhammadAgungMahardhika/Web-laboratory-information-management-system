@@ -21,6 +21,8 @@ use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class TestResultsTable
@@ -45,67 +47,146 @@ class TestResultsTable
                 TextColumn::make('sample.labJobItem.description')
                     ->label('Matrix')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable(),
-                TextColumn::make('sample.sample_code')
-                    ->label('Kode sampel')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->toggledHiddenByDefault(),
-                TextColumn::make('status')->formatStateUsing(fn($state) => TestResultStatusEnum::labels()[$state])->badge()->color(fn($state) => TestResultStatusEnum::color($state))->searchable()
                     ->sortable(),
-                TextColumn::make('parameter.long_name')->label('Parameter')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('testMethod.name')->label('Metode')
-                    ->searchable()
-                    ->sortable(),
+
+                TextColumn::make('parameter.long_name')
+                    ->label('Parameter')
+                    ->searchable(query: function ($query, string $search) {
+                        $query->whereHas('parameter', function ($q) use ($search) {
+                            $q->where('long_name', 'like', "%{$search}%");
+                        });
+                    })
+                    ->html()
+                    ->formatStateUsing(function ($state, TestResult $record) {
+
+                        $status = TestResultStatusEnum::labels()[$record->status];
+
+                        return "
+                <div class='space-y-1'>
+                    <div class='font-semibold'>
+                        " . e($state) . "
+                    </div>
+
+                    <div class='text-xs text-gray-500'>
+                        " . e($record->testMethod?->name ?? '-') . "
+                    </div>
+
+                    <div>
+                        <span class='fi-badge fi-color-" . TestResultStatusEnum::color($record->status) . "'>
+                            {$status}
+                        </span>
+                    </div>
+                </div>
+            ";
+                    }),
+
                 TextColumn::make('tested_value')
-                    ->alignEnd()
-                    ->numeric()
-                    ->color(Color::Green)
-                    ->label('Nilai')
-                    ->searchable(),
-                TextColumn::make('unit')
-                    ->label('Satuan')
-                    ->searchable(),
+                    ->label('Hasil Uji')
+                    ->html()
+                    ->searchable(
+                        query: function (Builder $query, string $search): Builder {
+
+                            return $query->where(function ($q) use ($search) {
+
+                                $q->where('tested_value', 'like', "%{$search}%")
+                                    ->orWhere('unit', 'like', "%{$search}%")
+                                    ->orWhere('standard_notes_ref', 'like', "%{$search}%");
+                            });
+                        }
+                    )
+                    ->formatStateUsing(function ($state, TestResult $record) {
+
+                        $html = "
+                <div class='font-semibold text-success-600'>
+                    " . e($state) . " " . e($record->unit) . "
+                </div>
+            ";
+
+                        if (Auth::user()->can('validate-test-result')) {
+                            $html .= "
+                    <div class='text-xs text-gray-500 mt-1'>
+                        <strong>BML</strong> : 
+                        " . e($record->standard_notes_ref ?: '-') . "
+                    </div>
+                ";
+                        }
+
+                        return $html;
+                    }),
+
+                TextColumn::make('analystPersonel.fullname')
+                    ->label('Petugas')
+                    ->html()
+                    ->searchable(
+                        query: function (Builder $query, string $search): Builder {
+
+                            return $query
+                                ->whereHas('analystPersonel', function ($q) use ($search) {
+                                    $q->where('fullname', 'like', "%{$search}%");
+                                })
+                                ->orWhereHas('validatorPersonel', function ($q) use ($search) {
+                                    $q->where('fullname', 'like', "%{$search}%");
+                                });
+                        }
+                    )
+                    ->formatStateUsing(function ($state, TestResult $record) {
+
+                        return "
+                <div class='space-y-2'>
+                    <div>
+                        <div class='text-xs text-gray-500'>
+                            Analis  :  " . e($record->analystPersonel?->fullname ?? '-') . "
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <div class='text-xs text-gray-500'>
+                            Validator : " . e($record->validatorPersonel?->fullname ?? '-') . "
+                        </div>
+                    </div>
+                </div>
+            ";
+                    }),
+
                 TextColumn::make('test_date')
-                    ->label('Tanggal uji')
-                    ->date()
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('standard_max_value_ref')
-                    ->numeric()
-                    ->label('Nilai Standar Maksimum'),
-                TextColumn::make('standard_min_value_ref')
-                    ->numeric()
-                    ->label('Nilai Standar Minimum'),
-                TextColumn::make('standard_unit_ref')
-                    ->label('Satuan Standar'),
-                TextColumn::make('standard_notes_ref')
-                    ->label('Baku Mutu (BML)'),
-                TextColumn::make('analystPersonel.fullname')->label('Analis')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('validatorPersonel.fullname')->label('Validator')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('validation_date')
-                    ->label('Tanggal Validasi')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('created_by')
-                    ->searchable(),
-                TextColumn::make('updated_by')
-                    ->searchable(),
+                    ->label('Tanggal')
+                    ->html()
+                    ->sortable()
+                    ->formatStateUsing(function ($state, TestResult $record) {
+
+                        $uji = $record->test_date
+                            ? Carbon::parse($record->test_date)->format('d M Y')
+                            : '-';
+
+                        $validasi = $record->validation_date
+                            ? Carbon::parse($record->validation_date)->format('d M Y H:i')
+                            : '-';
+
+                        return "
+                <div class='space-y-2'>
+                    <div>
+                        <div class='text-xs text-gray-500'>
+                            Uji : {$uji}
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <div class='text-xs text-gray-500'>
+                            Validasi :   {$validasi}
+                        </div>
+                    </div>
+                </div>
+            ";
+                    }),
+
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

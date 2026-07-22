@@ -44,15 +44,10 @@ class TestResultResource extends Resource
         return TestResultForm::configure($schema);
     }
 
-    // public static function infolist(Schema $schema): Schema
-    // {
-    //     return TestResultInfolist::configure($schema);
-    // }
-
-
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with(['testMethod'])
             ->visibleForUser(Auth::user());
     }
     public static function getNavigationBadge(): ?string

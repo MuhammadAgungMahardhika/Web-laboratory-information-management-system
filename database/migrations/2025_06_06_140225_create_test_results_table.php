@@ -29,9 +29,6 @@ return new class extends Migration
             $table->text('test_notes')->nullable();
 
             // Data standar referensi
-            $table->decimal('standard_max_value_ref', 10, 4)->nullable();
-            $table->decimal('standard_min_value_ref', 10, 4)->nullable();
-            $table->string('standard_unit_ref', 50)->nullable();
             $table->string('standard_notes_ref', 255)->nullable();
 
             // Status validasi
