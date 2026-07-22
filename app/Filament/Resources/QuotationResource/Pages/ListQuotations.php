@@ -24,26 +24,26 @@ class ListQuotations extends ListRecords
 
     public function getTabs(): array
     {
-        // Tab "SEMUA"
-        $tabs = [
-            'all' => Tab::make('all')
-                ->label('SEMUA')
-                ->badge(Quotation::count()),
-        ];
-
-        // Hitung jumlah per status dalam 1 query
         $counts = Quotation::query()
             ->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        // Buat tab untuk tiap status
+        $tabs = [
+            'all' => Tab::make('all')
+                ->label('SEMUA')
+                ->badge($counts->sum())
+                ->badgeColor('gray'),
+        ];
+
         foreach (QuotationStatusEnum::cases() as $status) {
-            $tabs[$status->value] = Tab::make($status->value)
-                ->badge($counts[$status->value] ?? 0) // pakai hasil pluck
-                ->badgeColor(QuotationStatusEnum::color($status->value))
+            $tabs[$status->value] = Tab::make($status->label())
                 ->label(strtoupper($status->label()))
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', $status->value));
+                ->badge($counts[$status->value] ?? 0)
+                ->badgeColor(QuotationStatusEnum::color($status->value))
+                ->modifyQueryUsing(
+                    fn(Builder $query) => $query->where('status', $status->value)
+                );
         }
 
         return $tabs;

@@ -31,25 +31,27 @@ class ManageParameters extends ManageRecords
 
     public function getTabs(): array
     {
-        return [
+        $counts = Parameter::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $tabs = [
             'all' => Tab::make('Semua')
-                ->badge(Parameter::count())
+                ->badge($counts->sum())
                 ->badgeColor('gray'),
-
-            'accredited' => Tab::make('Terakreditasi')
-                ->badge(Parameter::where('status', ParameterStatusEnum::Accredited->value)->count())
-                ->badgeColor('success')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', ParameterStatusEnum::Accredited->value)),
-
-            'unaccredited' => Tab::make('Tidak Terakreditasi')
-                ->badge(Parameter::where('status', ParameterStatusEnum::Unaccredited->value)->count())
-                ->badgeColor('danger')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', ParameterStatusEnum::Unaccredited->value)),
-
-            'sub' => Tab::make('Sub-kontrak')
-                ->badge(Parameter::where('status', ParameterStatusEnum::Sub->value)->count())
-                ->badgeColor('warning')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', ParameterStatusEnum::Sub->value)),
         ];
+
+        foreach (ParameterStatusEnum::cases() as $status) {
+            $tabs[$status->value] = Tab::make($status->label())
+                ->badge($counts[$status->value] ?? 0)
+                ->badgeColor(ParameterStatusEnum::color($status->value))
+                ->modifyQueryUsing(
+                    fn(Builder $query) =>
+                    $query->where('status', $status->value)
+                );
+        }
+
+        return $tabs;
     }
 }

@@ -44,7 +44,27 @@ class LabJobResource extends Resource
     protected static ?int $navigationSort = 2;
     protected static ?string $recordTitleAttribute = 'job_number';
     protected static int $globalSearchResultsLimit = 20;
+    protected static ?int $draftCount = null;
 
+    protected static function draftCount(): int
+    {
+        return static::$draftCount ??=
+            static::getEloquentQuery()
+            ->where('status', JobStatusEnum::PendingStart->value)
+            ->count();
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::draftCount();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::draftCount() > 0
+            ? 'gray'
+            : 'success';
+    }
     public static function getGloballySearchableAttributes(): array
     {
         return ['job_number', 'quotation.quotation_number', 'quotation.quotation_name', 'quotation.customer.name'];

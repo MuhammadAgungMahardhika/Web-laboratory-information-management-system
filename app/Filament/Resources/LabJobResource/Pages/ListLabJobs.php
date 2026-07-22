@@ -28,25 +28,32 @@ class ListLabJobs extends ListRecords
     // }
     public function getTabs(): array
     {
-        // Tab "SEMUA"
-        $tabs = [
-            'all' => Tab::make('all')
-                ->label('SEMUA'),
-        ];
-
-        // Hitung jumlah per status sekali query
         $counts = LabJob::query()
             ->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        // Buat tab untuk tiap status
+        $tabs = [
+            'all' => Tab::make('all')
+                ->label('SEMUA')
+                ->badge($counts->sum())
+                ->badgeColor('gray'),
+        ];
+
         foreach (JobStatusEnum::cases() as $status) {
+            $count = $counts[$status->value] ?? 0;
+
             $tabs[$status->value] = Tab::make($status->value)
-                ->badge($counts[$status->value] ?? 0)
-                ->badgeColor(JobStatusEnum::color($status->value))
                 ->label(strtoupper($status->label()))
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', $status->value));
+                ->badge($count)
+                ->badgeColor(
+                    $count > 0
+                        ? JobStatusEnum::color($status->value)
+                        : 'success'
+                )
+                ->modifyQueryUsing(
+                    fn(Builder $query) => $query->where('status', $status->value)
+                );
         }
 
         return $tabs;
