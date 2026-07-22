@@ -174,7 +174,7 @@ class QuotationStatusAction
 
                     $record->load(['customer', 'personel', 'quotationItems.parameterQuotationItems']);
                     // HAPUS BARIS INI: $settings = \App\Models\Setting::first();
-                    $company = Auth::user()->personel->company;
+                    $company = Auth::user()->personel?->company;
                     $pdf = Pdf::loadView('pdfs.quotation', ['quotation' => $record, 'company' => $company]); // Hanya meneruskan quotation
                     $pdfContent = $pdf->output();
                     $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);

@@ -13,10 +13,6 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Attachment; // Import Attachment
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Filament\Notifications\Actions\Action;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class DocumentMail extends Mailable implements ShouldQueue
 {
