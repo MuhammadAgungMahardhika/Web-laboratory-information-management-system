@@ -57,6 +57,13 @@ class PermissionAndRoleSeeder extends Seeder
             'delete-customer',
         ];
 
+        $customerTypePermissions = [
+            'view-any-customer-type',
+            'view-customer-type',
+            'create-customer-type',
+            'update-customer-type',
+            'delete-customer-type',
+        ];
         $personelPermissions = [
             'view-chart-role-personel',
 
@@ -247,6 +254,7 @@ class PermissionAndRoleSeeder extends Seeder
             $provincePermissions,
             $cityPermissions,
             $customerPermissions,
+            $customerTypePermissions,
             $rolePermissions,
             $paramPermissions,
             $parameterPermissions,
@@ -278,7 +286,21 @@ class PermissionAndRoleSeeder extends Seeder
             'customer' => Permission::all(),
             'admin' => Permission::all(),
             'sampling technician' => Permission::all(),
-            'analyst' => Permission::all(),
+            'analyst' => [
+                'view-chart-test-result',
+                'view-any-test-result',
+                'view-test-result',
+                'update-test-result',
+                // 'filling-test-result',
+                'request-validate-test-result',
+
+                'view-chart-accreditation-status-parameter',
+                'view-any-parameter',
+                'view-parameter',
+
+                'view-any-regulation',
+                'view-regulation',
+            ],
             'technical manager' => Permission::all(),
             'laboratory head' => Permission::all(),
         ];

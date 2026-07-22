@@ -22,6 +22,7 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class SpecializationResource extends Resource
 {
@@ -95,7 +96,7 @@ class SpecializationResource extends Resource
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-specialization')),
                 ]),
             ]);
     }

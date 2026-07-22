@@ -25,6 +25,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ProvinceResource extends Resource
 {
@@ -95,7 +96,7 @@ class ProvinceResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-province')),
                 ]),
             ]);
     }

@@ -12,18 +12,12 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\TestMethodResource\Pages\ManageTestMethods;
-use App\Filament\Resources\TestMethodResource\Pages;
-use App\Filament\Resources\TestMethodResource\RelationManagers;
 use App\Models\TestMethod;
-use App\Traits\HasAuthorization;
 use Filament\Actions\ViewAction;
-use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class TestMethodResource extends Resource
 {
@@ -86,7 +80,7 @@ class TestMethodResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-test-method')),
                 ]),
             ]);
     }

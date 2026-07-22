@@ -8,26 +8,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\RoleResource\Pages\ListRoles;
-use App\Filament\Resources\RoleResource\Pages\CreateRole;
-use App\Filament\Resources\RoleResource\Pages\ViewRole;
-use App\Filament\Resources\RoleResource\Pages\EditRole;
-use App\Filament\Resources\RoleResource\Pages;
-use App\Filament\Resources\RoleResource\RelationManagers;
 use App\Models\Enums\RoleEnum;
 use App\Models\Role;
-use App\Traits\HasAuthorization;
-use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Permission\Models\Permission;
 
 class RoleResource extends Resource

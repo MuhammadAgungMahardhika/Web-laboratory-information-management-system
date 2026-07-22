@@ -11,29 +11,19 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\RegulationResource\Pages\ManageRegulations;
-use App\Filament\Resources\RegulationResource\Pages;
-use App\Filament\Resources\RegulationResource\RelationManagers;
-use App\Models\Enums\RegulationTypeEnum;
 use App\Models\Regulation;
 use App\Models\RegulationType;
-use App\Traits\HasAuthorization;
 use Filament\Actions\ViewAction;
-use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class RegulationResource extends Resource
 {
@@ -131,7 +121,7 @@ class RegulationResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-regulation')),
                 ]),
             ]);
     }

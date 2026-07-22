@@ -13,21 +13,15 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\SampleMatricResource\Pages\ManageSampleMatrics;
-use App\Filament\Resources\SampleMatricResource\Pages;
-use App\Filament\Resources\SampleMatricResource\RelationManagers;
 use App\Models\Enums\EnvironmentTypeEnum;
 use App\Models\SampleMatric;
-use App\Traits\HasAuthorization;
 use Filament\Actions\ViewAction;
-use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class SampleMatricResource extends Resource
 {
@@ -128,7 +122,7 @@ class SampleMatricResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-sample-matric')),
                 ]),
             ]);
     }

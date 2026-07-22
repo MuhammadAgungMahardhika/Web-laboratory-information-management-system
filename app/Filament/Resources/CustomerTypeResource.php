@@ -17,6 +17,7 @@ use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerTypeResource extends Resource
 {
@@ -71,7 +72,7 @@ class CustomerTypeResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-customer-type')),
                 ]),
             ]);
     }

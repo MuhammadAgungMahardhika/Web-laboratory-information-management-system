@@ -11,18 +11,12 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\SampleTypeResource\Pages\ManageSampleTypes;
-use App\Filament\Resources\SampleTypeResource\Pages;
-use App\Filament\Resources\SampleTypeResource\RelationManagers;
 use App\Models\SampleType;
-use App\Traits\HasAuthorization;
 use Filament\Actions\ViewAction;
-use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class SampleTypeResource extends Resource
 {
@@ -82,7 +76,7 @@ class SampleTypeResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-sample-type')),
                 ]),
             ]);
     }

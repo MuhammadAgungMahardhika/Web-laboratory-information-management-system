@@ -34,6 +34,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Support\Enums\Size;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyResource extends Resource
 {
@@ -218,7 +219,7 @@ class CompanyResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-company')),
                 ]),
             ]);
     }
