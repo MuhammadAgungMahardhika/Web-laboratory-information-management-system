@@ -106,8 +106,19 @@ class LabJobResource extends Resource
                 Section::make('Job')
                     ->heading(fn($record) => $record?->status ? 'Status -> ' .  JobStatusEnum::labels()[$record->status] : '')
                     ->iconColor(fn($record) =>  $record && $record->status ? JobStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate')
-                    ->inlineLabel()
                     ->schema([
+                        DatePicker::make('start_date')
+                            ->label('Tanggal Mulai')
+                            ->live()
+                            ->disabledOn('edit')
+                            ->dehydrated()
+                            ->default(now()),
+                        DatePicker::make('end_date')
+                            ->label('Tanggal Selesai')
+                            ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
+                            ->afterOrEqual('start_date')
+                            ->disabledOn('edit')
+                            ->dehydrated(),
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
                             ->disabledOn('edit')
@@ -136,16 +147,7 @@ class LabJobResource extends Resource
                             ->required()
                             ->disabled() // <-- Jadikan read-only
                             ->maxLength(50),
-                        DatePicker::make('start_date')
-                            ->label('Tanggal Mulai')
-                            ->live()
-                            ->disabledOn('edit')
-                            ->dehydrated()
-                            ->default(now()),
-                        DatePicker::make('end_date')
-                            ->label('Tanggal Selesai')
-                            ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
-                            ->afterOrEqual('start_date'),
+
 
                     ])->columnSpanFull()->columns(2),
                 Repeater::make('labJobPersonels')

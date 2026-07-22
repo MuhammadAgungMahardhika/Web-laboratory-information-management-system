@@ -103,9 +103,8 @@ class QuotationResource extends Resource
         $quoatationService = app(QuotationService::class);
         return $schema
             ->columns([
-                'sm' => 2,
-                'md' => 3,
-                'xl' => 4,
+                'default' => 1,
+                'lg' => 2,
             ])
             ->components([
                 Section::make([
@@ -246,108 +245,109 @@ class QuotationResource extends Resource
                         ->searchable()
                         ->preload(),
 
-                ])->columnSpanFull()->columns(4)->heading(fn($record) => $record && $record->status ?  'Status -> ' . QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
-                    ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
-
-                Section::make('Syarat & Ketentuan Pembayaran')
-                    ->heading(null)
-                    ->schema([
-                        Section::make([
-                            TextInput::make('discount_percentage')
-                                ->label('Diskon (%)')
-                                ->required()
-                                ->numeric()
-                                ->default(0),
-                            TextInput::make('ppn_percentage')
-                                ->label('Ppn (%)')
-                                ->required()
-                                ->numeric()
-                                ->default(11),
-                            TextInput::make('pph_percentage')
-                                ->label('Pph (%)')
-                                ->required()
-                                ->numeric()
-                                ->default(0),
-                        ])->columns(3)->collapsible()->heading('Potongan')->icon(Heroicon::ReceiptPercent)->columnSpanFull(),
-                        Section::make([
-                            Select::make('template_selector')
-                                ->label('Pilih Template')
-                                // --- PENTING: Opsi diambil dari database untuk menampilkan NAMA TEMPLATE ---
-                                ->options(function () {
-                                    $options = TermTemplate::query()
-                                        ->where('is_active', true)
-                                        ->pluck('name', 'id') // Mengambil 'name' sebagai label dan 'id' sebagai value
-                                        ->toArray();
-                                    // Tambahkan opsi "Kosongkan" secara manual
-                                    $options['kosong'] = 'Kosongkan';
-                                    return $options;
-                                })
-                                ->searchable()
-                                // -------------------------------------------------------------------------
-                                ->placeholder('Atau tulis manual di bawah')
-                                ->reactive()
-                                ->afterStateUpdated(function (?string $state, Get $get, Set $set) {
-                                    if ($state === 'kosong') {
-                                        $set('additional_description', null); // Kosongkan jika 'kosong' dipilih
-                                    } elseif ($state) {
-                                        // --- Mengambil KONTEN template dari database berdasarkan ID yang dipilih ---
-                                        $template = TermTemplate::find($state);
-                                        if ($template) {
-                                            $set('additional_description', $template->content);
-                                        } else {
-                                            // Fallback jika template tidak ditemukan (misal: ID tidak valid)
-                                            $set('additional_description', null);
-                                        }
+                    Section::make([
+                        TextInput::make('discount_percentage')
+                            ->label('Diskon (%)')
+                            ->required()
+                            ->numeric()
+                            ->default(0),
+                        TextInput::make('ppn_percentage')
+                            ->label('Ppn (%)')
+                            ->required()
+                            ->numeric()
+                            ->default(11),
+                        TextInput::make('pph_percentage')
+                            ->label('Pph (%)')
+                            ->required()
+                            ->numeric()
+                            ->default(0),
+                    ])->columns([
+                        'default' => 1,
+                        'md' => 3,
+                    ])->collapsible()->heading('Potongan')->icon(Heroicon::ReceiptPercent),
+                    Section::make([
+                        Select::make('template_selector')
+                            ->label('Pilih Template')
+                            ->options(function () {
+                                $options = TermTemplate::query()
+                                    ->where('is_active', true)
+                                    ->pluck('name', 'id') // Mengambil 'name' sebagai label dan 'id' sebagai value
+                                    ->toArray();
+                                // Tambahkan opsi "Kosongkan" secara manual
+                                $options['kosong'] = 'Kosongkan';
+                                return $options;
+                            })
+                            ->searchable()
+                            // -------------------------------------------------------------------------
+                            ->placeholder('Atau tulis manual di bawah')
+                            ->reactive()
+                            ->afterStateUpdated(function (?string $state, Get $get, Set $set) {
+                                if ($state === 'kosong') {
+                                    $set('additional_description', null); // Kosongkan jika 'kosong' dipilih
+                                } elseif ($state) {
+                                    // --- Mengambil KONTEN template dari database berdasarkan ID yang dipilih ---
+                                    $template = TermTemplate::find($state);
+                                    if ($template) {
+                                        $set('additional_description', $template->content);
                                     } else {
-                                        // Jika pilihan dikosongkan tanpa memilih 'kosong'
+                                        // Fallback jika template tidak ditemukan (misal: ID tidak valid)
                                         $set('additional_description', null);
                                     }
-                                })
-                                ->dehydrated(false)
-                                ->createOptionForm(function (Get $get, Set $set) {
-                                    return [
-                                        TextInput::make('name')
-                                            ->label('Nama Template')
-                                            ->required()
-                                            ->unique(TermTemplate::class)
-                                            ->maxLength(255),
-                                        RichEditor::make('content')
-                                            ->label('Isi Template')
-                                            ->required()
-                                            ->columnSpanFull()
-                                            ->toolbarButtons([ // Atur toolbar RichEditor
-                                                'blockquote',
-                                                'bold',
-                                                'bulletList',
-                                                'codeBlock',
-                                                'h2',
-                                                'h3',
-                                                'italic',
-                                                'link',
-                                                'orderedList',
-                                                'strike',
-                                                'underline',
-                                            ]),
-                                        Hidden::make('is_active')
-                                            ->label('Aktif ?')
-                                            ->required()
-                                            ->default(true),
-                                    ];
-                                })->createOptionUsing(function (array $data): string {
-                                    // Logika ini akan membuat record baru di database
-                                    $template = TermTemplate::create($data);
-                                    return (string) $template->id; // Mengembalikan ID dari record yang baru dibuat
-                                }),
+                                } else {
+                                    // Jika pilihan dikosongkan tanpa memilih 'kosong'
+                                    $set('additional_description', null);
+                                }
+                            })
+                            ->dehydrated(false)
+                            ->createOptionForm(function (Get $get, Set $set) {
+                                return [
+                                    TextInput::make('name')
+                                        ->label('Nama Template')
+                                        ->required()
+                                        ->unique(TermTemplate::class)
+                                        ->maxLength(255),
+                                    RichEditor::make('content')
+                                        ->label('Isi Template')
+                                        ->required()
+                                        ->columnSpanFull()
+                                        ->toolbarButtons([ // Atur toolbar RichEditor
+                                            'blockquote',
+                                            'bold',
+                                            'bulletList',
+                                            'codeBlock',
+                                            'h2',
+                                            'h3',
+                                            'italic',
+                                            'link',
+                                            'orderedList',
+                                            'strike',
+                                            'underline',
+                                        ]),
+                                    Hidden::make('is_active')
+                                        ->label('Aktif ?')
+                                        ->required()
+                                        ->default(true),
+                                ];
+                            })->createOptionUsing(function (array $data): string {
+                                // Logika ini akan membuat record baru di database
+                                $template = TermTemplate::create($data);
+                                return (string) $template->id; // Mengembalikan ID dari record yang baru dibuat
+                            }),
 
-                            RichEditor::make('additional_description')
-                                ->label('')
-                                ->required()
-                                ->autofocus()
-                                ->columnSpanFull(),
-                        ])->columnSpanFull()->collapsible()->collapsed()->heading('Syarat & Ketentuan')->icon(Heroicon::DocumentText)->iconColor('success')->description('Pilih template atau tulis syarat & ketentuan secara manual.'),
+                        RichEditor::make('additional_description')
+                            ->label('')
+                            ->required()
+                            ->autofocus()
+                            ->columnSpanFull(),
+                    ])->columns(1)->collapsible()->collapsed()->heading('Syarat & Ketentuan')->icon(Heroicon::DocumentText)->iconColor('success')->description('Pilih template atau tulis syarat & ketentuan secara manual.'),
 
 
-                    ])->columnSpanFull()->columns(2),
+                ])->columns([
+                    'default' => 1,
+                    'lg' => 2,
+                ])
+                    ->columnSpanFull()->heading(fn($record) => $record && $record->status ?  'Status -> ' . QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
+                    ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
 
             ]);
     }
