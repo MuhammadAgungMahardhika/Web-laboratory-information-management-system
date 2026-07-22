@@ -17,6 +17,7 @@ use App\Filament\Resources\QuotationResource\RelationManagers\QuotationItemRelat
 use App\Models\Enums\QuotationStatusEnum;
 use App\Models\Enums\RoleEnum;
 use App\Models\Quotation;
+use App\Models\QuotationItem;
 use App\Models\TermTemplate;
 use App\Services\QuotationService;
 use Carbon\Carbon;
@@ -37,8 +38,10 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\RecordActionsPosition;
+use Illuminate\Support\HtmlString;
 
 class QuotationResource extends Resource
 {
@@ -369,59 +372,183 @@ class QuotationResource extends Resource
                 //     ->searchable()
                 //     ->sortable(),
                 TextColumn::make('quotation_number')
-                    ->label('Nomor penawaran')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('quotation_date')
-                    ->label('Tanggal penawaran')
-                    ->date('d M Y')
-                    ->sortable(),
-                TextColumn::make('valid_until_date')
-                    ->label('Tanggal berakhir penawaran')
-                    ->date('d M Y')
-                    ->sortable(),
-
-                TextColumn::make('quotation_name')
-                    ->label('Judul penawaran')
+                    ->label('Penawaran')
+                    ->html()
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(
+                        query: function (Builder $query, string $search): Builder {
+                            return $query->where(function ($q) use ($search) {
+                                $q->where('quotation_number', 'like', "%{$search}%")
+                                    ->orWhere('quotation_name', 'like', "%{$search}%");
+                            });
+                        }
+                    )->formatStateUsing(function ($state, $record) {
+
+                        $quotationDate = $record->quotation_date
+                            ? Carbon::parse($record->quotation_date)->format('d M Y')
+                            : '-';
+
+                        $validUntil = $record->valid_until_date
+                            ? Carbon::parse($record->valid_until_date)->format('d M Y')
+                            : '-';
+
+                        return new \Illuminate\Support\HtmlString("
+        <div style='line-height:1.45'>
+            <div style='font-weight:700;color:#2563eb'>
+                {$record->quotation_number}
+            </div>
+
+            <div style='font-size:12px;color:#6b7280'>
+                {$record->quotation_name}
+            </div>
+
+            <div style='font-size:12px;margin-top:6px'>
+                {$quotationDate}
+                &nbsp;&rarr;&nbsp;
+                {$validUntil}
+            </div>
+        </div>
+    ");
+                    }),
                 TextColumn::make('customer.name')
-                    ->label('Nama perusahaan')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('personel.fullname')
-                    ->label('Petugas pembuat')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('discount_percentage')
-                    ->numeric()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('ppn_percentage')
-                    ->numeric()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('pph_percentage')
-                    ->numeric()
+                    ->label('Klien')
+                    ->html()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(
+                        query: function (Builder $query, string $search): Builder {
+                            return $query->where(function ($q) use ($search) {
+
+                                $q->whereHas('customer', function ($sub) use ($search) {
+                                    $sub->where('name', 'like', "%{$search}%");
+                                })
+                                    ->orWhereHas('personel', function ($sub) use ($search) {
+                                        $sub->where('fullname', 'like', "%{$search}%");
+                                    });
+                            });
+                        }
+                    )
+                    ->formatStateUsing(function ($state, $record): string {
+
+                        return "
+            <div>
+                <div class='font-semibold'>
+                    {$record->customer?->name}
+                </div>
+
+                <div class='text-xs text-gray-500'>
+                    {$record->personel?->fullname}
+                </div>
+            </div>
+        ";
+                    }),
                 TextColumn::make('total_price')
-                    ->label('Jumlah total')
-                    ->numeric()
-                    ->money('IDR', true)
+                    ->label('Nominal')
+                    ->html()
+                    ->sortable(
+                        query: function (Builder $query, string $direction) {
+
+                            return $query->orderBy(
+                                QuotationItem::selectRaw('COALESCE(SUM(quantity * price),0)')
+                                    ->whereColumn(
+                                        'quotation_items.quotation_id',
+                                        'quotations.id'
+                                    ),
+                                $direction
+                            );
+                        }
+                    )
+                    ->searchable(
+                        query: function (Builder $query, string $search): Builder {
+                            return $query->whereExists(function ($sub) use ($search) {
+                                $sub->selectRaw(1)
+                                    ->from('quotation_items')
+                                    ->whereColumn('quotation_items.quotation_id', 'quotations.id')
+                                    ->groupBy('quotation_items.quotation_id')
+                                    ->havingRaw(
+                                        'COALESCE(SUM(quantity * price), 0) LIKE ?',
+                                        ["%{$search}%"]
+                                    );
+                            });
+                        }
+                    )
                     ->alignEnd()
-                    ->sortable(),
+                    ->formatStateUsing(function ($state, $record) {
+
+                        $total = number_format($record->total_price, 0, ',', '.');
+
+                        return "
+        <div style='text-align:right;line-height:1.45'>
+            <div style='font-size:15px;font-weight:700;color:#16a34a'>
+                Rp {$total}
+            </div>
+
+            <div style='font-size:12px;color:#6b7280'>
+                Diskon {$record->discount_percentage}%
+            </div>
+
+            <div style='font-size:12px;color:#6b7280'>
+                PPN {$record->ppn_percentage}% &nbsp;|&nbsp; PPh {$record->pph_percentage}%
+            </div>
+        </div>";
+                    }),
 
                 TextColumn::make('approvedByPersonel.fullname')
-                    ->label('Disetujui oleh')
-                    ->searchable(),
-                TextColumn::make('approved_at')
-                    ->label('Disetujui pada')
-                    ->dateTime()
-                    ->sortable(),
+                    ->label('Approval')
+                    ->html()
+                    ->sortable()
+                    ->searchable(
+                        query: function (Builder $query, string $search): Builder {
+
+                            return $query->whereHas(
+                                'approvedByPersonel',
+                                fn($q) => $q->where('fullname', 'like', "%{$search}%")
+                            );
+                        }
+                    )
+                    ->formatStateUsing(function ($state, $record): string {
+
+                        $tanggal = optional($record->approved_at)->format('d M Y H:i');
+
+                        return "
+            <div>
+                <div class='font-semibold'>
+                    " . ($record->approvedByPersonel?->fullname ?? '-') . "
+                </div>
+
+                <div class='text-xs text-gray-500'>
+                    {$tanggal}
+                </div>
+            </div>
+        ";
+                    }),
                 TextColumn::make('created_by')
-                    ->searchable(),
-                TextColumn::make('updated_by')
-                    ->searchable(),
+                    ->label('Audit')
+                    ->html()
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->searchable(
+                        query: function (Builder $query, string $search): Builder {
+
+                            return $query->where(function ($q) use ($search) {
+
+                                $q->where('created_by', 'like', "%{$search}%")
+                                    ->orWhere('updated_by', 'like', "%{$search}%");
+                            });
+                        }
+                    )
+                    ->formatStateUsing(function ($state, $record): string {
+
+                        return "
+            <div>
+                <div>
+                    <strong>Create :</strong> {$record->created_by}
+                </div>
+
+                <div class='text-xs text-gray-500'>
+                    Update : {$record->updated_by}
+                </div>
+            </div>
+        ";
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -432,28 +559,18 @@ class QuotationResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('customer_id')
-                    ->label('Klien')
-                    ->relationship('customer', 'name')
-                    ->searchable()
-                    ->preload(),
-                SelectFilter::make('user_id')
-                    ->label('Petugas')
-                    ->relationship('personel', 'fullname')
-                    ->searchable()
-                    ->preload(),
                 // --- Filter Tanggal Penawaran (quotation_date) ---
                 Filter::make('quotation_date_range')
                     ->schema([
-                        Section::make([
-                            DatePicker::make('from')
-                                ->label('Tanggal Penawaran Mulai')
-                                ->displayFormat('d/m/Y'),
-                            DatePicker::make('until')
-                                ->label('Tanggal Penawaran Sampai')
-                                ->displayFormat('d/m/Y'),
-                        ])->columns(2)
+                        DatePicker::make('from')
+                            ->label('Tanggal Mulai')
+                            ->displayFormat('d/m/Y'),
+                        DatePicker::make('until')
+                            ->label('Tanggal Akhir')
+                            ->displayFormat('d/m/Y'),
+
                     ])
+                    ->columns(2)
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
@@ -475,6 +592,17 @@ class QuotationResource extends Resource
                         }
                         return $indicators;
                     })->columnSpan(2),
+                SelectFilter::make('customer_id')
+                    ->label('Klien')
+                    ->relationship('customer', 'name')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('user_id')
+                    ->label('Petugas')
+                    ->relationship('personel', 'fullname')
+                    ->searchable()
+                    ->preload(),
+
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 ViewAction::make(),
