@@ -24,6 +24,7 @@ use Illuminate\Support\HtmlString;
 use Filament\Support\Colors\Color;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Support\Icons\Heroicon;
 
 class QuotationStatusAction
 {
@@ -47,7 +48,7 @@ class QuotationStatusAction
     {
         return  Action::make('Preview')
             ->color(Color::Blue) // Menggunakan warna biru Filament
-            ->icon('heroicon-o-eye')
+            ->icon(Heroicon::OutlinedDocumentDuplicate)
             ->slideOver()
             ->authorize(static::isAuthorized(static::PERMISSION_PREVIEW_QUOTATION))
             ->modalHeading('Pratinjau Penawaran PDF') // Judul modal

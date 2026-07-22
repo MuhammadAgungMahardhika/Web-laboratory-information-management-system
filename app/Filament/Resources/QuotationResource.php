@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\QuotationResource\Actions\QuotationStatusAction;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
@@ -605,6 +606,7 @@ class QuotationResource extends Resource
 
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
+                QuotationStatusAction::preview(),
                 ViewAction::make(),
                 EditAction::make(),
             ], position: RecordActionsPosition::BeforeColumns)

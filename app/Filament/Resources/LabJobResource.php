@@ -111,6 +111,7 @@ class LabJobResource extends Resource
                             ->label('Tanggal Mulai')
                             ->live()
                             ->disabledOn('edit')
+                            ->visible(fn($record) => $record && $record->end_date !== null)
                             ->dehydrated()
                             ->default(now()),
                         DatePicker::make('end_date')
@@ -118,6 +119,7 @@ class LabJobResource extends Resource
                             ->minDate(fn(callable $get) => $get('start_date') ?? \Carbon\Carbon::parse($get('start_date')))
                             ->afterOrEqual('start_date')
                             ->disabledOn('edit')
+                            ->visible(fn($record) => $record && $record->end_date !== null)
                             ->dehydrated(),
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
