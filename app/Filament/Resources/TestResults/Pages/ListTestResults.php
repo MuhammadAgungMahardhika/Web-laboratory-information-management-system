@@ -10,6 +10,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ListTestResults extends ListRecords
 {
@@ -18,32 +19,36 @@ class ListTestResults extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->slideOver()->modalWidth(Width::SixExtraLarge),
+            // CreateAction::make()->slideOver()->modalWidth(Width::SixExtraLarge),
         ];
     }
 
     public function getTabs(): array
     {
-        $tabs = [
-            'all' => Tab::make('all')
-                ->label('SEMUA')
-                ->badge(TestResult::count()),
-        ];
+        $baseQuery = TestResult::query()
+            ->visibleForUser(Auth::user());
 
-        // ambil jumlah per status dalam 1 query
-        $counts = TestResult::query()
-            ->selectRaw('status, COUNT(*) as total')
+        $counts = (clone $baseQuery)
+            ->selectRaw('status, COUNT(*) total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
+        $total = $counts->sum();
+        $tabs = [
+            'all' => Tab::make('all')
+                ->label('SEMUA')
+                ->badge($total),
+        ];
+
+
+
         foreach (TestResultStatusEnum::cases() as $status) {
-            $tabs[$status->value] = Tab::make($status->value)
+            $tabs[$status->value] = Tab::make($status->label())
                 ->badge($counts[$status->value] ?? 0)
                 ->badgeColor(TestResultStatusEnum::color($status->value))
                 ->label(strtoupper($status->label()))
                 ->modifyQueryUsing(
-                    fn(Builder $query) =>
-                    $query->where('test_results.status', $status->value)
+                    fn(Builder $query) => $query->where('status', $status->value)
                 );
         }
 

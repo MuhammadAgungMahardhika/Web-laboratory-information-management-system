@@ -43,11 +43,12 @@ class FortifyServiceProvider extends ServiceProvider
             ]);
             $user = User::where(function ($query) use ($request) {
                 $query->where('email', $request->identity)
-                    ->orWhere('username', $request->identity);
+                    ->orWhereHas('personel', function ($q) use ($request) {
+                        $q->where('nip', $request->identity);
+                    });
             })
                 ->where('status', UserStatusEnum::Active->value)
                 ->first();
-
             if (
                 $user &&
                 Hash::check($request->password, $user->password)

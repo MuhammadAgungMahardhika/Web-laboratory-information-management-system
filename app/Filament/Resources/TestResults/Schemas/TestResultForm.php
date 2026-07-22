@@ -64,8 +64,8 @@ class TestResultForm
                             ->relationship('validatorPersonel', 'fullname')
                             ->searchable(),
                         Textarea::make('comment')->label('Komentar')->autosize()->columnSpanFull()
-                    ])->columns(1)->inlineLabel()->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed()->visibleOn(['view', 'edit']),
-                ])->columns(2)->columnSpanFull(),
+                    ])->columns(1)->inlineLabel()->heading(fn($record) => $record?->evaluation_status ? 'Status Evaluasi -> ' . TestResultEvaluationStatusEnum::labels()[$record->evaluation_status] : 'Status Evaluasi -> Belum evaluasi')->disabled()->collapsible()->collapsed(),
+                ])->columns(2)->columnSpanFull()->visibleOn(['view', 'edit']),
 
                 Section::make([
                     Section::make([

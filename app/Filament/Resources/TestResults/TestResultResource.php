@@ -11,12 +11,15 @@ use App\Filament\Resources\TestResults\RelationManagers\TestResultHistoriesRelat
 use App\Filament\Resources\TestResults\Schemas\TestResultForm;
 use App\Filament\Resources\TestResults\Schemas\TestResultInfolist;
 use App\Filament\Resources\TestResults\Tables\TestResultsTable;
+use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class TestResultResource extends Resource
 {
@@ -26,6 +29,16 @@ class TestResultResource extends Resource
     protected static ?string $label = 'Hasil Pengujian';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Beaker;
     protected static ?int $navigationSort = 4;
+
+    protected static ?int $pendingCount = null;
+
+    protected static function pendingCount(): int
+    {
+        return static::$pendingCount ??=
+            static::getEloquentQuery()
+            ->where('status', TestResultStatusEnum::Raw)
+            ->count();
+    }
     public static function form(Schema $schema): Schema
     {
         return TestResultForm::configure($schema);
@@ -36,6 +49,23 @@ class TestResultResource extends Resource
     //     return TestResultInfolist::configure($schema);
     // }
 
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->visibleForUser(Auth::user());
+    }
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::pendingCount();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::pendingCount() > 0
+            ? 'warning'
+            : 'success';
+    }
 
     public static function table(Table $table): Table
     {

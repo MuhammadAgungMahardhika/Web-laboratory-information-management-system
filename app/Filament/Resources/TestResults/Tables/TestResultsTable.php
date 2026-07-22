@@ -27,20 +27,8 @@ class TestResultsTable
 {
     public static function configure(Table $table): Table
     {
-        $user = Auth::user();
-        $personel = $user?->personel;
-
-        $specializationIds = $personel?->personelSpecializations()
-            ->pluck('specialization_id')
-            ->toArray() ?? [];
-
 
         return $table
-            ->modifyQueryUsing(function ($query) use ($specializationIds) {
-                return $query->whereHas('parameter.specialisasiParameters', function ($q) use ($specializationIds) {
-                    $q->whereIn('specialization_id', $specializationIds);
-                });
-            })
             ->striped()
             ->groups([
                 Group::make('sample.sample_code')
@@ -48,7 +36,7 @@ class TestResultsTable
                 Group::make('sample.labJobItem.description')
                     ->label('Matrix')
                     ->titlePrefixedWithLabel(false),
-                Group::make('parameter.name')
+                Group::make('parameter.long_name')
                     ->label('Parameter')
                     ->titlePrefixedWithLabel(false),
             ])
@@ -67,7 +55,7 @@ class TestResultsTable
                     ->toggledHiddenByDefault(),
                 TextColumn::make('status')->formatStateUsing(fn($state) => TestResultStatusEnum::labels()[$state])->badge()->color(fn($state) => TestResultStatusEnum::color($state))->searchable()
                     ->sortable(),
-                TextColumn::make('parameter.name')->label('Parameter')
+                TextColumn::make('parameter.long_name')->label('Parameter')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('testMethod.name')->label('Metode')

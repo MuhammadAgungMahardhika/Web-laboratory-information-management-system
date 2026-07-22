@@ -24,7 +24,7 @@ class ParameterSeeder extends Seeder
             if (empty($code)) continue;
 
             $longName = $this->clean($row[1] ?? null);
-            $status = $this->convertStatus($this->clean($row[2] ?? null));
+            $status = $this->convertStatus($this->clean($row[2] ?? 2));
             $standardNotes = $this->clean($row[3] ?? null);
             $unit = $this->clean($row[4] ?? null);
             $price = $this->parseDecimal($row[5] ?? 0);
@@ -76,7 +76,7 @@ class ParameterSeeder extends Seeder
                 'code'           => $code,
                 'long_name'      => $longName,
                 'unit'           => $unit,
-                'status'         => $status,
+                'status'         => $status ?? 2,
                 'default_price'  => $price ?? 0,
                 'test_method_id' => $testMethodId,
                 'standard_notes' => $standardNotes,

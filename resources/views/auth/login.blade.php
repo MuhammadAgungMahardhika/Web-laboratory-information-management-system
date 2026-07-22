@@ -68,7 +68,8 @@
 
                 <!-- NIP / Email -->
                 <div>
-                    <label for="identity" class="block text-sm font-medium text-white mb-1">NIP / Email</label>
+                    <label for="identity" class="block text-sm font-medium text-white mb-1">Nip / Username /
+                        Email</label>
                     <input id="identity" name="identity" type="text" required autofocus value="{{ old('email') }}"
                         class="w-full px-3 py-2 bg-white/80 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800 placeholder-gray-500"
                         placeholder="Enter your NIP or email">

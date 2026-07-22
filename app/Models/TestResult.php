@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Blameable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -68,5 +69,16 @@ class TestResult extends Model
     public function testResultHistories()
     {
         return $this->hasMany(TestResultHistory::class);
+    }
+
+    public function scopeVisibleForUser(Builder $query, User $user): Builder
+    {
+        $specializationIds = $user->personel?->personelSpecializations
+            ->pluck('specialization_id')
+            ->toArray() ?? [];
+
+        return $query->whereHas('parameter.specialisasiParameters', function ($q) use ($specializationIds) {
+            $q->whereIn('specialization_id', $specializationIds);
+        });
     }
 }
