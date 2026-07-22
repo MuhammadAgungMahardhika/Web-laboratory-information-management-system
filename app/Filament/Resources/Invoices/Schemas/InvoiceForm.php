@@ -22,10 +22,32 @@ class InvoiceForm
     {
         $invoiceService = app(InvoiceService::class);
         return $schema
-
+            ->columns([
+                'default' => 1,
+                'lg' => 2,
+            ])
             ->components([
                 Section::make('Informasi Tagihan')
                     ->components([
+                        DatePicker::make('invoice_date')
+                            ->label('Tanggal Tagihan')
+                            ->required()
+                            ->default(now())
+                            ->live() // <-- 1. JADIKAN LIVE: Ini adalah pemicunya
+                            ->afterStateUpdated(function (Set $set, ?string $state) {
+                                // 2. AKSI: Jalankan ini setelah tanggal Tagihan diubah
+                                if ($state) {
+                                    // Ubah nilai 'due_date' menjadi 30 hari setelah tanggal baru
+                                    $set('due_date', Carbon::parse($state)->addDays(30)->format('Y-m-d'));
+                                }
+                            }),
+
+                        DatePicker::make('due_date')
+                            ->label('Tanggal jatuh Tempo')
+                            ->required()
+                            ->helperText('Otomatis diatur ke 30 hari setelah Tanggal Tagihan')
+                            ->default(now()->addDays(30)) // <-- Default awal tetap berguna
+                            ->afterOrEqual('invoice_date'),
                         Select::make('lab_job_id')
                             ->label('Nomor Lab Job')
                             ->disabledOn(['view', 'edit'])
@@ -63,25 +85,7 @@ class InvoiceForm
                             ->live()
                             ->unique(ignoreRecord: true)
                             ->readOnly(fn(Get $get) => !$get('manual_invoice_confirmation')),
-                        DatePicker::make('invoice_date')
-                            ->label('Tanggal Tagihan')
-                            ->required()
-                            ->default(now())
-                            ->live() // <-- 1. JADIKAN LIVE: Ini adalah pemicunya
-                            ->afterStateUpdated(function (Set $set, ?string $state) {
-                                // 2. AKSI: Jalankan ini setelah tanggal Tagihan diubah
-                                if ($state) {
-                                    // Ubah nilai 'due_date' menjadi 30 hari setelah tanggal baru
-                                    $set('due_date', Carbon::parse($state)->addDays(30)->format('Y-m-d'));
-                                }
-                            }),
 
-                        DatePicker::make('due_date')
-                            ->label('Jatuh Tempo')
-                            ->required()
-                            ->helperText('Otomatis diatur ke 30 hari setelah Tanggal Tagihan')
-                            ->default(now()->addDays(30)) // <-- Default awal tetap berguna
-                            ->afterOrEqual('invoice_date'),
 
                         TextInput::make('discount')
                             ->label('Diskon (%)')
@@ -101,7 +105,10 @@ class InvoiceForm
                             ->numeric()
                             ->visible(fn($record) => $record?->total_amount),
 
-                    ])->columns(4)->columnSpanFull(),
+                    ])->columns([
+                        'default' => 1,
+                        'lg' => 2,
+                    ])->columnSpanFull(),
             ]);
     }
 }
