@@ -19,6 +19,7 @@ class TestResultsChartWidget extends ChartWidget
     protected ?string $heading = 'Status Hasil Pengujian';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_SAMPLE = 'view-chart-sample';
+    protected ?string $description = 'Default filter 1 tahun belakang';
 
     public static function canView(): bool
     {

@@ -20,7 +20,7 @@ class LabJobsChartWidget extends ChartWidget
     protected ?string $heading = 'Status Pengerjaan Lab Job';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_LAB_JOB = 'view-chart-lab-job';
-
+    protected ?string $description = 'Default filter 1 tahun belakang';
 
     public static function canView(): bool
     {
