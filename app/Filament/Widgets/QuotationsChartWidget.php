@@ -5,10 +5,10 @@ namespace App\Filament\Widgets;
 use App\Models\Enums\QuotationStatusEnum;
 use Filament\Widgets\ChartWidget;
 use App\Models\Quotation;
-use Auth;
 use Filament\Forms\Components\DatePicker;
 use Filament\Schemas\Schema;
 use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class QuotationsChartWidget extends ChartWidget
@@ -79,7 +79,7 @@ class QuotationsChartWidget extends ChartWidget
         return $schema->components([
             DatePicker::make('startDate')
                 ->label('Tanggal Mulai')
-                ->default(now()->subDays(30))
+                ->default(now()->subYear())
                 ->maxDate(now()),
             DatePicker::make('endDate')
                 ->label('Tanggal Akhir')

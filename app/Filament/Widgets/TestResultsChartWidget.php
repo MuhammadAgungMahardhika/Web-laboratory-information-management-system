@@ -79,7 +79,7 @@ class TestResultsChartWidget extends ChartWidget
         return $schema->components([
             DatePicker::make('startDate')
                 ->label('Tanggal Mulai')
-                ->default(now()->subDays(30))
+                ->default(now()->subYear())
                 ->maxDate(now()),
             DatePicker::make('endDate')
                 ->label('Tanggal Akhir')
