@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ class TestResultApproval extends Model
     protected $casts = [
         'personel_id' => 'integer',
         'approval_level' => 'integer',
+        'status' => TestResultApprovalStatusEnum::class,
     ];
     public function personel()
     {

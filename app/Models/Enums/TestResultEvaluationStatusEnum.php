@@ -27,12 +27,12 @@ enum TestResultEvaluationStatusEnum: int
         return self::labels()[$this->value];
     }
 
-    public static function color(string $status): string
+    public static function cssColor(?int $status): string
     {
         return match ($status) {
-            self::Compliant->value => 'success',
-            self::Invalid->value => 'danger',
-            default => 'gray',
+            self::Compliant->value => '#10B981', // Green
+            self::Invalid->value => '#EF4444',   // Red
+            default => '#6B7280',                // Gray
         };
     }
 }

@@ -2,17 +2,14 @@
 
 namespace App\Filament\Resources\TestResults;
 
-use App\Filament\Clusters\Master\MasterCluster;
-use App\Filament\Resources\TestResults\Pages\CreateTestResult;
-use App\Filament\Resources\TestResults\Pages\EditTestResult;
 use App\Filament\Resources\TestResults\Pages\ListTestResults;
-use App\Filament\Resources\TestResults\Pages\ViewTestResult;
 use App\Filament\Resources\TestResults\RelationManagers\TestResultHistoriesRelationManager;
 use App\Filament\Resources\TestResults\Schemas\TestResultForm;
-use App\Filament\Resources\TestResults\Schemas\TestResultInfolist;
 use App\Filament\Resources\TestResults\Tables\TestResultsTable;
+use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
+use App\Services\TestResultApprovalService;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -23,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
 
 class TestResultResource extends Resource
 {
-
     protected static ?string $model = TestResult::class;
     protected static ?string $navigationLabel = 'Hasil Pengujian';
     protected static ?string $label = 'Hasil Pengujian';
@@ -32,13 +28,54 @@ class TestResultResource extends Resource
 
     protected static ?int $pendingCount = null;
 
+    /**
+     * User dianggap "approver" kalau dia punya salah satu permission
+     * approve-test-result-level-*. Approver tidak dibatasi specialization.
+     */
+    protected static function isApprover($user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        foreach (TestResultApprovalService::LEVEL_PERMISSIONS as $permission) {
+            if ($user->can($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected static function pendingCount(): int
     {
-        return static::$pendingCount ??=
-            static::getEloquentQuery()
-            ->where('status', TestResultStatusEnum::Raw)
+        if (static::$pendingCount !== null) {
+            return static::$pendingCount;
+        }
+
+        $user = Auth::user();
+
+        if (static::isApprover($user)) {
+            // Badge buat approver = jumlah record yang punya approval pending
+            // di level yang dia punya izinnya.
+            $myLevels = collect(TestResultApprovalService::LEVEL_PERMISSIONS)
+                ->filter(fn($permission) => $user->can($permission))
+                ->keys();
+
+            return static::$pendingCount = static::getEloquentQuery()
+                ->whereHas('test_result_approvals', function ($q) use ($myLevels) {
+                    $q->where('status', TestResultApprovalStatusEnum::Pending->value)
+                        ->whereIn('approval_level', $myLevels);
+                })
+                ->count();
+        }
+
+        // Badge buat analis = jumlah record yang masih Raw (belum di-submit)
+        return static::$pendingCount = static::getEloquentQuery()
+            ->where('status', TestResultStatusEnum::Raw->value)
             ->count();
     }
+
     public static function form(Schema $schema): Schema
     {
         return TestResultForm::configure($schema);
@@ -46,10 +83,19 @@ class TestResultResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->with(['testMethod'])
-            ->visibleForUser(Auth::user());
+        $query = parent::getEloquentQuery()->with(['testMethod']);
+        $user = Auth::user();
+
+        // Approver: lihat semua record (tidak dibatasi specialization),
+        // karena hak lihat/approve ditentukan permission, bukan keahlian teknis.
+        if (static::isApprover($user)) {
+            return $query;
+        }
+
+        // Analis: tetap dibatasi ke specialization miliknya.
+        return $query->visibleForUser($user);
     }
+
     public static function getNavigationBadge(): ?string
     {
         return (string) static::pendingCount();
@@ -57,9 +103,7 @@ class TestResultResource extends Resource
 
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return static::pendingCount() > 0
-            ? 'warning'
-            : 'success';
+        return static::pendingCount() > 0 ? 'warning' : 'success';
     }
 
     public static function table(Table $table): Table
@@ -70,7 +114,7 @@ class TestResultResource extends Resource
     public static function getRelations(): array
     {
         return [
-            TestResultHistoriesRelationManager::class
+            TestResultHistoriesRelationManager::class,
         ];
     }
 
@@ -78,9 +122,6 @@ class TestResultResource extends Resource
     {
         return [
             'index' => ListTestResults::route('/'),
-            // 'create' => CreateTestResult::route('/create'),
-            // 'view' => ViewTestResult::route('/{record}'),
-            // 'edit' => EditTestResult::route('/{record}/edit'),
         ];
     }
 }

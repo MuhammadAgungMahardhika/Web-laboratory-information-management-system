@@ -71,7 +71,7 @@ class TestResult extends Model
         return $this->hasMany(TestResultHistory::class);
     }
 
-    public function testResultApproval()
+    public function test_result_approvals()
     {
         return $this->hasMany(TestResultApproval::class);
     }

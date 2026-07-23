@@ -45,6 +45,7 @@ enum TestResultStatusEnum: int
         };
     }
 
+
     /**
      * Provides a CSS hex color code for inline styling.
      *
@@ -53,17 +54,13 @@ enum TestResultStatusEnum: int
      */
     public static function cssColor(int $status): string
     {
-        if ($status === null) {
-            return '#6B7280'; // Default gray
-        }
-
         return match ($status) {
             self::Raw->value => '#6B7280',
-            self::Validated->value => '#10B981',
             self::RequestValidate->value => '#F59E0B',
-            self::RevisionNeeded->value =>  '#F59E0B',
+            self::Validated->value => '#10B981',
+            self::RevisionNeeded->value => '#3B82F6',
             self::Rejected->value => '#EF4444',
-            default => '#6B7280', // Fallback
+            default => '#6B7280',
         };
     }
 }

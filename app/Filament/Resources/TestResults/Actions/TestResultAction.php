@@ -4,11 +4,12 @@ namespace App\Filament\Resources\TestResults\Actions;
 
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
-use App\Services\TestResultService;
+use App\Services\TestResultApprovalService;
 
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
@@ -19,30 +20,46 @@ use Illuminate\Support\Facades\Log;
 
 class TestResultAction
 {
-    public const PERMISSION_REQUEST_VALIDATE_TEST_RESULT =  'request-validate-test-result';
-    public const PERMISSION_VALIDATE_TEST_RESULT =  'validate-test-result';
-    public const PERMISSION_REVISION_NEEDED_TEST_RESULT =  'revision-needed-test-result';
-    public const PERMISSION_REJECT_TEST_RESULT =  'reject-test-result';
+    public const PERMISSION_REQUEST_VALIDATE_TEST_RESULT = 'request-validate-test-result';
 
     public static function isAuthorized(string $permission): bool
     {
         return Auth::user()->can($permission);
     }
 
+    /**
+     * Analis kirim hasil uji untuk divalidasi (mulai Level 1).
+     * Dipakai juga untuk submit ULANG setelah status RevisionNeeded.
+     */
     public static function requestValidate($url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);
-        return  Action::make('Request Validasi')
+
+        return Action::make('Request Validasi')
             ->icon(Heroicon::ArrowUpTray)
             ->color('warning')
-            ->authorize(fn(TestResult $record) => $record->status === TestResultStatusEnum::Raw->value && $record->tested_value && $authorized)
+            ->authorize(
+                fn(TestResult $record) =>
+                in_array($record->status, [
+                    TestResultStatusEnum::Raw->value,
+                    TestResultStatusEnum::RevisionNeeded->value,
+                ])
+                    && $record->tested_value
+                    && $authorized
+            )
             ->requiresConfirmation()
-            ->action(function (TestResult $record, TestResultService $testResultService, $livewire) use ($url) {
+            ->action(function (TestResult $record, TestResultApprovalService $service, $livewire) use ($url) {
                 try {
-                    DB::transaction(function () use ($testResultService, $record) {
-                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RequestValidate);
+                    $result = null;
+                    DB::transaction(function () use ($service, $record, &$result) {
+                        $result = $service->submitForValidation($record);
+                        if (!$result['success']) {
+                            throw new Exception($result['message']);
+                        }
                     });
-                    Notification::make()->title('Hasil uji sudah dikirim untuk di validasi')->success()->send();
+
+                    Notification::make()->title($result['message'] ?? "")->success()->send();
+
                     if ($url) {
                         return redirect()->to($url);
                     } else {
@@ -50,12 +67,13 @@ class TestResultAction
                     }
                 } catch (Exception $e) {
                     Notification::make()
-                        ->title('Gagal Request validasi hasil uji')
+                        ->title('Gagal request validasi hasil uji')
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
                         ->danger()
                         ->send();
-                    Log::error('Gagal Request validasi hasil uji', [
-                        'quotation_id' => $record->id,
+
+                    Log::error('Gagal request validasi hasil uji', [
+                        'test_result_id' => $record->id,
                         'error' => $e->getMessage(),
                         'user_id' => Auth::id(),
                     ]);
@@ -63,20 +81,62 @@ class TestResultAction
             });
     }
 
+    /**
+     * Satu tombol Validasi, otomatis nyesuaikan Level 1 / Level 2
+     * berdasarkan permission user yang login dan approval yang sedang pending.
+     */
     public static function validate($url = null): Action
     {
-        $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);
-        return  Action::make('Validasi')
+        return Action::make('Validasi')
             ->icon(Heroicon::Check)
             ->color('success')
-            ->authorize(fn(TestResult $record) => $record->status === TestResultStatusEnum::RequestValidate->value && $authorized)
+            ->visible(fn(TestResult $record, TestResultApprovalService $service) =>
+            (bool) $service->getPendingApprovalForCurrentUser($record))
+            ->schema(function (TestResult $record, TestResultApprovalService $service) {
+                $pending = $service->getPendingApprovalForCurrentUser($record);
+
+                // Hanya Level 1 yang menentukan sesuai/tidak sesuai BML
+                if ($pending && $pending->approval_level === 1) {
+                    return [
+                        Radio::make('evaluation_status')
+                            ->label('Status Evaluasi')
+                            ->options([
+                                1 => 'Sesuai Baku Mutu',
+                                2 => 'Tidak Sesuai Baku Mutu',
+                            ])
+                            ->default($record->evaluation_status ?? 1)
+                            ->required(),
+                        Textarea::make('comment')
+                            ->label('Catatan (opsional)')
+                            ->rows(3),
+                    ];
+                }
+
+                // Level 2+ cukup catatan pengesahan, tidak ubah evaluation_status lagi
+                return [
+                    Textarea::make('comment')
+                        ->label('Catatan (opsional)')
+                        ->rows(3),
+                ];
+            })
             ->requiresConfirmation()
-            ->action(function (TestResult $record, TestResultService $testResultService) use ($url) {
+            ->action(function (TestResult $record, array $data, TestResultApprovalService $service) use ($url) {
                 try {
-                    DB::transaction(function () use ($testResultService, $record) {
-                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Validated);
+                    $personel = $service->getPersonelFromAuth();
+                    if (!$personel) {
+                        throw new Exception('Data personel untuk user ini tidak ditemukan.');
+                    }
+
+                    $result = null;
+                    DB::transaction(function () use ($service, $record, $personel, $data, &$result) {
+                        $result = $service->accept($record, $personel->id, null, $data);
+                        if (!$result['success']) {
+                            throw new Exception($result['message']);
+                        }
                     });
-                    Notification::make()->title('Hasil uji sudah tervalidasi')->success()->send();
+
+                    Notification::make()->title($result['message'] ?? "")->success()->send();
+
                     if ($url) {
                         return redirect()->to($url);
                     }
@@ -86,26 +146,27 @@ class TestResultAction
                         ->body('Terjadi kesalahan: ' . $e->getMessage())
                         ->danger()
                         ->send();
-                    Log::error('Gagal mengirimkan penawaran', [
-                        'quotation_id' => $record->id,
+
+                    Log::error('Gagal validasi hasil uji', [
+                        'test_result_id' => $record->id,
                         'error' => $e->getMessage(),
                         'user_id' => Auth::id(),
                     ]);
                 }
             });
     }
+    /**
+     * Perlu Revisi.
+     * Level 1 -> balik ke analis. Level 2 -> balik ke Level 1 saja (tidak ke analis).
+     * Logikanya sepenuhnya ditentukan service berdasarkan level approval yang pending.
+     */
     public static function revisionNeeded($url = null): Action
     {
-        $authorized = static::isAuthorized(static::PERMISSION_REVISION_NEEDED_TEST_RESULT);
-
         return Action::make('Perlu Revisi')
-            ->icon('heroicon-o-pencil-square') // Ikon Pensil Kotak lebih umum di Filament
+            ->icon('heroicon-o-pencil-square')
             ->color('warning')
-            ->authorize(
-                fn(TestResult $record) =>
-                $record->status === TestResultStatusEnum::RequestValidate->value && $authorized
-            )
-            // --- TAMBAHKAN FORM UNTUK CATATAN ---
+            ->visible(fn(TestResult $record, TestResultApprovalService $service) =>
+            (bool) $service->getPendingApprovalForCurrentUser($record))
             ->schema([
                 Textarea::make('comment')
                     ->label('Alasan Revisi')
@@ -113,20 +174,23 @@ class TestResultAction
                     ->required()
                     ->rows(4),
             ])
-            // ------------------------------------
             ->requiresConfirmation()
-            ->action(function (TestResult $record, array $data, TestResultService $testResultService) use ($url) {
+            ->action(function (TestResult $record, array $data, TestResultApprovalService $service) use ($url) {
                 try {
-                    DB::transaction(function () use ($testResultService, $record, $data) {
-                        // Panggil service untuk perubahan status
-                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RevisionNeeded, $data);
+                    $personel = $service->getPersonelFromAuth();
+                    if (!$personel) {
+                        throw new Exception('Data personel untuk user ini tidak ditemukan.');
+                    }
+
+                    $result = null;
+                    DB::transaction(function () use ($service, $record, $personel, $data, &$result) {
+                        $result = $service->requestRevision($record, $personel->id, $data['comment']);
+                        if (!$result['success']) {
+                            throw new Exception($result['message']);
+                        }
                     });
 
-                    Notification::make()
-                        ->title('Hasil uji ditandai perlu revisi')
-                        ->body('Catatan revisi berhasil dicatat.') // Perbarui notifikasi
-                        ->success()
-                        ->send();
+                    Notification::make()->title($result['message'] ?? "")->success()->send();
 
                     if ($url) {
                         return redirect()->to($url);
@@ -149,10 +213,8 @@ class TestResultAction
 
     public static function reject($url = null): Action
     {
-        $authorized = static::isAuthorized(static::PERMISSION_REJECT_TEST_RESULT);
-
         return Action::make('Tolak')
-            ->icon(Heroicon::XCircle) // ikon penolakan
+            ->icon(Heroicon::XCircle)
             ->color('danger')
             ->schema([
                 Textarea::make('comment')
@@ -161,21 +223,25 @@ class TestResultAction
                     ->required()
                     ->rows(4),
             ])
-            ->visible(
-                fn(TestResult $record) =>
-                $record->status === TestResultStatusEnum::RequestValidate->value && $authorized
-            )
+            ->visible(fn(TestResult $record, TestResultApprovalService $service) =>
+            (bool) $service->getPendingApprovalForCurrentUser($record))
             ->requiresConfirmation()
-            ->action(function (TestResult $record, array $data, TestResultService $testResultService) use ($url) {
+            ->action(function (TestResult $record, array $data, TestResultApprovalService $service) use ($url) {
                 try {
-                    DB::transaction(function () use ($testResultService, $record, $data) {
-                        $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Rejected, $data['comment']);
+                    $personel = $service->getPersonelFromAuth();
+                    if (!$personel) {
+                        throw new Exception('Data personel untuk user ini tidak ditemukan.');
+                    }
+
+                    $result = null;
+                    DB::transaction(function () use ($service, $record, $personel, $data, &$result) {
+                        $result = $service->reject($record, $personel->id, $data['comment']);
+                        if (!$result['success']) {
+                            throw new Exception($result['message']);
+                        }
                     });
 
-                    Notification::make()
-                        ->title('Hasil uji ditolak')
-                        ->success()
-                        ->send();
+                    Notification::make()->title($result['message'] ?? "")->success()->send();
 
                     if ($url) {
                         return redirect()->to($url);
@@ -196,87 +262,66 @@ class TestResultAction
             });
     }
 
+    // ==================== BULK ACTIONS ====================
+
     public static function bulkRequestValidate(): BulkAction
     {
-        return  BulkAction::make('requestValidate')
+        return BulkAction::make('requestValidate')
             ->label('Request Validasi')
             ->icon(Heroicon::ArrowUpTray)
             ->requiresConfirmation()
             ->authorize(fn() => TestResultAction::isAuthorized(TestResultAction::PERMISSION_REQUEST_VALIDATE_TEST_RESULT))
             ->color('warning')
-            ->action(function (Collection $records) {
-                $testResultService = new TestResultService();
+            ->action(function (Collection $records, TestResultApprovalService $service) {
                 $successCount = 0;
                 $failedCount = 0;
                 foreach ($records as $record) {
                     try {
-                        DB::transaction(function () use ($testResultService, $record) {
-                            $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RequestValidate);
+                        DB::transaction(function () use ($service, $record) {
+                            $result = $service->submitForValidation($record);
+                            if (!$result['success']) throw new Exception($result['message']);
                         });
                         $successCount++;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $failedCount++;
                     }
                 }
-                if ($successCount > 0) {
-                    Notification::make()
-                        ->title("Request Validasi Berhasil")
-                        ->body("{$successCount} hasil uji berhasil untuk request validasi.")
-                        ->success()
-                        ->send();
-                }
-                if ($failedCount > 0) {
-                    Notification::make()
-                        ->title("Request Validasi Gagal")
-                        ->body("{$failedCount} hasil uji gagal untuk request validasi.")
-                        ->danger()
-                        ->send();
-                }
+                self::bulkNotify($successCount, $failedCount, 'Request Validasi Berhasil', 'hasil uji berhasil untuk request validasi.', 'Request Validasi Gagal', 'hasil uji gagal untuk request validasi.');
             })
             ->deselectRecordsAfterCompletion();
     }
+
     public static function bulkValidate(): BulkAction
     {
-        return   BulkAction::make('validate')
+        return BulkAction::make('validate')
             ->label('Validasi')
             ->icon(Heroicon::Check)
-            ->authorize(fn() => TestResultAction::isAuthorized(TestResultAction::PERMISSION_VALIDATE_TEST_RESULT))
             ->requiresConfirmation()
             ->color('success')
-            ->action(function (Collection $records) {
-                $testResultService = new TestResultService();
+            ->action(function (Collection $records, TestResultApprovalService $service) {
+                $personel = $service->getPersonelFromAuth();
                 $successCount = 0;
                 $failedCount = 0;
                 foreach ($records as $record) {
                     try {
-                        DB::transaction(function () use ($testResultService, $record) {
-                            $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Validated);
+                        if (!$personel) throw new Exception('Data personel tidak ditemukan.');
+                        DB::transaction(function () use ($service, $record, $personel) {
+                            $result = $service->accept($record, $personel->id);
+                            if (!$result['success']) throw new Exception($result['message']);
                         });
                         $successCount++;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $failedCount++;
                     }
                 }
-                if ($successCount > 0) {
-                    Notification::make()
-                        ->title("Validasi Berhasil")
-                        ->body("{$successCount} hasil uji berhasil divalidasi.")
-                        ->success()
-                        ->send();
-                }
-                if ($failedCount > 0) {
-                    Notification::make()
-                        ->title("Validasi Gagal")
-                        ->body("{$failedCount} hasil uji gagal divalidasi.")
-                        ->danger()
-                        ->send();
-                }
+                self::bulkNotify($successCount, $failedCount, 'Validasi Berhasil', 'hasil uji berhasil divalidasi.', 'Validasi Gagal', 'hasil uji gagal divalidasi.');
             })
             ->deselectRecordsAfterCompletion();
     }
+
     public static function bulkRevisionNeeded(): BulkAction
     {
-        return  BulkAction::make('revision_needed')
+        return BulkAction::make('revision_needed')
             ->label('Perlu Revisi')
             ->icon(Heroicon::PencilSquare)
             ->schema([
@@ -286,77 +331,70 @@ class TestResultAction
                     ->required()
                     ->rows(4),
             ])
-            ->authorize(fn() => TestResultAction::isAuthorized(TestResultAction::PERMISSION_REVISION_NEEDED_TEST_RESULT))
             ->requiresConfirmation()
             ->color('warning')
-            ->action(function (Collection $records, array $data) {
-                $testResultService = new TestResultService();
+            ->action(function (Collection $records, array $data, TestResultApprovalService $service) {
+                $personel = $service->getPersonelFromAuth();
                 $successCount = 0;
                 $failedCount = 0;
                 foreach ($records as $record) {
                     try {
-                        DB::transaction(function () use ($testResultService, $record, $data) {
-                            $testResultService->updateTestResultStatus($record, TestResultStatusEnum::RevisionNeeded, $data);
+                        if (!$personel) throw new Exception('Data personel tidak ditemukan.');
+                        DB::transaction(function () use ($service, $record, $personel, $data) {
+                            $result = $service->requestRevision($record, $personel->id, $data['comment']);
+                            if (!$result['success']) throw new Exception($result['message']);
                         });
                         $successCount++;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $failedCount++;
                     }
                 }
-                if ($successCount > 0) {
-                    Notification::make()
-                        ->title("Berhasil menandai status menjadi revisi")
-                        ->body("{$successCount} hasil uji ditandai sebagai revisi.")
-                        ->success()
-                        ->send();
-                }
-                if ($failedCount > 0) {
-                    Notification::make()
-                        ->title("Gagal menandai status menjadi revisi ")
-                        ->body("{$failedCount} hasil uji gagal ditandai sebagai revisi.")
-                        ->danger()
-                        ->send();
-                }
+                self::bulkNotify($successCount, $failedCount, 'Berhasil menandai status menjadi revisi', 'hasil uji ditandai sebagai revisi.', 'Gagal menandai status menjadi revisi', 'hasil uji gagal ditandai sebagai revisi.');
             })
             ->deselectRecordsAfterCompletion();
     }
+
     public static function bulkReject(): BulkAction
     {
-        return     BulkAction::make('reject')
+        return BulkAction::make('reject')
             ->label('Tolak Hasil Uji')
             ->icon(Heroicon::XCircle)
-            ->authorize(fn() => TestResultAction::isAuthorized(TestResultAction::PERMISSION_REJECT_TEST_RESULT))
+            ->schema([
+                Textarea::make('comment')
+                    ->label('Alasan ditolak')
+                    ->required()
+                    ->rows(4),
+            ])
             ->requiresConfirmation()
             ->color('danger')
-            ->action(function (Collection $records) {
-                $testResultService = new TestResultService();
+            ->action(function (Collection $records, array $data, TestResultApprovalService $service) {
+                $personel = $service->getPersonelFromAuth();
                 $successCount = 0;
                 $failedCount = 0;
                 foreach ($records as $record) {
                     try {
-                        DB::transaction(function () use ($testResultService, $record) {
-                            $testResultService->updateTestResultStatus($record, TestResultStatusEnum::Rejected);
+                        if (!$personel) throw new Exception('Data personel tidak ditemukan.');
+                        DB::transaction(function () use ($service, $record, $personel, $data) {
+                            $result = $service->reject($record, $personel->id, $data['comment']);
+                            if (!$result['success']) throw new Exception($result['message']);
                         });
                         $successCount++;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $failedCount++;
                     }
                 }
-                if ($successCount > 0) {
-                    Notification::make()
-                        ->title("Berhasil menandai status menjadi ditolak")
-                        ->body("{$successCount} hasil uji ditandai sebagai ditolak.")
-                        ->success()
-                        ->send();
-                }
-                if ($failedCount > 0) {
-                    Notification::make()
-                        ->title("Gagal menandai status menjadi ditolak ")
-                        ->body("{$failedCount} hasil uji gagal ditandai sebagai ditolak.")
-                        ->danger()
-                        ->send();
-                }
+                self::bulkNotify($successCount, $failedCount, 'Berhasil menandai status menjadi ditolak', 'hasil uji ditandai sebagai ditolak.', 'Gagal menandai status menjadi ditolak', 'hasil uji gagal ditandai sebagai ditolak.');
             })
             ->deselectRecordsAfterCompletion();
+    }
+
+    private static function bulkNotify(int $success, int $failed, string $successTitle, string $successBody, string $failedTitle, string $failedBody): void
+    {
+        if ($success > 0) {
+            Notification::make()->title($successTitle)->body("{$success} {$successBody}")->success()->send();
+        }
+        if ($failed > 0) {
+            Notification::make()->title($failedTitle)->body("{$failed} {$failedBody}")->danger()->send();
+        }
     }
 }
