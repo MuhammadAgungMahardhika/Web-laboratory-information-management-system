@@ -77,10 +77,10 @@ class TestResultForm
                                         ->inline()
                                         ->hintIcon(Heroicon::InformationCircle)
                                         ->hintIconTooltip('Ditentukan otomatis dari keputusan approver saat Validasi Level 1.')
-                                        ->label('Status Evaluasi')
+                                        ->label('Status Hasil Uji')
                                         ->columnSpanFull(),
-                                    Textarea::make('comment')
-                                        ->label('Catatan Approval')
+                                    Textarea::make('test_notes')
+                                        ->label('Catatan Hasil Uji')
                                         ->autosize()
                                         ->columnSpanFull(),
 
@@ -106,12 +106,12 @@ class TestResultForm
                                     ->heading(function ($record) {
                                         if (!$record?->evaluation_status) {
                                             return new HtmlString(
-                                                'Status Evaluasi -> <span style="color:#6B7280;font-weight:700">Belum Divalidasi</span>'
+                                                'Status Hasil Uji -> <span style="color:#6B7280;font-weight:700">Belum Divalidasi</span>'
                                             );
                                         }
 
                                         return new HtmlString(sprintf(
-                                            'Status Evaluasi -> <span style="color:%s;font-weight:700">%s</span>',
+                                            'Status Hasil Uji -> <span style="color:%s;font-weight:700">%s</span>',
                                             TestResultEvaluationStatusEnum::cssColor($record->evaluation_status),
                                             TestResultEvaluationStatusEnum::labels()[$record->evaluation_status]
                                         ));
@@ -213,10 +213,6 @@ class TestResultForm
                                         ->live()
                                         ->required(),
 
-                                    Textarea::make('test_notes')
-                                        ->columnSpanFull()
-                                        ->label('Catatan Pengujian'),
-
                                 ])->columns(1)->inlineLabel()->heading(function ($record) {
                                     if (!$record?->status) {
                                         return new HtmlString(
@@ -244,8 +240,8 @@ class TestResultForm
                                         ->table([
                                             TableColumn::make('Level'),
                                             TableColumn::make('Status'),
-                                            TableColumn::make('Petugas'),
                                             TableColumn::make('Catatan'),
+                                            TableColumn::make('Petugas'),
                                             TableColumn::make('Waktu'),
 
                                         ])
@@ -261,14 +257,12 @@ class TestResultForm
                                                     TestResultApprovalStatusEnum::Rejected->value => 'Ditolak',
                                                     TestResultApprovalStatusEnum::Revision->value => 'Perlu Revisi',
                                                 ]),
-
-                                            Select::make('personel_id')
-                                                ->label('Petugas')
-                                                ->relationship('personel', 'fullname'),
-
                                             Textarea::make('note')
                                                 ->label('Catatan')
                                                 ->columnSpanFull(),
+                                            Select::make('personel_id')
+                                                ->label('Petugas')
+                                                ->relationship('personel', 'fullname'),
 
                                             DateTimePicker::make('updated_at')
                                                 ->label('Waktu'),

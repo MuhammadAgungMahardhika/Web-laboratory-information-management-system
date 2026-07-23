@@ -99,7 +99,7 @@ class TestResultAction
                 if ($pending && $pending->approval_level === 1) {
                     return [
                         Radio::make('evaluation_status')
-                            ->label('Status Evaluasi')
+                            ->label('Status Hasil Uji')
                             ->options([
                                 1 => 'Sesuai Baku Mutu',
                                 2 => 'Tidak Sesuai Baku Mutu',
@@ -304,7 +304,7 @@ class TestResultAction
                 if ($service->canApproveLevel(1)) {
                     return [
                         Radio::make('evaluation_status')
-                            ->label('Status Evaluasi')
+                            ->label('Status Hasil Uji')
                             ->options([
                                 1 => 'Sesuai Baku Mutu',
                                 2 => 'Tidak Sesuai Baku Mutu',
