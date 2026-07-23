@@ -106,8 +106,9 @@ class TestResultAction
                             ])
                             ->default($record->evaluation_status ?? 1)
                             ->required(),
-                        Textarea::make('comment')
-                            ->label('Catatan (opsional)')
+                        Textarea::make('test_notes')
+                            ->required()
+                            ->label('Catatan Hasil Uji')
                             ->rows(3),
                     ];
                 }
@@ -115,7 +116,8 @@ class TestResultAction
                 // Level 2+ cukup catatan pengesahan, tidak ubah evaluation_status lagi
                 return [
                     Textarea::make('comment')
-                        ->label('Catatan (opsional)')
+                        ->required()
+                        ->label('Catatan Hasil Uji')
                         ->rows(3),
                 ];
             })
@@ -297,23 +299,68 @@ class TestResultAction
             ->label('Validasi')
             ->icon(Heroicon::Check)
             ->requiresConfirmation()
+            ->schema(function (TestResultApprovalService $service) {
+
+                if ($service->canApproveLevel(1)) {
+                    return [
+                        Radio::make('evaluation_status')
+                            ->label('Status Evaluasi')
+                            ->options([
+                                1 => 'Sesuai Baku Mutu',
+                                2 => 'Tidak Sesuai Baku Mutu',
+                            ])
+                            ->default(1)
+                            ->required(),
+
+                        Textarea::make('test_notes')
+                            ->required()
+                            ->label('Catatan Hasil Uji')
+                            ->rows(3),
+                    ];
+                }
+
+                return [
+                    Textarea::make('comment')
+                        ->required()
+                        ->label('Catatan Hasil Uji')
+                        ->rows(3),
+                ];
+            })
             ->color('success')
-            ->action(function (Collection $records, TestResultApprovalService $service) {
+            ->visible(function (TestResultApprovalService $service) {
+                return $service->canApproveLevel(1)
+                    || $service->canApproveLevel(2);
+            })
+            ->action(function (
+                Collection $records,
+                array $data,
+                TestResultApprovalService $service
+            ) {
+
                 $personel = $service->getPersonelFromAuth();
+
+                if (! $personel) {
+                    throw new Exception('Data personel tidak ditemukan.');
+                }
+
                 $successCount = 0;
                 $failedCount = 0;
+
                 foreach ($records as $record) {
                     try {
-                        if (!$personel) throw new Exception('Data personel tidak ditemukan.');
-                        DB::transaction(function () use ($service, $record, $personel) {
-                            $result = $service->accept($record, $personel->id);
-                            if (!$result['success']) throw new Exception($result['message']);
+                        DB::transaction(function () use ($service,  $record, $personel, $data) {
+                            $result = $service->accept($record,  $personel->id,   null, $data);
+                            if (! $result['success']) {
+                                throw new Exception($result['message']);
+                            }
                         });
+
                         $successCount++;
                     } catch (Exception $e) {
                         $failedCount++;
                     }
                 }
+
                 self::bulkNotify($successCount, $failedCount, 'Validasi Berhasil', 'hasil uji berhasil divalidasi.', 'Validasi Gagal', 'hasil uji gagal divalidasi.');
             })
             ->deselectRecordsAfterCompletion();
@@ -324,6 +371,10 @@ class TestResultAction
         return BulkAction::make('revision_needed')
             ->label('Perlu Revisi')
             ->icon(Heroicon::PencilSquare)
+            ->visible(function (TestResultApprovalService $service) {
+                return $service->canApproveLevel(1)
+                    || $service->canApproveLevel(2);
+            })
             ->schema([
                 Textarea::make('comment')
                     ->label('Alasan Revisi')
@@ -366,6 +417,10 @@ class TestResultAction
                     ->rows(4),
             ])
             ->requiresConfirmation()
+            ->visible(function (TestResultApprovalService $service) {
+                return $service->canApproveLevel(1)
+                    || $service->canApproveLevel(2);
+            })
             ->color('danger')
             ->action(function (Collection $records, array $data, TestResultApprovalService $service) {
                 $personel = $service->getPersonelFromAuth();

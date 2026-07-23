@@ -35,7 +35,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->tinyInteger('revision_count')->default(0);
-            $table->tinyInteger('evaluation_status')->default(1);
+            $table->tinyInteger('evaluation_status')->nullable();
             $table->timestamp('validation_date')->nullable();
 
             // Auditing columns

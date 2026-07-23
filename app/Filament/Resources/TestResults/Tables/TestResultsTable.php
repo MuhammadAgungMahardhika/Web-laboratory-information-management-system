@@ -6,6 +6,7 @@ use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
+use App\Services\TestResultApprovalService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -27,6 +28,26 @@ use Illuminate\Support\Facades\Auth;
 class TestResultsTable
 {
 
+    /**
+     * User dianggap "approver" kalau punya salah satu permission
+     * approve-test-result-level-*. Cuma approver yang boleh lihat BML & hasil evaluasi.
+     */
+    public static function isApprover(): bool
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return false;
+        }
+
+        foreach (TestResultApprovalService::LEVEL_PERMISSIONS as $permission) {
+            if ($user->can($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public static function configure(Table $table): Table
     {
         return $table
@@ -97,6 +118,7 @@ class TestResultsTable
         ";
                     }),
 
+                TextColumn::make('standard_notes_ref')->label('BML')->visible(fn() => static::isApprover()),
                 TextColumn::make('tested_value')
                     ->label('Hasil Uji')
                     ->html()
@@ -111,20 +133,10 @@ class TestResultsTable
                     )
                     ->formatStateUsing(function ($state, TestResult $record) {
                         $html = "
-                <div class='font-semibold text-success-600'>
-                    " . e($state) . " " . e($record->unit) . "
-                </div>
-            ";
-
-                        if (Auth::user()->can('approve-test-result-level-1') || Auth::user()->can('approve-test-result-level-2')) {
-                            $html .= "
-                    <div class='text-xs text-gray-500 mt-1'>
-                        <strong>BML</strong> : 
-                        " . e($record->standard_notes_ref ?: '-') . "
-                    </div>
-                ";
-                        }
-
+                                <div class='font-semibold text-success-600'>
+                                    " . e($state) . " " . e($record->unit) . "
+                                </div>
+                            ";
                         return $html;
                     }),
 
@@ -247,7 +259,7 @@ class TestResultsTable
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-test-result')),
                     TestResultAction::bulkRequestValidate(),
                     TestResultAction::bulkValidate(),
                     TestResultAction::bulkRevisionNeeded(),

@@ -148,6 +148,7 @@ class TestResultApprovalService
             $testResult->update([
                 'validator_personel_id' => $approverPersonelId,
                 'evaluation_status' => $data['evaluation_status'] ?? $testResult->evaluation_status,
+                'test_notes' =>  $data['test_notes'] ?? ""
             ]);
         }
 

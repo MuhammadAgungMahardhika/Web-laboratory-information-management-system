@@ -12,8 +12,8 @@ enum TestResultEvaluationStatusEnum: int
     public static function labels(): array
     {
         return [
-            self::Compliant->value => 'Sesuai Baku Mutu',
-            self::Invalid->value => 'Tidak Sesuai Baku Mutu',
+            self::Compliant->value => 'Sesuai',
+            self::Invalid->value => 'Tidak Sesuai',
         ];
     }
 

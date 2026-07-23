@@ -79,22 +79,25 @@ class TestResultForm
                                         ->hintIconTooltip('Ditentukan otomatis dari keputusan approver saat Validasi Level 1.')
                                         ->label('Status Evaluasi')
                                         ->columnSpanFull(),
+                                    Textarea::make('comment')
+                                        ->label('Catatan Approval')
+                                        ->autosize()
+                                        ->columnSpanFull(),
 
                                     TextInput::make('revision_count')
                                         ->label('Jumlah Revisi')
                                         ->numeric(),
 
                                     DateTimePicker::make('validation_date')
+                                        ->visible(fn($record) => $record && $record->validation_date !== null)
                                         ->label('Tanggal Valid'),
 
                                     Select::make('validator_personel_id')
                                         ->label('Validator')
+                                        ->visible(fn($record) => $record && $record->validator_personel_id !== null)
                                         ->relationship('validatorPersonel', 'fullname'),
 
-                                    Textarea::make('comment')
-                                        ->label('Catatan Approval')
-                                        ->autosize()
-                                        ->columnSpanFull(),
+
                                 ])
                                     ->columns(1)
                                     ->inlineLabel()
@@ -193,6 +196,7 @@ class TestResultForm
                                     TextInput::make('tested_value')
                                         ->label('Nilai')
                                         ->required()
+                                        ->autofocus()
                                         ->copyable()
                                         ->live(),
 

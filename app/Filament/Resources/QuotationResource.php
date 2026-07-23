@@ -264,7 +264,7 @@ class QuotationResource extends Resource
                             ->label('Pph (%)')
                             ->required()
                             ->numeric()
-                            ->default(0),
+                            ->default(2),
                     ])->columns([
                         'default' => 1,
                         'md' => 3,
