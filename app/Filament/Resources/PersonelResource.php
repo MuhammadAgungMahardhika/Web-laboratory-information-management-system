@@ -39,9 +39,8 @@ class PersonelResource extends Resource
     {
         return $schema
             ->columns([
-                'sm' => 2,
-                'md' => 3,
-                'xl' => 3,
+                'default' => 1,
+                'lg' => 2,
             ])
             ->components([
                 Section::make([
@@ -169,35 +168,40 @@ class PersonelResource extends Resource
                     Select::make('company_id')
                         ->label('Perusahaan')
                         ->required()
+                        ->searchable()
+                        ->default(Auth::user()->company_id)
                         ->relationship('company', 'name')
                         ->preload(),
-                ])->columnSpanFull()->columns(3),
+                ])->columnSpanFull()->columns(2),
+                Section::make([
+                    Repeater::make('personelSpecializations')
+                        ->relationship()
+                        ->hiddenLabel()
+                        ->schema([
+                            Select::make('specialization_id')
+                                ->relationship('specialization', 'name')
+                                ->label('Sertifikasi')
+                                ->searchable()
+                                ->required()
+                                ->preload(),
+                            FileUpload::make('file_path')
+                                ->label('Dokumen Sertifikasi')
+                                ->acceptedFileTypes(['application/pdf', 'image/*'])
+                                ->imagePreviewHeight('250')
+                                ->loadingIndicatorPosition('left')
+                                ->panelAspectRatio('2:1')
+                                ->panelLayout('integrated')
+                                ->removeUploadedFileButtonPosition('right')
+                                ->uploadButtonPosition('left')
+                                ->previewable()
+                                ->openable()
+                                ->uploadProgressIndicatorPosition('left'),
 
-                Repeater::make('personelSpecializations')
-                    ->relationship()
-                    ->label('Keahlian')
-                    ->schema([
-                        Select::make('specialization_id')
-                            ->relationship('specialization', 'name')
-                            ->label('Sertifikasi')
-                            ->searchable()
-                            ->required()
-                            ->preload(),
-                        FileUpload::make('file_path')
-                            ->label('Dokumen Sertifikasi')
-                            ->acceptedFileTypes(['application/pdf', 'image/*'])
-                            ->imagePreviewHeight('250')
-                            ->loadingIndicatorPosition('left')
-                            ->panelAspectRatio('2:1')
-                            ->panelLayout('integrated')
-                            ->removeUploadedFileButtonPosition('right')
-                            ->uploadButtonPosition('left')
-                            ->previewable()
-                            ->openable()
-                            ->uploadProgressIndicatorPosition('left'),
-
-                    ])
-                    ->columnSpanFull()->columns(2)->grid(3)
+                        ])
+                        ->inlineLabel()->columns(1)
+                        ->grid(2)
+                        ->columnSpanFull()
+                ])->columnSpanFull()->columns(2)->heading("Keahlian / Sertifikasi")
             ]);
     }
 
@@ -229,10 +233,8 @@ class PersonelResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_by')
-                    ->searchable(),
-                TextColumn::make('updated_by')
-                    ->searchable(),
+                TextColumn::make('created_by'),
+                TextColumn::make('updated_by'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

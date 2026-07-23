@@ -82,6 +82,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(Personel::class);
     }
 
+
     public function customer()
     {
         return $this->hasOne(Customer::class);
@@ -94,6 +95,16 @@ class User extends Authenticatable implements FilamentUser
     {
         return Attribute::make(
             get: fn() => $this->personel?->id,
+        );
+    }
+    /**
+     * 1. id_employe
+     * Dipanggil sebagai: Auth::user()->id_employe
+     */
+    protected function companyId(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->personel?->company_id,
         );
     }
 }

@@ -22,7 +22,7 @@ class DocumentMail extends Mailable implements ShouldQueue
     public string $markdownView;
     public array $mailData;
     public array $attachmentsData; // Array for attachments
-    public  $notifierId; // Properti untuk menyimpan ID user yang memicu email
+    public int $notifierId; // Properti untuk menyimpan ID user yang memicu email
 
     // Properti khusus queue jika diperlukan
     public int $tries = 3;    // Coba ulang email hingga 3 kali jika gagal

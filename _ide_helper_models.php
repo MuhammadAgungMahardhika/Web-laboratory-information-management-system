@@ -606,6 +606,8 @@ namespace App\Models{
  * @property-read int|null $lab_jobs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Parameter> $parameters
  * @property-read int|null $parameters_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultApproval> $personel
+ * @property-read int|null $personel_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonelSpecialization> $personelSpecializations
  * @property-read int|null $personel_specializations_count
  * @property-read \App\Models\Position|null $position
@@ -1327,9 +1329,6 @@ namespace App\Models{
  * @property string|null $unit
  * @property string|null $test_date
  * @property string|null $test_notes
- * @property string|null $standard_max_value_ref
- * @property string|null $standard_min_value_ref
- * @property string|null $standard_unit_ref
  * @property string|null $standard_notes_ref
  * @property string|null $comment
  * @property int $status
@@ -1346,6 +1345,8 @@ namespace App\Models{
  * @property-read \App\Models\TestMethod|null $testMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultHistory> $testResultHistories
  * @property-read int|null $test_result_histories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultApproval> $test_result_approvals
+ * @property-read int|null $test_result_approvals_count
  * @property-read \App\Models\Personel|null $validatorPersonel
  * @method static \Database\Factories\TestResultFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newModelQuery()
@@ -1361,10 +1362,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereParameterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereRevisionCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereSampleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardMaxValueRef($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardMinValueRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardNotesRef($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStandardUnitRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereTestMethodId($value)
@@ -1381,10 +1379,32 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property int $test_result_id
+ * @property int|null $personel_id
+ * @property int $approval_level
+ * @property \App\Models\Enums\TestResultApprovalStatusEnum $status
+ * @property string|null $note
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Personel|null $personel
+ * @property-read \App\Models\TestResult $testResult
  * @method static \Database\Factories\TestResultApprovalFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereApprovalLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval wherePersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereTestResultId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval whereUpdatedBy($value)
  */
 	class TestResultApproval extends \Eloquent {}
 }
@@ -1442,6 +1462,7 @@ namespace App\Models{
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $company_id
  * @property-read \App\Models\Customer|null $customer
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
