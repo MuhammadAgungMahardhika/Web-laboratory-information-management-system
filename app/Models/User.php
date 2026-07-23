@@ -13,6 +13,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -84,5 +85,15 @@ class User extends Authenticatable implements FilamentUser
     public function customer()
     {
         return $this->hasOne(Customer::class);
+    }
+    /**
+     * 1. id_employe
+     * Dipanggil sebagai: Auth::user()->id_employe
+     */
+    protected function personelId(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->personel?->id,
+        );
     }
 }

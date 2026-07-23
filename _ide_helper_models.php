@@ -250,7 +250,6 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property mixed $0
  * @property-read float $total_price
  * @property-read \App\Models\Invoice|null $invoice
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LabJobItem> $labJobItems
@@ -393,8 +392,8 @@ namespace App\Models{
  * @property string|null $long_name_standard_notes
  * @property string|null $unit
  * @property string|null $description
- * @property string|null $default_price
- * @property int|null $status
+ * @property string $default_price
+ * @property int $status
  * @property int|null $tested_time
  * @property string|null $standard_notes
  * @property string|null $created_by
@@ -1352,6 +1351,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult visibleForUser(\App\Models\User $user)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereAnalystPersonelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereCreatedAt($value)
@@ -1377,6 +1377,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult whereValidatorPersonelId($value)
  */
 	class TestResult extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Database\Factories\TestResultApprovalFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultApproval query()
+ */
+	class TestResultApproval extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -1438,6 +1448,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
  * @property-read int|null $permissions_count
  * @property-read \App\Models\Personel|null $personel
+ * @property-read mixed $personel_id
  * @property-read string $profile_photo_url
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count

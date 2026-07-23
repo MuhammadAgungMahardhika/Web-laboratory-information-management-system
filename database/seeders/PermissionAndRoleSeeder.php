@@ -223,7 +223,11 @@ class PermissionAndRoleSeeder extends Seeder
             'request-validate-test-result',
             'validate-test-result',
             'revision-needed-test-result',
-            'reject-test-result'
+            'reject-test-result',
+
+            'approve-test-result-level-1',
+            'approve-test-result-level-2',
+
         ];
         $specializationPermissions = [
             'view-any-specialization',

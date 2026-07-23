@@ -65,4 +65,9 @@ class Personel extends Model
     {
         return $this->belongsTo(Position::class);
     }
+
+    public function personel()
+    {
+        return $this->hasMany(TestResultApproval::class);
+    }
 }

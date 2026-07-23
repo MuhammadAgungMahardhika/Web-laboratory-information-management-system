@@ -315,6 +315,19 @@ return new class extends Migration
                 ->onDelete('set null');
         });
 
+        Schema::table('test_result_approvals', function (Blueprint $table) {
+            $table->foreign('test_result_id', 'fk_test_result_approvals_test_result')
+                ->references('id')
+                ->on('test_results')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('personel_id', 'fk_test_result_approvals_employe')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+        });
+
         Schema::table('test_result_histories', function (Blueprint $table) {
             $table->foreign('personel_id', 'fk_test_result_histories_personel')
                 ->references('id')

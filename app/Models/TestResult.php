@@ -71,6 +71,10 @@ class TestResult extends Model
         return $this->hasMany(TestResultHistory::class);
     }
 
+    public function testResultApproval()
+    {
+        return $this->hasMany(TestResultApproval::class);
+    }
     public function scopeVisibleForUser(Builder $query, User $user): Builder
     {
         $specializationIds = $user->personel?->personelSpecializations
