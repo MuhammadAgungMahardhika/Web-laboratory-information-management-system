@@ -182,6 +182,8 @@ class TestResultForm
                                         ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->where('id', Auth::user()->personel->id))
                                         ->searchable()
                                         ->preload()
+                                        ->disabled()
+                                        ->dehydrated()
                                         ->afterStateHydrated(function ($state, callable $set) {
                                             if (empty($state)) {
                                                 $set('analyst_personel_id', Auth::user()->personel_id);
