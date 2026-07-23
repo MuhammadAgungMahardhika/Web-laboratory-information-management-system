@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Override;
+use Filament\Actions\Action;
 
 class TestResultResource extends Resource
 {
@@ -48,6 +49,26 @@ class TestResultResource extends Resource
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['sample', 'parameter']);
+    }
+
+
+
+    public static function getGlobalSearchResultActions(Model $record): array
+    {
+        return [
+            Action::make('edit')
+                ->label('Edit')
+                ->url(static::getUrl('index', [
+                    'tableAction' => 'edit',
+                    'tableActionRecord' => $record->getKey(),
+                ])),
+            Action::make('view')
+                ->label('View')
+                ->url(static::getUrl('index', [
+                    'tableAction' => 'view',
+                    'tableActionRecord' => $record->getKey(),
+                ])),
+        ];
     }
     protected static function isApprover($user): bool
     {
