@@ -137,8 +137,6 @@ class TestResultForm
 
                                 // ================= SECTION UTAMA: DATA HASIL UJI (ANALIS) =================
                                 Section::make([
-                                    Select::make('status')
-                                        ->options(TestResultStatusEnum::labels()),
                                     Select::make('sample_id')
                                         ->label('Kode Sampel')
                                         ->relationship('sample', 'sample_code')

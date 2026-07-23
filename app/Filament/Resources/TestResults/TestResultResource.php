@@ -103,7 +103,8 @@ class TestResultResource extends Resource
 
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return static::pendingCount() > 0 ? 'warning' : 'success';
+        return static::pendingCount() > 0  ? 'gray'
+            : 'success';
     }
 
     public static function table(Table $table): Table
