@@ -20,11 +20,13 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class TestResultsTable
 {
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -148,11 +150,7 @@ class TestResultsTable
                             Analis  :  " . e($record->analystPersonel?->fullname ?? '-') . "
                         </div>
                     </div>
-                    <div>
-                        <div class='text-xs text-gray-500'>
-                            Validator : " . e($record->validatorPersonel?->fullname ?? '-') . "
-                        </div>
-                    </div>
+                  
                 </div>
             ";
                     }),

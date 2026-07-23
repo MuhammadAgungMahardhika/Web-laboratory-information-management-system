@@ -16,7 +16,9 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Override;
 
 class TestResultResource extends Resource
 {
@@ -25,13 +27,28 @@ class TestResultResource extends Resource
     protected static ?string $label = 'Hasil Pengujian';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Beaker;
     protected static ?int $navigationSort = 4;
-
+    protected static ?string $recordTitleAttribute = 'sample.sample_code';
     protected static ?int $pendingCount = null;
 
     /**
      * User dianggap "approver" kalau dia punya salah satu permission
      * approve-test-result-level-*. Approver tidak dibatasi specialization.
      */
+
+    #[Override]
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Kode Sampel' => $record->sample->sample_code,
+            'Parameter' => $record->parameter->long_name,
+            'status' => TestResultStatusEnum::labels()[$record->status]
+        ];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['sample', 'parameter']);
+    }
     protected static function isApprover($user): bool
     {
         if (!$user) {

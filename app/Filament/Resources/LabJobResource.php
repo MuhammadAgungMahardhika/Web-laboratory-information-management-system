@@ -34,6 +34,7 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class LabJobResource extends Resource
 {
@@ -75,12 +76,14 @@ class LabJobResource extends Resource
         return $record->job_number;
     }
 
+
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
             'Nomor job' => $record->job_number,
             'Nomor penawaran' => $record->quotation->quotation_number,
             'Klien' => $record->quotation->customer->name,
+            'Tanggal' => Carbon::parse($record->start_date)->format('d M y')   . " - " .  Carbon::parse($record->end_date)->format('d M y')
         ];
     }
 
