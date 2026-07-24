@@ -30,11 +30,7 @@ class SettingsRelationManager extends RelationManager
     public function form(Schema $schema): Schema
     {
         return $schema
-            ->columns([
-                'sm' => 2,
-                'md' => 3,
-                'xl' => 4,
-            ])
+            ->columns(['default' => 1, 'xl' => 4,])
             ->components([
                 Toggle::make('is_active')
                     ->label('Aktif ?'),

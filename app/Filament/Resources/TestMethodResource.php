@@ -33,11 +33,7 @@ class TestMethodResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->columns([
-                'sm' => 2,
-                'md' => 3,
-                'xl' => 4,
-            ])
+            ->columns(['default' => 1, 'xl' => 4,])
             ->components([
                 TextInput::make('name')
                     ->label('Nama metode uji')

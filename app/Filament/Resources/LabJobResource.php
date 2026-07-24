@@ -100,11 +100,7 @@ class LabJobResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->columns([
-                'sm' => 2,
-                'md' => 3,
-                'xl' => 4,
-            ])
+            ->columns(['default' => 1, 'xl' => 4,])
             ->components([
                 Section::make('Job')
                     ->heading(fn($record) => $record?->status ? 'Status -> ' .  JobStatusEnum::labels()[$record->status] : '')
