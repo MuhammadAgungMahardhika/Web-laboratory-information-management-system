@@ -1345,8 +1345,8 @@ namespace App\Models{
  * @property-read \App\Models\TestMethod|null $testMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultHistory> $testResultHistories
  * @property-read int|null $test_result_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultApproval> $test_result_approvals
- * @property-read int|null $test_result_approvals_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultApproval> $testResultApprovals
+ * @property-read int|null $testResultApprovals_count
  * @property-read \App\Models\Personel|null $validatorPersonel
  * @method static \Database\Factories\TestResultFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newModelQuery()

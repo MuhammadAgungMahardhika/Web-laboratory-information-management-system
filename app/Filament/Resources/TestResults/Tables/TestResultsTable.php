@@ -15,6 +15,7 @@ use Filament\Actions\ViewAction;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Filters\SelectFilter;
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 
 class TestResultsTable
 {
@@ -59,65 +61,28 @@ class TestResultsTable
             ])
             ->defaultGroup('sample.sample_code')
             ->columns([
+                TextColumn::make('parameter.long_name')
+                    ->label('Parameter')
+                    ->searchable()
+                    ->html()
+                    ->formatStateUsing(
+                        fn(TestResult $record) => new HtmlString(
+                            view('components.parameter-info', [
+                                'record' => $record,
+                            ])->render()
+                        )
+                    ),
+
+                ViewColumn::make('approval_flow')
+                    ->label('Approval')
+                    ->view('components.approval-timeline'),
+
                 TextColumn::make('sample.labJobItem.description')
                     ->label('Matrix')
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+
                     ->sortable(),
-                TextColumn::make('parameter.long_name')
-                    ->label('Parameter')
-                    ->searchable(query: function ($query, string $search) {
-                        $query->whereHas('parameter', function ($q) use ($search) {
-                            $q->where('long_name', 'like', "%{$search}%");
-                        });
-                    })
-                    ->html()
-                    ->formatStateUsing(function ($state, TestResult $record) {
-
-                        $status = TestResultStatusEnum::labels()[$record->status];
-                        $color = TestResultStatusEnum::cssColor($record->status);
-
-                        $pending = $record->test_result_approvals()
-                            ->where('status', TestResultApprovalStatusEnum::Pending->value)
-                            ->orderBy('approval_level')
-                            ->first();
-
-                        $levelInfo = $pending
-                            ? "<span style='font-size:11px;color:#6B7280;'>Menunggu Level {$pending->approval_level}</span>"
-                            : '';
-
-                        return "
-            <div style='display:flex;flex-direction:column;gap:4px;'>
-                <div style='font-weight:600;'>
-                    " . e($state) . "
-                </div>
-
-                <div style='font-size:12px;color:#6B7280;'>
-                    " . e($record->testMethod?->name ?? '-') . "
-                </div>
-
-                <div style='display:flex;align-items:center;gap:6px;flex-wrap:wrap;'>
-
-                    <span
-                        style='
-                            display:inline-block;
-                            padding:2px 10px;
-                            border-radius:999px;
-                            font-size:11px;
-                            font-weight:600;
-                            color:white;
-                            background:{$color};
-                        '
-                    >
-                        {$status}
-                    </span>
-
-                    {$levelInfo}
-
-                </div>
-            </div>
-        ";
-                    }),
-
                 TextColumn::make('standard_notes_ref')->label('BML')->visible(fn() => static::isApprover()),
                 TextColumn::make('tested_value')
                     ->label('Hasil Uji')
@@ -140,6 +105,7 @@ class TestResultsTable
                         return $html;
                     }),
 
+
                 TextColumn::make('analystPersonel.fullname')
                     ->label('Petugas')
                     ->html()
@@ -156,15 +122,14 @@ class TestResultsTable
                     )
                     ->formatStateUsing(function ($state, TestResult $record) {
                         return "
-                <div class='space-y-2'>
-                    <div>
-                        <div class='text-xs text-gray-500'>
-                            Analis  :  " . e($record->analystPersonel?->fullname ?? '-') . "
-                        </div>
-                    </div>
-                  
-                </div>
-            ";
+                            <div class='space-y-2'>
+                                <div>
+                                    <div class='text-xs text-gray-500'>
+                                        Analis  :  " . e($record->analystPersonel?->fullname ?? '-') . "
+                                    </div>
+                                </div>
+                            </div>
+                        ";
                     }),
 
                 TextColumn::make('test_date')
@@ -175,25 +140,23 @@ class TestResultsTable
                         $uji = $record->test_date
                             ? Carbon::parse($record->test_date)->format('d M Y')
                             : '-';
-
                         $validasi = $record->validation_date
                             ? Carbon::parse($record->validation_date)->format('d M Y H:i')
                             : '-';
-
                         return "
-                <div class='space-y-2'>
-                    <div>
-                        <div class='text-xs text-gray-500'>
-                            Uji : {$uji}
-                        </div>
-                    </div>
-                    <div>
-                        <div class='text-xs text-gray-500'>
-                            Validasi :   {$validasi}
-                        </div>
-                    </div>
-                </div>
-            ";
+                            <div class='space-y-2'>
+                                <div>
+                                    <div class='text-xs text-gray-500'>
+                                        Uji : {$uji}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class='text-xs text-gray-500'>
+                                        Validasi :   {$validasi}
+                                    </div>
+                                </div>
+                            </div>
+                        ";
                     }),
 
                 TextColumn::make('created_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),

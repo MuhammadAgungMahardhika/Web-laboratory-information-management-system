@@ -129,7 +129,7 @@ class TestResultForm
                                         ->dehydrated(false)
                                         ->columnSpanFull(),
                                 ])
-                                    ->heading('Catatan Revisi dari Approver')
+                                    ->heading('Catatan dari Approver')
                                     ->visible(
                                         fn($record) =>
                                         !static::isApprover()
@@ -234,8 +234,8 @@ class TestResultForm
                         Tab::make('Riwayat Approval')
                             ->schema([
                                 Section::make([
-                                    Repeater::make('test_result_approvals')
-                                        ->relationship('test_result_approvals')
+                                    Repeater::make('testResultApprovals')
+                                        ->relationship('testResultApprovals')
                                         ->hiddenLabel()
                                         ->table([
                                             TableColumn::make('Level'),

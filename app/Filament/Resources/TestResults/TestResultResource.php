@@ -9,6 +9,7 @@ use App\Filament\Resources\TestResults\Tables\TestResultsTable;
 use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
+use App\Models\User;
 use App\Services\TestResultApprovalService;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -70,7 +71,7 @@ class TestResultResource extends Resource
                 ])),
         ];
     }
-    protected static function isApprover($user): bool
+    protected static function isApprover(User $user): bool
     {
         if (!$user) {
             return false;
@@ -101,7 +102,7 @@ class TestResultResource extends Resource
                 ->keys();
 
             return static::$pendingCount = static::getEloquentQuery()
-                ->whereHas('test_result_approvals', function ($q) use ($myLevels) {
+                ->whereHas('testResultApprovals', function ($q) use ($myLevels) {
                     $q->where('status', TestResultApprovalStatusEnum::Pending->value)
                         ->whereIn('approval_level', $myLevels);
                 })

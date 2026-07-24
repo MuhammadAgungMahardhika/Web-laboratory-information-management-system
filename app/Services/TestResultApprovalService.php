@@ -61,7 +61,7 @@ class TestResultApprovalService
      */
     public function getPendingApproval(TestResult $testResult, ?int $level = null): ?TestResultApproval
     {
-        $query = $testResult->test_result_approvals()
+        $query = $testResult->testResultApprovals()
             ->where('status', TestResultApprovalStatusEnum::Pending->value);
 
         if ($level !== null) {
@@ -255,7 +255,7 @@ class TestResultApprovalService
         $backToLevel = $currentLevel - 1;
 
         // Cari siapa approver sebelumnya di level itu (biar bisa jadi assignee lagi, opsional saja)
-        $previousApproverId = $testResult->test_result_approvals()
+        $previousApproverId = $testResult->testResultApprovals()
             ->where('approval_level', $backToLevel)
             ->where('status', TestResultApprovalStatusEnum::Accepted->value)
             ->orderByDesc('id')
