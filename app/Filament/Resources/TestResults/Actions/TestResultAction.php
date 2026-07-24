@@ -49,6 +49,25 @@ class TestResultAction
      * Analis kirim hasil uji untuk divalidasi (mulai Level 1).
      * Dipakai juga untuk submit ULANG setelah status RevisionNeeded.
      */
+
+    public static function saveAndRequestValidate(): Action
+    {
+
+        $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);
+
+        return Action::make('saveAndRequestValidate')
+            ->label('Simpan & Request Validasi')
+            ->icon(Heroicon::ArrowUpTray)
+            ->color('warning')
+            ->authorize(
+                fn(TestResult $record) =>
+                $authorized && in_array($record->status, [
+                    TestResultStatusEnum::Raw->value,
+                    TestResultStatusEnum::RevisionNeeded->value,
+                ])
+            )
+            ->arguments(['requestValidate' => true]); // <-- ini dia
+    }
     public static function requestValidate($url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);

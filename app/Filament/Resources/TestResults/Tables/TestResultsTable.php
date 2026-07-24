@@ -12,6 +12,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -186,7 +187,8 @@ class TestResultsTable
                     ->preload(),
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
-                EditAction::make()->slideOver()
+                EditAction::make()
+                    ->slideOver()
                     ->modalSubmitAction(function (Action $action, TestResult $record) {
                         $action->keyBindings(['ctrl+s']);
                         if ($record->status === TestResultStatusEnum::RevisionNeeded->value) {
@@ -200,16 +202,42 @@ class TestResultsTable
                         }
                         return $data;
                     })
+                    ->after(function (TestResult $record, array $arguments, TestResultApprovalService $service) {
+                        // baca argument yang ditempel tombol saveAndRequestValidate()
+                        if (!($arguments['requestValidate'] ?? false)) {
+                            return;
+                        }
+                        $result = $service->submitForValidation($record);
+
+                        if ($result['success']) {
+                            Notification::make()->title($result['message'])->success()->send();
+                        } else {
+                            Notification::make()->title($result['message'])->danger()->send();
+                        }
+                    })
                     ->modalWidth(Width::SixExtraLarge)
-                    ->extraModalFooterActions([
-                        TestResultAction::requestValidate()->cancelParentActions(),
+                    ->extraModalFooterActions(fn(Action $action): array => [
+                        $action->makeModalSubmitAction('saveAndRequestValidate', arguments: ['requestValidate' => true])
+                            ->label(fn(TestResult $record) => $record->status === TestResultStatusEnum::RevisionNeeded->value
+                                ? 'Perbaiki & Request Validasi'
+                                : 'Simpan & Request Validasi')
+                            ->icon(Heroicon::ArrowUpTray)
+                            ->color('warning')
+                            ->visible(
+                                fn(TestResult $record) =>
+                                Auth::user()->can(TestResultAction::PERMISSION_REQUEST_VALIDATE_TEST_RESULT)
+                                    && in_array($record->status, [
+                                        TestResultStatusEnum::Raw->value,
+                                        TestResultStatusEnum::RevisionNeeded->value,
+                                    ])
+                            ),
+
                         TestResultAction::validate()->cancelParentActions(),
                         TestResultAction::revisionNeeded()->cancelParentActions(),
                     ])
                     ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->sample_code}")
                     ->modalIcon(Heroicon::Beaker)
                     ->modalIconColor(fn($record) => $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
-
                 ViewAction::make()->slideOver()->modalFooterActions([
                     TestResultAction::requestValidate()->cancelParentActions(),
                     TestResultAction::validate()->cancelParentActions(),

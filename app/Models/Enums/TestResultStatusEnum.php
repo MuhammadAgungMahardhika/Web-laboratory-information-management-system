@@ -15,7 +15,7 @@ enum TestResultStatusEnum: int
     public static function labels(): array
     {
         return [
-            self::Raw->value => 'Mentah',
+            self::Raw->value => 'Draft',
             self::RequestValidate->value => 'Request Validasi',
             self::Validated->value => 'Tervalidasi',
             self::RevisionNeeded->value => 'Perlu Revisi',
