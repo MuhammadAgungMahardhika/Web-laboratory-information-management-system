@@ -51,8 +51,7 @@ class TestResultForm
     {
         return $schema
             ->columns([
-                'sm' => 2,
-                'md' => 3,
+                'default' => 1,
                 'xl' => 4,
             ])
             ->components([
