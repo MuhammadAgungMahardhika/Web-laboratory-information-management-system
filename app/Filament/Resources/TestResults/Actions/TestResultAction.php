@@ -12,11 +12,14 @@ use Filament\Actions\BulkAction;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\View;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 
 class TestResultAction
 {
@@ -27,6 +30,21 @@ class TestResultAction
         return Auth::user()->can($permission);
     }
 
+    public static function approvalHistory(): Action
+    {
+        return Action::make('approvalHistory')
+            ->label('Riwayat Approval')
+            ->button()
+            ->icon(Heroicon::OutlinedClock)
+            ->modalHeading('Riwayat Approval')
+            ->modalSubmitAction(false)
+            ->slideOver()
+            ->modalCancelActionLabel('Tutup')
+            ->modalWidth(Width::TwoExtraLarge)
+            ->schema([
+                View::make('components.approval-timeline'),
+            ]);
+    }
     /**
      * Analis kirim hasil uji untuk divalidasi (mulai Level 1).
      * Dipakai juga untuk submit ULANG setelah status RevisionNeeded.

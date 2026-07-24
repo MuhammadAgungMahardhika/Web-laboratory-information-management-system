@@ -75,7 +75,8 @@ class TestResultsTable
 
                 ViewColumn::make('approval_flow')
                     ->label('Approval')
-                    ->view('components.approval-timeline'),
+                    ->action(TestResultAction::approvalHistory())
+                    ->view('components.approval-summary'),
 
                 TextColumn::make('sample.labJobItem.description')
                     ->label('Matrix')

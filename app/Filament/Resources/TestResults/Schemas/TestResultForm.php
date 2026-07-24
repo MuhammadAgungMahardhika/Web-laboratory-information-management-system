@@ -124,19 +124,14 @@ class TestResultForm
                                 // RevisionNeeded, dia perlu tahu alasannya.
                                 Section::make([
                                     Textarea::make('comment')
-                                        ->label('Alasan Perlu Revisi')
+                                        ->hiddenLabel()
                                         ->disabled()
                                         ->dehydrated(false)
                                         ->columnSpanFull(),
                                 ])
                                     ->heading('Catatan dari Approver')
-                                    ->visible(
-                                        fn($record) =>
-                                        !static::isApprover()
-                                            && $record
-                                            && $record->status === TestResultStatusEnum::RevisionNeeded->value
-                                    )
-                                    ->visibleOn(['view', 'edit']),
+                                    ->visibleOn(['view', 'edit'])
+                                    ->visible(fn(?TestResult $record) => filled($record?->comment)),
 
                                 // ================= SECTION UTAMA: DATA HASIL UJI (ANALIS) =================
                                 Section::make([
@@ -171,7 +166,7 @@ class TestResultForm
                                         ->disabled()
                                         ->dehydrated()
                                         ->label('Tanggal Uji')
-                                        ->minDate(now()->toDateString())
+                                        ->minDate(fn(?TestResult $record) => $record ? null : now()->toDateString())
                                         ->required()
                                         ->afterStateHydrated(function ($state, callable $set) {
                                             if (empty($state)) {
@@ -233,63 +228,59 @@ class TestResultForm
 
                         Tab::make('Riwayat Approval')
                             ->schema([
-                                Section::make([
-                                    Repeater::make('testResultApprovals')
-                                        ->relationship('testResultApprovals')
-                                        ->hiddenLabel()
-                                        ->table([
-                                            TableColumn::make('Level'),
-                                            TableColumn::make('Status'),
-                                            TableColumn::make('Catatan'),
-                                            TableColumn::make('Petugas'),
-                                            TableColumn::make('Waktu'),
 
-                                        ])
-                                        ->schema([
-                                            TextInput::make('approval_level')
-                                                ->label('Level'),
+                                Repeater::make('testResultApprovals')
+                                    ->relationship('testResultApprovals')
+                                    ->hiddenLabel()
+                                    ->table([
+                                        TableColumn::make('Level'),
+                                        TableColumn::make('Status'),
+                                        TableColumn::make('Catatan'),
+                                        TableColumn::make('Petugas'),
+                                        TableColumn::make('Waktu'),
 
-                                            Select::make('status')
-                                                ->label('Status')
-                                                ->options([
-                                                    TestResultApprovalStatusEnum::Pending->value => 'Menunggu',
-                                                    TestResultApprovalStatusEnum::Accepted->value => 'Disetujui',
-                                                    TestResultApprovalStatusEnum::Rejected->value => 'Ditolak',
-                                                    TestResultApprovalStatusEnum::Revision->value => 'Perlu Revisi',
-                                                ]),
-                                            Textarea::make('note')
-                                                ->label('Catatan')
-                                                ->columnSpanFull(),
-                                            Select::make('personel_id')
-                                                ->label('Petugas')
-                                                ->relationship('personel', 'fullname'),
+                                    ])
+                                    ->schema([
+                                        TextInput::make('approval_level')
+                                            ->label('Level'),
 
-                                            DateTimePicker::make('updated_at')
-                                                ->label('Waktu'),
-                                        ])
-                                        ->columns(5)
-                                        ->disabled()
-                                        ->dehydrated(false)
-                                        ->deletable(false)
-                                        ->addable(false)
-                                        ->reorderable(false)
-                                        ->collapsible()
-                                        ->itemLabel(function (array $state) {
-                                            $status = match ($state['status'] ?? null) {
+                                        Select::make('status')
+                                            ->label('Status')
+                                            ->options([
                                                 TestResultApprovalStatusEnum::Pending->value => 'Menunggu',
                                                 TestResultApprovalStatusEnum::Accepted->value => 'Disetujui',
                                                 TestResultApprovalStatusEnum::Rejected->value => 'Ditolak',
                                                 TestResultApprovalStatusEnum::Revision->value => 'Perlu Revisi',
-                                                default => '-',
-                                            };
-                                            return "Level " . ($state['approval_level'] ?? '-') . " — {$status}";
-                                        }),
-                                ])
-                                    ->heading('Riwayat Approval')
+                                            ]),
+                                        Textarea::make('note')
+                                            ->label('Catatan')
+                                            ->columnSpanFull(),
+                                        Select::make('personel_id')
+                                            ->label('Petugas')
+                                            ->relationship('personel', 'fullname'),
+
+                                        DateTimePicker::make('updated_at')
+                                            ->label('Waktu'),
+                                    ])
+                                    ->columns(5)
+                                    ->disabled()
+                                    ->dehydrated(false)
+                                    ->deletable(false)
+                                    ->addable(false)
+                                    ->reorderable(false)
                                     ->collapsible()
-                                    ->columnSpanFull()
-                                    ->visibleOn(['view', 'edit']),
-                            ]),
+                                    ->itemLabel(function (array $state) {
+                                        $status = match ($state['status'] ?? null) {
+                                            TestResultApprovalStatusEnum::Pending->value => 'Menunggu',
+                                            TestResultApprovalStatusEnum::Accepted->value => 'Disetujui',
+                                            TestResultApprovalStatusEnum::Rejected->value => 'Ditolak',
+                                            TestResultApprovalStatusEnum::Revision->value => 'Perlu Revisi',
+                                            default => '-',
+                                        };
+                                        return "Level " . ($state['approval_level'] ?? '-') . " — {$status}";
+                                    }),
+
+                            ])->visibleOn(['view', 'edit']),
 
                     ])->columnSpanFull(),
 
