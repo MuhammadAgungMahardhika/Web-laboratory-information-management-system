@@ -223,6 +223,7 @@ class TestResultsTable
                                 : 'Simpan & Request Validasi')
                             ->icon(Heroicon::ArrowUpTray)
                             ->color('warning')
+                            ->requiresConfirmation()
                             ->visible(
                                 fn(TestResult $record) =>
                                 Auth::user()->can(TestResultAction::PERMISSION_REQUEST_VALIDATE_TEST_RESULT)
