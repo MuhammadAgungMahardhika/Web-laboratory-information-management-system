@@ -75,6 +75,7 @@ class SamplesRelationManager extends RelationManager
     {
         $user = Auth::user();
         $personel = $user->personel;
+        $sampleService  = app(SampleService::class);
         return  SampleResource::form($schema)
             ->components([
                 Section::make([
@@ -89,10 +90,9 @@ class SamplesRelationManager extends RelationManager
                         ->searchable()
                         ->preload()
                         ->live()
-                        ->afterStateUpdated(function ($state,  $set) {
+                        ->afterStateUpdated(function ($state,  $set) use ($sampleService) {
                             if ($state) {
                                 // Inisialisasi service
-                                $sampleService = new \App\Services\SampleService();
                                 $labJobItem = LabJobItem::find($state);
                                 $sampleCode = $sampleService->generateSampleCode($labJobItem);
                                 $set('sample_code', $sampleCode);
@@ -226,6 +226,7 @@ class SamplesRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+        $sampleService  = app(SampleService::class);
         return SampleResource::table($table)
             ->headerActions([
                 CreateAction::make()->after(
@@ -237,9 +238,9 @@ class SamplesRelationManager extends RelationManager
             ->recordActions([
                 SampleAction::downloadLabel(),
                 SampleAction::prepare($this->ownerRecord),
-                EditAction::make(),
-                ViewAction::make(),
-                LinkAction::make('detail')->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)),
+                EditAction::make()->slideOver(),
+                ViewAction::make()->slideOver(),
+                LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -253,8 +254,7 @@ class SamplesRelationManager extends RelationManager
                         ->color('info')
                         ->requiresConfirmation()
                         ->authorize($this->ownerRecord->status === JobStatusEnum::SamplingCompleted->value && static::isAuthorized(SampleAction::PERMISSION_PREPARE))
-                        ->action(function (Collection $records) {
-                            $sampleService = new SampleService();
+                        ->action(function (Collection $records) use ($sampleService) {
                             $successCount = 0;
                             $failedCount = 0;
                             foreach ($records as $record) {

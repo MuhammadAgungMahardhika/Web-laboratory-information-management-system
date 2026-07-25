@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 
 class LabJobService
 {
-
     public function generateLabJobNumber(): string
     {
         $currentYear = Carbon::now()->format('y'); // 25
@@ -81,7 +80,7 @@ class LabJobService
      * Menghapus semua item pekerjaan lab dan menyalin ulang dari penawaran.
      *
      * @param LabJob $labJob
-     * @return void
+     * @return LabJob
      */
     public function resetToQuotationSnapshot(LabJob $labJob): LabJob
     {
@@ -142,8 +141,8 @@ class LabJobService
     public function updateLabJobStatus(LabJob $labJob, JobStatusEnum $newStatus, array $data = null): bool
     {
         // Perbarui status penawaran
-
         // mulai job
+        $isSuccessed  = false;
         if ($newStatus === JobStatusEnum::InProgress) {
             $labJob->start_date = $data['start_date'] ?? $labJob->start_date;
             $labJob->end_date = $data['end_date'] ?? $labJob->end_date;

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Enums\SampleStatusEnum;
 use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\Personel;
@@ -158,6 +159,10 @@ class TestResultApprovalService
                 'validation_date' => now(),
                 'updated_by' => $this->actor(),
             ]);
+            // app(SampleService::class)->updateSampleStatus(
+            //     $testResult->sample,
+            //     SampleStatusEnum::AnalysisCompleted
+            // );
             return $this->response(true, 'Hasil uji berhasil disetujui (Final).');
         }
 

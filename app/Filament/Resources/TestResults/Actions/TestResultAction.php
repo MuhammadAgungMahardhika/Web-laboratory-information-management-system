@@ -159,6 +159,7 @@ class TestResultAction
 
                         Textarea::make('test_notes')
                             ->label('Catatan Hasil Uji')
+                            ->default('Hasil pengujian memenuhi baku mutu.')
                             ->rows(3)
                             ->required(),
                     ];

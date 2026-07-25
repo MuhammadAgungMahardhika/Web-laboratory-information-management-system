@@ -28,8 +28,9 @@ class SampleService
 
     public function updateSampleStatus(Sample $sample, SampleStatusEnum $newStatus): bool
     {
+        $testResultService = app(TestResultService::class);
+        $isSuccessed = false;
         if ($newStatus === SampleStatusEnum::Received) {
-            $testResultService = new TestResultService();
             $testResultService->rollBackTestResultsFromSample($sample);
             $sample->status = $newStatus->value;
             $isSuccessed =  $sample->save();
@@ -43,7 +44,6 @@ class SampleService
             }
             $sample->status = $newStatus->value;
             $isSuccessed =  $sample->save();
-            $testResultService = new TestResultService();
             $testResultService->generateTestResultsFromSample($sample);
         }
         if ($newStatus === SampleStatusEnum::AnalysisCompleted) {

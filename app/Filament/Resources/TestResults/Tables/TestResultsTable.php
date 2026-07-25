@@ -192,7 +192,9 @@ class TestResultsTable
                     ->modalSubmitAction(function (Action $action, TestResult $record) {
                         $action->keyBindings(['ctrl+s']);
                         if ($record->status === TestResultStatusEnum::RevisionNeeded->value) {
-                            $action->label('Perbaiki');
+                            $action->label('Perbaiki Draft');
+                        } else {
+                            $action->label('Simpan Draft');
                         }
                         return $action;
                     })
