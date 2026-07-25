@@ -50,24 +50,7 @@ class TestResultAction
      * Dipakai juga untuk submit ULANG setelah status RevisionNeeded.
      */
 
-    public static function saveAndRequestValidate(): Action
-    {
 
-        $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);
-
-        return Action::make('saveAndRequestValidate')
-            ->label('Simpan & Request Validasi')
-            ->icon(Heroicon::ArrowUpTray)
-            ->color('warning')
-            ->authorize(
-                fn(TestResult $record) =>
-                $authorized && in_array($record->status, [
-                    TestResultStatusEnum::Raw->value,
-                    TestResultStatusEnum::RevisionNeeded->value,
-                ])
-            )
-            ->arguments(['requestValidate' => true]); // <-- ini dia
-    }
     public static function requestValidate($url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_REQUEST_VALIDATE_TEST_RESULT);
@@ -142,20 +125,51 @@ class TestResultAction
                                 2 => 'Tidak Sesuai Baku Mutu',
                             ])
                             ->default($record->evaluation_status ?? 1)
-                            ->required(),
-                        Textarea::make('test_notes')
+                            ->live()
                             ->required()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                if ($state == 1) {
+                                    // Langsung isi catatan jika sesuai baku mutu
+                                    $set('non_compliance_type', null);
+                                    $set('test_notes', 'Hasil pengujian memenuhi baku mutu.');
+                                } else {
+                                    // Kosongkan saat berubah ke tidak sesuai
+                                    $set('test_notes', '');
+                                }
+                            }),
+
+                        Radio::make('non_compliance_type')
+                            ->label('Jenis Ketidaksesuaian')
+                            ->options([
+                                'below' => 'Di bawah baku mutu',
+                                'above' => 'Di atas baku mutu',
+                            ])
+                            ->visible(fn(callable $get) => $get('evaluation_status') == 2)
+                            ->live()
+                            ->dehydrated(false) // tidak disimpan ke database
+                            ->afterStateUpdated(function ($state, callable $set) {
+
+                                $notes = [
+                                    'below' => 'Hasil pengujian berada di bawah baku mutu.',
+                                    'above' => 'Hasil pengujian berada di atas baku mutu.',
+                                ];
+
+                                $set('test_notes', $notes[$state] ?? '');
+                            }),
+
+                        Textarea::make('test_notes')
                             ->label('Catatan Hasil Uji')
-                            ->rows(3),
+                            ->rows(3)
+                            ->required(),
                     ];
                 }
 
                 // Level 2+ cukup catatan pengesahan, tidak ubah evaluation_status lagi
                 return [
-                    Textarea::make('comment')
-                        ->required()
-                        ->label('Catatan Hasil Uji')
-                        ->rows(3),
+                    // Textarea::make('comment')
+                    //     ->required()
+                    //     ->label('Catatan Hasil Uji')
+                    //     ->rows(3),
                 ];
             })
             ->requiresConfirmation()
