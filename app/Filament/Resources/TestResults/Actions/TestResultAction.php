@@ -62,6 +62,7 @@ class TestResultAction
                 fn(TestResult $record) =>
                 in_array($record->status, [
                     TestResultStatusEnum::Raw->value,
+                    TestResultStatusEnum::RequestValidate->value,
                     TestResultStatusEnum::RevisionNeeded->value,
                 ])
                     && $record->tested_value
@@ -331,11 +332,19 @@ class TestResultAction
                 $failedCount = 0;
                 foreach ($records as $record) {
                     try {
-                        DB::transaction(function () use ($service, $record) {
-                            $result = $service->submitForValidation($record);
-                            if (!$result['success']) throw new Exception($result['message']);
-                        });
-                        $successCount++;
+                        if (in_array($record->status, [
+                            TestResultStatusEnum::Raw->value,
+                            TestResultStatusEnum::RequestValidate->value,
+                            TestResultStatusEnum::RevisionNeeded->value,
+                        ])) {
+                            DB::transaction(function () use ($service, $record) {
+                                $result = $service->submitForValidation($record);
+                                if (!$result['success']) throw new Exception($result['message']);
+                            });
+                            $successCount++;
+                        } else {
+                            throw new Exception();
+                        }
                     } catch (Exception $e) {
                         $failedCount++;
                     }
