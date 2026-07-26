@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Enums\TestResultEvaluationStatusEnum;
 use App\Models\Enums\TestResultHistoryActionEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
@@ -28,14 +29,46 @@ class TestResultObserver
 
         $changes = [];
 
-        foreach (['status', 'tested_value', 'comment', 'evaluation_status',] as $field) {
+        $enumFields = [
+            'status' => TestResultStatusEnum::labels(),
+            'evaluation_status' => TestResultEvaluationStatusEnum::labels(),
+        ];
 
-            if ($testResult->wasChanged($field)) {
-                $changes[$field] = [
-                    'old' => TestResultStatusEnum::labels()[$testResult->getOriginal($field)],
-                    'new' => TestResultStatusEnum::labels()[$testResult->{$field}],
-                ];
+        $trackedFields = [
+            'status',
+            'tested_value',
+            'comment',
+            'evaluation_status',
+        ];
+
+        $changes = [];
+
+        foreach ($trackedFields as $field) {
+
+            if (! $testResult->wasChanged($field)) {
+                continue;
             }
+
+            $old = $testResult->getOriginal($field);
+            $new = $testResult->getAttribute($field);
+
+            // Format enum jika field merupakan enum
+            if (isset($enumFields[$field])) {
+                $labels = $enumFields[$field];
+
+                $old = $old !== null && array_key_exists($old, $labels)
+                    ? $labels[$old]
+                    : $old;
+
+                $new = $new !== null && array_key_exists($new, $labels)
+                    ? $labels[$new]
+                    : $new;
+            }
+
+            $changes[$field] = [
+                'old' => $old,
+                'new' => $new,
+            ];
         }
 
         TestResultHistory::create([
