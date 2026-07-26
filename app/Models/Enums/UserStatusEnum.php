@@ -41,15 +41,15 @@ enum UserStatusEnum: int
     {
         return self::Active; // Status default adalah "Pending"
     }
-    public static function color($status): string
+    public static function color(int $status): string
     {
         switch ($status) {
             case self::Active->value:
                 return 'success';
-                break;
+
             case self::Inactive->value:
                 return 'danger';
-                break;
+
             default:
                 return 'info';
         }

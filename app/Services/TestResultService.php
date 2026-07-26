@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Enums\SampleStatusEnum;
+use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultEvaluationStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJob;
@@ -29,7 +30,10 @@ class TestResultService
 
     public function generateTestResultsFromSample(Sample $sample): void
     {
-        $this->rollBackTestResultsFromSample($sample);
+        // Hindari duplicate jika method terpanggil dua kali
+        if ($sample->testResults()->exists()) {
+            return;
+        }
         $sample->load('labJobItem.parameterLabJobItems.parameter');
         foreach ($sample->labJobItem->parameterLabJobItems as $paramSnapshot) {
             // 2. Buat record TestResult baru untuk setiap pasangan Sample-Parameter
@@ -44,6 +48,45 @@ class TestResultService
                 // --- SALIN NILAI STANDAR DI SINI ---
                 'standard_notes_ref' =>  $paramSnapshot->parameter->standard_notes,
             ]);
+        }
+    }
+
+    /**
+     * Re-open hasil uji.
+     * Dipanggil ketika Sample dari Analysis Completed kembali ke Prepared.
+     */
+    public function reopenTestResultsFromSample(Sample $sample): void
+    {
+        $sample->load('testResults.testResultApprovals');
+
+        foreach ($sample->testResults as $testResult) {
+
+            // Approval lama tetap disimpan sebagai histori
+            $testResult->testResultApprovals()
+                ->whereIn('status', [
+                    TestResultApprovalStatusEnum::Pending->value,
+                    TestResultApprovalStatusEnum::Accepted->value,
+                    TestResultApprovalStatusEnum::Revision->value,
+                ])
+                ->update([
+                    'status' => TestResultApprovalStatusEnum::Revoked->value,
+                    'updated_by' => Auth::user()?->name,
+
+                ]);
+
+            // Test Result kembali menjadi revisi
+            $testResult->update([
+                'status' => TestResultStatusEnum::RevisionNeeded->value,
+                'validator_personel_id' => null,
+                'validation_date' => null,
+                'updated_by' => Auth::user()?->name,
+            ]);
+
+            // tested_value tidak dihapus
+            // evaluation_status tidak dihapus
+            // test_notes tidak dihapus
+            // comment tetap disimpan
+            // revision_count juga tetap
         }
     }
 }

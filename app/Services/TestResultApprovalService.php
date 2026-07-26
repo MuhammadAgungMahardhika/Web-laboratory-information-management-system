@@ -154,16 +154,32 @@ class TestResultApprovalService
         }
 
         if ($currentLevel >= self::MAX_LEVEL) {
+
             $testResult->update([
                 'status' => TestResultStatusEnum::Validated->value,
                 'validation_date' => now(),
                 'updated_by' => $this->actor(),
             ]);
-            // app(SampleService::class)->updateSampleStatus(
-            //     $testResult->sample,
-            //     SampleStatusEnum::AnalysisCompleted
-            // );
-            return $this->response(true, 'Hasil uji berhasil disetujui (Final).');
+
+            // cek apakah semua test result sample sudah validated
+            $sample = $testResult->sample;
+
+            $hasPending = $sample->testResults()
+                ->where('status', '!=', TestResultStatusEnum::Validated->value)
+                ->exists();
+
+            if (! $hasPending) {
+
+                app(SampleService::class)->updateSampleStatus(
+                    $sample,
+                    SampleStatusEnum::AnalysisCompleted
+                );
+            }
+
+            return $this->response(
+                true,
+                'Hasil uji berhasil divalidasi.'
+            );
         }
 
         $nextLevel = $currentLevel + 1;

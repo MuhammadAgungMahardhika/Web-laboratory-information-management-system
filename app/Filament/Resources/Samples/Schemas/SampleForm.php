@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Samples\Schemas;
 use App\Models\Enums\SampleCollectionTypeEnum;
 use App\Models\Enums\SampleStatusEnum;
 use App\Models\LabJobItem;
+use App\Services\SampleService;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
@@ -30,6 +31,7 @@ class SampleForm
     public static function configure(Schema $schema): Schema
     {
         $personel = Auth::user()->personel;
+        $sampleService = app(SampleService::class);
         return  $schema
             ->components([
                 Section::make([
@@ -43,10 +45,9 @@ class SampleForm
                         ->searchable()
                         ->preload()
                         ->live()
-                        ->afterStateUpdated(function ($state,  $set) {
+                        ->afterStateUpdated(function ($state,  $set) use ($sampleService) {
                             if ($state) {
                                 // Inisialisasi service
-                                $sampleService = new \App\Services\SampleService();
                                 $labJobItem = LabJobItem::find($state);
                                 $sampleCode = $sampleService->generateSampleCode($labJobItem);
                                 $set('sample_code', $sampleCode);

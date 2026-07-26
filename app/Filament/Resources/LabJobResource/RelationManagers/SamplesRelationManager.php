@@ -238,6 +238,7 @@ class SamplesRelationManager extends RelationManager
             ->recordActions([
                 SampleAction::downloadLabel(),
                 SampleAction::prepare($this->ownerRecord),
+                SampleAction::reopen(),
                 EditAction::make()->slideOver(),
                 ViewAction::make()->slideOver(),
                 LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)),

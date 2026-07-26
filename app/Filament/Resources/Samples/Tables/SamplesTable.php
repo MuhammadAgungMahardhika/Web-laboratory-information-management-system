@@ -27,6 +27,7 @@ class SamplesTable
 {
     public static function configure(Table $table): Table
     {
+        $sampleService  = app(SampleService::class);
         return $table
             ->selectCurrentPageOnly()
             ->groups([
@@ -125,8 +126,7 @@ class SamplesTable
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
                         ->requiresConfirmation()
-                        ->action(function (Collection $records) {
-                            $sampleService = new SampleService();
+                        ->action(function (Collection $records)  use ($sampleService) {
                             $successCount = 0;
                             $failedCount = 0;
 

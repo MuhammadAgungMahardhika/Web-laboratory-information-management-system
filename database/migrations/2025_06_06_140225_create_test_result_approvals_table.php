@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('test_result_id');
             $table->unsignedBigInteger('personel_id')->nullable(); // 
             $table->integer('approval_level')->default(1);
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'revision'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'revision', 'revoked'])->default('pending');
             $table->text('note')->nullable(); // alasan kenapa reject misalnya
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

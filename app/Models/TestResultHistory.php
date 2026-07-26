@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enums\TestResultHistoryActionEnum;
 use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,10 @@ class TestResultHistory extends Model
 {
     /** @use HasFactory<\Database\Factories\TestResultHistoryFactory> */
     use HasFactory;
-
+    protected $casts = [
+        'action' => TestResultHistoryActionEnum::class,
+        'changes' => 'array',
+    ];
     public function testResult()
     {
         return $this->belongsTo(TestResult::class);

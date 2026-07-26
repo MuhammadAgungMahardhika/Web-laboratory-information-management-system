@@ -33,10 +33,10 @@ class TestResultAction
     public static function approvalHistory(): Action
     {
         return Action::make('approvalHistory')
-            ->label('Riwayat Approval')
+            ->label('Approval')
             ->button()
             ->icon(Heroicon::OutlinedClock)
-            ->modalHeading('Riwayat Approval')
+            ->modalHeading('Approval')
             ->modalSubmitAction(false)
             ->slideOver()
             ->modalCancelActionLabel('Tutup')

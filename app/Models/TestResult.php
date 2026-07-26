@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Observers\TestResultObserver;
 use App\Traits\Blameable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +13,7 @@ use Log;
 
 use function Illuminate\Events\queueable;
 
+#[ObservedBy([TestResultObserver::class])]
 class TestResult extends Model
 {
     protected $casts = [
@@ -20,27 +23,7 @@ class TestResult extends Model
     use HasFactory;
     use Blameable;
 
-    protected static function booted(): void
-    {
-        $user = Auth::user();
-        $personelId =  $user->personel->id ?? null;
-        $personelFullname =  $user->personel->fullname ?? null;
-        static::updated(queueable(function (TestResult $testResult) use ($personelId, $personelFullname) {
-            if ($testResult->isDirty('status') || $testResult->isDirty('tested_value') || $testResult->isDirty('corrected_value') || $testResult->isDirty('notes')) {
-                TestResultHistory::create([
-                    'test_result_id' => $testResult->id,
-                    'personel_id' => $personelId,
-                    'old_status' => $testResult->getOriginal('status'),
-                    'new_status' => $testResult->status,
-                    'old_tested_value' => $testResult->getOriginal('tested_value'),
-                    'new_tested_value' => $testResult->tested_value,
-                    'comment' => $testResult->comment ?? null,
-                    'created_by' =>  $personelFullname ?? 'System',
-                    'updated_by' =>  $personelFullname ?? 'System',
-                ]);
-            }
-        }));
-    }
+
     public function sample()
     {
         return $this->belongsTo(Sample::class);

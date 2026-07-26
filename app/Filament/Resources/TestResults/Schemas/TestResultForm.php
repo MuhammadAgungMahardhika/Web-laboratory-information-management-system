@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TestResults\Schemas;
 
 use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultEvaluationStatusEnum;
+use App\Models\Enums\TestResultHistoryActionEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
 use App\Services\TestResultApprovalService;
@@ -176,7 +177,7 @@ class TestResultForm
                                     Select::make('analyst_personel_id')
                                         ->label('Analis')
                                         ->default(Auth::user()->personel_id)
-                                        ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => $query->where('id', Auth::user()->personel->id))
+                                        ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => !static::isApprover() ? $query->where('id', Auth::user()->personel->id) : $query)
                                         ->searchable()
                                         ->preload()
                                         ->disabled()
@@ -225,7 +226,7 @@ class TestResultForm
 
                             ])->columnSpanFull()->columns(2)->visibleOn(['view', 'edit']),
 
-                        Tab::make('Riwayat Approval')
+                        Tab::make('Approval')
                             ->schema([
 
                                 Repeater::make('testResultApprovals')
@@ -250,6 +251,7 @@ class TestResultForm
                                                 TestResultApprovalStatusEnum::Accepted->value => 'Disetujui',
                                                 TestResultApprovalStatusEnum::Rejected->value => 'Ditolak',
                                                 TestResultApprovalStatusEnum::Revision->value => 'Perlu Revisi',
+                                                TestResultApprovalStatusEnum::Revoked->value => 'Revoke',
                                             ]),
                                         Textarea::make('note')
                                             ->label('Catatan')
@@ -280,7 +282,99 @@ class TestResultForm
                                     }),
 
                             ])->visibleOn(['view', 'edit']),
+                        Tab::make('Riwayat')
+                            ->icon(Heroicon::Clock)
+                            ->schema([
 
+                                Repeater::make('testResultHistories')
+                                    ->relationship('testResultHistories')
+                                    ->hiddenLabel()
+                                    ->table([
+                                        TableColumn::make('Waktu'),
+                                        TableColumn::make('Aksi'),
+                                        TableColumn::make('Perubahan'),
+                                        TableColumn::make('Petugas'),
+                                    ])
+                                    ->schema([
+
+                                        DateTimePicker::make('created_at')
+                                            ->label('Waktu'),
+
+                                        Select::make('action')
+                                            ->label('Aksi')
+                                            ->options(TestResultHistoryActionEnum::options()),
+
+                                        Textarea::make('changes')
+                                            ->label('Perubahan')
+                                            ->formatStateUsing(function ($state) {
+
+                                                if (blank($state)) {
+                                                    return '-';
+                                                }
+
+                                                $changes = is_array($state)
+                                                    ? $state
+                                                    : json_decode($state, true);
+
+                                                if (! is_array($changes)) {
+                                                    return '-';
+                                                }
+
+                                                $result = [];
+
+                                                foreach ($changes as $field => $change) {
+
+                                                    $fieldLabel = match ($field) {
+                                                        'status' => 'Status',
+                                                        'tested_value' => 'Nilai Uji',
+                                                        'comment' => 'Catatan',
+                                                        'evaluation_status' => 'Status Evaluasi',
+                                                        'validator_personel_id' => 'Validator',
+                                                        'analyst_personel_id' => 'Analis',
+                                                        'test_date' => 'Tanggal Uji',
+                                                        default => ucwords(str_replace('_', ' ', $field)),
+                                                    };
+
+                                                    $old = $change['old'] ?? '-';
+                                                    $new = $change['new'] ?? '-';
+
+                                                    $result[] = "{$fieldLabel}: {$old} → {$new}";
+                                                }
+
+                                                return implode("\n", $result);
+                                            })
+                                            ->rows(6)
+                                            ->columnSpanFull(),
+
+                                        Select::make('personel_id')
+                                            ->label('Petugas')
+                                            ->relationship('personel', 'fullname'),
+
+                                        Textarea::make('comment')
+                                            ->label('Catatan')
+                                            ->columnSpanFull(),
+
+                                    ])
+                                    ->columns(4)
+                                    ->disabled()
+                                    ->dehydrated(false)
+                                    ->addable(false)
+                                    ->deletable(false)
+                                    ->reorderable(false)
+                                    ->collapsible()
+                                    ->itemLabel(function (array $state) {
+
+                                        $action = TestResultHistoryActionEnum::tryFrom(
+                                            $state['action'] ?? 0
+                                        );
+
+                                        return $action
+                                            ? "{$action->icon()} {$action->label()}"
+                                            : 'Riwayat';
+                                    }),
+
+                            ])
+                            ->visibleOn(['view', 'edit']),
                     ])->columnSpanFull(),
 
 

@@ -9,6 +9,7 @@ use App\Models\Sample;
 use App\Services\SampleService;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -73,6 +74,65 @@ class SampleAction
                         'sample_id' => $record->id,
                         'error' => $e->getMessage(),
                         'user_id' => Auth::id(),
+                    ]);
+                }
+            });
+    }
+
+    public static function reopen(): Action
+    {
+        $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
+
+        return Action::make('Reopen')
+            ->icon(Heroicon::ArrowPath)
+            ->color(Color::Orange)
+            ->authorize(
+                fn(Sample $record) =>
+                $record->status === SampleStatusEnum::AnalysisCompleted->value
+                    && $authorized
+            )
+            ->requiresConfirmation()
+            ->modalHeading('Reopen Sampel')
+            ->modalDescription('Sampel akan dibuka kembali untuk proses analisa ulang. Seluruh hasil uji akan dikembalikan ke status revisi dan harus melalui proses validasi kembali.')
+            ->schema([
+                Textarea::make('reason')
+                    ->label('Alasan Reopen')
+                    ->required()
+                    ->rows(4)
+                    ->maxLength(1000),
+            ])
+            ->action(function (
+                array $data,
+                Sample $record,
+                SampleService $sampleService
+            ) {
+
+                try {
+
+                    DB::transaction(function () use ($record, $sampleService, $data) {
+                        $sampleService->updateSampleStatus(
+                            $record,
+                            SampleStatusEnum::Prepared,
+                        );
+                    });
+
+                    Notification::make()
+                        ->title('Sampel berhasil direopen.')
+                        ->success()
+                        ->send();
+                } catch (Exception $e) {
+
+                    Notification::make()
+                        ->title('Gagal Reopen Sampel')
+                        ->body($e->getMessage())
+                        ->danger()
+                        ->send();
+
+                    Log::error('Reopen Sample Failed', [
+                        'sample_id' => $record->id,
+                        'user_id' => Auth::id(),
+                        'reason' => $data['reason'],
+                        'error' => $e->getMessage(),
                     ]);
                 }
             });

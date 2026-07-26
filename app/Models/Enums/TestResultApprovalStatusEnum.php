@@ -8,6 +8,7 @@ enum TestResultApprovalStatusEnum: string
     case Accepted = 'accepted';
     case Rejected = 'rejected';
     case Revision = 'revision';
+    case Revoked = 'revoked';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum TestResultApprovalStatusEnum: string
             self::Accepted => 'Disetujui',
             self::Rejected => 'Ditolak',
             self::Revision => 'Revisi',
+            self::Revoked => 'Revoke',
         };
     }
 
@@ -26,6 +28,7 @@ enum TestResultApprovalStatusEnum: string
             self::Accepted => '#16a34a',
             self::Rejected => '#dc2626',
             self::Revision => '#ea580c',
+            self::Revoked   => '#6b7280', // Gray
         };
     }
 
@@ -35,7 +38,8 @@ enum TestResultApprovalStatusEnum: string
             self::Pending => '⏳',
             self::Accepted => '✓',
             self::Rejected => '✕',
-            self::Revision => '↺',
+            self::Revision  => '📝',
+            self::Revoked   => '🔄',
         };
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\TestResults\Tables;
 
 use App\Filament\Resources\TestResults\Actions\TestResultAction;
-use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
 use App\Services\TestResultApprovalService;
@@ -23,7 +22,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;

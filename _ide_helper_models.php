@@ -1333,7 +1333,7 @@ namespace App\Models{
  * @property string|null $comment
  * @property int $status
  * @property int $revision_count
- * @property int $evaluation_status
+ * @property int|null $evaluation_status
  * @property string|null $validation_date
  * @property string|null $created_by
  * @property string|null $updated_by
@@ -1343,10 +1343,10 @@ namespace App\Models{
  * @property-read \App\Models\Parameter|null $parameter
  * @property-read \App\Models\Sample $sample
  * @property-read \App\Models\TestMethod|null $testMethod
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultApproval> $testResultApprovals
+ * @property-read int|null $test_result_approvals_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultHistory> $testResultHistories
  * @property-read int|null $test_result_histories_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResultApproval> $testResultApprovals
- * @property-read int|null $testResultApprovals_count
  * @property-read \App\Models\Personel|null $validatorPersonel
  * @method static \Database\Factories\TestResultFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResult newModelQuery()
@@ -1423,6 +1423,7 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property mixed $action
  * @property-read \App\Models\Personel $personel
  * @property-read \App\Models\TestResult $testResult
  * @method static \Database\Factories\TestResultHistoryFactory factory($count = null, $state = [])
