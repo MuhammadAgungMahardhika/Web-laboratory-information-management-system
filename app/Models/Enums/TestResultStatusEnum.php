@@ -16,7 +16,7 @@ enum TestResultStatusEnum: int
     {
         return [
             self::Raw->value => 'Draft',
-            self::RequestValidate->value => 'Request Validasi',
+            self::RequestValidate->value => 'Pengajuan',
             self::Validated->value => 'Tervalidasi',
             self::RevisionNeeded->value => 'Perlu Revisi',
             self::Rejected->value => 'Ditolak',

@@ -32,8 +32,8 @@ class TestResultObserver
 
             if ($testResult->wasChanged($field)) {
                 $changes[$field] = [
-                    'old' => $testResult->getOriginal($field),
-                    'new' => $testResult->{$field},
+                    'old' => TestResultStatusEnum::labels()[$testResult->getOriginal($field)],
+                    'new' => TestResultStatusEnum::labels()[$testResult->{$field}],
                 ];
             }
         }

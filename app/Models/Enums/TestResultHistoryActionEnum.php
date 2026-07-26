@@ -17,7 +17,7 @@ enum TestResultHistoryActionEnum: int
         return match ($this) {
             self::Created   => 'Dibuat',
             self::Updated   => 'Diperbarui',
-            self::Submitted => 'Request Validasi',
+            self::Submitted => 'Pengajuan',
             self::Approved  => 'Disetujui',
             self::Rejected  => 'Ditolak',
             self::Revision  => 'Revisi',

@@ -153,9 +153,7 @@ class TestResultResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            TestResultHistoriesRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array
