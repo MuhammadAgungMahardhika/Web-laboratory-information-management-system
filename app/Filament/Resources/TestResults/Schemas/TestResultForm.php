@@ -2,17 +2,13 @@
 
 namespace App\Filament\Resources\TestResults\Schemas;
 
-use App\Models\Enums\TestResultApprovalStatusEnum;
 use App\Models\Enums\TestResultEvaluationStatusEnum;
-use App\Models\Enums\TestResultHistoryActionEnum;
 use App\Models\Enums\TestResultStatusEnum;
 use App\Models\TestResult;
 use App\Services\TestResultApprovalService;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -20,6 +16,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
@@ -226,153 +223,21 @@ class TestResultForm
 
                             ])->columnSpanFull()->columns(2)->visibleOn(['view', 'edit']),
 
+                        // ================= TAB APPROVAL (TIMELINE) =================
+                        // Reuse partial yang sama dengan modal "Approval" di table action,
+                        // supaya tampilannya konsisten di seluruh aplikasi.
                         Tab::make('Approval')
+                            ->icon(Heroicon::CheckBadge)
                             ->schema([
+                                View::make('components.approval-timeline'),
+                            ])
+                            ->visibleOn(['view', 'edit']),
 
-                                Repeater::make('testResultApprovals')
-                                    ->relationship('testResultApprovals')
-                                    ->hiddenLabel()
-                                    ->table([
-                                        TableColumn::make('Level'),
-                                        TableColumn::make('Status'),
-                                        TableColumn::make('Catatan'),
-                                        TableColumn::make('Petugas'),
-                                        TableColumn::make('Waktu'),
-
-                                    ])
-                                    ->schema([
-                                        TextInput::make('approval_level')
-                                            ->label('Level'),
-
-                                        Select::make('status')
-                                            ->label('Status')
-                                            ->options([
-                                                TestResultApprovalStatusEnum::Pending->value => 'Menunggu',
-                                                TestResultApprovalStatusEnum::Accepted->value => 'Disetujui',
-                                                TestResultApprovalStatusEnum::Rejected->value => 'Ditolak',
-                                                TestResultApprovalStatusEnum::Revision->value => 'Perlu Revisi',
-                                                TestResultApprovalStatusEnum::Revoked->value => 'Revoke',
-                                            ]),
-                                        Textarea::make('note')
-                                            ->label('Catatan')
-                                            ->columnSpanFull(),
-                                        Select::make('personel_id')
-                                            ->label('Petugas')
-                                            ->relationship('personel', 'fullname'),
-
-                                        DateTimePicker::make('updated_at')
-                                            ->label('Waktu'),
-                                    ])
-                                    ->columns(5)
-                                    ->disabled()
-                                    ->dehydrated(false)
-                                    ->deletable(false)
-                                    ->addable(false)
-                                    ->reorderable(false)
-                                    ->collapsible()
-                                    ->itemLabel(function (array $state) {
-                                        $status = match ($state['status'] ?? null) {
-                                            TestResultApprovalStatusEnum::Pending->value => 'Menunggu',
-                                            TestResultApprovalStatusEnum::Accepted->value => 'Disetujui',
-                                            TestResultApprovalStatusEnum::Rejected->value => 'Ditolak',
-                                            TestResultApprovalStatusEnum::Revision->value => 'Perlu Revisi',
-                                            default => '-',
-                                        };
-                                        return "Level " . ($state['approval_level'] ?? '-') . " — {$status}";
-                                    }),
-
-                            ])->visibleOn(['view', 'edit']),
+                        // ================= TAB RIWAYAT (TIMELINE) =================
                         Tab::make('Riwayat')
                             ->icon(Heroicon::Clock)
                             ->schema([
-
-                                Repeater::make('testResultHistories')
-                                    ->relationship('testResultHistories')
-                                    ->hiddenLabel()
-                                    ->table([
-                                        TableColumn::make('Waktu'),
-                                        TableColumn::make('Aksi'),
-                                        TableColumn::make('Perubahan'),
-                                        TableColumn::make('Petugas'),
-                                    ])
-                                    ->schema([
-
-                                        DateTimePicker::make('created_at')
-                                            ->label('Waktu'),
-
-                                        Select::make('action')
-                                            ->label('Aksi')
-                                            ->options(TestResultHistoryActionEnum::options()),
-
-                                        Textarea::make('changes')
-                                            ->label('Perubahan')
-                                            ->formatStateUsing(function ($state) {
-
-                                                if (blank($state)) {
-                                                    return '-';
-                                                }
-
-                                                $changes = is_array($state)
-                                                    ? $state
-                                                    : json_decode($state, true);
-
-                                                if (! is_array($changes)) {
-                                                    return '-';
-                                                }
-
-                                                $result = [];
-
-                                                foreach ($changes as $field => $change) {
-
-                                                    $fieldLabel = match ($field) {
-                                                        'status' => 'Status',
-                                                        'tested_value' => 'Nilai Uji',
-                                                        'comment' => 'Catatan',
-                                                        'evaluation_status' => 'Status Evaluasi',
-                                                        'validator_personel_id' => 'Validator',
-                                                        'analyst_personel_id' => 'Analis',
-                                                        'test_date' => 'Tanggal Uji',
-                                                        default => ucwords(str_replace('_', ' ', $field)),
-                                                    };
-
-                                                    $old = $change['old'] ?? '-';
-                                                    $new = $change['new'] ?? '-';
-
-                                                    $result[] = "{$fieldLabel}: {$old} → {$new}";
-                                                }
-
-                                                return implode("\n", $result);
-                                            })
-                                            ->rows(6)
-                                            ->columnSpanFull(),
-
-                                        Select::make('personel_id')
-                                            ->label('Petugas')
-                                            ->relationship('personel', 'fullname'),
-
-                                        Textarea::make('comment')
-                                            ->label('Catatan')
-                                            ->columnSpanFull(),
-
-                                    ])
-                                    ->columns(4)
-                                    ->disabled()
-                                    ->dehydrated(false)
-                                    ->addable(false)
-                                    ->deletable(false)
-                                    ->reorderable(false)
-                                    ->collapsible()
-                                    ->itemLabel(function (array $state) {
-
-                                        $action = TestResultHistoryActionEnum::tryFrom(
-                                            $state['action'] ?? 0
-                                        );
-
-                                        return $action
-                                            ? "{$action->icon()} {$action->label()}"
-                                            : 'Riwayat';
-                                    }),
-
+                                View::make('components.history-timeline'),
                             ])
                             ->visibleOn(['view', 'edit']),
                     ])->columnSpanFull(),
