@@ -3,7 +3,7 @@
     use Illuminate\Support\Carbon;
 
     $record = $getRecord();
-    $approvals = $record->testResultApprovals->sortBy('approval_level')->values();
+    $approvals = $record->testResultApprovals->sortBy('updated_at')->values();
 
     $previousApproved = true;
 @endphp

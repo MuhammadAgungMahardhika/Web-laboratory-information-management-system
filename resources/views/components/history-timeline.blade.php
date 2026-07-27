@@ -3,7 +3,7 @@
     use Illuminate\Support\Carbon;
 
     $record = $getRecord();
-    $histories = $record->testResultHistories->sortByDesc('created_at')->values();
+    $histories = $record->testResultHistories->sortBy('created_at')->values();
 
     $fieldLabels = [
         'status' => 'Status',
