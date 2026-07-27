@@ -2,11 +2,16 @@
 
 namespace App\Observers;
 
+use App\Jobs\RecordTestResultHistoryJob;
 use App\Models\Enums\TestResultEvaluationStatusEnum;
 use App\Models\Enums\TestResultHistoryActionEnum;
 use App\Models\Enums\TestResultStatusEnum;
+use App\Models\Personel;
+use App\Models\TestMethod;
 use App\Models\TestResult;
 use App\Models\TestResultHistory;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class TestResultObserver
@@ -21,6 +26,8 @@ class TestResultObserver
             'validator_personel_id',
             'analyst_personel_id',
             'test_date',
+            'test_method_id',
+            'unit',
         ];
 
         if (! $testResult->wasChanged($trackedFields)) {
@@ -29,48 +36,152 @@ class TestResultObserver
 
         $user = Auth::user();
 
+        $fieldLabels = [
+            'status' => 'Status',
+            'tested_value' => 'Nilai Hasil Uji',
+            'comment' => 'Komentar',
+            'evaluation_status' => 'Status Evaluasi',
+            'validator_personel_id' => 'Validator',
+            'analyst_personel_id' => 'Analis',
+            'test_date' => 'Tanggal Uji',
+            'test_method_id' => 'Metode Uji',
+            'unit' => 'Satuan',
+        ];
+
         $enumFields = [
             'status' => TestResultStatusEnum::labels(),
             'evaluation_status' => TestResultEvaluationStatusEnum::labels(),
         ];
 
-        $changes = [];
+        $personelFields = [
+            'validator_personel_id',
+            'analyst_personel_id',
+        ];
 
-        foreach ($trackedFields as $field) {
+        /*
+        |--------------------------------------------------------------------------
+        | Personel
+        |--------------------------------------------------------------------------
+        */
+
+        $personelIds = [];
+
+        foreach ($personelFields as $field) {
             if (! $testResult->wasChanged($field)) {
                 continue;
             }
 
-            $old = $testResult->getOriginal($field);
-            $new = $testResult->getAttribute($field);
+            $personelIds[] = $testResult->getOriginal($field);
+            $personelIds[] = $testResult->getAttribute($field);
+        }
 
-            // Konversi enum menjadi label
-            if (isset($enumFields[$field])) {
-                $labels = $enumFields[$field];
+        $personels = Personel::query()
+            ->whereIn('id', array_filter($personelIds))
+            ->pluck('fullname', 'id');
 
-                $old = $old !== null && isset($labels[$old])
-                    ? $labels[$old]
-                    : $old;
+        /*
+        |--------------------------------------------------------------------------
+        | Test Method
+        |--------------------------------------------------------------------------
+        */
 
-                $new = $new !== null && isset($labels[$new])
-                    ? $labels[$new]
-                    : $new;
+        $testMethodIds = [];
+
+        if ($testResult->wasChanged('test_method_id')) {
+            $testMethodIds[] = $testResult->getOriginal('test_method_id');
+            $testMethodIds[] = $testResult->getAttribute('test_method_id');
+        }
+
+        $testMethods = TestMethod::query()
+            ->whereIn('id', array_filter($testMethodIds))
+            ->pluck('name', 'id'); // ganti 'name' bila kolomnya berbeda
+
+        /*
+        |--------------------------------------------------------------------------
+        | Changes
+        |--------------------------------------------------------------------------
+        */
+
+        $changes = [];
+
+        foreach ($trackedFields as $field) {
+
+            if (! $testResult->wasChanged($field)) {
+                continue;
             }
 
-            $changes[$field] = [
+            $old = $this->formatHistoryValue(
+                field: $field,
+                value: $testResult->getOriginal($field),
+                enumFields: $enumFields,
+                personelFields: $personelFields,
+                personels: $personels,
+                testMethods: $testMethods,
+            );
+
+            $new = $this->formatHistoryValue(
+                field: $field,
+                value: $testResult->getAttribute($field),
+                enumFields: $enumFields,
+                personelFields: $personelFields,
+                personels: $personels,
+                testMethods: $testMethods,
+            );
+
+            $changes[$fieldLabels[$field]] = [
                 'old' => $old,
                 'new' => $new,
             ];
         }
 
-        TestResultHistory::create([
+        if (empty($changes)) {
+            return;
+        }
+        RecordTestResultHistoryJob::dispatch([
             'test_result_id' => $testResult->id,
             'personel_id' => $user?->personel?->id,
             'action' => $this->resolveAction($testResult),
             'changes' => $changes,
             'created_by' => $user?->personel?->fullname ?? 'System',
             'updated_by' => $user?->personel?->fullname ?? 'System',
-        ]);
+        ])
+            ->afterCommit();
+    }
+
+    private function formatHistoryValue(
+        string $field,
+        mixed $value,
+        array $enumFields,
+        array $personelFields,
+        Collection $personels,
+        Collection $testMethods,
+    ): mixed {
+        if ($value === null) {
+            return null;
+        }
+
+        // Enum
+        if (isset($enumFields[$field])) {
+            return $enumFields[$field][$value] ?? $value;
+        }
+
+        // Personel
+        if (in_array($field, $personelFields, true)) {
+            return $personels[$value] ?? $value;
+        }
+
+        // Test Method
+        if ($field === 'test_method_id') {
+            return $testMethods[$value] ?? $value;
+        }
+
+        // Date
+        if ($field === 'test_date') {
+            return Carbon::parse($value)->format('d/m/Y');
+        }
+
+        // Unit & field lainnya
+        return $value;
     }
 
     private function resolveAction(TestResult $testResult): TestResultHistoryActionEnum
@@ -89,32 +200,26 @@ class TestResultObserver
 
         return match (true) {
 
-            // Draft -> Request Validasi
             $oldStatus === TestResultStatusEnum::Raw
                 && $newStatus === TestResultStatusEnum::RequestValidate
             => TestResultHistoryActionEnum::Submitted,
 
-            // Revisi -> Request Validasi
             $oldStatus === TestResultStatusEnum::RevisionNeeded
                 && $newStatus === TestResultStatusEnum::RequestValidate
             => TestResultHistoryActionEnum::Submitted,
 
-            // Request Validasi -> Tervalidasi
             $oldStatus === TestResultStatusEnum::RequestValidate
                 && $newStatus === TestResultStatusEnum::Validated
             => TestResultHistoryActionEnum::Approved,
 
-            // Request Validasi -> Ditolak
             $oldStatus === TestResultStatusEnum::RequestValidate
                 && $newStatus === TestResultStatusEnum::Rejected
             => TestResultHistoryActionEnum::Rejected,
 
-            // Request Validasi -> Revisi
             $oldStatus === TestResultStatusEnum::RequestValidate
                 && $newStatus === TestResultStatusEnum::RevisionNeeded
             => TestResultHistoryActionEnum::Revision,
 
-            // Validated -> Revisi (Reopen)
             $oldStatus === TestResultStatusEnum::Validated
                 && $newStatus === TestResultStatusEnum::RevisionNeeded
             => TestResultHistoryActionEnum::Reopened,
