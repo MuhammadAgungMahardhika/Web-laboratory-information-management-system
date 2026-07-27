@@ -77,12 +77,35 @@ class TestResultsTable
                     ->action(TestResultAction::approvalHistory())
                     ->view('components.approval-summary'),
 
-                TextColumn::make('sample.labJobItem.description')
-                    ->label('Matrix')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true)
+                TextColumn::make('sample.sample_code')
+                    ->label('Sample')
+                    ->searchable(query: function (Builder $query, string $search) {
+                        $query
+                            ->whereHas(
+                                'sample',
+                                fn($q) =>
+                                $q->where('sample_code', 'like', "%{$search}%")
+                            )
+                            ->orWhereHas(
+                                'sample.labJobItem',
+                                fn($q) =>
+                                $q->where('description', 'like', "%{$search}%")
+                            );
+                    })
+                    ->sortable()
+                    ->html()
+                    ->formatStateUsing(function ($state, $record) {
+                        $matrix = e($record->sample?->labJobItem?->description);
 
-                    ->sortable(),
+                        return <<<HTML
+                                    <div class="font-semibold text-gray-900">
+                                        {$state}
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-0.5">
+                                        {$matrix}
+                                    </div>
+                                HTML;
+                    })->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('standard_notes_ref')->label('BML')->visible(fn() => static::isApprover()),
                 TextColumn::make('tested_value')
                     ->label('Hasil Uji')

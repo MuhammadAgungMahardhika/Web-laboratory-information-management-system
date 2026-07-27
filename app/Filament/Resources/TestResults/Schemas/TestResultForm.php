@@ -165,8 +165,13 @@ class TestResultForm
                                         ->label('Tanggal Uji')
                                         ->minDate(fn(?TestResult $record) => $record ? null : now()->toDateString())
                                         ->required()
-                                        ->afterStateHydrated(function ($state, callable $set) {
-                                            if (empty($state)) {
+                                        ->afterStateHydrated(function ($state, callable $set, string $operation) {
+                                            if ($operation === 'edit') {
+                                                if (empty($state))
+                                                    $set('test_date', now()->toDateString());
+                                            }
+
+                                            if ($operation === 'create' && blank($state)) {
                                                 $set('test_date', now()->toDateString());
                                             }
                                         }),
@@ -179,9 +184,11 @@ class TestResultForm
                                         ->preload()
                                         ->disabled()
                                         ->dehydrated()
-                                        ->afterStateHydrated(function ($state, callable $set) {
-                                            if (empty($state)) {
-                                                $set('analyst_personel_id', Auth::user()->personel_id);
+                                        ->afterStateHydrated(function ($state, callable $set, string $operation) {
+                                            if ($operation === 'edit') {
+                                                if (empty($state)) {
+                                                    $set('analyst_personel_id', Auth::user()->personel_id);
+                                                }
                                             }
                                         }),
 
