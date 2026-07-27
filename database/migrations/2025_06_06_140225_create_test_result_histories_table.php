@@ -17,17 +17,6 @@ return new class extends Migration
             // Foreign keys
             $table->unsignedBigInteger('personel_id');
             $table->unsignedBigInteger('test_result_id');
-
-
-            // Perubahan status dan nilai
-            $table->tinyInteger('old_status');
-            $table->tinyInteger('new_status');
-
-            // tested value
-            $table->string('old_tested_value')->nullable();
-            $table->string('new_tested_value')->nullable();
-            $table->text('comment')->nullable();
-
             $table->tinyInteger('action');
             $table->json('changes')->nullable();
 

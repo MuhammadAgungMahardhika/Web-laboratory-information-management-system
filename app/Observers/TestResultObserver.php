@@ -13,7 +13,7 @@ class TestResultObserver
 {
     public function updated(TestResult $testResult): void
     {
-        if (! $testResult->wasChanged([
+        $trackedFields = [
             'status',
             'tested_value',
             'comment',
@@ -21,30 +21,22 @@ class TestResultObserver
             'validator_personel_id',
             'analyst_personel_id',
             'test_date',
-        ])) {
+        ];
+
+        if (! $testResult->wasChanged($trackedFields)) {
             return;
         }
 
         $user = Auth::user();
-
-        $changes = [];
 
         $enumFields = [
             'status' => TestResultStatusEnum::labels(),
             'evaluation_status' => TestResultEvaluationStatusEnum::labels(),
         ];
 
-        $trackedFields = [
-            'status',
-            'tested_value',
-            'comment',
-            'evaluation_status',
-        ];
-
         $changes = [];
 
         foreach ($trackedFields as $field) {
-
             if (! $testResult->wasChanged($field)) {
                 continue;
             }
@@ -52,15 +44,15 @@ class TestResultObserver
             $old = $testResult->getOriginal($field);
             $new = $testResult->getAttribute($field);
 
-            // Format enum jika field merupakan enum
+            // Konversi enum menjadi label
             if (isset($enumFields[$field])) {
                 $labels = $enumFields[$field];
 
-                $old = $old !== null && array_key_exists($old, $labels)
+                $old = $old !== null && isset($labels[$old])
                     ? $labels[$old]
                     : $old;
 
-                $new = $new !== null && array_key_exists($new, $labels)
+                $new = $new !== null && isset($labels[$new])
                     ? $labels[$new]
                     : $new;
             }
@@ -74,11 +66,6 @@ class TestResultObserver
         TestResultHistory::create([
             'test_result_id' => $testResult->id,
             'personel_id' => $user?->personel?->id,
-            'old_status' => $testResult->getOriginal('status'),
-            'new_status' => $testResult->status,
-            'old_tested_value' => $testResult->getOriginal('tested_value'),
-            'new_tested_value' => $testResult->tested_value,
-            'comment' => $testResult->comment,
             'action' => $this->resolveAction($testResult),
             'changes' => $changes,
             'created_by' => $user?->personel?->fullname ?? 'System',
@@ -88,7 +75,6 @@ class TestResultObserver
 
     private function resolveAction(TestResult $testResult): TestResultHistoryActionEnum
     {
-        // Jika status tidak berubah, berarti hanya update data
         if (! $testResult->wasChanged('status')) {
             return TestResultHistoryActionEnum::Updated;
         }
@@ -108,7 +94,7 @@ class TestResultObserver
                 && $newStatus === TestResultStatusEnum::RequestValidate
             => TestResultHistoryActionEnum::Submitted,
 
-            // Perlu Revisi -> Request Validasi
+            // Revisi -> Request Validasi
             $oldStatus === TestResultStatusEnum::RevisionNeeded
                 && $newStatus === TestResultStatusEnum::RequestValidate
             => TestResultHistoryActionEnum::Submitted,
@@ -123,12 +109,12 @@ class TestResultObserver
                 && $newStatus === TestResultStatusEnum::Rejected
             => TestResultHistoryActionEnum::Rejected,
 
-            // Request Validasi -> Perlu Revisi
+            // Request Validasi -> Revisi
             $oldStatus === TestResultStatusEnum::RequestValidate
                 && $newStatus === TestResultStatusEnum::RevisionNeeded
             => TestResultHistoryActionEnum::Revision,
 
-            // Tervalidasi -> Perlu Revisi (Reopen)
+            // Validated -> Revisi (Reopen)
             $oldStatus === TestResultStatusEnum::Validated
                 && $newStatus === TestResultStatusEnum::RevisionNeeded
             => TestResultHistoryActionEnum::Reopened,
