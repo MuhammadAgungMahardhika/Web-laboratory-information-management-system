@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Surat Tugas - {{ $labJob->job_number }}</title>
+    <title>Surat Tugas - {{ $labJob->code }}</title>
     <style>
         body {
             font-family: 'DejaVu Sans', sans-serif;
@@ -87,7 +87,7 @@
     <table class="details-table">
         <tr>
             <td class="label">Nomor Lab Job</td>
-            <td>: {{ $labJob->job_number ?? '-' }}</td>
+            <td>: {{ $labJob->code ?? '-' }}</td>
         </tr>
         <tr>
             <td class="label">Tanggal Dikeluarkan</td>

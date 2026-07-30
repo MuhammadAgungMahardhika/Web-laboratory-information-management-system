@@ -61,7 +61,7 @@ class LabJobStatusAction
             ->modalCancelActionLabel('Tutup Pratinjau')
             ->modalWidth('6xl')
             ->modalContent(function (LabJob $record) {
-                $safeJobNumber = Str::of($record->job_number)->replace('/', '-');
+                $safeJobNumber = Str::of($record->code)->replace('/', '-');
                 $pdfUrl = route(static::$taskLetterPreviewUrl, $record);
                 $downloadUrl = route(static::$taskLetterPreviewUrl, $record);
 
@@ -391,7 +391,7 @@ class LabJobStatusAction
             ->modalContent(function (LabJob $record) {
                 // Ini adalah cara untuk me-render Blade view di dalam modal
                 // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
-                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->job_number);
+                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->code);
                 $pdfUrl = route(static::$previewFinalReport, $record);
                 $downloadUrl = route(static::$downloadFinalReport, $record);
 
@@ -427,7 +427,7 @@ class LabJobStatusAction
             ->modalContent(function (LabJob $record) {
                 // Ini adalah cara untuk me-render Blade view di dalam modal
                 // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
-                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->job_number);
+                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->code);
                 $pdfUrl = route(static::$previewAnalystTestResultUrl, $record);
                 $downloadUrl = route(static::$downloadAnalystTestResultUrl, $record);
 

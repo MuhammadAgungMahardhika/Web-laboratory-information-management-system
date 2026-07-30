@@ -20,7 +20,7 @@ class InvoicesTable
         return $table
             ->recordTitle(fn($record) => $record->invoice_number)
             ->columns([
-                TextColumn::make('labJob.job_number')
+                TextColumn::make('labJob.code')
                     ->label('Nomor Lab Job')
                     ->searchable()
                     ->sortable()
@@ -78,7 +78,7 @@ class InvoicesTable
             ->filters([
                 SelectFilter::make('lab_job_id')
                     ->label('Lab Job')
-                    ->relationship('labJob', 'job_number')
+                    ->relationship('labJob', 'code')
                     ->searchable()
                     ->preload(),
 

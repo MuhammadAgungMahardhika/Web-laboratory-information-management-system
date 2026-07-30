@@ -242,7 +242,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $quotation_id
- * @property string $job_number
+ * @property string $code
  * @property string|null $start_date
  * @property string|null $end_date
  * @property int $status
@@ -1003,7 +1003,7 @@ namespace App\Models{
  * @property int $lab_job_item_id
  * @property int|null $collected_by_personel_id
  * @property int|null $received_by_personel_id
- * @property string $sample_code
+ * @property string $code
  * @property string|null $collection_date
  * @property string|null $collection_time
  * @property string|null $collection_location_desc
@@ -1283,7 +1283,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $name
- * @property string|null $sample_matric_code
+ * @property string|null $code
  * @property int|null $regulation_id
  * @property string|null $description
  * @property string $price

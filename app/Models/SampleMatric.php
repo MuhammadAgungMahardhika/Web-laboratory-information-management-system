@@ -28,6 +28,6 @@ class SampleMatric extends Model
 
     public function sampleMatrics()
     {
-        return $this->hasMany(TestPackage::class, 'sample_matric_code', 'code');
+        return $this->hasMany(TestPackage::class, 'code', 'code');
     }
 }

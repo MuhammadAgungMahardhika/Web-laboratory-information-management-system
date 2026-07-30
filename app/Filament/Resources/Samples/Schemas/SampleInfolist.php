@@ -17,7 +17,7 @@ class SampleInfolist
                     ->numeric(),
                 TextEntry::make('received_by_personel_id')
                     ->numeric(),
-                TextEntry::make('sample_code'),
+                TextEntry::make('code'),
                 TextEntry::make('collection_date')
                     ->date(),
                 TextEntry::make('collection_time')

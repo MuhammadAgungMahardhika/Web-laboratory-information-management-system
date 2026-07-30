@@ -43,7 +43,7 @@ class LabJobResource extends Resource
     protected static ?string $label = 'Lab Job';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::DocumentDuplicate;
     protected static ?int $navigationSort = 2;
-    protected static ?string $recordTitleAttribute = 'job_number';
+    protected static ?string $recordTitleAttribute = 'code';
     protected static int $globalSearchResultsLimit = 20;
     protected static ?int $draftCount = null;
 
@@ -68,19 +68,19 @@ class LabJobResource extends Resource
     }
     public static function getGloballySearchableAttributes(): array
     {
-        return ['job_number', 'quotation.quotation_number', 'quotation.quotation_name', 'quotation.customer.name'];
+        return ['code', 'quotation.quotation_number', 'quotation.quotation_name', 'quotation.customer.name'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
     {
-        return $record->job_number;
+        return $record->code;
     }
 
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Nomor job' => $record->job_number,
+            'Nomor job' => $record->code,
             'Nomor penawaran' => $record->quotation->quotation_number,
             'Klien' => $record->quotation->customer->name,
             'Tanggal' => Carbon::parse($record->start_date)->format('d M y')   . " - " .  Carbon::parse($record->end_date)->format('d M y')
@@ -136,13 +136,13 @@ class LabJobResource extends Resource
                             ->afterStateUpdated(function ($state, Set $set, LabJobService $labJobService) {
                                 // Jika penawaran dipilih, generate nomor job
                                 if ($state) {
-                                    $job_number = $labJobService->generateLabJobNumber();
-                                    $set('job_number', $job_number);
+                                    $code = $labJobService->generateLabJobNumber();
+                                    $set('code', $code);
                                 } else {
-                                    $set('job_number', null);
+                                    $set('code', null);
                                 }
                             }),
-                        TextInput::make('job_number')
+                        TextInput::make('code')
                             ->label('Nomor Job')
                             ->helperText('Generate otomatis dari Nomor Penawaran')
                             ->required()
@@ -207,7 +207,7 @@ class LabJobResource extends Resource
                     ->label('Nomor Penawaran')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('job_number')
+                TextColumn::make('code')
                     ->label('Nomor Lab Job')
                     ->searchable()
                     ->sortable(),

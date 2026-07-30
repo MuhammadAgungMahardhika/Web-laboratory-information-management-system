@@ -101,7 +101,7 @@ return new class extends Migration
                 ->onDelete('set null');
         });
         Schema::table('test_packages', function (Blueprint $table) {
-            $table->foreign('sample_matric_code', 'fk_test_packages_sample_matric')
+            $table->foreign('code', 'fk_test_packages_sample_matric')
                 ->references('code')
                 ->on('sample_matrics')
                 ->onUpdate('cascade')

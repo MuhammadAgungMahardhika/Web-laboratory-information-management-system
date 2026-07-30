@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('lab_job_items', function (Blueprint $table) {
             $table->id();
-
+            $table->string('code', 50)->unique(); // Kode unik Job
             // Foreign keys (sementara tanpa constraint dan indeks)
             $table->unsignedBigInteger('lab_job_id');
             $table->unsignedBigInteger('quotation_item_id')->nullable();

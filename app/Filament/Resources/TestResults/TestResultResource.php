@@ -29,7 +29,7 @@ class TestResultResource extends Resource
     protected static ?string $label = 'Pengujian';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Beaker;
     protected static ?int $navigationSort = 4;
-    protected static ?string $recordTitleAttribute = 'sample.sample_code';
+    protected static ?string $recordTitleAttribute = 'sample.code';
     protected static ?int $pendingCount = null;
 
     /**
@@ -41,7 +41,7 @@ class TestResultResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Kode Sampel' => $record->sample->sample_code,
+            'Kode Sampel' => $record->sample->code,
             'Parameter' => $record->parameter->long_name,
             'status' => TestResultStatusEnum::labels()[$record->status]
         ];

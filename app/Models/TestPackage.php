@@ -15,7 +15,7 @@ class TestPackage extends Model
 
     public function sampleMatric()
     {
-        return $this->belongsTo(SampleMatric::class, 'sample_matric_code', 'code');
+        return $this->belongsTo(SampleMatric::class, 'code', 'code');
     }
 
     public function regulation()

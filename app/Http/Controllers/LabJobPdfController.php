@@ -15,7 +15,7 @@ class LabJobPdfController extends Controller
         $company = Auth::user()?->personel?->company;
         $labJob->load(['quotation.customer', 'labJobPersonels.personel']);
         $pdf = Pdf::loadView('pdfs.task_letter', compact('labJob', 'company'));
-        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
         return $pdf->stream("Surat-Tugas-{$safeJobNumber}.pdf");
     }
     public function downloadTaskLetter(LabJob $labJob)
@@ -23,7 +23,7 @@ class LabJobPdfController extends Controller
         $company = Auth::user()?->personel?->company;
         $labJob->load(['quotation.customer', 'labJobPersonels.personel']);
         $pdf = Pdf::loadView('pdfs.task_letter', compact('labJob', 'company'));
-        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
         return $pdf->download("Surat-Tugas-{$safeJobNumber}.pdf");
     }
 
@@ -50,7 +50,7 @@ class LabJobPdfController extends Controller
         $pdf = Pdf::loadView('pdfs.analyst_test_report', compact('labJob', 'company'))->setPaper('a4', 'portrait')
             ->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);;
 
-        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
         return $pdf->stream("LPA-{$safeJobNumber}.pdf");
     }
 
@@ -76,7 +76,7 @@ class LabJobPdfController extends Controller
 
         $pdf = Pdf::loadView('pdfs.analyst_test_report', compact('labJob', 'company'));
 
-        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
         return $pdf->download("LPA-{$safeJobNumber}.pdf");
     }
 }

@@ -134,7 +134,7 @@ class TestResultForm
                                 Section::make([
                                     Select::make('sample_id')
                                         ->label('Kode Sampel')
-                                        ->relationship('sample', 'sample_code')
+                                        ->relationship('sample', 'code')
                                         ->required()
                                         ->searchable()
                                         ->disabledOn(['view', 'edit'])

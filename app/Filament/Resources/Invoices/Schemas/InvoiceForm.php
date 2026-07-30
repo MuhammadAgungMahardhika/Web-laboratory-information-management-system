@@ -51,7 +51,7 @@ class InvoiceForm
                         Select::make('lab_job_id')
                             ->label('Nomor Lab Job')
                             ->disabledOn(['view', 'edit'])
-                            ->relationship('labJob', 'job_number', modifyQueryUsing: function ($query,  $record) {
+                            ->relationship('labJob', 'code', modifyQueryUsing: function ($query,  $record) {
                                 $currentInvoiceId = $record?->id;
                                 return $query->whereDoesntHave('invoice', function (Builder $q) use ($currentInvoiceId) {
                                     if ($currentInvoiceId) {

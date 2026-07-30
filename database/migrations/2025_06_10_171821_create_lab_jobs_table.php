@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('lab_jobs', function (Blueprint $table) {
             $table->id(); // Primary Key, auto-increment
             $table->unsignedBigInteger('quotation_id');
-            $table->string('job_number', 50)->unique(); // Kode unik Job
+            $table->string('code', 50)->unique(); // Kode unik Job
 
             $table->date('start_date')->nullable(); // Tanggal Job dimulai
             $table->date('end_date')->nullable(); // Tanggal Job selesai

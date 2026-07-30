@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Laporan Pengujian - {{ $labJob->job_number }}</title>
+    <title>Laporan Pengujian - {{ $labJob->code }}</title>
     <style>
         body {
             font-family: 'DejaVu Sans', sans-serif;
@@ -88,7 +88,7 @@
 
     <div class="header">
         <h1>LAPORAN HASIL UJI</h1>
-        <p>Nomor Laporan: {{ $labJob->job_number ?? '-' }}</p>
+        <p>Nomor Laporan: {{ $labJob->code ?? '-' }}</p>
         <p>Tanggal Dikeluarkan: {{ \Carbon\Carbon::now()->format('d F Y') }}</p>
     </div>
 
@@ -104,7 +104,7 @@
         </tr>
         <tr>
             <td class="label">Nomor Pekerjaan</td>
-            <td>: {{ $labJob->job_number ?? '-' }}</td>
+            <td>: {{ $labJob->code ?? '-' }}</td>
         </tr>
         <tr>
             <td class="label">Nomor Registrasi</td>
@@ -126,7 +126,7 @@
             @foreach ($labJob->labJobItems as $item)
                 @foreach ($item->samples as $sample)
                     <tr>
-                        <td>{{ $sample->sample_code ?? '-' }}</td>
+                        <td>{{ $sample->code ?? '-' }}</td>
                         <td>{{ $item->testPackage->sampleMatrix->name ?? '-' }}</td>
                         <td>{{ \Carbon\Carbon::parse($sample->collection_date)->format('d/m/Y') ?? '-' }}</td>
                         <td>{{ \Carbon\Carbon::parse($sample->reception_date)->format('d/m/Y') ?? '-' }}</td>
@@ -146,13 +146,13 @@
             <div class="page-break"></div>
             <div class="header">
                 <h1>LAPORAN HASIL UJI</h1>
-                <p>Nomor Laporan: {{ $labJob->job_number ?? '-' }}</p>
+                <p>Nomor Laporan: {{ $labJob->code ?? '-' }}</p>
             </div>
-            <div class="section-heading">Pengujian untuk Sampel: {{ $sample->sample_code }}</div>
+            <div class="section-heading">Pengujian untuk Sampel: {{ $sample->code }}</div>
             <table class="details-table">
                 <tr>
                     <td class="label">Identifikasi Sampel</td>
-                    <td>: {{ $sample->sample_code ?? '-' }}</td>
+                    <td>: {{ $sample->code ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">Matriks</td>

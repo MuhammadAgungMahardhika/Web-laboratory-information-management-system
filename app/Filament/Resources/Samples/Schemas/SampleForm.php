@@ -51,12 +51,12 @@ class SampleForm
                                 // Inisialisasi service
                                 $labJobItem = LabJobItem::find($state);
                                 $sampleCode = $sampleService->generateSampleCode($labJobItem);
-                                $set('sample_code', $sampleCode);
+                                $set('code', $sampleCode);
                             } else {
-                                $set('sample_code', null);
+                                $set('code', null);
                             }
                         }),
-                    TextInput::make('sample_code')
+                    TextInput::make('code')
                         ->label('Kode Sampel')
                         ->unique()
                         ->live()
@@ -162,7 +162,7 @@ class SampleForm
                                     ->nullable(),
                             ])->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
                     ])
-                    ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('sample_code')))->activeTab(function (Get $get) {
+                    ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ? 1 : 2;
                     }),

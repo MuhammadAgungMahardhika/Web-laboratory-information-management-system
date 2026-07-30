@@ -54,11 +54,11 @@ class TestResultsTable
         return $table
             ->striped()
             ->groups([
-                Group::make('sample.sample_code')->label('KODE SAMPEL'),
+                Group::make('sample.code')->label('KODE SAMPEL'),
                 Group::make('sample.labJobItem.description')->label('Matrix')->titlePrefixedWithLabel(false),
                 Group::make('parameter.long_name')->label('Parameter')->titlePrefixedWithLabel(false),
             ])
-            ->defaultGroup('sample.sample_code')
+            ->defaultGroup('sample.code')
             ->columns([
                 TextColumn::make('parameter.long_name')
                     ->label('Parameter')
@@ -77,14 +77,14 @@ class TestResultsTable
                     ->action(TestResultAction::approvalHistory())
                     ->view('components.approval-summary'),
 
-                TextColumn::make('sample.sample_code')
+                TextColumn::make('sample.code')
                     ->label('Sample')
                     ->searchable(query: function (Builder $query, string $search) {
                         $query
                             ->whereHas(
                                 'sample',
                                 fn($q) =>
-                                $q->where('sample_code', 'like', "%{$search}%")
+                                $q->where('code', 'like', "%{$search}%")
                             )
                             ->orWhereHas(
                                 'sample.labJobItem',
@@ -188,12 +188,12 @@ class TestResultsTable
             ->filters([
                 SelectFilter::make('sample.labJobItem.lab_job_id')
                     ->label('Nomor Job')
-                    ->relationship('sample.labJobItem.labJob', 'job_number')
+                    ->relationship('sample.labJobItem.labJob', 'code')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('sample_id')
                     ->label('Kode sampel')
-                    ->relationship('sample', 'sample_code')
+                    ->relationship('sample', 'code')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('parameter_id')
@@ -259,7 +259,7 @@ class TestResultsTable
                         TestResultAction::validate()->cancelParentActions(),
                         TestResultAction::revisionNeeded()->cancelParentActions(),
                     ])
-                    ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->sample_code}")
+                    ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->code}")
                     ->modalIcon(Heroicon::Beaker)
                     ->modalIconColor(fn($record) => $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
                 ViewAction::make()->slideOver()->modalFooterActions([
@@ -269,7 +269,7 @@ class TestResultsTable
                     TestResultAction::reject()->cancelParentActions(),
                 ])
                     ->modalWidth(Width::SixExtraLarge)
-                    ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->sample_code}")
+                    ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->code}")
                     ->modalIcon(Heroicon::Beaker)
                     ->modalIconColor(fn($record) => $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
             ], position: RecordActionsPosition::BeforeColumns)

@@ -18,8 +18,8 @@ class InvoiceService
      */
     public function generateInvoiceNumber(LabJob $labJob): string
     {
-        // 1. Ambil job_number sebagai informasi
-        $jobNumber = $labJob->job_number;
+        // 1. Ambil code sebagai informasi
+        $jobNumber = $labJob->code;
 
         // 2. Ambil format tanggal
         $currentYearMonth = Carbon::now()->format('ym'); // Contoh: 2510

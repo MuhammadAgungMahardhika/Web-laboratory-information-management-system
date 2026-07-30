@@ -18,7 +18,7 @@ class SampleService
     {
         $labJobItem->load('labJob');
 
-        $jobNumber = $labJobItem->labJob->job_number;
+        $jobNumber = $labJobItem->labJob->code;
         $sampleCount = $labJobItem->labJob->samples()->count();
 
         return "{$jobNumber}-" . ($sampleCount + 1);

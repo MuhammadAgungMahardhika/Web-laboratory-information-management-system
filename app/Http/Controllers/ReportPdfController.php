@@ -24,7 +24,7 @@ class ReportPdfController extends Controller
 
         $pdf = Pdf::loadView('pdfs.test_report', compact('labJob', 'company'));
 
-        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
 
         return $pdf->stream("LHP-{$safeJobNumber}.pdf");
     }
@@ -42,7 +42,7 @@ class ReportPdfController extends Controller
 
         $pdf = Pdf::loadView('pdfs.test_report', compact('labJob', 'company'));
 
-        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
 
         return $pdf->download("LHP-{$safeJobNumber}.pdf");
     }
@@ -61,7 +61,7 @@ class ReportPdfController extends Controller
 
         $pdf = Pdf::loadView('pdfs.test_report', compact('labJob', 'company'));
 
-        $safeJobNumber = Str::of($labJob->job_number)->replace('/', '-');
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
 
         return $pdf->download("LHP-{$safeJobNumber}.pdf");
     }

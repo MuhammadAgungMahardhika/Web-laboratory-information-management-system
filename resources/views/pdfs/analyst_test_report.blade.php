@@ -191,7 +191,7 @@
     <table class="info-table">
         <tr>
             <td class="info-label">Job Number</td>
-            <td>: {{ $labJob->job_number }}</td>
+            <td>: {{ $labJob->code }}</td>
             <td class="info-label">Tanggal Uji</td>
             <td>:
                 {{ $labJob->start_date ? \Carbon\Carbon::parse($labJob->start_date)->format('d/m/Y') : '___________' }}

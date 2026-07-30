@@ -40,7 +40,7 @@ class SamplePdfController extends Controller
 
         $pdf = Pdf::loadView('pdfs.analyst_test_report', compact('sample', 'company'));
 
-        $safeSampleCode = Str::of($sample->sample_code)->replace('/', '-');
+        $safeSampleCode = Str::of($sample->code)->replace('/', '-');
         return $pdf->stream("LPA-{$safeSampleCode}.pdf");
     }
 
@@ -58,7 +58,7 @@ class SamplePdfController extends Controller
 
         $pdf = Pdf::loadView('pdfs.analyst_test_report', compact('sample', 'company'));
 
-        $safeSampleCode = Str::of($sample->sample_code)->replace('/', '-');
+        $safeSampleCode = Str::of($sample->code)->replace('/', '-');
         return $pdf->download("LPA-{$safeSampleCode}.pdf");
     }
 }

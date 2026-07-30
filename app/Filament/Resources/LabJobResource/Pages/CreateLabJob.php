@@ -22,8 +22,7 @@ class CreateLabJob extends CreateRecord
         try {
             return DB::transaction(function () use ($data) {
                 $quotation = Quotation::find($data['quotation_id']);
-                $labJobService = new LabJobService();
-                $labJob = $labJobService->createLabJobFromQuotation($quotation);
+                $labJob = app(LabJobService::class)->createLabJobFromQuotation($quotation);
                 return $labJob;
             });
         } catch (\Exception $e) {

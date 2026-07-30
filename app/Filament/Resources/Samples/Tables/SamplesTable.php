@@ -31,7 +31,7 @@ class SamplesTable
         return $table
             ->selectCurrentPageOnly()
             ->groups([
-                Group::make('labJobItem.labJob.job_number')
+                Group::make('labJobItem.labJob.code')
                     ->label('Nomor Job')
                     ->titlePrefixedWithLabel(false),
                 Group::make('labJobItem.description')
@@ -42,7 +42,7 @@ class SamplesTable
                 TextColumn::make('labJobItem.description')
                     ->label('Matrix')
                     ->searchable(),
-                TextColumn::make('sample_code')
+                TextColumn::make('code')
                     ->label('Kode Sampel')
                     ->searchable(),
                 TextColumn::make('status')
@@ -109,7 +109,7 @@ class SamplesTable
             ->filters([
                 SelectFilter::make('labJobItem.lab_job_id')
                     ->label('Nomor Job')
-                    ->relationship('labJobItem.labJob', 'job_number')
+                    ->relationship('labJobItem.labJob', 'code')
                     ->searchable()
                     ->preload(),
             ], layout: FiltersLayout::AboveContent)

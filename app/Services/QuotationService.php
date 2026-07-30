@@ -63,8 +63,7 @@ class QuotationService
         // 2. Lakukan aksi spesifik berdasarkan status baru
         if ($newStatus === QuotationStatusEnum::Accepted) {
             // Logika untuk membuat Lab Job saat penawaran diterima
-            $labJobService = new LabJobService();
-            $labJobService->createLabJobFromQuotation($quotation);
+            app(LabJobService::class)->createLabJobFromQuotation($quotation);
         }
 
         // 3. Simpan perubahan ke database

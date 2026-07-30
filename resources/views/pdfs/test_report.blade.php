@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Laporan Pengujian - {{ $labJob->job_number }}</title>
+    <title>Laporan Pengujian - {{ $labJob->code }}</title>
     <style>
         body {
             font-family: 'DejaVu Sans', sans-serif;
@@ -85,7 +85,7 @@
 
     <div class="header">
         <h1>LAPORAN HASIL UJI</h1>
-        <p>Nomor Laporan: {{ $labJob->job_number ?? '-' }}</p>
+        <p>Nomor Laporan: {{ $labJob->code ?? '-' }}</p>
     </div>
 
     <div class="section-heading">Informasi Umum</div>
@@ -110,7 +110,7 @@
         <p>Total Sampel: {{ $item->samples->count() }}</p>
 
         @foreach ($item->samples as $sample)
-            <p style="font-weight: bold; margin-bottom: 5px;">Kode Sampel: {{ $sample->sample_code ?? '-' }}</p>
+            <p style="font-weight: bold; margin-bottom: 5px;">Kode Sampel: {{ $sample->code ?? '-' }}</p>
             <table class="results-table">
                 <thead>
                     <tr>

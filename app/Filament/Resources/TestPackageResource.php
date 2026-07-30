@@ -48,7 +48,7 @@ class TestPackageResource extends Resource
                     TextInput::make('name')
                         ->label('Nama produk uji')
                         ->required(),
-                    Select::make('sample_matric_code')
+                    Select::make('code')
                         ->label('Matrix sampel')
                         ->required()
                         ->relationship('sampleMatric', 'code_name')
@@ -96,7 +96,7 @@ class TestPackageResource extends Resource
                     Textarea::make('description')
                         ->label('Keterangan'),
 
-                ])->columns(1)->inlineLabel()->columnSpanFull()
+                ])->columns(2)->inlineLabel()->columnSpanFull()
 
 
             ]);
@@ -176,7 +176,7 @@ class TestPackageResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('sample_matric_code')
+                SelectFilter::make('code')
                     ->label('Matrix')
                     ->relationship('sampleMatric', 'code_name')
                     ->searchable()
