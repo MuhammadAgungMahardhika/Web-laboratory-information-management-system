@@ -27,7 +27,7 @@ return new class extends Migration
 
             // Sample type and container details
             $table->string('container_type', 100)->nullable();
-            $table->integer('container_quantity')->default(1);
+            $table->integer('container_quantity')->nullable()->default(1);
             $table->string('sample_volume', 50)->nullable();
             // Sample preservation and notes
             $table->string('preservation_method', 255)->nullable();

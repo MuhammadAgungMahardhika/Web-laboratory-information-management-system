@@ -120,7 +120,7 @@ class TestResultAction
                 if ($pending && $pending->approval_level === 1) {
                     return [
                         Radio::make('evaluation_status')
-                            ->label('Status Hasil Uji')
+                            ->label('Status Pengujian')
                             ->options([
                                 1 => 'Sesuai Baku Mutu',
                                 2 => 'Tidak Sesuai Baku Mutu',
@@ -132,7 +132,7 @@ class TestResultAction
                                 if ($state == 1) {
                                     // Langsung isi catatan jika sesuai baku mutu
                                     $set('non_compliance_type', null);
-                                    $set('test_notes', 'Hasil pengujian memenuhi baku mutu.');
+                                    $set('test_notes', 'Pengujian memenuhi baku mutu.');
                                 } else {
                                     // Kosongkan saat berubah ke tidak sesuai
                                     $set('test_notes', '');
@@ -151,16 +151,16 @@ class TestResultAction
                             ->afterStateUpdated(function ($state, callable $set) {
 
                                 $notes = [
-                                    'below' => 'Hasil pengujian berada di bawah baku mutu.',
-                                    'above' => 'Hasil pengujian berada di atas baku mutu.',
+                                    'below' => 'Pengujian berada di bawah baku mutu.',
+                                    'above' => 'Pengujian berada di atas baku mutu.',
                                 ];
 
                                 $set('test_notes', $notes[$state] ?? '');
                             }),
 
                         Textarea::make('test_notes')
-                            ->label('Catatan Hasil Uji')
-                            ->default('Hasil pengujian memenuhi baku mutu.')
+                            ->label('Catatan Pengujian')
+                            ->default('Pengujian memenuhi baku mutu.')
                             ->rows(3)
                             ->required(),
                     ];
@@ -170,7 +170,7 @@ class TestResultAction
                 return [
                     // Textarea::make('comment')
                     //     ->required()
-                    //     ->label('Catatan Hasil Uji')
+                    //     ->label('Catatan Pengujian')
                     //     ->rows(3),
                 ];
             })
@@ -365,7 +365,7 @@ class TestResultAction
                 if ($service->canApproveLevel(1)) {
                     return [
                         Radio::make('evaluation_status')
-                            ->label('Status Hasil Uji')
+                            ->label('Status Pengujian')
                             ->options([
                                 1 => 'Sesuai Baku Mutu',
                                 2 => 'Tidak Sesuai Baku Mutu',
@@ -375,7 +375,7 @@ class TestResultAction
 
                         Textarea::make('test_notes')
                             ->required()
-                            ->label('Catatan Hasil Uji')
+                            ->label('Catatan Pengujian')
                             ->rows(3),
                     ];
                 }
@@ -383,7 +383,7 @@ class TestResultAction
                 return [
                     Textarea::make('comment')
                         ->required()
-                        ->label('Catatan Hasil Uji')
+                        ->label('Catatan Pengujian')
                         ->rows(3),
                 ];
             })
@@ -469,7 +469,7 @@ class TestResultAction
     public static function bulkReject(): BulkAction
     {
         return BulkAction::make('reject')
-            ->label('Tolak Hasil Uji')
+            ->label('Tolak Pengujian')
             ->icon(Heroicon::XCircle)
             ->schema([
                 Textarea::make('comment')

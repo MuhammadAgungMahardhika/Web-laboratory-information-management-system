@@ -591,8 +591,8 @@
                         dengan ketentuan bahwa sampel tersebut masih cukup untuk dianalisis ulang;</li>
                     <li>Laporan hasil analisis akan dikirim melalui email (sebagai draft), sedangkan hasil analisis asli
                         akan dikirimkan bersamaan dengan tagihan;</li>
-                    <li>{{ $company->name ?? 'Laboratorium' }} akan mengeluarkan laporan akhir dari hasil pengujian
-                        berupa Laporan Hasil Pengujian (LHP) berdasarkan atas semua informasi yang diberikan. Untuk itu
+                    <li>{{ $company->name ?? 'Laboratorium' }} akan mengeluarkan laporan akhir dari Pengujian
+                        berupa Laporan Pengujian (LHP) berdasarkan atas semua informasi yang diberikan. Untuk itu
                         pihak pelanggan diminta untuk meyakinkan bahwa semua informasi yang diberikan sudah sah dan
                         benar; dan</li>
                     <li>Bagi pelanggan yang tidak menerbitkan Purchase Order (PO) atau Surat Perintah Kerja (SPK) dapat

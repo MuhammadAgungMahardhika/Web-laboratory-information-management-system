@@ -55,7 +55,7 @@ class TestResultForm
             ->components([
                 Tabs::make('Tabs')
                     ->tabs([
-                        Tab::make('Hasil Uji')
+                        Tab::make('Pengujian')
                             ->schema([
 
                                 // ================= SECTION KHUSUS APPROVER =================
@@ -74,10 +74,10 @@ class TestResultForm
                                         ->inline()
                                         ->hintIcon(Heroicon::InformationCircle)
                                         ->hintIconTooltip('Ditentukan otomatis dari keputusan approver saat Validasi Level 1.')
-                                        ->label('Status Hasil Uji')
+                                        ->label('Status Pengujian')
                                         ->columnSpanFull(),
                                     Textarea::make('test_notes')
-                                        ->label('Catatan Hasil Uji')
+                                        ->label('Catatan Pengujian')
                                         ->autosize()
                                         ->columnSpanFull(),
 
@@ -103,12 +103,12 @@ class TestResultForm
                                     ->heading(function ($record) {
                                         if (!$record?->evaluation_status) {
                                             return new HtmlString(
-                                                'Status Hasil Uji -> <span style="color:#6B7280;font-weight:700">Belum Divalidasi</span>'
+                                                'Status Pengujian -> <span style="color:#6B7280;font-weight:700">Belum Divalidasi</span>'
                                             );
                                         }
 
                                         return new HtmlString(sprintf(
-                                            'Status Hasil Uji -> <span style="color:%s;font-weight:700">%s</span>',
+                                            'Status Pengujian -> <span style="color:%s;font-weight:700">%s</span>',
                                             TestResultEvaluationStatusEnum::cssColor($record->evaluation_status),
                                             TestResultEvaluationStatusEnum::labels()[$record->evaluation_status]
                                         ));
@@ -215,12 +215,12 @@ class TestResultForm
                                 ])->columns(1)->inlineLabel()->heading(function ($record) {
                                     if (!$record?->status) {
                                         return new HtmlString(
-                                            'Status Hasil Uji -> <span style="color:#6B7280;font-weight:600">Belum Diuji</span>'
+                                            'Status Pengujian -> <span style="color:#6B7280;font-weight:600">Belum Diuji</span>'
                                         );
                                     }
 
                                     return new HtmlString(sprintf(
-                                        'Status Hasil Uji -> <span style="color:%s;font-weight:700">%s</span>',
+                                        'Status Pengujian -> <span style="color:%s;font-weight:700">%s</span>',
                                         TestResultStatusEnum::cssColor($record->status),
                                         TestResultStatusEnum::labels()[$record->status]
                                     ));

@@ -25,8 +25,8 @@ use Filament\Actions\Action;
 class TestResultResource extends Resource
 {
     protected static ?string $model = TestResult::class;
-    protected static ?string $navigationLabel = 'Hasil Pengujian';
-    protected static ?string $label = 'Hasil Pengujian';
+    protected static ?string $navigationLabel = 'Pengujian';
+    protected static ?string $label = 'Pengujian';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Beaker;
     protected static ?int $navigationSort = 4;
     protected static ?string $recordTitleAttribute = 'sample.sample_code';

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
+use App\Filament\Resources\Samples\SampleResource;
 use App\Models\Enums\JobStatusEnum;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
@@ -289,6 +290,20 @@ class LabJobItemsRelationManager extends RelationManager
                     })->databaseTransaction(),
             ])
             ->recordActions([
+                Action::make('manageSamples')
+                    ->label('Kelola Sampel')
+                    ->icon('heroicon-o-beaker')
+                    ->url(function (LabJobItem $record) {
+                        if ($record->samples()->exists()) {
+                            return SampleResource::getUrl('index', [
+                                'filters[labJobItem][lab_job_id][value]=' => $record->id,
+                            ]);
+                        }
+
+                        return SampleResource::getUrl('create', [
+                            'lab_job_item_id' => $record->id,
+                        ]);
+                    }),
                 EditAction::make()
                     ->after(function (LabJobItem $record, array $data) {
                         // Inisialisasi service

@@ -38,7 +38,7 @@ class TestResultObserver
 
         $fieldLabels = [
             'status' => 'Status',
-            'tested_value' => 'Nilai Hasil Uji',
+            'tested_value' => 'Nilai Pengujian',
             'comment' => 'Komentar',
             'evaluation_status' => 'Status Evaluasi',
             'validator_personel_id' => 'Validator',

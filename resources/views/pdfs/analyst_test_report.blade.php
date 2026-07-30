@@ -262,7 +262,7 @@
                         }
                     }
                 @endphp
-                <th colspan="{{ $maxSamplesInMatrix }}">Hasil Uji</th>
+                <th colspan="{{ $maxSamplesInMatrix }}">Pengujian</th>
                 <th rowspan="2" class="signature-cell">Paraf</th>
             </tr>
             <tr>

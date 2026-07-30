@@ -61,7 +61,7 @@ class SamplesChartWidget extends ChartWidget
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label' => 'Jumlah Hasil Pengujian',
+                    'label' => 'Jumlah Pengujian',
                     'data' => $data,
                     'backgroundColor' => $colors, // Gunakan array warna yang sudah disiapkan
                 ],

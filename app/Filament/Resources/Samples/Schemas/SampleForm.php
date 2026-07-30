@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -45,7 +46,7 @@ class SampleForm
                         ->searchable()
                         ->preload()
                         ->live()
-                        ->afterStateUpdated(function ($state,  $set) use ($sampleService) {
+                        ->afterStateHydrated(function ($state,  $set) use ($sampleService) {
                             if ($state) {
                                 // Inisialisasi service
                                 $labJobItem = LabJobItem::find($state);
@@ -64,6 +65,7 @@ class SampleForm
                         ->required(),
                     Select::make('status')
                         ->label('Status')
+                        ->searchable()
                         ->options(function ($record) {
                             $baseOptions = [
                                 SampleStatusEnum::Received->value => SampleStatusEnum::Received->label(),
@@ -84,12 +86,14 @@ class SampleForm
                         ->live()
                         ->default(SampleCollectionTypeEnum::default()->value)
                         ->inline(),
-                ])->columnSpanFull()->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->columns(4),
+                ])->columnSpanFull()->columns(2)->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->inlineLabel(),
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')
                             ->label('PENGAMBILAN SAMPEL OLEH PPC')
                             ->columnSpanFull()
+                            ->columns(2)
+                            ->inlineLabel()
                             ->icon(Heroicon::OutlinedBeaker)
                             ->schema([
                                 Select::make('collected_by_personel_id')
@@ -110,20 +114,15 @@ class SampleForm
                                 TextInput::make('preservation_method')
                                     ->label('Metode Preservasi')
                                     ->maxLength(255),
-                                Textarea::make('collection_notes')
-                                    ->label('Catatan Pengambilan')
-                                    ->columnSpan(2),
-                                Section::make('Lokasi pengambilan')
-                                    ->columns(1)
-                                    ->columnSpan(2)
-                                    ->schema([
-                                        Textarea::make('collection_location_desc')
-                                            ->label('Lokasi Pengambilan'),
-                                        TextInput::make('latitude'),
-                                        TextInput::make('longitude'),
-                                    ])->inlineLabel(),
+                                TextInput::make('latitude'),
+                                TextInput::make('longitude'),
 
-                            ])->columns(4)->visible(
+                                Textarea::make('collection_location_desc')
+                                    ->label('Lokasi Pengambilan'),
+                                Textarea::make('collection_notes')
+                                    ->label('Catatan Pengambilan'),
+
+                            ])->visible(
                                 fn(Get $get) => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)
                                     && SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ),
@@ -131,6 +130,8 @@ class SampleForm
                             ->label('PENERIMAAN SAMPEL OLEH ADMIN')
                             ->icon(Heroicon::OutlinedInbox)
                             ->columnSpanFull()
+                            ->columns(2)
+                            ->inlineLabel()
                             ->schema([
                                 Select::make('received_by_personel_id')
                                     ->relationship('receivedByPersonel', 'fullname')
@@ -140,34 +141,26 @@ class SampleForm
                                     ->preload(),
                                 DatePicker::make('received_date')
                                     ->label('Tanggal Penerimaan')
-                                    ->default(now())
-                                    ->required(),
+                                    ->default(now()),
                                 TimePicker::make('received_time')
                                     ->label('Waktu Penerimaan')
-                                    ->default(now()->format('H:i:s'))
-                                    ->required(),
+                                    ->default(now()->format('H:i:s')),
                                 Textarea::make('received_condition_notes')
-                                    ->label('Catatan Kondisi Penerimaan')
-                                    ->columnSpan(2),
-                                Section::make('Wadah dan Volume')
-                                    ->columns(1)
-                                    ->schema([
-                                        TextInput::make('container_type')
-                                            ->label('Jenis Wadah')
-                                            ->maxLength(50)
-                                            ->nullable(),
-                                        TextInput::make('container_quantity')
-                                            ->label('Jumlah Wadah')
-                                            ->required()
-                                            ->numeric()
-                                            ->default(1),
-                                        TextInput::make('sample_volume')
-                                            ->label('Volume Sampel')
-                                            ->maxLength(50)
-                                            ->nullable(),
-                                    ])->columnSpan(2)
-                                    ->inlineLabel(),
-                            ])->columns(4)->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
+                                    ->label('Catatan Kondisi Penerimaan'),
+                                TextInput::make('container_type')
+                                    ->label('Jenis Wadah')
+                                    ->maxLength(50)
+                                    ->nullable(),
+                                TextInput::make('container_quantity')
+                                    ->label('Jumlah Wadah')
+
+                                    ->numeric()
+                                    ->default(1),
+                                TextInput::make('sample_volume')
+                                    ->label('Volume Sampel')
+                                    ->maxLength(50)
+                                    ->nullable(),
+                            ])->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
                     ])
                     ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('sample_code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected

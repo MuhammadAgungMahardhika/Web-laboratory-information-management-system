@@ -384,7 +384,7 @@ class LabJobStatusAction
         return  Action::make('Final Report')
             ->icon(Heroicon::DocumentChartBar)
             ->slideOver()
-            ->modalHeading('Pratinjau Laporan Hasil Pengujian') // Judul modal
+            ->modalHeading('Pratinjau Laporan Pengujian') // Judul modal
             ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
             ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
             ->modalWidth('6xl') // Atur lebar modal (misal: '7xl' atau 'full')

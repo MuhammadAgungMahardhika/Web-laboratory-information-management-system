@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Laporan Hasil Uji - {{ $labJob->job_number }}</title>
+    <title>Laporan Pengujian - {{ $labJob->job_number }}</title>
     <style>
         body {
             font-family: 'DejaVu Sans', sans-serif;
@@ -115,7 +115,7 @@
                 <thead>
                     <tr>
                         <th style="width: 25%;">Parameter Uji</th>
-                        <th style="width: 15%;">Hasil Uji</th>
+                        <th style="width: 15%;">Pengujian</th>
                         <th style="width: 10%;">Satuan</th>
                         <th style="width: 25%;">Baku Mutu Referensi</th>
                         <th style="width: 15%;">Status</th>

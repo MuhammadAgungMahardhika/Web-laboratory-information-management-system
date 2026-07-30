@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('analyst_personel_id')->nullable();
             $table->unsignedBigInteger('validator_personel_id')->nullable();
 
-            // Hasil uji dan data terkait
+            // Pengujian dan data terkait
             $table->string('tested_value')->nullable();
             // $table->decimal('corrected_value', 10, 4)->nullable();
             $table->string('unit', 50)->nullable();

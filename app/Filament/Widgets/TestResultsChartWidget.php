@@ -16,7 +16,7 @@ class TestResultsChartWidget extends ChartWidget
     use HasFiltersSchema;
     protected static bool $isLazy = false;
     protected bool $isCollapsible = true;
-    protected ?string $heading = 'Status Hasil Pengujian';
+    protected ?string $heading = 'Status Pengujian';
     protected ?string $pollingInterval = null;
     public const PERMISSION_VIEW_CHART_SAMPLE = 'view-chart-sample';
     protected ?string $description = 'Default filter 1 tahun belakang';
@@ -62,7 +62,7 @@ class TestResultsChartWidget extends ChartWidget
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label' => 'Jumlah Hasil Pengujian',
+                    'label' => 'Jumlah Pengujian',
                     'data' => $data,
                     'backgroundColor' => $colors, // Gunakan array warna yang sudah disiapkan
                 ],

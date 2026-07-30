@@ -115,7 +115,7 @@ class TestResultApprovalService
             'updated_by' => $this->actor(),
         ]);
 
-        return $this->response(true, 'Hasil uji berhasil dikirim untuk validasi Level 1.');
+        return $this->response(true, 'Pengujian berhasil dikirim untuk validasi Level 1.');
     }
 
     /**
@@ -178,7 +178,7 @@ class TestResultApprovalService
 
             return $this->response(
                 true,
-                'Hasil uji berhasil divalidasi.'
+                'Pengujian berhasil divalidasi.'
             );
         }
 
@@ -227,7 +227,7 @@ class TestResultApprovalService
             'updated_by' => $this->actor(),
         ]);
 
-        return $this->response(true, 'Hasil uji berhasil ditolak.');
+        return $this->response(true, 'Pengujian berhasil ditolak.');
     }
 
     /**

@@ -108,7 +108,7 @@ class TestResultsTable
                     })->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('standard_notes_ref')->label('BML')->visible(fn() => static::isApprover()),
                 TextColumn::make('tested_value')
-                    ->label('Hasil Uji')
+                    ->label('Pengujian')
                     ->html()
                     ->searchable(
                         query: function (Builder $query, string $search): Builder {

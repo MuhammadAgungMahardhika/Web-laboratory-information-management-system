@@ -21,8 +21,8 @@ use Filament\Tables\Table;
 class TestResultsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
-    protected static ?string $label = "Hasil Uji";
-    protected static ?string $title = "Hasil Uji";
+    protected static ?string $label = "Pengujian";
+    protected static ?string $title = "Pengujian";
     protected static string $relationship = 'testResults';
 
     public function form(Schema $schema): Schema

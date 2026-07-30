@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Laporan Hasil Uji - {{ $labJob->job_number }}</title>
+    <title>Laporan Pengujian - {{ $labJob->job_number }}</title>
     <style>
         body {
             font-family: 'DejaVu Sans', sans-serif;
@@ -148,7 +148,7 @@
                 <h1>LAPORAN HASIL UJI</h1>
                 <p>Nomor Laporan: {{ $labJob->job_number ?? '-' }}</p>
             </div>
-            <div class="section-heading">Hasil Uji untuk Sampel: {{ $sample->sample_code }}</div>
+            <div class="section-heading">Pengujian untuk Sampel: {{ $sample->sample_code }}</div>
             <table class="details-table">
                 <tr>
                     <td class="label">Identifikasi Sampel</td>
@@ -164,7 +164,7 @@
                 <thead>
                     <tr>
                         <th style="width: 20%;">Parameter Uji</th>
-                        <th style="width: 15%;">Hasil Uji</th>
+                        <th style="width: 15%;">Pengujian</th>
                         <th style="width: 10%;">Satuan</th>
                         <th style="width: 20%;">Baku Mutu Referensi</th>
                         <th style="width: 15%;">Metode</th>
