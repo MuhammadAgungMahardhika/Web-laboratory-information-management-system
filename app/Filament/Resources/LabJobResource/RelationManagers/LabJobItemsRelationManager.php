@@ -214,8 +214,9 @@ class LabJobItemsRelationManager extends RelationManager
             ->recordTitleAttribute('description')
             ->paginated(false)
             ->columns([
+                TextColumn::make('code')->label('Kode'),
                 TextColumn::make('description')
-                    ->label('Deskripsi'),
+                    ->label('Matrix'),
                 TextColumn::make('regulation_name')
                     ->label('Regulasi'),
                 TextColumn::make('parameterLabJobItems')
@@ -283,11 +284,24 @@ class LabJobItemsRelationManager extends RelationManager
                         }
                     })->visible(fn() => !$this->isReadOnly() && $this->ownerRecord->status === JobStatusEnum::PendingStart->value),
                 CreateAction::make()
-                    ->after(function (LabJobItem $record, array $data) {
-                        // Inisialisasi service
-                        $LabJobItemService = new LabJobItemService();
-                        $LabJobItemService->syncParameterLabJobItems($record);
-                    })->databaseTransaction(),
+                    ->mutateDataUsing(function (
+                        array $data,
+                        LabJobItemService $labJobItemService
+                    ): array {
+                        $data['code'] = $labJobItemService
+                            ->generateCode($this->ownerRecord);
+
+                        return $data;
+                    })
+                    ->after(function (
+                        LabJobItem $record,
+                        LabJobItemService $labJobItemService
+                    ) {
+
+                        $labJobItemService
+                            ->syncParameterLabJobItems($record);
+                    })
+                    ->databaseTransaction(),
             ])
             ->recordActions([
                 Action::make('manageSamples')

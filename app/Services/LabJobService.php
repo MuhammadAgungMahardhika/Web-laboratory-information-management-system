@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Log;
 
 class LabJobService
 {
+    public function __construct(
+        protected LabJobItemService $labJobItemService
+    ) {}
+
     public function generateLabJobNumber(): string
     {
         $currentYear = Carbon::now()->format('y'); // 25
@@ -35,7 +39,7 @@ class LabJobService
         // Contoh logika untuk membuat LabJob
         $labJob = LabJob::create([
             'quotation_id' => $quotation->id,
-            'job_number' => $this->generateLabJobNumber(),
+            'code' => $this->generateLabJobNumber(),
             'status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
         ]);
         // 2. Salin rincian item penawaran (snapshot) ke rincian pekerjaan lab
@@ -44,6 +48,7 @@ class LabJobService
         foreach ($quotation->quotationItems as $quotationItem) {
             // Buat item pekerjaan lab baru sebagai snapshot
             $labJobItem = LabJobItem::create([
+                'code' => $this->labJobItemService->generateCode($labJob),
                 'lab_job_id' => $labJob->id,
                 'quotation_item_id' => $quotationItem->id,
                 'test_package_id' => $quotationItem->test_package_id,
@@ -72,7 +77,7 @@ class LabJobService
             }
         }
 
-        Log::info("Lab Job #{$labJob->job_number} and its items created from Quotation #{$quotation->quotation_number}.");
+        Log::info("Lab Job #{$labJob->code} and its items created from Quotation #{$quotation->quotation_number}.");
         return $labJob;
     }
 
@@ -100,6 +105,7 @@ class LabJobService
             // 3. Salin ulang item dari penawaran
             foreach ($quotation->quotationItems as $quotationItem) {
                 $labJobItem = LabJobItem::create([
+                    'code' => $this->labJobItemService->generateCode($labJob),
                     'lab_job_id' => $labJob->id,
                     'quotation_item_id' => $quotationItem->id,
                     'test_package_id' => $quotationItem->test_package_id,
@@ -128,7 +134,7 @@ class LabJobService
                 }
             }
         }
-        Log::info("Lab Job #{$labJob->job_number} have been reset from Quotation #{$quotation->quotation_number}.");
+        Log::info("Lab Job #{$labJob->code} have been reset from Quotation #{$quotation->quotation_number}.");
         return $labJob;
     }
     /**

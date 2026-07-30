@@ -112,6 +112,8 @@ class SamplesTable
                     ->relationship('labJobItem.labJob', 'code')
                     ->searchable()
                     ->preload(),
+
+
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
                 SampleAction::downloadLabel(),

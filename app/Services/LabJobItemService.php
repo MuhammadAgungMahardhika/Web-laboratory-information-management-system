@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\Parameter;
 use App\Models\ParameterLabJobItem;
@@ -9,6 +10,40 @@ use Illuminate\Support\Collection;
 
 class LabJobItemService
 {
+    /**
+     * Generate kode Produk Uji.
+     *
+     * Example:
+     * LAB-JLI-26070001-01
+     * LAB-JLI-26070001-02
+     */
+    public function generateCode(LabJob $labJob): string
+    {
+        $lastCode = $labJob->labJobItems()
+            ->latest('id')
+            ->value('code');
+
+        if (! $lastCode) {
+            $sequence = 1;
+        } else {
+            preg_match(
+                '/-(\d+)$/',
+                $lastCode,
+                $matches
+            );
+
+            $sequence = isset($matches[1])
+                ? ((int) $matches[1]) + 1
+                : 1;
+        }
+        return sprintf(
+            '%s-%02d',
+            $labJob->code,
+            $sequence
+        );
+    }
+
+
     /**
      * Menangani sinkronisasi parameter untuk LabJobItem.
      *

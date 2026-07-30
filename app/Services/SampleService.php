@@ -13,15 +13,29 @@ class SampleService
 {
     /**
      * Generate kode sampel.
+     *
+     * Example:
+     * LAB-JLI-26070001-01-S01
+     * LAB-JLI-26070001-01-S02
      */
-    public function generateSampleCode(LabJobItem $labJobItem): string
-    {
-        $labJobItem->load('labJob');
+    public function generateSampleCode(
+        LabJobItem $labJobItem
+    ): string {
 
-        $jobNumber = $labJobItem->labJob->code;
-        $sampleCount = $labJobItem->labJob->samples()->count();
+        $sampleCount = $labJobItem
+            ->samples()
+            ->count();
 
-        return "{$jobNumber}-" . ($sampleCount + 1);
+
+        $sequence = str_pad(
+            $sampleCount + 1,
+            2,
+            '0',
+            STR_PAD_LEFT
+        );
+
+
+        return "{$labJobItem->code}-S{$sequence}";
     }
 
     /**
