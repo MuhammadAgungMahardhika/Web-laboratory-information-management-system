@@ -17,8 +17,10 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+
 use Illuminate\Support\Facades\Auth;
 
 class SampleForm
@@ -46,7 +48,7 @@ class SampleForm
                         ->searchable()
                         ->preload()
                         ->live()
-                        ->afterStateHydrated(function ($state,  $set) use ($sampleService) {
+                        ->afterStateUpdated(function ($state,  $set) use ($sampleService) {
                             if ($state) {
                                 // Inisialisasi service
                                 $labJobItem = LabJobItem::find($state);
@@ -62,10 +64,12 @@ class SampleForm
                         ->live()
                         ->disabled()
                         ->dehydrated()
+
                         ->required(),
                     Select::make('status')
                         ->label('Status')
                         ->searchable()
+                        ->default(SampleStatusEnum::default())
                         ->options(function ($record) {
                             $baseOptions = [
                                 SampleStatusEnum::Received->value => SampleStatusEnum::Received->label(),
@@ -78,13 +82,12 @@ class SampleForm
                             }
                             return $baseOptions;
                         })
-                        ->default(SampleStatusEnum::default())
                         ->required(),
                     Radio::make('collection_type')
                         ->label('Keterangan Lain')
+                        ->default(SampleCollectionTypeEnum::default())
                         ->options(SampleCollectionTypeEnum::labels())
                         ->live()
-                        ->default(SampleCollectionTypeEnum::default()->value)
                         ->inline(),
                 ])->columnSpanFull()->columns(2)->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->inlineLabel(),
                 Tabs::make('Tabs')

@@ -127,7 +127,7 @@ class SamplesRelationManager extends RelationManager
                         ->label('Keterangan Lain')
                         ->options(SampleCollectionTypeEnum::labels())
                         ->live()
-                        ->default(SampleCollectionTypeEnum::default()->value)
+                        ->default(SampleCollectionTypeEnum::default())
                         ->inline(),
                 ])->columnSpanFull()->visible(fn() =>  static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->columns(4),
                 Tabs::make('Tabs')

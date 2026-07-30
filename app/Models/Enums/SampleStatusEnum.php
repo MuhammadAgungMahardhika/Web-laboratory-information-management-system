@@ -39,9 +39,9 @@ enum SampleStatusEnum: int
         return self::labels()[$this->value];
     }
 
-    public static function default(): self
+    public static function default(): int
     {
-        return self::Received; // Status default adalah "Pending"
+        return self::Received->value; // Status default adalah "Pending"
     }
     public static function color(int $status): string
     {

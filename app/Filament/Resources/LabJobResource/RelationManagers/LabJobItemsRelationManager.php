@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 
 class LabJobItemsRelationManager extends RelationManager
 {
@@ -214,11 +215,21 @@ class LabJobItemsRelationManager extends RelationManager
             ->recordTitleAttribute('description')
             ->paginated(false)
             ->columns([
-                TextColumn::make('code')->label('Kode'),
-                TextColumn::make('description')
-                    ->label('Matrix'),
-                TextColumn::make('regulation_name')
-                    ->label('Regulasi'),
+                TextColumn::make('information')
+                    ->label('Produk Uji')
+                    ->state(fn($record) => new HtmlString("
+        <div style='line-height:1.5'>
+            <div><strong>Kode</strong> : {$record->code}</div>
+            <div><strong>Matrix</strong> : {$record->description}</div>
+            <div><strong>Regulasi</strong> : {$record->regulation_name}</div>
+        </div>
+    "))
+                    ->html(),
+                TextColumn::make('samples.code')
+                    ->label('Sampel')
+                    ->listWithLineBreaks()
+                    ->limitList(5)
+                    ->expandableLimitedList(),
                 TextColumn::make('parameterLabJobItems')
                     ->badge()
                     ->listWithLineBreaks()
@@ -229,13 +240,14 @@ class LabJobItemsRelationManager extends RelationManager
 
                     ->label('Parameter Uji'),
 
-                TextColumn::make('quantity')
-
-                    ->alignEnd()
-                    ->label('Kuantitas'),
-                TextColumn::make('unit')
-
-                    ->label('Satuan'),
+                TextColumn::make('quantity_info')
+                    ->label('Kuantitas')
+                    ->state(fn($record) => new HtmlString("
+                        <strong>{$record->quantity}</strong>
+                        <span style='color:#6b7280'> {$record->unit}</span>
+                    "))
+                    ->html()
+                    ->alignEnd(),
                 TextColumn::make('price')
                     ->label('Harga')
                     ->alignEnd()
@@ -253,11 +265,9 @@ class LabJobItemsRelationManager extends RelationManager
                     ->toggleable()
                     ->toggledHiddenByDefault(),
                 TextColumn::make('created_by')
-
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_by')
-
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -310,7 +320,7 @@ class LabJobItemsRelationManager extends RelationManager
                     ->url(function (LabJobItem $record) {
                         if ($record->samples()->exists()) {
                             return SampleResource::getUrl('index', [
-                                'filters[labJobItem][lab_job_id][value]=' => $record->id,
+                                'filters[lab_job_item_id][value]=' => $record->id,
                             ]);
                         }
 

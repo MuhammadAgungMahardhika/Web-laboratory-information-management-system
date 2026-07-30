@@ -19,9 +19,12 @@ use App\Filament\Resources\TestPackageResource\Pages\ViewTestPackage;
 use App\Filament\Resources\TestPackageResource\Pages\EditTestPackage;
 use App\Filament\Resources\TestPackageResource\RelationManagers\ParameterTestPackagesRelationManager;
 use App\Models\Enums\EnvironmentTypeEnum;
+use App\Models\SampleMatric;
 use App\Models\TestPackage;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\FiltersLayout;
@@ -45,9 +48,7 @@ class TestPackageResource extends Resource
         return $schema
             ->components([
                 Section::make([
-                    TextInput::make('name')
-                        ->label('Nama produk uji')
-                        ->required(),
+
                     Select::make('code')
                         ->label('Matrix sampel')
                         ->required()
@@ -76,7 +77,16 @@ class TestPackageResource extends Resource
                                 ->columnSpanFull(),
                         ])
                         ->createOptionModalHeading('Buat Matrix Sampel')
+                        ->afterStateUpdated(function (Set $set, Get $get, $state) {
+                            if (!$get('name'))
+                                $sampleMatric = SampleMatric::find($state);
+                            $set('name',  $sampleMatric->name);
+                        })
+                        ->live()
                         ->preload(),
+                    TextInput::make('name')
+                        ->label('Nama produk uji')
+                        ->required(),
                     Select::make('regulation_id')
                         ->label('Regulasi/Standar')
                         ->searchable(['long_name', 'name'])
