@@ -317,6 +317,7 @@ class LabJobItemsRelationManager extends RelationManager
                 Action::make('manageSamples')
                     ->label('Kelola Sampel')
                     ->icon('heroicon-o-beaker')
+                    ->visible(fn() => $this->ownerRecord->status == JobStatusEnum::InProgress->value)
                     ->url(function (LabJobItem $record) {
                         if ($record->samples()->exists()) {
                             return SampleResource::getUrl('index', [

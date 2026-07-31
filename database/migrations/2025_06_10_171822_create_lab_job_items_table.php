@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('lab_job_items', function (Blueprint $table) {
             $table->id();
             $table->string('code', 50)->unique(); // Kode unik Job
+            $table->string('description_code')
+                ->storedAs("CONCAT(code, ' (', description, ')')");
             // Foreign keys (sementara tanpa constraint dan indeks)
             $table->unsignedBigInteger('lab_job_id');
             $table->unsignedBigInteger('quotation_item_id')->nullable();
@@ -33,6 +35,8 @@ return new class extends Migration
             $table->string('created_by', 255)->nullable();
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
+
+            $table->index('description_code');
         });
     }
 

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('test_method_id')->nullable();
             $table->string('code', 50)->nullable();
             $table->string('long_name', 255);
-            $table->string('long_name_standard_notes')->virtualAs("IF(standard_notes IS NULL OR standard_notes = '', long_name, CONCAT(long_name, ' (', standard_notes, ')'))");
+            $table->string('long_name_standard_notes')->storedAs("IF(standard_notes IS NULL OR standard_notes = '', long_name, CONCAT(long_name, ' (', standard_notes, ')'))");
             $table->string('unit', 50)->nullable();
 
             $table->text('description')->nullable();
