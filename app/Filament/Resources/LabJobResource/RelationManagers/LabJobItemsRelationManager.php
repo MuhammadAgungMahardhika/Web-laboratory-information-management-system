@@ -20,14 +20,24 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Enums\ParameterStatusEnum;
+use App\Models\Enums\SampleCollectionTypeEnum;
+use App\Models\Enums\SampleStatusEnum;
 use App\Models\LabJob;
 use App\Models\LabJobItem;
 use App\Models\TestPackage;
 use App\Services\LabJobItemService;
 use App\Services\LabJobService;
+use App\Services\SampleService;
 use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TimePicker;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Grouping\Group;
@@ -67,6 +77,7 @@ class LabJobItemsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
+        $sampleService = app(SampleService::class);
         return $schema
             ->components([
                 Hidden::make('group')
@@ -156,53 +167,55 @@ class LabJobItemsRelationManager extends RelationManager
                         ->label('Lokasi Pengambilan Sampel')
                         ->maxLength(100)
                         ->nullable(),
-                ])->columnSpanFull()->columns(3)->visible(fn(Get $get) => $get('group') === 'A'),
-                Section::make([
-                    TextInput::make('description')
-                        ->label('Keterangan')
-                        ->autocomplete(false)
-                        ->datalist([
-                            'Engineer dan Mobilisasi',
-                        ])
-                        ->required()
-                        ->maxLength(255)
-                        ->placeholder(fn(Get $get) => match ($get('group')) {
-                            'B' => 'Deskripsi untuk biaya pengambilan sampel',
-                            'C' => 'Deskripsi untuk item lainnya',
-                            default => ''
-                        }),
-                    TextInput::make('quantity')
-                        ->label('Jumlah')
-                        ->numeric()
-                        ->autocomplete(false)
-                        ->required()
-                        ->default(1),
-                    TextInput::make('unit')
-                        ->label('Satuan')
-                        ->datalist(function (Get $get) {
-                            $itemTypeSelector = $get('group');
-                            if ($itemTypeSelector === 'B') {
-                                return [
-                                    'Hari',
-                                    'Jam'
-                                ];
-                            } else {
-                                return [
-                                    'Sampel',
-                                    'Ls'
-                                ];
-                            }
-                        })
-                        ->required()
-                        ->autocomplete(false)
-                        ->maxLength(50),
-                    TextInput::make('price')
-                        ->label('Harga')
-                        ->numeric()
-                        ->required()
-                        ->prefix('Rp.')
-                        ->default(0),
-                ])->columnSpanFull()->columns(4)->visible(fn(Get $get) => $get('group') !== 'A')
+                ])->columnSpanFull()->columns(3),
+                Section::make('Sampel')
+                    ->schema([
+                        Repeater::make('samples')
+                            ->table([
+
+                                TableColumn::make('Status'),
+                                TableColumn::make('Tipe pengambilan'),
+                                TableColumn::make('Waktu pengambilan'),
+                                TableColumn::make('Tanggal pengambilan'),
+                                TableColumn::make('Catatan pengambilan')
+                            ])
+                            ->relationship()
+                            ->label('Daftar Sampel')
+                            ->defaultItems(0)
+                            ->collapsible()
+                            ->collapsed()
+                            ->cloneable(false)
+                            ->mutateRelationshipDataBeforeCreateUsing(function (array $data, LabJobItem $record) use ($sampleService) {
+                                $data['code'] = $sampleService->generateSampleCode($record);
+
+                                return $data;
+                            })
+                            ->reorderable(false)
+                            ->addActionLabel('Tambah Sampel')
+                            ->schema([
+                                Hidden::make('code')
+                                    ->label('Kode Sampel')
+                                    ->disabled()
+                                    ->dehydrated(),
+
+                                Select::make('status')
+                                    ->options(SampleStatusEnum::labels())
+                                    ->required(),
+
+                                Radio::make('collection_type')
+                                    ->options(SampleCollectionTypeEnum::labels())
+                                    ->inline()
+                                    ->live(),
+
+                                DatePicker::make('collection_date'),
+
+                                TimePicker::make('collection_time'),
+
+                                Textarea::make('collection_notes'),
+
+                            ]),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -329,7 +342,9 @@ class LabJobItemsRelationManager extends RelationManager
                             'lab_job_item_id' => $record->id,
                         ]);
                     }),
+                ViewAction::make()->slideOver(),
                 EditAction::make()
+                    ->slideOver()
                     ->after(function (LabJobItem $record, array $data) {
                         // Inisialisasi service
                         $LabJobItemService = new LabJobItemService();
