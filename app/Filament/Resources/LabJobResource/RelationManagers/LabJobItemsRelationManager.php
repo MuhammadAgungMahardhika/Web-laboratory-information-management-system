@@ -172,7 +172,6 @@ class LabJobItemsRelationManager extends RelationManager
                     ->schema([
                         Repeater::make('samples')
                             ->table([
-
                                 TableColumn::make('Status'),
                                 TableColumn::make('Tipe pengambilan'),
                                 TableColumn::make('Waktu pengambilan'),
@@ -210,7 +209,6 @@ class LabJobItemsRelationManager extends RelationManager
                                 DatePicker::make('collection_date'),
 
                                 TimePicker::make('collection_time'),
-
                                 Textarea::make('collection_notes'),
 
                             ]),

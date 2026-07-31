@@ -8,6 +8,7 @@ use App\Models\Enums\TestResultStatusEnum;
 use App\Models\LabJobItem;
 use App\Models\Sample;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class SampleService
 {
@@ -21,21 +22,29 @@ class SampleService
     public function generateSampleCode(
         LabJobItem $labJobItem
     ): string {
+        $lastSequence = $labJobItem->samples()
+            ->selectRaw("
+        MAX(
+            CAST(
+                SUBSTRING_INDEX(code, '-S', -1) AS UNSIGNED
+            )
+        ) as last_sequence
+    ")->value('last_sequence') ?? 0;
 
-        $sampleCount = $labJobItem
-            ->samples()
-            ->count();
-
-
-        $sequence = str_pad(
-            $sampleCount + 1,
-            2,
-            '0',
-            STR_PAD_LEFT
-        );
-
+        $sequence = str_pad($lastSequence + 1, 2, '0', STR_PAD_LEFT);
 
         return "{$labJobItem->code}-S{$sequence}";
+    }
+    /**
+     * Membuat sampel baru.
+     */
+    public function create(LabJobItem $labJobItem, array $data): Sample
+    {
+        return DB::transaction(function () use ($labJobItem, $data) {
+            $data['lab_job_item_id'] = $labJobItem->id;
+            $data['code'] = $this->generateSampleCode($labJobItem);
+            return Sample::create($data);
+        });
     }
 
     /**
