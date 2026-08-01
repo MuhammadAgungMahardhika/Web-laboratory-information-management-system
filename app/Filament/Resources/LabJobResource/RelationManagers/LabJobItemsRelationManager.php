@@ -168,52 +168,7 @@ class LabJobItemsRelationManager extends RelationManager
                         ->maxLength(100)
                         ->nullable(),
                 ])->columnSpanFull()->columns(3),
-                Section::make('Sampel')
-                    ->schema([
-                        Repeater::make('samples')
-                            ->table([
-                                TableColumn::make('Status'),
-                                TableColumn::make('Tipe pengambilan'),
-                                TableColumn::make('Waktu pengambilan'),
-                                TableColumn::make('Tanggal pengambilan'),
-                                TableColumn::make('Catatan pengambilan')
-                            ])
-                            ->relationship()
-                            ->label('Daftar Sampel')
-                            ->defaultItems(0)
-                            ->collapsible()
-                            ->collapsed()
-                            ->cloneable(false)
-                            ->mutateRelationshipDataBeforeCreateUsing(function (array $data, LabJobItem $record) use ($sampleService) {
-                                $data['code'] = $sampleService->generateSampleCode($record);
 
-                                return $data;
-                            })
-                            ->reorderable(false)
-                            ->addActionLabel('Tambah Sampel')
-                            ->schema([
-                                Hidden::make('code')
-                                    ->label('Kode Sampel')
-                                    ->disabled()
-                                    ->dehydrated(),
-
-                                Select::make('status')
-                                    ->options(SampleStatusEnum::labels())
-                                    ->required(),
-
-                                Radio::make('collection_type')
-                                    ->options(SampleCollectionTypeEnum::labels())
-                                    ->inline()
-                                    ->live(),
-
-                                DatePicker::make('collection_date'),
-
-                                TimePicker::make('collection_time'),
-                                Textarea::make('collection_notes'),
-
-                            ]),
-                    ])
-                    ->columnSpanFull(),
             ]);
     }
 

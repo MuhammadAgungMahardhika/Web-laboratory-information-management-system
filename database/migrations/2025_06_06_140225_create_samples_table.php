@@ -14,29 +14,26 @@ return new class extends Migration
         Schema::create('samples', function (Blueprint $table) {
             $table->id();
             // Foreign keys
+            $table->string('code', 50)->unique();
             $table->unsignedBigInteger('lab_job_item_id');
             $table->unsignedBigInteger('collected_by_personel_id')->nullable();
             $table->unsignedBigInteger('received_by_personel_id')->nullable();
-            // Sample collection details
-            $table->string('code', 50)->unique();
+            // Sample  details
             $table->date('collection_date')->nullable();
             $table->time('collection_time')->nullable();
             $table->text('collection_location_desc')->nullable();
             $table->string('latitude', 50)->nullable();
             $table->string('longitude', 50)->nullable();
-
-            // Sample type and container details
-            $table->string('container_type', 100)->nullable();
-            $table->integer('container_quantity')->nullable()->default(1);
-            $table->string('sample_volume', 50)->nullable();
-            // Sample preservation and notes
             $table->string('preservation_method', 255)->nullable();
             $table->text('collection_notes')->nullable();
-            // Received details
+
+            // Sample Received details
             $table->date('received_date')->nullable();
             $table->time('received_time')->nullable();
             $table->text('received_condition_notes')->nullable();
-
+            $table->string('container_type', 100)->nullable();
+            $table->integer('container_quantity')->nullable()->default(1);
+            $table->string('sample_volume', 50)->nullable();
             // analysy details
             $table->date('analyzed_start_date')->nullable();
             $table->date('analyzed_end_date')->nullable();

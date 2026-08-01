@@ -52,9 +52,9 @@ class SampleResource extends Resource
     {
         return [
             'index' => ListSamples::route('/'),
-            'create' => CreateSample::route('/create'),
             'view' => ViewSample::route('/{record}'),
-            'edit' => EditSample::route('/{record}/edit'),
+            // 'create' => CreateSample::route('/create'),
+            // 'edit' => EditSample::route('/{record}/edit'),
         ];
     }
 }

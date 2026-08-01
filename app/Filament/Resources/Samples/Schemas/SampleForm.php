@@ -40,7 +40,7 @@ class SampleForm
                 Section::make([
                     Select::make('lab_job_item_id')
                         ->label('Produk Uji')
-                        ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) {
+                        ->relationship('labJobItem', 'description_code', modifyQueryUsing: function ($query) {
                             return $query
                                 ->where('group', 'A');
                         })
@@ -89,7 +89,7 @@ class SampleForm
                         ->options(SampleCollectionTypeEnum::labels())
                         ->live()
                         ->inline(),
-                ])->columnSpanFull()->columns(2)->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->inlineLabel(),
+                ])->columnSpanFull()->columns(1)->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->inlineLabel(),
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')

@@ -38,7 +38,9 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -76,15 +78,19 @@ class SamplesRelationManager extends RelationManager
         $user = Auth::user();
         $personel = $user->personel;
         $sampleService  = app(SampleService::class);
+        $ownerRecord = $this->ownerRecord;
         return  SampleResource::form($schema)
             ->components([
                 Section::make([
                     Select::make('lab_job_item_id')
                         ->label('Produk Uji')
-                        ->relationship('labJobItem', 'description', modifyQueryUsing: function ($query) {
+                        ->relationship('labJobItem', 'description_code', modifyQueryUsing: function (
+                            $query
+                        ) use ($ownerRecord) {
+                            $ownerRecord->loadMissing('labJobItems');
                             return $query
                                 ->where('group', 'A')
-                                ->where('lab_job_id', $this->ownerRecord->id);
+                                ->where('lab_job_id', $ownerRecord->id);
                         })
                         ->required()
                         ->searchable()
@@ -100,15 +106,38 @@ class SamplesRelationManager extends RelationManager
                                 $set('code', null);
                             }
                         }),
+                    // Select::make('lab_job_item_id')
+                    //     ->label('Produk Uji')
+                    //     ->relationship('labJobItem', 'description_code', modifyQueryUsing: function ($query) {
+                    //         return $query
+                    //             ->where('group', 'A');
+                    //     })
+                    //     ->required()
+                    //     ->searchable()
+                    //     ->preload()
+                    //     ->live()
+                    //     ->afterStateUpdated(function ($state,  $set) use ($sampleService) {
+                    //         if ($state) {
+                    //             // Inisialisasi service
+                    //             $labJobItem = LabJobItem::find($state);
+                    //             $sampleCode = $sampleService->generateSampleCode($labJobItem);
+                    //             $set('code', $sampleCode);
+                    //         } else {
+                    //             $set('code', null);
+                    //         }
+                    //     }),
                     TextInput::make('code')
                         ->label('Kode Sampel')
                         ->unique()
                         ->live()
                         ->disabled()
                         ->dehydrated()
+
                         ->required(),
                     Select::make('status')
                         ->label('Status')
+                        ->searchable()
+                        ->default(SampleStatusEnum::default())
                         ->options(function ($record) {
                             $baseOptions = [
                                 SampleStatusEnum::Received->value => SampleStatusEnum::Received->label(),
@@ -121,29 +150,27 @@ class SamplesRelationManager extends RelationManager
                             }
                             return $baseOptions;
                         })
-                        ->default(SampleStatusEnum::default())
                         ->required(),
                     Radio::make('collection_type')
                         ->label('Keterangan Lain')
+                        ->default(SampleCollectionTypeEnum::default())
                         ->options(SampleCollectionTypeEnum::labels())
                         ->live()
-                        ->default(SampleCollectionTypeEnum::default())
                         ->inline(),
-                ])->columnSpanFull()->visible(fn() =>  static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->columns(4),
+                ])->columnSpanFull()->columns(1)->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->inlineLabel(),
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')
                             ->label('PENGAMBILAN SAMPEL OLEH PPC')
                             ->columnSpanFull()
-
+                            ->columns(2)
+                            ->inlineLabel()
                             ->icon(Heroicon::OutlinedBeaker)
                             ->schema([
                                 Select::make('collected_by_personel_id')
                                     ->relationship(
                                         'collectedByPersonel',
                                         'fullname',
-                                        modifyQueryUsing: fn($query) =>
-                                        $query->whereHas('labJobPersonels', fn($q) => $q->where('lab_job_id', $this->ownerRecord->id))
                                     )
                                     ->label('Ppc')
                                     ->searchable()
@@ -158,27 +185,24 @@ class SamplesRelationManager extends RelationManager
                                 TextInput::make('preservation_method')
                                     ->label('Metode Preservasi')
                                     ->maxLength(255),
-                                Textarea::make('collection_notes')
-                                    ->label('Catatan Pengambilan')
-                                    ->columnSpan(2),
-                                Section::make('Lokasi pengambilan')
-                                    ->columns(1)
-                                    ->columnSpan(2)
-                                    ->schema([
-                                        Textarea::make('collection_location_desc')
-                                            ->label('Lokasi Pengambilan'),
-                                        TextInput::make('latitude'),
-                                        TextInput::make('longitude'),
-                                    ])->inlineLabel(),
+                                TextInput::make('latitude'),
+                                TextInput::make('longitude'),
 
-                            ])->columns(4)->visible(
-                                fn(Get $get) =>   static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)
+                                Textarea::make('collection_location_desc')
+                                    ->label('Lokasi Pengambilan'),
+                                Textarea::make('collection_notes')
+                                    ->label('Catatan Pengambilan'),
+
+                            ])->visible(
+                                fn(Get $get) => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)
                                     && SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ),
                         Tab::make('penerimaan')
                             ->label('PENERIMAAN SAMPEL OLEH ADMIN')
                             ->icon(Heroicon::OutlinedInbox)
                             ->columnSpanFull()
+                            ->columns(2)
+                            ->inlineLabel()
                             ->schema([
                                 Select::make('received_by_personel_id')
                                     ->relationship('receivedByPersonel', 'fullname')
@@ -188,34 +212,26 @@ class SamplesRelationManager extends RelationManager
                                     ->preload(),
                                 DatePicker::make('received_date')
                                     ->label('Tanggal Penerimaan')
-                                    ->default(now())
-                                    ->required(),
+                                    ->default(now()),
                                 TimePicker::make('received_time')
                                     ->label('Waktu Penerimaan')
-                                    ->default(now()->format('H:i:s'))
-                                    ->required(),
+                                    ->default(now()->format('H:i:s')),
                                 Textarea::make('received_condition_notes')
-                                    ->label('Catatan Kondisi Penerimaan')
-                                    ->columnSpan(2),
-                                Section::make('Wadah dan Volume')
-                                    ->columns(1)
-                                    ->schema([
-                                        TextInput::make('container_type')
-                                            ->label('Jenis Wadah')
-                                            ->maxLength(50)
-                                            ->nullable(),
-                                        TextInput::make('container_quantity')
-                                            ->label('Jumlah Wadah')
-                                            ->required()
-                                            ->numeric()
-                                            ->default(1),
-                                        TextInput::make('sample_volume')
-                                            ->label('Volume Sampel')
-                                            ->maxLength(50)
-                                            ->nullable(),
-                                    ])->columnSpan(2)
-                                    ->inlineLabel(),
-                            ])->columns(4)->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
+                                    ->label('Catatan Kondisi Penerimaan'),
+                                TextInput::make('container_type')
+                                    ->label('Jenis Wadah')
+                                    ->maxLength(50)
+                                    ->nullable(),
+                                TextInput::make('container_quantity')
+                                    ->label('Jumlah Wadah')
+
+                                    ->numeric()
+                                    ->default(1),
+                                TextInput::make('sample_volume')
+                                    ->label('Volume Sampel')
+                                    ->maxLength(50)
+                                    ->nullable(),
+                            ])->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
                     ])
                     ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
@@ -228,19 +244,36 @@ class SamplesRelationManager extends RelationManager
     {
         $sampleService  = app(SampleService::class);
         return SampleResource::table($table)
+            ->filters([
+                SelectFilter::make('lab_job_item_id')
+                    ->label('Nomor Produk Uji')
+                    ->relationship('labJobItem', 'code')
+                    ->searchable()
+                    ->preload(),
+
+
+            ], layout: FiltersLayout::Dropdown)
             ->headerActions([
                 CreateAction::make()->after(
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
                     }
-                ),
+                )->slideOver(),
             ])
             ->recordActions([
                 SampleAction::downloadLabel(),
                 SampleAction::prepare($this->ownerRecord),
-                SampleAction::reopen(),
-                EditAction::make()->slideOver(),
+                SampleAction::reopen()->after(
+                    function (RelationManager $livewire) {
+                        $livewire->dispatch('refresh');
+                    }
+                ),
                 ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver()->after(
+                    function (RelationManager $livewire) {
+                        $livewire->dispatch('refresh');
+                    }
+                ),
                 LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([

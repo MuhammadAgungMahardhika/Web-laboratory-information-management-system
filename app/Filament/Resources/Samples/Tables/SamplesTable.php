@@ -31,17 +31,20 @@ class SamplesTable
         return $table
             ->selectCurrentPageOnly()
             ->groups([
-                Group::make('labJobItem.labJob.code')
-                    ->label('Nomor Job')
+                Group::make('labJobItem.code')
+                    ->label('Nomor Produk Uji')
                     ->titlePrefixedWithLabel(false),
                 Group::make('labJobItem.description')
                     ->label('Matrix')
                     ->titlePrefixedWithLabel(false),
             ])
+            ->defaultSort('created_at', 'desc')
+            ->defaultGroup('labJobItem.code')
             ->columns([
                 TextColumn::make('labJobItem.description')
                     ->label('Matrix')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('code')
                     ->label('Kode Sampel')
                     ->searchable(),
@@ -123,8 +126,8 @@ class SamplesTable
             ->recordActions([
                 SampleAction::downloadLabel(),
                 SampleAction::prepare(),
-                EditAction::make(),
-                ViewAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
