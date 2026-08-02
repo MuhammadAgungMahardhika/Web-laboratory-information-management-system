@@ -62,7 +62,6 @@ class TestResultAction
                 fn(TestResult $record) =>
                 in_array($record->status, [
                     TestResultStatusEnum::Raw->value,
-                    TestResultStatusEnum::RequestValidate->value,
                     TestResultStatusEnum::RevisionNeeded->value,
                 ])
                     && $record->tested_value
@@ -334,7 +333,6 @@ class TestResultAction
                     try {
                         if (in_array($record->status, [
                             TestResultStatusEnum::Raw->value,
-                            TestResultStatusEnum::RequestValidate->value,
                             TestResultStatusEnum::RevisionNeeded->value,
                         ])) {
                             DB::transaction(function () use ($service, $record) {
