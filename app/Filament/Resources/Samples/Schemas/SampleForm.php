@@ -69,19 +69,10 @@ class SampleForm
                     Select::make('status')
                         ->label('Status')
                         ->searchable()
+                        ->disabled()
+                        ->dehydrated()
+                        ->options(SampleStatusEnum::labels())
                         ->default(SampleStatusEnum::default())
-                        ->options(function ($record) {
-                            $baseOptions = [
-                                SampleStatusEnum::Received->value => SampleStatusEnum::Received->label(),
-                                SampleStatusEnum::Invalid->value => SampleStatusEnum::Invalid->label(),
-                            ];
-                            // Jika edit dan record punya status lain, tambahkan status tersebut ke options
-                            if ($record && !array_key_exists($record->status, $baseOptions)) {
-                                $allLabels = SampleStatusEnum::labels();
-                                $baseOptions[$record->status] = $allLabels[$record->status];
-                            }
-                            return $baseOptions;
-                        })
                         ->required(),
                     Radio::make('collection_type')
                         ->label('Keterangan Lain')

@@ -6,11 +6,12 @@ use Filament\Support\Colors\Color;
 
 enum SampleStatusEnum: int
 {
-    case Received = 1;
-    case Prepared = 2;
-    case AnalysisCompleted = 3;
-    case Invalid = 4;
-    case Archived = 5;
+    case Collected = 1;
+    case Received = 2;
+    case Prepared = 3;
+    case AnalysisCompleted = 4;
+    case Invalid = 5;
+    case Archived = 6;
 
 
     /**
@@ -21,6 +22,7 @@ enum SampleStatusEnum: int
     public static function labels(): array
     {
         return [
+            self::Collected->value => 'Diambil',
             self::Received->value => 'Diterima',
             self::Prepared->value  => 'Siap dianalisa',
             self::AnalysisCompleted->value  => 'Analisis Selesai',
@@ -41,11 +43,12 @@ enum SampleStatusEnum: int
 
     public static function default(): int
     {
-        return self::Received->value; // Status default adalah "Pending"
+        return self::Collected->value; // Status default adalah "Pending"
     }
     public static function color(int $status): string
     {
         return match ($status) {
+            self::Collected->value => 'info',
             self::Received->value => 'info',
             self::Prepared->value => 'warning',
             self::AnalysisCompleted->value => 'success',
@@ -68,6 +71,7 @@ enum SampleStatusEnum: int
         }
 
         return match ($status) {
+            self::Collected->value => '#6B7280',
             self::Received->value => '#6B7280',
             self::Prepared->value => '#F59E0B',
             self::AnalysisCompleted->value =>  '#10B981',

@@ -29,7 +29,7 @@ enum JobStatusEnum: int
     {
         return [
             self::PendingStart->value => 'Menunggu Mulai',
-            self::InProgress->value => 'Dalam Proses',
+            self::InProgress->value => 'Proses Sampling',
             self::SamplingCompleted->value => 'Sampling Selesai',
             self::AnalysisCompleted->value => 'Analisis Selesai',
             self::ValidationCompleted->value => 'Validasi Selesai',

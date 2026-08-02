@@ -106,26 +106,7 @@ class SamplesRelationManager extends RelationManager
                                 $set('code', null);
                             }
                         }),
-                    // Select::make('lab_job_item_id')
-                    //     ->label('Produk Uji')
-                    //     ->relationship('labJobItem', 'description_code', modifyQueryUsing: function ($query) {
-                    //         return $query
-                    //             ->where('group', 'A');
-                    //     })
-                    //     ->required()
-                    //     ->searchable()
-                    //     ->preload()
-                    //     ->live()
-                    //     ->afterStateUpdated(function ($state,  $set) use ($sampleService) {
-                    //         if ($state) {
-                    //             // Inisialisasi service
-                    //             $labJobItem = LabJobItem::find($state);
-                    //             $sampleCode = $sampleService->generateSampleCode($labJobItem);
-                    //             $set('code', $sampleCode);
-                    //         } else {
-                    //             $set('code', null);
-                    //         }
-                    //     }),
+
                     TextInput::make('code')
                         ->label('Kode Sampel')
                         ->unique()
@@ -137,19 +118,10 @@ class SamplesRelationManager extends RelationManager
                     Select::make('status')
                         ->label('Status')
                         ->searchable()
+                        ->disabled()
+                        ->dehydrated()
+                        ->options(SampleStatusEnum::labels())
                         ->default(SampleStatusEnum::default())
-                        ->options(function ($record) {
-                            $baseOptions = [
-                                SampleStatusEnum::Received->value => SampleStatusEnum::Received->label(),
-                                SampleStatusEnum::Invalid->value => SampleStatusEnum::Invalid->label(),
-                            ];
-                            // Jika edit dan record punya status lain, tambahkan status tersebut ke options
-                            if ($record && !array_key_exists($record->status, $baseOptions)) {
-                                $allLabels = SampleStatusEnum::labels();
-                                $baseOptions[$record->status] = $allLabels[$record->status];
-                            }
-                            return $baseOptions;
-                        })
                         ->required(),
                     Radio::make('collection_type')
                         ->label('Keterangan Lain')
@@ -174,6 +146,7 @@ class SamplesRelationManager extends RelationManager
                                     )
                                     ->label('Ppc')
                                     ->searchable()
+                                    ->default(Auth::user()->personel_id)
                                     ->preload(),
                                 DatePicker::make('collection_date')
                                     ->label('Tanggal Pengambilan')
