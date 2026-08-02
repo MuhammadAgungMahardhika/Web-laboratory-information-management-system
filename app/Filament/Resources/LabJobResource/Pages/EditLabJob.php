@@ -59,6 +59,23 @@ class EditLabJob extends EditRecord
                 ->icon(Heroicon::ArrowUp)
                 ->button()
                 ->color('success'),
+            ActionGroup::make([
+                LabJobStatusAction::completeSampling()->after(
+                    function ($livewire) {
+                        $livewire->dispatch('refresh');
+                    }
+                ),
+                LabJobStatusAction::completeAnalysis(),
+                LabJobStatusAction::completeValidation(),
+                LabJobStatusAction::generateReport(),
+                LabJobStatusAction::approveReport(),
+                LabJobStatusAction::sendReport(),
+                LabJobStatusAction::abortJob(),
+            ])
+                ->label('Update Status')
+                ->button()
+                ->icon(Heroicon::ArrowUp)
+                ->color('success'),
         ];
     }
 }
