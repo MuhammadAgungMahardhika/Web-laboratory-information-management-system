@@ -186,9 +186,15 @@ class TestResultsTable
                 TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+
                 SelectFilter::make('sample.labJobItem.lab_job_id')
                     ->label('Nomor Job')
                     ->relationship('sample.labJobItem.labJob', 'code')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('sample.labJobItem')
+                    ->label('Nomor Produk Uji')
+                    ->relationship('sample.labJobItem', 'code')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('sample_id')

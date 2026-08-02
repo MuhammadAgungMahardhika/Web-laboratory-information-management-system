@@ -10,6 +10,7 @@ use App\Filament\Resources\Samples\RelationManagers\TestResultsRelationManager;
 use App\Filament\Resources\Samples\Schemas\SampleForm;
 use App\Filament\Resources\Samples\Schemas\SampleInfolist;
 use App\Filament\Resources\Samples\Tables\SamplesTable;
+use App\Models\Enums\SampleStatusEnum;
 use App\Models\Sample;
 use App\Models\TestResult;
 use BackedEnum;
@@ -17,6 +18,9 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Override;
 
 class SampleResource extends Resource
 {
@@ -25,6 +29,21 @@ class SampleResource extends Resource
     protected static ?string $label = 'Sampel';
     protected static ?int $navigationSort = 5;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ClipboardDocumentList;
+    protected static ?string $recordTitleAttribute = 'code';
+
+    #[Override]
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Kode Sampel' => $record->code,
+            'Matrix' => $record->labJobItem->description,
+            'status' => SampleStatusEnum::labels()[$record->status]
+        ];
+    }
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['labJobItem']);
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -52,9 +71,9 @@ class SampleResource extends Resource
     {
         return [
             'index' => ListSamples::route('/'),
+            'create' => CreateSample::route('/create'),
             'view' => ViewSample::route('/{record}'),
-            // 'create' => CreateSample::route('/create'),
-            // 'edit' => EditSample::route('/{record}/edit'),
+            'edit' => EditSample::route('/{record}/edit'),
         ];
     }
 }

@@ -12,19 +12,19 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSample extends CreateRecord
 {
     protected static string $resource = SampleResource::class;
-    public function mount(): void
-    {
-        parent::mount();
-        if (request('lab_job_item_id')) {
-            $labJobItem = LabJobItem::find(request('lab_job_item_id'));
-            $sampleService = app(SampleService::class);
-            $sampleCode = $sampleService->generateSampleCode($labJobItem);
-            $this->form->fill([
-                'lab_job_item_id' => request('lab_job_item_id'),
-                'code' =>  $sampleCode,
-                'status' => SampleStatusEnum::default(),
-                'collection_type' => SampleCollectionTypeEnum::default()
-            ]);
-        }
-    }
+    // public function mount(): void
+    // {
+    //     parent::mount();
+    //     if (request('lab_job_item_id')) {
+    //         $labJobItem = LabJobItem::find(request('lab_job_item_id'));
+    //         $sampleService = app(SampleService::class);
+    //         $sampleCode = $sampleService->generateSampleCode($labJobItem);
+    //         $this->form->fill([
+    //             'lab_job_item_id' => request('lab_job_item_id'),
+    //             'code' =>  $sampleCode,
+    //             'status' => SampleStatusEnum::default(),
+    //             'collection_type' => SampleCollectionTypeEnum::default()
+    //         ]);
+    //     }
+    // }
 }

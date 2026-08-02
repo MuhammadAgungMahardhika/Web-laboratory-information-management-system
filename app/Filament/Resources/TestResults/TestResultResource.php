@@ -43,7 +43,7 @@ class TestResultResource extends Resource
         return [
             'Kode Sampel' => $record->sample->code,
             'Parameter' => $record->parameter->long_name,
-            'status' => TestResultStatusEnum::labels()[$record->status]
+            'Status' => TestResultStatusEnum::labels()[$record->status]
         ];
     }
 

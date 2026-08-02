@@ -195,6 +195,9 @@ class LabJobItemsRelationManager extends RelationManager
                     ->label('Sampel')
                     ->listWithLineBreaks()
                     ->limitList(5)
+                    ->url(fn($record) => $record->samples->isNotEmpty()
+                        ? SampleResource::getUrl('view', ['record' => $record->samples->first()])
+                        : null)
                     ->expandableLimitedList(),
                 TextColumn::make('parameterLabJobItems')
                     ->badge()
@@ -280,21 +283,7 @@ class LabJobItemsRelationManager extends RelationManager
                     ->databaseTransaction(),
             ])
             ->recordActions([
-                Action::make('manageSamples')
-                    ->label('Kelola Sampel')
-                    ->icon('heroicon-o-beaker')
-                    ->visible(fn() => $this->ownerRecord->status == JobStatusEnum::InProgress->value)
-                    ->url(function (LabJobItem $record) {
-                        if ($record->samples()->exists()) {
-                            return SampleResource::getUrl('index', [
-                                'filters[lab_job_item_id][value]=' => $record->id,
-                            ]);
-                        }
 
-                        return SampleResource::getUrl('create', [
-                            'lab_job_item_id' => $record->id,
-                        ]);
-                    }),
                 ViewAction::make()->slideOver(),
                 EditAction::make()
                     ->slideOver()
