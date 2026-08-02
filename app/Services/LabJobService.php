@@ -158,15 +158,13 @@ class LabJobService
         // selesai sampling
         if ($newStatus === JobStatusEnum::SamplingCompleted) {
             // Cek apakah semua samples memiliki status Received atau Invalid
-            $hasInvalidStatusSamples = $labJob->samples
-                ->whereNotIn('status', [
-                    SampleStatusEnum::Received->value,
-                    SampleStatusEnum::Invalid->value,
-                    SampleStatusEnum::AnalysisCompleted->value
+            $hasValidStatusSamples = $labJob->samples
+                ->whereIn('status', [
+                    SampleStatusEnum::Collected->value,
                 ])
                 ->isNotEmpty();
 
-            if ($hasInvalidStatusSamples) {
+            if (!$hasValidStatusSamples) {
                 throw new Exception("Tidak bisa mengubah status ke Sampling Completed. Masih ada sampel dengan status selain 'Diterima' atau 'Tidak Valid'.");
             }
             $labJob->status = $newStatus->value;

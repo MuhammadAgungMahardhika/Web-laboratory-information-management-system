@@ -7,7 +7,6 @@ use App\Filament\Resources\LabJobResource;
 use App\Filament\Resources\LabJobResource\Actions\LabJobStatusAction;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\ActionGroup;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Icons\Heroicon;
 
 class ViewLabJob extends ViewRecord

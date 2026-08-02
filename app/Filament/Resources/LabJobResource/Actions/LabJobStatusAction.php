@@ -187,7 +187,7 @@ class LabJobStatusAction
                 }
             });
     }
-    public static function completeSampling(): Action
+    public static function completeSampling(string $url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_COMPLETE_LAB_JOB_SAMPLING);
         return Action::make('Selesai Sampling')
@@ -195,13 +195,16 @@ class LabJobStatusAction
             ->color('info')
             ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized && count($record->samples) > 0)
             ->requiresConfirmation()
-            ->action(function (LabJob $record, LabJobService $labJobService) {
+            ->action(function (LabJob $record, LabJobService $labJobService) use ($url) {
                 try {
                     DB::transaction(function () use ($record, $labJobService) {
                         $labJobService->updateLabJobStatus($record, JobStatusEnum::SamplingCompleted);
                     });
 
                     Notification::make()->title('Status pekerjaan diubah menjadi Sampling Selesai.')->success()->send();
+                    if ($url) {
+                        return redirect()->to($url);
+                    }
                 } catch (Exception $e) {
                     Notification::make()
                         ->title('Gagal menyelesaikan sampling')

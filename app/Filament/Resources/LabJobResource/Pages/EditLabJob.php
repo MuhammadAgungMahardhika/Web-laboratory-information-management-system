@@ -60,7 +60,7 @@ class EditLabJob extends EditRecord
                 ->button()
                 ->color('success'),
             ActionGroup::make([
-                LabJobStatusAction::completeSampling()->after(
+                LabJobStatusAction::completeSampling(static::getResource()::getUrl('view', ['record' => $this->record->id]))->after(
                     function ($livewire) {
                         $livewire->dispatch('refresh');
                     }

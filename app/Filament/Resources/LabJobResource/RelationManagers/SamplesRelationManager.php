@@ -12,6 +12,7 @@ use App\Models\LabJobItem;
 use App\Models\Sample;
 use App\Services\SampleService;
 use Exception;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -235,20 +236,25 @@ class SamplesRelationManager extends RelationManager
                 )->slideOver(),
             ])
             ->recordActions([
-                SampleAction::downloadLabel(),
-                SampleAction::prepare($this->ownerRecord),
+                ActionGroup::make([
+                    SampleAction::downloadLabel(),
+                    SampleAction::prepare($this->ownerRecord),
+                ])->icon(Heroicon::DocumentArrowDown)->label('Aksi'),
                 SampleAction::reopen()->after(
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
                     }
                 ),
-                ViewAction::make()->slideOver(),
+                ViewAction::make()->slideOver()->extraModalFooterActions([
+                    SampleAction::downloadLabel(),
+                    SampleAction::prepare($this->ownerRecord)
+                ]),
                 EditAction::make()->slideOver()->after(
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
                     }
                 )->authorize(fn() =>  $ownerStatus === JobStatusEnum::InProgress->value),
-                LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)),
+                LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->icon(HeroIcon::ArrowRightEndOnRectangle)->openUrlInNewTab(),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
