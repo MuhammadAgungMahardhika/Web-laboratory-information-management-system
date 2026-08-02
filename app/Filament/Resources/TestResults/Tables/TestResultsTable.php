@@ -54,9 +54,9 @@ class TestResultsTable
         return $table
             ->striped()
             ->groups([
-                Group::make('sample.code')->label('KODE SAMPEL'),
-                Group::make('sample.labJobItem.description')->label('Matrix')->titlePrefixedWithLabel(false),
-                Group::make('parameter.long_name')->label('Parameter')->titlePrefixedWithLabel(false),
+                Group::make('sample.code')->label('KODE SAMPEL')->collapsible(),
+                Group::make('sample.labJobItem.description')->label('Matrix')->titlePrefixedWithLabel(false)->collapsible(),
+                Group::make('parameter.long_name')->label('Parameter')->titlePrefixedWithLabel(false)->collapsible(),
             ])
             ->defaultGroup('sample.code')
             ->columns([
