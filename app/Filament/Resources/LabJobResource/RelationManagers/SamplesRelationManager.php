@@ -215,6 +215,7 @@ class SamplesRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+        $ownerStatus =  $this->ownerRecord->status;
         $sampleService  = app(SampleService::class);
         return SampleResource::table($table)
             ->filters([
@@ -246,7 +247,7 @@ class SamplesRelationManager extends RelationManager
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
                     }
-                ),
+                )->authorize(fn() =>  $ownerStatus === JobStatusEnum::InProgress->value),
                 LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
@@ -255,7 +256,7 @@ class SamplesRelationManager extends RelationManager
                         function (RelationManager $livewire) {
                             $livewire->dispatch('refresh');
                         }
-                    ),
+                    )->authorize(fn() =>  $ownerStatus === JobStatusEnum::InProgress->value),
                     BulkAction::make('Siapkan')
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')

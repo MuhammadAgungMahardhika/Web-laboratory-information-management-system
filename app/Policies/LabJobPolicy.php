@@ -17,7 +17,7 @@ class LabJobPolicy
     public function update(User $user, LabJob $labJob): bool
     {
         // Panggil izin dasar dari trait, lalu tambahkan kondisi khusus
-        return static::hasPermission('update', static::getResourceName()) && $labJob->status === JobStatusEnum::PendingStart->value;
+        return static::hasPermission('update', static::getResourceName()) && in_array($labJob->status, [JobStatusEnum::PendingStart->value, JobStatusEnum::InProgress->value]);
     }
     public function delete(User $user, LabJob $labJob): bool
     {

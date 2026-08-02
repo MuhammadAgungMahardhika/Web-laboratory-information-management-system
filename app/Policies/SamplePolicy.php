@@ -16,14 +16,14 @@ class SamplePolicy
     {
         // Panggil izin dasar dari trait, lalu tambahkan kondisi khusus
         return static::hasPermission('update', static::getResourceName()) &&  in_array($sample->status, [
-            SampleStatusEnum::Received->value
+            SampleStatusEnum::Collected->value
         ]);
     }
     public function delete(User $user, Sample $sample): bool
     {
         // Panggil izin dasar dari trait, lalu tambahkan kondisi khusus
         return static::hasPermission('delete', static::getResourceName()) && in_array($sample->status, [
-            SampleStatusEnum::Received->value
+            SampleStatusEnum::Collected->value
         ]);
     }
 }
