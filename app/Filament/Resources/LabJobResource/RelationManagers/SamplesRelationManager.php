@@ -147,7 +147,7 @@ class SamplesRelationManager extends RelationManager
                                     )
                                     ->label('Ppc')
                                     ->searchable()
-                                    ->default(Auth::user()->personel_id)
+                                    ->default(static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE) ? ($personel->id ?? null) : null)
                                     ->preload(),
                                 DatePicker::make('collection_date')
                                     ->label('Tanggal Pengambilan')
@@ -219,6 +219,9 @@ class SamplesRelationManager extends RelationManager
         $ownerStatus =  $this->ownerRecord->status;
         $sampleService  = app(SampleService::class);
         return SampleResource::table($table)
+            ->modifyQueryUsing(function ($query) {
+                return $query->with('collectedByPersonel', 'receivedByPersonel', 'labJobItem.labJob');
+            })
             ->filters([
                 SelectFilter::make('lab_job_item_id')
                     ->label('Nomor Produk Uji')
@@ -238,7 +241,8 @@ class SamplesRelationManager extends RelationManager
             ->recordActions([
                 ActionGroup::make([
                     SampleAction::downloadLabel(),
-                    SampleAction::prepare($this->ownerRecord),
+                    SampleAction::received(),
+                    SampleAction::prepare(),
                 ])->icon(Heroicon::DocumentArrowDown)->label('Aksi'),
                 SampleAction::reopen()->after(
                     function (RelationManager $livewire) {
@@ -247,7 +251,7 @@ class SamplesRelationManager extends RelationManager
                 ),
                 ViewAction::make()->slideOver()->extraModalFooterActions([
                     SampleAction::downloadLabel(),
-                    SampleAction::prepare($this->ownerRecord)
+                    SampleAction::prepare()
                 ]),
                 EditAction::make()->slideOver()->after(
                     function (RelationManager $livewire) {

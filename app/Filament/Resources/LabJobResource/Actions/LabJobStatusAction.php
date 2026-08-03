@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\LabJobResource\Actions;
 
 use App\Models\Enums\JobStatusEnum;
+use App\Models\Enums\SampleStatusEnum;
 use App\Models\LabJob;
 use App\Services\LabJobService;
 
@@ -48,13 +49,14 @@ class LabJobStatusAction
     }
     public static function previewTaskLetter(): Action
     {
+
         $authorized = static::isAuthorized(static::PERMISSION_PREVIEW_LAB_JOB_TASK_LETTER);
         return Action::make('Surat Tugas')
-            ->label(fn($record) => $record->labJobPersonels->isNotEmpty() ? 'Surat Tugas' : 'Tidak Ada Surat Tugas')
+            ->label(fn($record) => 'Surat Tugas')
             ->color(Color::Gray) // Menggunakan warna biru Filament
             ->icon(Heroicon::DocumentDuplicate)
             ->slideOver()
-            ->disabled(fn($record) => !$record->labJobPersonels->isNotEmpty())
+            ->disabled(fn($record) => $record->labJobPersonels->isEmpty())
             ->authorize(fn(LabJob $record) => $record->status !== JobStatusEnum::PendingStart->value && $authorized)
             ->modalHeading('Pratinjau Surat Tugas')
             ->modalSubmitAction(false)
@@ -190,10 +192,18 @@ class LabJobStatusAction
     public static function completeSampling(string $url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_COMPLETE_LAB_JOB_SAMPLING);
+        $allowedStatuses = [
+            SampleStatusEnum::Received->value,
+            SampleStatusEnum::Invalid->value,
+        ];
+
         return Action::make('Selesai Sampling')
             ->icon('heroicon-o-clipboard-document-check')
             ->color('info')
-            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized && count($record->samples) > 0)
+            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized &&  $record->samples
+                ->pluck('status')
+                ->diff($allowedStatuses)
+                ->isEmpty())
             ->requiresConfirmation()
             ->action(function (LabJob $record, LabJobService $labJobService) use ($url) {
                 try {

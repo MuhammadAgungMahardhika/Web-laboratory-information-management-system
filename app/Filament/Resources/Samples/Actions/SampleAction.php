@@ -50,13 +50,41 @@ class SampleAction
             ->color('gray')
             ->openUrlInNewTab();
     }
-    public static function prepare(LabJob $owner = null): Action
+    public static function received(): Action
+    {
+        $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
+        return  Action::make('Diterima')
+            ->icon(Heroicon::CheckCircle)
+            ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
+            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Collected->value &&  $authorized && $record->labJob()->status === JobStatusEnum::InProgress->value)
+            ->requiresConfirmation()
+            ->action(function (Sample $record, SampleService $sampleService) {
+                try {
+                    DB::transaction(function () use ($record, $sampleService) {
+                        $sampleService->updateSampleStatus($record, SampleStatusEnum::Received);
+                    });
+                    Notification::make()->title('Status sampel diubah menjadi diterima.')->success()->send();
+                } catch (Exception $e) {
+                    Notification::make()
+                        ->title('Gagal mengubah status diterima')
+                        ->body('Terjadi kesalahan: ' . $e->getMessage())
+                        ->danger()
+                        ->send();
+                    Log::error('Gagal mengubah status diterima', [
+                        'sample_id' => $record->id,
+                        'error' => $e->getMessage(),
+                        'user_id' => Auth::id(),
+                    ]);
+                }
+            });
+    }
+    public static function prepare(): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
         return  Action::make('Siapkan')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
-            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Collected->value &&  $authorized && $owner?->status === JobStatusEnum::SamplingCompleted->value)
+            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $authorized && $record->labJob()->status === JobStatusEnum::SamplingCompleted->value)
             ->requiresConfirmation()
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {

@@ -6,6 +6,7 @@ use App\Filament\Resources\Samples\Actions\SampleAction;
 use App\Models\Enums\SampleStatusEnum;
 use App\Models\Sample;
 use App\Services\SampleService;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -203,6 +204,11 @@ class SamplesTable
 
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([
+                ActionGroup::make([
+                    SampleAction::downloadLabel(),
+                    SampleAction::received(),
+                    SampleAction::prepare(),
+                ]),
                 SampleAction::downloadLabel(),
                 SampleAction::prepare(),
                 ViewAction::make()->slideOver(),

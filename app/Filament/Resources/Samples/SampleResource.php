@@ -55,6 +55,12 @@ class SampleResource extends Resource
     //     return SampleInfolist::configure($schema);
     // }
 
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('collectedByPersonel', 'receivedByPersonel', 'labJobItem.labJob');
+    }
+
     public static function table(Table $table): Table
     {
         return SamplesTable::configure($table);

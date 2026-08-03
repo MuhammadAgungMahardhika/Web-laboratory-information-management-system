@@ -160,7 +160,8 @@ class LabJobService
             // Cek apakah semua samples memiliki status Received atau Invalid
             $hasValidStatusSamples = $labJob->samples
                 ->whereIn('status', [
-                    SampleStatusEnum::Collected->value,
+                    SampleStatusEnum::Received->value,
+                    SampleStatusEnum::Invalid->value,
                 ])
                 ->isNotEmpty();
 

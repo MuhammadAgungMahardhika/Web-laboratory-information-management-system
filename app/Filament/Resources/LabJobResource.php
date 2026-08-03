@@ -92,6 +92,11 @@ class LabJobResource extends Resource
         return parent::getGlobalSearchEloquentQuery()->with(['quotation.customer']);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['quotation.customer', 'samples', 'labJobPersonels.personel']);
+    }
+
 
     // public static function getNavigationBadge(): ?string
     // {
@@ -152,6 +157,7 @@ class LabJobResource extends Resource
 
                     ])->columnSpanFull()->columns(2),
                 Repeater::make('labJobPersonels')
+
                     ->label('ppc')
                     ->addActionLabel('Tambah ppc')
                     ->relationship()
@@ -262,7 +268,6 @@ class LabJobResource extends Resource
     {
         return [
             SamplesRelationManager::class,
-            // LabJobPersonelsRelationManager::class,
             LabJobItemsRelationManager::class,
         ];
     }

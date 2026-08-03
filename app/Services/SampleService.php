@@ -61,12 +61,12 @@ class SampleService
 
             /*
             |--------------------------------------------------------------------------
-            | RECEIVED
+            | COLLECTED
             |--------------------------------------------------------------------------
             */
-            case SampleStatusEnum::Received:
+            case SampleStatusEnum::Collected:
 
-                if ($sample->status !== SampleStatusEnum::Prepared->value) {
+                if (in_array($sample->status, [SampleStatusEnum::Received->value, SampleStatusEnum::Prepared->value, SampleStatusEnum::AnalysisCompleted->value])) {
                     throw new Exception(
                         "Status sampel hanya dapat dikembalikan ke Received dari Prepared."
                     );
@@ -81,9 +81,31 @@ class SampleService
             | PREPARED
             |--------------------------------------------------------------------------
             */
+                /*
+            |--------------------------------------------------------------------------
+            | RECEIVED
+            |--------------------------------------------------------------------------
+            */
+            case SampleStatusEnum::Received:
+
+                if ($sample->status !== SampleStatusEnum::Collected->value) {
+                    throw new Exception(
+                        "Status sampel tidak dapat diubah menjadi Received."
+                    );
+                }
+
+                $sample->status = SampleStatusEnum::Received->value;
+
+                return $sample->save();
+
+                /*
+            |--------------------------------------------------------------------------
+            | PREPARED
+            |--------------------------------------------------------------------------
+            */
             case SampleStatusEnum::Prepared:
 
-                if (! in_array($sample->status, [SampleStatusEnum::Received->value, SampleStatusEnum::AnalysisCompleted->value,])) {
+                if ($sample->status !== SampleStatusEnum::Received->value) {
                     throw new Exception(
                         "Status sampel tidak dapat diubah menjadi Prepared."
                     );
