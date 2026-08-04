@@ -243,7 +243,7 @@ class SamplesRelationManager extends RelationManager
                     SampleAction::downloadLabel(),
                     SampleAction::received(),
                     SampleAction::prepare(),
-                ])->icon(Heroicon::DocumentArrowDown)->label('Aksi'),
+                ])->label('Aksi')->dropdownPlacement("right-top"),
                 SampleAction::reopen()->after(
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
