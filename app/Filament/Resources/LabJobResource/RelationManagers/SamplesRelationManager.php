@@ -251,6 +251,7 @@ class SamplesRelationManager extends RelationManager
                 ),
                 ViewAction::make()->slideOver()->extraModalFooterActions([
                     SampleAction::downloadLabel(),
+                    SampleAction::received(),
                     SampleAction::prepare()
                 ]),
                 EditAction::make()->slideOver()->after(

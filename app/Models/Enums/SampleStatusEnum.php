@@ -72,7 +72,7 @@ enum SampleStatusEnum: int
 
         return match ($status) {
             self::Collected->value => '#6B7280',
-            self::Received->value => '#6B7280',
+            self::Received->value => '#10B981',
             self::Prepared->value => '#F59E0B',
             self::AnalysisCompleted->value =>  '#10B981',
             self::Invalid->value => '#EF4444',

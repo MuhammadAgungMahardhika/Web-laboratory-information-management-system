@@ -12,6 +12,7 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -132,33 +133,14 @@ class TestResultForm
 
                                 // ================= SECTION UTAMA: DATA HASIL UJI (ANALIS) =================
                                 Section::make([
+                                    TextEntry::make('sample.labJobItem.description_code')
+                                        ->label('Produk Uji'),
 
+                                    TextEntry::make('sample.code')
+                                        ->label('Kode Sampel'),
 
-                                    Select::make('sample_id')
-                                        ->label('Kode Sampel')
-                                        ->relationship('sample', 'code')
-                                        ->required()
-                                        ->searchable()
-                                        ->disabledOn(['view', 'edit'])
-                                        ->preload(),
-
-                                    Select::make('parameter_id')
-                                        ->label('Parameter')
-                                        ->required()
-                                        ->relationship('parameter', 'code', modifyQueryUsing: function ($query, Get $get) {
-                                            $sampleId = $get('sample_id');
-
-                                            $query->whereHas('parameterLabJobItems', function ($q) use ($sampleId) {
-                                                return $q->whereHas('labJobItem', function ($a) use ($sampleId) {
-                                                    return $a->whereHas('samples', function ($b) use ($sampleId) {
-                                                        return $b->where('id', $sampleId);
-                                                    });
-                                                });
-                                            });
-                                        })
-                                        ->searchable()
-                                        ->disabledOn(['view', 'edit'])
-                                        ->preload(),
+                                    TextEntry::make('parameter.code')
+                                        ->label('Parameter'),
 
                                     DatePicker::make('test_date')
                                         ->default(now())

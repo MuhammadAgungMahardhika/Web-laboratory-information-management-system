@@ -11,6 +11,7 @@ use Exception;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
+use Filament\Resources\RelationManagers\RelationManager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Filament\Support\Icons\Heroicon;
@@ -57,6 +58,11 @@ class SampleAction
             ->icon(Heroicon::CheckCircle)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
             ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Collected->value &&  $authorized && $record->labJob()->status === JobStatusEnum::InProgress->value)
+            ->after(
+                function (RelationManager $livewire) {
+                    $livewire->dispatch('refresh');
+                }
+            )
             ->requiresConfirmation()
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {
@@ -86,6 +92,11 @@ class SampleAction
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
             ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $authorized && $record->labJob()->status === JobStatusEnum::SamplingCompleted->value)
             ->requiresConfirmation()
+            ->after(
+                function (RelationManager $livewire) {
+                    $livewire->dispatch('refresh');
+                }
+            )
             ->action(function (Sample $record, SampleService $sampleService) {
                 try {
                     DB::transaction(function () use ($record, $sampleService) {
@@ -120,6 +131,11 @@ class SampleAction
                     && $authorized
             )
             ->requiresConfirmation()
+            ->after(
+                function (RelationManager $livewire) {
+                    $livewire->dispatch('refresh');
+                }
+            )
             ->modalHeading('Reopen Sampel')
             ->modalDescription('Sampel akan dibuka kembali untuk proses analisa ulang. Seluruh hasil uji akan dikembalikan ke status revisi dan harus melalui proses validasi kembali.')
             ->schema([
