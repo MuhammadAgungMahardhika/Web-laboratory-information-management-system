@@ -30,8 +30,8 @@ enum JobStatusEnum: int
         return [
             self::PendingStart->value => 'Menunggu Mulai',
             self::InProgress->value => 'Proses Sampling',
-            self::SamplingCompleted->value => 'Sampling Selesai',
-            self::AnalysisCompleted->value => 'Analisis Selesai',
+            self::SamplingCompleted->value => 'Selesai Sampling',
+            self::AnalysisCompleted->value => 'Selesai Analisis',
             self::ValidationCompleted->value => 'Validasi Selesai',
             self::ReportGenerated->value => 'Laporan Dibuat',
             self::ReportApproved->value => 'Laporan Disetujui',

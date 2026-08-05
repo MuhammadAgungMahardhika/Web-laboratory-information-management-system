@@ -62,14 +62,13 @@ class TestResultApprovalService
      */
     public function getPendingApproval(TestResult $testResult, ?int $level = null): ?TestResultApproval
     {
-        $query = $testResult->testResultApprovals()
-            ->where('status', TestResultApprovalStatusEnum::Pending->value);
+        $approvals = $testResult->testResultApprovals;
 
         if ($level !== null) {
-            $query->where('approval_level', $level);
+            $approvals = $approvals->where('approval_level', $level);
         }
 
-        return $query->orderBy('approval_level')->latest('id')->first();
+        return $approvals->first();
     }
 
     /**

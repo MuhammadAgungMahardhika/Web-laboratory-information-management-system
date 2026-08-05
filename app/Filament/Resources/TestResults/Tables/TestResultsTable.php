@@ -275,7 +275,7 @@ class TestResultsTable
                     TestResultAction::reject()->cancelParentActions(),
                 ])
                     ->modalWidth(Width::SixExtraLarge)
-                    ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->code}")
+                    // ->modalHeading(fn($record) => "{$record->parameter->code} - Sampel {$record->sample->code}")
                     ->modalIcon(Heroicon::Beaker)
                     ->modalIconColor(fn($record) => $record && $record->status ? TestResultStatusEnum::color($record->status) : 'primary'),
             ], position: RecordActionsPosition::BeforeColumns)

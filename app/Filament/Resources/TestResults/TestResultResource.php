@@ -49,7 +49,10 @@ class TestResultResource extends Resource
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
-        return parent::getGlobalSearchEloquentQuery()->with(['sample', 'parameter']);
+        return parent::getGlobalSearchEloquentQuery()->with(['sample.labJobItem', 'parameter', 'testResultHistories.personel',    'testResultApprovals' => fn($query) => $query
+            ->where('status', TestResultApprovalStatusEnum::Pending->value)
+            ->orderBy('approval_level')
+            ->orderByDesc('id'),]);
     }
 
 
@@ -122,7 +125,10 @@ class TestResultResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->with(['testMethod']);
+        $query = parent::getEloquentQuery()->with(['validatorPersonel', 'analystPersonel', 'testMethod', 'sample.labJobItem', 'parameter', 'testResultHistories.personel',    'testResultApprovals' => fn($query) => $query
+            ->where('status', TestResultApprovalStatusEnum::Pending->value)
+            ->orderBy('approval_level')
+            ->orderByDesc('id'),]);
         $user = Auth::user();
 
         // Approver: lihat semua record (tidak dibatasi specialization),
