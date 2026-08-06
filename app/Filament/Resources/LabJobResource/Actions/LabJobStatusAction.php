@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Resources\RelationManagers\RelationManager;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Filament\Support\Colors\Color;
@@ -106,10 +107,13 @@ class LabJobStatusAction
         return Action::make('Mulai Job')
             ->icon('heroicon-o-play')
             ->color('success')
-            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::PendingStart->value && $authorized)
+            ->authorize(function (LabJob $record, LabJobService $labJobService) use ($authorized) {
+                return $record->status === JobStatusEnum::PendingStart->value
+                    && $authorized
+                    && $labJobService->canStartJob($record);
+            })
             ->requiresConfirmation()
             ->modalHeading('Konfirmasi Memulai Job')
-
             ->schema(function (LabJob $record) {
                 $fields = [
                     // --- FIELDS BARU UNTUK START & END DATE ---
@@ -169,6 +173,11 @@ class LabJobStatusAction
                         Notification::make()->title('Gagal: Konfirmasi penugasan diperlukan.')->danger()->send();
                         return;
                     }
+                    if (! $labJobService->canStartJob($record)) {
+                        throw new Exception(
+                            'Lab Job belum memiliki produk uji. Tambahkan minimal satu produk uji sebelum memulai pekerjaan.'
+                        );
+                    }
 
                     DB::transaction(function () use ($record, $labJobService, $data) {
                         // Update status dan tanggal menggunakan service
@@ -192,33 +201,43 @@ class LabJobStatusAction
     public static function completeSampling(string $url = null): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_COMPLETE_LAB_JOB_SAMPLING);
-        $allowedStatuses = [
-            SampleStatusEnum::Received->value,
-            SampleStatusEnum::Invalid->value,
-        ];
-
         return Action::make('Selesai Sampling')
             ->icon('heroicon-o-clipboard-document-check')
             ->color('info')
-            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::InProgress->value && $authorized &&  $record->samples
-                ->pluck('status')
-                ->diff($allowedStatuses)
-                ->isEmpty())
+            ->authorize(function (LabJob $record, LabJobService $labJobService) use ($authorized) {
+                return $record->status === JobStatusEnum::InProgress->value
+                    && $authorized
+                    && $labJobService->canCompleteSampling($record);
+            })
             ->requiresConfirmation()
             ->action(function (LabJob $record, LabJobService $labJobService) use ($url) {
                 try {
                     DB::transaction(function () use ($record, $labJobService) {
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::SamplingCompleted);
+
+                        if (! $labJobService->canCompleteSampling($record)) {
+                            throw new \Exception(
+                                'Masih terdapat produk uji yang belum memiliki sampel atau status sampel tidak valid.'
+                            );
+                        }
+
+                        $labJobService->updateLabJobStatus(
+                            $record,
+                            JobStatusEnum::SamplingCompleted
+                        );
                     });
 
-                    Notification::make()->title('Status pekerjaan diubah menjadi Sampling Selesai.')->success()->send();
+                    Notification::make()
+                        ->title('Status pekerjaan diubah menjadi Sampling Selesai.')
+                        ->success()
+                        ->send();
+
                     if ($url) {
                         return redirect()->to($url);
                     }
                 } catch (Exception $e) {
                     Notification::make()
                         ->title('Gagal menyelesaikan sampling')
-                        ->body('Terjadi kesalahan: ' . $e->getMessage())
+                        ->body($e->getMessage())
                         ->danger()
                         ->send();
                 }
@@ -454,6 +473,48 @@ class LabJobStatusAction
                 static::downloadAnalystTestReport(),
                 // static::sendAnalystTestReport(),
             ])->modalFooterActionsAlignment('right');
+    }
+
+    public static function resetToQuotationSnapshot(LabJob $labJob): Action
+    {
+
+        return Action::make('resetToQuotationSnapshot')
+            ->label('Kembalikan Rincian Lab Job')
+            ->icon(Heroicon::ArrowUturnLeft)
+            ->color('warning')
+            ->requiresConfirmation()
+            ->modalHeading('Kembalikan Rincian Lab Job?')
+            ->modalDescription('Ini akan menghapus semua rincian pekerjaan saat ini dan menggantinya dengan rincian dari penawaran awal.')
+            ->modalSubmitActionLabel('Ya, Kembalikan')
+
+            ->action(function (LabJobService $labJobService) use ($labJob) {
+                try {
+
+                    DB::transaction(function () use ($labJobService, $labJob) {
+                        $labJobService->resetToQuotationSnapshot($labJob);
+                    });
+
+                    Notification::make()
+                        ->title('Rincian pekerjaan berhasil dikembalikan.')
+                        ->success()
+                        ->send();
+                } catch (\Exception $e) {
+                    Log::error('Gagal mengembalikan rincian pekerjaan: ' . $e->getMessage());
+
+                    Notification::make()
+                        ->title('Gagal mengembalikan rincian pekerjaan.')
+                        ->body($e->getMessage())
+                        ->danger()
+                        ->send();
+                }
+            })
+            ->after(function (RelationManager $livewire) {
+                $livewire->dispatch('refresh');
+            })
+            ->visible(function (RelationManager $livewire) use ($labJob) {
+                return ! $livewire->isReadOnly()
+                    && $labJob->status === JobStatusEnum::PendingStart->value;
+            });
     }
     public static function downloadAnalystTestReport(): Action
     {

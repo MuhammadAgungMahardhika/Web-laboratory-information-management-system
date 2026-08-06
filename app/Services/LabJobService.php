@@ -193,4 +193,32 @@ class LabJobService
         // Simpan perubahan ke database
         return $isSuccessed;
     }
+
+    public function canStartJob(LabJob $labJob): bool
+    {
+        return $labJob->labJobItems->isNotEmpty();
+    }
+    public function canCompleteSampling(LabJob $labJob): bool
+    {
+        $allowedStatuses = [
+            SampleStatusEnum::Received->value,
+            SampleStatusEnum::Invalid->value,
+        ];
+
+        $labJob->loadMissing([
+            'labJobItems.samples',
+            'samples',
+        ]);
+
+        // Tidak boleh ada produk uji yang belum memiliki sampel
+        if ($labJob->labJobItems->contains(fn($item) => $item->samples->isEmpty())) {
+            return false;
+        }
+
+        // Semua sampel harus masih Received atau Invalid
+        return $labJob->samples
+            ->pluck('status')
+            ->diff($allowedStatuses)
+            ->isEmpty();
+    }
 }

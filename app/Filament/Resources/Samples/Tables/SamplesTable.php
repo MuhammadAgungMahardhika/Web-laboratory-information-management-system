@@ -28,6 +28,11 @@ use Illuminate\Support\HtmlString;
 
 class SamplesTable
 {
+
+    protected static function isAuthorized(string $permission): bool
+    {
+        return Auth::user()->can($permission);
+    }
     public static function configure(Table $table): Table
     {
         $sampleService  = app(SampleService::class);
@@ -217,10 +222,47 @@ class SamplesTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()->authorize(fn() => Auth::user()->can('delete-sample')),
+                    BulkAction::make("Diterima")
+                        ->icon(Heroicon::OutlinedDocumentCheck)
+                        ->color('info')
+                        ->requiresConfirmation()
+                        ->authorize(static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE))
+                        ->action(function (Collection $records)  use ($sampleService) {
+                            $successCount = 0;
+                            $failedCount = 0;
+
+                            foreach ($records as $record) {
+                                try {
+                                    DB::transaction(function () use ($sampleService, $record) {
+                                        $sampleService->updateSampleStatus($record, SampleStatusEnum::Received);
+                                    });
+
+                                    $successCount++;
+                                } catch (\Exception $e) {
+                                    $failedCount++;
+                                }
+                            }
+                            if ($successCount > 0) {
+                                Notification::make()
+                                    ->title("Berhasil mengubah status sampel")
+                                    ->body("{$successCount} sample berhasil untuk diubah.")
+                                    ->success()
+                                    ->send();
+                            }
+                            if ($failedCount > 0) {
+                                Notification::make()
+                                    ->title("Gagal mengubah status sampel")
+                                    ->body("{$failedCount} sample gagal untuk diubah.")
+                                    ->danger()
+                                    ->send();
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion(),
                     BulkAction::make('Siapkan')
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
                         ->requiresConfirmation()
+                        ->authorize(static::isAuthorized(SampleAction::PERMISSION_PREPARE))
                         ->action(function (Collection $records)  use ($sampleService) {
                             $successCount = 0;
                             $failedCount = 0;
@@ -238,15 +280,15 @@ class SamplesTable
                             }
                             if ($successCount > 0) {
                                 Notification::make()
-                                    ->title("Berhasil menyiapkan sampel uji")
-                                    ->body("{$successCount} sample berhasil untuk disiapkan.")
+                                    ->title("Berhasil mengubah status sampel")
+                                    ->body("{$successCount} sample berhasil untuk diubah.")
                                     ->success()
                                     ->send();
                             }
                             if ($failedCount > 0) {
                                 Notification::make()
-                                    ->title("Gagal menyiapkan sampel uji")
-                                    ->body("{$failedCount} sample gagal untuk disiapkan.")
+                                    ->title("Gagal mengubah status sampel")
+                                    ->body("{$failedCount} sample gagal untuk diubah.")
                                     ->danger()
                                     ->send();
                             }

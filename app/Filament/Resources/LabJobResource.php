@@ -94,7 +94,7 @@ class LabJobResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['quotation.customer', 'samples', 'labJobPersonels.personel']);
+        return parent::getEloquentQuery()->with(['quotation.customer', 'samples', 'labJobPersonels.personel', 'labJobItems']);
     }
 
 

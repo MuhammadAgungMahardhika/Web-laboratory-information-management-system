@@ -9,6 +9,7 @@ use App\Models\Sample;
 use App\Services\SampleService;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -17,13 +18,15 @@ use Illuminate\Support\Facades\Log;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Filament\Support\Colors\Color;
+use Illuminate\Database\Eloquent\Collection;
 
 class SampleAction
 {
     protected static string $labelDownloadUrl = 'sample_labels.download';
     protected static string $taskLetterPreviewUrl = 'task_letters.preview';
 
-
+    public const PERMISSION_COLLECTING_SAMPLE = 'collecting-sample';
+    public const PERMISSION_RECEIVING_SAMPLE = 'receiving-sample';
     public const PERMISSION_DOWNLOAD_LABEL = 'download-label-sample';
     public const PERMISSION_PREPARE = 'prepare-sample';
 
@@ -53,7 +56,7 @@ class SampleAction
     }
     public static function received(): Action
     {
-        $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
+        $authorized = static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE);
         return  Action::make('Diterima')
             ->icon(Heroicon::CheckCircle)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
@@ -180,5 +183,113 @@ class SampleAction
                     ]);
                 }
             });
+    }
+
+    // bulk
+    public static function bulkReceived(LabJob $labJob): BulkAction
+    {
+        $sampleService = app(SampleService::class);
+
+        return BulkAction::make('Diterima')
+            ->icon(Heroicon::OutlinedDocumentCheck)
+            ->color('info')
+            ->requiresConfirmation()
+            ->after(fn(RelationManager $livewire) => $livewire->dispatch('refresh'))
+            ->authorize(
+                $labJob->status === JobStatusEnum::InProgress->value
+                    && static::isAuthorized(static::PERMISSION_PREPARE)
+            )
+            ->action(function (Collection $records) use ($sampleService) {
+                $successCount = 0;
+                $failedCount = 0;
+
+                foreach ($records as $record) {
+                    try {
+                        DB::transaction(function () use ($sampleService, $record) {
+                            $sampleService->updateSampleStatus(
+                                $record,
+                                SampleStatusEnum::Received
+                            );
+                        });
+
+                        $successCount++;
+                    } catch (\Throwable $e) {
+                        $failedCount++;
+                    }
+                }
+
+                static::sendBulkNotification(
+                    $successCount,
+                    $failedCount,
+                    'mengubah status sampel',
+                    'sample berhasil diubah'
+                );
+            })
+            ->deselectRecordsAfterCompletion();
+    }
+
+    public static function bulkPrepare(LabJob $labJob): BulkAction
+    {
+        $sampleService = app(SampleService::class);
+
+        return BulkAction::make('Siapkan')
+            ->icon(Heroicon::OutlinedDocumentCheck)
+            ->color('info')
+            ->requiresConfirmation()
+            ->after(fn(RelationManager $livewire) => $livewire->dispatch('refresh'))
+            ->authorize(
+                $labJob->status === JobStatusEnum::SamplingCompleted->value
+                    && static::isAuthorized(static::PERMISSION_PREPARE)
+            )
+            ->action(function (Collection $records) use ($sampleService) {
+                $successCount = 0;
+                $failedCount = 0;
+
+                foreach ($records as $record) {
+                    try {
+                        DB::transaction(function () use ($sampleService, $record) {
+                            $sampleService->updateSampleStatus(
+                                $record,
+                                SampleStatusEnum::Prepared
+                            );
+                        });
+
+                        $successCount++;
+                    } catch (\Throwable $e) {
+                        $failedCount++;
+                    }
+                }
+
+                static::sendBulkNotification(
+                    $successCount,
+                    $failedCount,
+                    'menyiapkan sampel',
+                    'sample berhasil disiapkan'
+                );
+            })
+            ->deselectRecordsAfterCompletion();
+    }
+
+    private static function sendBulkNotification(
+        int $successCount,
+        int $failedCount,
+        string $title,
+        string $successBody,
+    ): void {
+        if ($successCount > 0) {
+            Notification::make()
+                ->title("Berhasil {$title}")
+                ->body("{$successCount} {$successBody}.")
+                ->success()
+                ->send();
+        }
+
+        if ($failedCount > 0) {
+            Notification::make()
+                ->title("Gagal {$title}")
+                ->body("{$failedCount} sample gagal diproses.")
+                ->danger()
+                ->send();
+        }
     }
 }

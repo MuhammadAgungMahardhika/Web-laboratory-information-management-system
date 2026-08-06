@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LabJobResource\RelationManagers;
 
+use App\Filament\Resources\LabJobResource\Actions\LabJobStatusAction;
 use App\Filament\Resources\Samples\SampleResource;
 use App\Models\Enums\JobStatusEnum;
 use Filament\Schemas\Schema;
@@ -243,26 +244,7 @@ class LabJobItemsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Action::make('resetToQuotationSnapshot')
-                    ->label('Kembalikan Rincian Lab Job')
-                    ->icon(Heroicon::ArrowUturnLeft)
-                    ->color('warning')
-                    ->requiresConfirmation()
-                    ->modalHeading('Kembalikan Rincian Lab Job?')
-                    ->modalDescription('Ini akan menghapus semua rincian pekerjaan saat ini dan menggantinya dengan rincian dari penawaran awal.')
-                    ->modalSubmitActionLabel('Ya, Kembalikan')
-                    ->action(function (LabJobService $labJobService) {
-                        try {
-                            $record = $this->ownerRecord; // Ambil record induk
-                            DB::transaction(function () use ($record, $labJobService) {
-                                $labJobService->resetToQuotationSnapshot($record);
-                            });
-                            return Notification::make()->title('Rincian pekerjaan berhasil dikembalikan.')->success()->send();
-                        } catch (\Exception $e) {
-                            Log::error('Gagal mengembalikan rincian pekerjaan: ' . $e->getMessage());
-                            return Notification::make()->title('Gagal mengembalikan rincian pekerjaan.')->danger()->body('Terjadi kesalahan: ' . $e->getMessage())->send();
-                        }
-                    })->visible(fn() => !$this->isReadOnly() && $this->ownerRecord->status === JobStatusEnum::PendingStart->value),
+                LabJobStatusAction::resetToQuotationSnapshot($this->ownerRecord),
                 CreateAction::make()
                     ->mutateDataUsing(function (
                         array $data,

@@ -53,8 +53,7 @@ class SamplesRelationManager extends RelationManager
     protected static string $relationship = 'samples';
     protected static ?string $label = "Sampel";
     protected static ?string $title = "Sampel";
-    public const PERMISSION_COLLECTING_SAMPLE = 'collecting-sample';
-    public const PERMISSION_RECEIVING_SAMPLE = 'receiving-sample';
+
     protected $listeners = ['refresh'];
 
     public function isReadOnly(): bool
@@ -130,7 +129,7 @@ class SamplesRelationManager extends RelationManager
                         ->options(SampleCollectionTypeEnum::labels())
                         ->live()
                         ->inline(),
-                ])->columnSpanFull()->columns(1)->visible(fn() => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->inlineLabel(),
+                ])->columnSpanFull()->columns(1)->visible(fn() => static::isAuthorized(SampleAction::PERMISSION_COLLECTING_SAMPLE))->inlineLabel(),
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')
@@ -147,7 +146,7 @@ class SamplesRelationManager extends RelationManager
                                     )
                                     ->label('Ppc')
                                     ->searchable()
-                                    ->default(static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE) ? ($personel->id ?? null) : null)
+                                    ->default(static::isAuthorized(SampleAction::PERMISSION_COLLECTING_SAMPLE) ? ($personel->id ?? null) : null)
                                     ->preload(),
                                 DatePicker::make('collection_date')
                                     ->label('Tanggal Pengambilan')
@@ -168,7 +167,7 @@ class SamplesRelationManager extends RelationManager
                                     ->label('Catatan Pengambilan'),
 
                             ])->visible(
-                                fn(Get $get) => static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE)
+                                fn(Get $get) => static::isAuthorized(SampleAction::PERMISSION_COLLECTING_SAMPLE)
                                     && SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ),
                         Tab::make('penerimaan')
@@ -181,7 +180,7 @@ class SamplesRelationManager extends RelationManager
                                 Select::make('received_by_personel_id')
                                     ->relationship('receivedByPersonel', 'fullname')
                                     ->label('Penerima')
-                                    ->default(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) ? ($personel->id ?? null) : null)
+                                    ->default(static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE) ? ($personel->id ?? null) : null)
                                     ->searchable()
                                     ->preload(),
                                 DatePicker::make('received_date')
@@ -205,7 +204,7 @@ class SamplesRelationManager extends RelationManager
                                     ->label('Volume Sampel')
                                     ->maxLength(50)
                                     ->nullable(),
-                            ])->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
+                            ])->visible(fn() => static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE)),
                     ])
                     ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
@@ -259,7 +258,7 @@ class SamplesRelationManager extends RelationManager
                         $livewire->dispatch('refresh');
                     }
                 )->authorize(fn() =>  $ownerStatus === JobStatusEnum::InProgress->value),
-                LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(static::PERMISSION_COLLECTING_SAMPLE))->icon(HeroIcon::ArrowRightEndOnRectangle)->openUrlInNewTab(),
+                LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(SampleAction::PERMISSION_COLLECTING_SAMPLE))->icon(HeroIcon::ArrowRightEndOnRectangle)->openUrlInNewTab(),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -268,10 +267,52 @@ class SamplesRelationManager extends RelationManager
                             $livewire->dispatch('refresh');
                         }
                     )->authorize(fn() =>  $ownerStatus === JobStatusEnum::InProgress->value),
+                    BulkAction::make("Diterima")
+                        ->icon(Heroicon::OutlinedDocumentCheck)
+                        ->color('info')
+                        ->requiresConfirmation()
+                        ->after(function (RelationManager $livewire) {
+                            $livewire->dispatch('refresh');
+                        })
+                        ->authorize($this->ownerRecord->status === JobStatusEnum::InProgress->value && static::isAuthorized(SampleAction::PERMISSION_PREPARE))
+                        ->action(function (Collection $records)  use ($sampleService) {
+                            $successCount = 0;
+                            $failedCount = 0;
+
+                            foreach ($records as $record) {
+                                try {
+                                    DB::transaction(function () use ($sampleService, $record) {
+                                        $sampleService->updateSampleStatus($record, SampleStatusEnum::Received);
+                                    });
+
+                                    $successCount++;
+                                } catch (\Exception $e) {
+                                    $failedCount++;
+                                }
+                            }
+                            if ($successCount > 0) {
+                                Notification::make()
+                                    ->title("Berhasil mengubah status sampel")
+                                    ->body("{$successCount} sample berhasil untuk diubah.")
+                                    ->success()
+                                    ->send();
+                            }
+                            if ($failedCount > 0) {
+                                Notification::make()
+                                    ->title("Gagal mengubah status sampel")
+                                    ->body("{$failedCount} sample gagal untuk diubah.")
+                                    ->danger()
+                                    ->send();
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion(),
                     BulkAction::make('Siapkan')
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
                         ->requiresConfirmation()
+                        ->after(function (RelationManager $livewire) {
+                            $livewire->dispatch('refresh');
+                        })
                         ->authorize($this->ownerRecord->status === JobStatusEnum::SamplingCompleted->value && static::isAuthorized(SampleAction::PERMISSION_PREPARE))
                         ->action(function (Collection $records) use ($sampleService) {
                             $successCount = 0;
