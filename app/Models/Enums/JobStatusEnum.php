@@ -28,9 +28,9 @@ enum JobStatusEnum: int
     public static function labels(): array
     {
         return [
-            self::PendingStart->value => 'Menunggu Mulai',
+            self::PendingStart->value => 'Draf',
             self::InProgress->value => 'Proses Sampling',
-            self::SamplingCompleted->value => 'Selesai Sampling',
+            self::SamplingCompleted->value => 'Proses Analisis',
             self::AnalysisCompleted->value => 'Selesai Analisis',
             self::ValidationCompleted->value => 'Validasi Selesai',
             self::ReportGenerated->value => 'Laporan Dibuat',
