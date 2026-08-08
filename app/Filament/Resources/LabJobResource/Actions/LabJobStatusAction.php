@@ -271,10 +271,10 @@ class LabJobStatusAction
                 }
             });
     }
-    public static function completeValidation(): Action
+    public static function completeJob(): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_COMPLETE_LAB_JOB_VALIDATION);
-        return  Action::make('Selesai Validasi')
+        return  Action::make('Selesai Job')
             ->icon('heroicon-o-check-circle')
             ->color('info')
             ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::AnalysisCompleted->value && $authorized)
@@ -282,7 +282,7 @@ class LabJobStatusAction
             ->action(function (LabJob $record, LabJobService $labJobService) {
                 try {
                     DB::transaction(function () use ($record, $labJobService) {
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::ValidationCompleted);
+                        $labJobService->updateLabJobStatus($record, JobStatusEnum::JobCompleted);
                     });
                     Notification::make()->title('Status pekerjaan diubah menjadi Validasi Selesai.')->success()->send();
                 } catch (Exception $e) {
@@ -299,62 +299,7 @@ class LabJobStatusAction
                 }
             });
     }
-    public static function generateReport(): Action
-    {
-        $authorized = static::isAuthorized(static::PERMISSION_GENERATE_LAB_JOB_REPORT);
-        return    Action::make('Buat Laporan')
-            ->icon('heroicon-o-document-duplicate')
-            ->color('success')
-            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::ValidationCompleted->value && $authorized)
-            ->requiresConfirmation()
-            ->action(function (LabJob $record, LabJobService $labJobService) {
-                try {
-                    DB::transaction(function () use ($record, $labJobService) {
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::ReportGenerated);
-                    });
-                    Notification::make()->title('Status pekerjaan diubah menjadi Laporan Dibuat.')->success()->send();
-                } catch (Exception $e) {
-                    Notification::make()
-                        ->title('Gagal mengubah status laporan dibuat')
-                        ->body('Terjadi kesalahan: ' . $e->getMessage())
-                        ->danger()
-                        ->send();
-                    Log::error('Gagal mengubah status laporan dibuat', [
-                        'lab_job_id' => $record->id,
-                        'error' => $e->getMessage(),
-                        'user_id' => Auth::id(),
-                    ]);
-                }
-            });
-    }
-    public static function approveReport(): Action
-    {
-        $authorized = static::isAuthorized(static::PERMISSION_APPROVE_LAB_JOB_REPORT);
-        return    Action::make('Setujui Laporan')
-            ->icon('heroicon-o-document-check')
-            ->color('success')
-            ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::ReportGenerated->value && $authorized)
-            ->requiresConfirmation()
-            ->action(function (LabJob $record, LabJobService $labJobService) {
-                try {
-                    DB::transaction(function () use ($record, $labJobService) {
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::ReportApproved);
-                    });
-                    Notification::make()->title('Status pekerjaan diubah menjadi Laporan Disetujui.')->success()->send();
-                } catch (Exception $e) {
-                    Notification::make()
-                        ->title('Gagal mengubah status laporan disetujui')
-                        ->body('Terjadi kesalahan: ' . $e->getMessage())
-                        ->danger()
-                        ->send();
-                    Log::error('Gagal mengubah status laporan disetujui', [
-                        'lab_job_id' => $record->id,
-                        'error' => $e->getMessage(),
-                        'user_id' => Auth::id(),
-                    ]);
-                }
-            });
-    }
+
     public static function sendReport(): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_SEND_LAB_JOB_REPORT);
@@ -366,7 +311,7 @@ class LabJobStatusAction
             ->action(function (LabJob $record, LabJobService $labJobService) {
                 try {
                     DB::transaction(function () use ($record, $labJobService) {
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::Delivered);
+                        $labJobService->updateLabJobStatus($record, JobStatusEnum::Paid);
                     });
                     Notification::make()->title('Lab Job telah selesai dan dikirim.')->success()->send();
                 } catch (Exception $e) {

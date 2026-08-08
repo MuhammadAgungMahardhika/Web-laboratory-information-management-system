@@ -184,8 +184,25 @@ class LabJobService
             $labJob->status = $newStatus->value;
             $isSuccessed =   $labJob->save();
         }
+
+        // selesai analisis
+        if ($newStatus === JobStatusEnum::JobCompleted) {
+            $hasUnvalidatedSamples = $labJob->samples
+                ->whereNotIn('status',  [SampleStatusEnum::AnalysisCompleted->value, SampleStatusEnum::Invalid->value])
+                ->isNotEmpty();
+
+            $hasAnalysisNotCompleted = $labJob->status === JobStatusEnum::AnalysisCompleted->value;
+            if ($hasAnalysisNotCompleted) {
+                throw new Exception("Status pekerjaan harus 'Selesai Analisis' sebelum menandai pekerjaan sebagai 'Selesai Job'.");
+            }
+            if ($hasUnvalidatedSamples) {
+                throw new Exception("Masih ada sampel yang belum tervalidasi.");
+            }
+            $labJob->status = $newStatus->value;
+            $isSuccessed =   $labJob->save();
+        }
         // job selesai / dikirim
-        if ($newStatus === JobStatusEnum::Delivered) {
+        if ($newStatus === JobStatusEnum::Paid) {
             $labJob->end_date = now();
             $labJob->status = $newStatus->value;
             $isSuccessed =  $labJob->save();

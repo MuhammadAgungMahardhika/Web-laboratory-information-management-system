@@ -7,7 +7,7 @@ use Filament\Support\Colors\Color;
 enum SampleCollectionTypeEnum: int
 {
     case Collected = 1;
-    case Delivered = 2;
+    case Paid = 2;
 
     //3,4,5->empty
 
@@ -20,7 +20,7 @@ enum SampleCollectionTypeEnum: int
     {
         return [
             self::Collected->value => 'Sampling',
-            self::Delivered->value  => 'Antar',
+            self::Paid->value  => 'Antar',
         ];
     }
 
@@ -42,7 +42,7 @@ enum SampleCollectionTypeEnum: int
     {
         return match ($status) {
             self::Collected->value => 'info',
-            self::Delivered->value => 'warning',
+            self::Paid->value => 'warning',
             default => 'gray',
         };
     }

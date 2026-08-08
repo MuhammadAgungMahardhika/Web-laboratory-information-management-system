@@ -11,11 +11,9 @@ enum JobStatusEnum: int
     case InProgress = 2;
     case SamplingCompleted = 3;
     case AnalysisCompleted = 4;
-    case ValidationCompleted = 5;
-    case ReportGenerated = 6;
-    case ReportApproved = 7;
+    case JobCompleted = 5;
     case Invoiced = 8;
-    case Delivered = 9;
+    case Paid = 9;
     case Cancelled = 10;
     case OnHold = 11;
 
@@ -32,11 +30,9 @@ enum JobStatusEnum: int
             self::InProgress->value => 'Proses Sampling',
             self::SamplingCompleted->value => 'Proses Analisis',
             self::AnalysisCompleted->value => 'Selesai Analisis',
-            self::ValidationCompleted->value => 'Validasi Selesai',
-            self::ReportGenerated->value => 'Laporan Dibuat',
-            self::ReportApproved->value => 'Laporan Disetujui',
-            self::Invoiced->value => 'Telah Ditagih',
-            self::Delivered->value => 'Selesai (Terkirim)',
+            self::JobCompleted->value => 'Selesai Job',
+            self::Invoiced->value => 'Proses Tagihan',
+            self::Paid->value => 'Lunas',
             self::Cancelled->value => 'Dibatalkan',
             self::OnHold->value => 'Ditunda',
         ];
@@ -61,10 +57,10 @@ enum JobStatusEnum: int
     {
         return match ($status) {
             self::PendingStart->value, self::OnHold->value => 'gray',
-            self::InProgress->value => 'warning',
-            self::SamplingCompleted->value, self::AnalysisCompleted->value, self::ValidationCompleted->value => 'info',
-            self::ReportGenerated->value, self::ReportApproved->value, self::Invoiced->value => 'success',
-            self::Delivered->value => 'success',
+            self::InProgress->value, self::Invoiced->value  => 'warning',
+            self::SamplingCompleted->value, self::AnalysisCompleted->value => 'info',
+            self::JobCompleted->value => 'success',
+            self::Paid->value => 'success',
             self::Cancelled->value => 'danger',
             default => 'gray',
         };
@@ -81,9 +77,8 @@ enum JobStatusEnum: int
         return match ($status) {
             self::PendingStart->value, self::OnHold->value => '#6B7280',
             self::InProgress->value => '#F59E0B',
-            self::SamplingCompleted->value, self::AnalysisCompleted->value, self::ValidationCompleted->value => '#3B82F6',
-            self::ReportGenerated->value, self::ReportApproved->value, self::Invoiced->value => '#10B981',
-            self::Delivered->value => '#10B981',
+            self::SamplingCompleted->value, self::AnalysisCompleted->value,  => '#3B82F6',
+            self::JobCompleted->value, self::Paid->value => '#10B981',
             self::Cancelled->value => '#EF4444',
             default => '#6B7280',
         };

@@ -66,9 +66,8 @@ class EditLabJob extends EditRecord
                     }
                 ),
                 LabJobStatusAction::completeAnalysis(),
-                LabJobStatusAction::completeValidation(),
-                LabJobStatusAction::generateReport(),
-                LabJobStatusAction::approveReport(),
+                LabJobStatusAction::completeJob(),
+
                 LabJobStatusAction::sendReport(),
                 LabJobStatusAction::abortJob(),
             ])

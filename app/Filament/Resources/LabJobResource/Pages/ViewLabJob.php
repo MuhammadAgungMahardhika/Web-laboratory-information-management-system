@@ -32,9 +32,7 @@ class ViewLabJob extends ViewRecord
                     }
                 ),
                 LabJobStatusAction::completeAnalysis(),
-                LabJobStatusAction::completeValidation(),
-                LabJobStatusAction::generateReport(),
-                LabJobStatusAction::approveReport(),
+                LabJobStatusAction::completeJob(),
                 LabJobStatusAction::sendReport(),
                 LabJobStatusAction::abortJob(),
             ])
