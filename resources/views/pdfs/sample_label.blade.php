@@ -51,7 +51,7 @@
         <p class="field">Tanggal pengambilan: {{ $sample->received_date ?? '-' }}</p>
         <p class="field">Tanggal penerimaan: {{ $sample->collection_date ?? '-' }}</p>
         <p class="field">Nomor Job: {{ $sample->labJobItem->labJob->code ?? '-' }}</p>
-        <p class="field">Kode Sampel: {{ $sample->code ?? '-' }}</p>
+        <p class="field">Nomor Sampel: {{ $sample->code ?? '-' }}</p>
         <p class="field">Deskripsi Item: {{ $sample->labJobItem->description ?? '-' }}</p>
 
         {{-- Barcode (aktifkan kalau sudah pakai milon/barcode) --}}

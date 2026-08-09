@@ -137,7 +137,7 @@ class TestResultForm
                                         ->label('Produk Uji'),
 
                                     TextEntry::make('sample.code')
-                                        ->label('Kode Sampel'),
+                                        ->label('Nomor Sampel'),
 
                                     TextEntry::make('parameter.code')
                                         ->label('Parameter'),

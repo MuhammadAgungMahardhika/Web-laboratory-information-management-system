@@ -35,7 +35,7 @@ class SampleResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Kode Sampel' => $record->code,
+            'Nomor Sampel' => $record->code,
             'Matrix' => $record->labJobItem->description,
             'status' => SampleStatusEnum::labels()[$record->status]
         ];

@@ -258,7 +258,7 @@ class SamplesTable
                             }
                         })
                         ->deselectRecordsAfterCompletion(),
-                    BulkAction::make('Siapkan')
+                    BulkAction::make('Proses Analisis')
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
                         ->requiresConfirmation()

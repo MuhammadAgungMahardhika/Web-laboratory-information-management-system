@@ -24,8 +24,8 @@ enum SampleStatusEnum: int
         return [
             self::Collected->value => 'Diambil',
             self::Received->value => 'Diterima',
-            self::Prepared->value  => 'Siap dianalisa',
-            self::AnalysisCompleted->value  => 'Analisis Selesai',
+            self::Prepared->value  => 'Proses Analisis',
+            self::AnalysisCompleted->value  => 'Selesai Analisis',
             self::Invalid->value  => 'Tidak Valid',
             self::Archived->value  => 'Diarsipkan',
         ];

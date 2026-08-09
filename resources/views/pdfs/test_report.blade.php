@@ -110,7 +110,7 @@
         <p>Total Sampel: {{ $item->samples->count() }}</p>
 
         @foreach ($item->samples as $sample)
-            <p style="font-weight: bold; margin-bottom: 5px;">Kode Sampel: {{ $sample->code ?? '-' }}</p>
+            <p style="font-weight: bold; margin-bottom: 5px;">Nomor Sampel: {{ $sample->code ?? '-' }}</p>
             <table class="results-table">
                 <thead>
                     <tr>

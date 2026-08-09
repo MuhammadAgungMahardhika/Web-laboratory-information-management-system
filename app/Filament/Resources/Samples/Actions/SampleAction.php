@@ -90,7 +90,7 @@ class SampleAction
     public static function prepare(): Action
     {
         $authorized = static::isAuthorized(static::PERMISSION_PREPARE);
-        return  Action::make('Siapkan')
+        return  Action::make('Proses Analisis')
             ->icon(Heroicon::OutlinedClipboardDocumentCheck)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
             ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Received->value &&  $authorized && $record->labJob()->status === JobStatusEnum::SamplingCompleted->value)
@@ -232,7 +232,7 @@ class SampleAction
     {
         $sampleService = app(SampleService::class);
 
-        return BulkAction::make('Siapkan')
+        return BulkAction::make('Proses Analisis')
             ->icon(Heroicon::OutlinedDocumentCheck)
             ->color('info')
             ->requiresConfirmation()

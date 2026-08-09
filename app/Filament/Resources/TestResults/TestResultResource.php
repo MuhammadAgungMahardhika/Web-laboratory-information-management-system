@@ -41,7 +41,7 @@ class TestResultResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Kode Sampel' => $record->sample->code,
+            'Nomor Sampel' => $record->sample->code,
             'Parameter' => $record->parameter->long_name,
             'Status' => TestResultStatusEnum::labels()[$record->status]
         ];

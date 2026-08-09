@@ -4,6 +4,9 @@ namespace App\Filament\Resources\TestResults\Tables;
 
 use App\Filament\Resources\TestResults\Actions\TestResultAction;
 use App\Models\Enums\TestResultStatusEnum;
+use App\Models\LabJob;
+use App\Models\LabJobItem;
+use App\Models\Sample;
 use App\Models\TestResult;
 use App\Services\TestResultApprovalService;
 use Filament\Actions\Action;
@@ -11,13 +14,16 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Enums\RecordActionsPosition;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
@@ -54,7 +60,7 @@ class TestResultsTable
         return $table
             ->striped()
             ->groups([
-                Group::make('sample.code')->label('KODE SAMPEL')->collapsible(),
+                Group::make('sample.code')->label('NOMOR SAMPEL')->collapsible(),
                 Group::make('sample.labJobItem.description')->label('Matrix')->titlePrefixedWithLabel(false)->collapsible(),
                 Group::make('parameter.long_name')->label('Parameter')->titlePrefixedWithLabel(false)->collapsible(),
             ])
@@ -186,22 +192,90 @@ class TestResultsTable
                 TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Filter::make('filter_sample')
+                    ->label('Filter Sampel')
+                    ->schema([
+                        Select::make('lab_job_id')
+                            ->label('Nomor Job')
+                            ->options(
+                                LabJob::query()
+                                    ->orderByDesc('id')
+                                    ->pluck('code', 'id')
+                            )
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->afterStateUpdated(function (callable $set) {
+                                $set('lab_job_item_id', null);
+                                $set('sample_id', null);
+                            }),
 
-                SelectFilter::make('sample.labJobItem.lab_job_id')
-                    ->label('Nomor Job')
-                    ->relationship('sample.labJobItem.labJob', 'code')
-                    ->searchable()
-                    ->preload(),
-                SelectFilter::make('sample.labJobItem')
-                    ->label('Nomor Produk Uji')
-                    ->relationship('sample.labJobItem', 'code')
-                    ->searchable()
-                    ->preload(),
-                SelectFilter::make('sample_id')
-                    ->label('Kode sampel')
-                    ->relationship('sample', 'code')
-                    ->searchable()
-                    ->preload(),
+                        Select::make('lab_job_item_id')
+                            ->label('Nomor Produk Uji')
+                            ->options(function (Get $get) {
+                                $labJobId = $get('lab_job_id');
+
+                                if (! $labJobId) {
+                                    return [];
+                                }
+
+                                return LabJobItem::query()
+                                    ->where('lab_job_id', $labJobId)
+                                    ->orderBy('code')
+                                    ->pluck('code', 'id');
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->disabled(fn(Get $get) => ! $get('lab_job_id'))
+                            ->afterStateUpdated(function (callable $set) {
+                                $set('sample_id', null);
+                            }),
+
+                        Select::make('sample_id')
+                            ->label('Nomor Sampel')
+                            ->options(function (Get $get) {
+                                $labJobItemId = $get('lab_job_item_id');
+
+                                if (! $labJobItemId) {
+                                    return [];
+                                }
+
+                                return Sample::query()
+                                    ->where('lab_job_item_id', $labJobItemId)
+                                    ->orderBy('code')
+                                    ->pluck('code', 'id');
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->disabled(fn(Get $get) => ! $get('lab_job_item_id')),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when(
+                                $data['lab_job_id'] ?? null,
+                                fn(Builder $query, $labJobId) =>
+                                $query->whereHas(
+                                    'sample.labJobItem',
+                                    fn(Builder $query) =>
+                                    $query->where('lab_job_id', $labJobId)
+                                )
+                            )
+                            ->when(
+                                $data['lab_job_item_id'] ?? null,
+                                fn(Builder $query, $labJobItemId) =>
+                                $query->whereHas(
+                                    'sample',
+                                    fn(Builder $query) =>
+                                    $query->where('lab_job_item_id', $labJobItemId)
+                                )
+                            )
+                            ->when(
+                                $data['sample_id'] ?? null,
+                                fn(Builder $query, $sampleId) =>
+                                $query->where('sample_id', $sampleId)
+                            );
+                    })->columnSpan(4)->columns(3),
                 SelectFilter::make('parameter_id')
                     ->label('Parameter uji')
                     ->relationship('parameter', 'code')

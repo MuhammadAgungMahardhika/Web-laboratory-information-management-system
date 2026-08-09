@@ -59,7 +59,7 @@ class SampleForm
                             }
                         }),
                     TextInput::make('code')
-                        ->label('Kode Sampel')
+                        ->label('Nomor Sampel')
                         ->unique()
                         ->live()
                         ->disabled()

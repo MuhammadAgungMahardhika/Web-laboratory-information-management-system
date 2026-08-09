@@ -108,7 +108,7 @@ class SamplesRelationManager extends RelationManager
                         }),
 
                     TextInput::make('code')
-                        ->label('Kode Sampel')
+                        ->label('Nomor Sampel')
                         ->unique()
                         ->live()
                         ->disabled()
@@ -306,7 +306,7 @@ class SamplesRelationManager extends RelationManager
                             }
                         })
                         ->deselectRecordsAfterCompletion(),
-                    BulkAction::make('Siapkan')
+                    BulkAction::make('Proses Analisis')
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
                         ->requiresConfirmation()
