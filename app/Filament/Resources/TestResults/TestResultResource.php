@@ -126,7 +126,6 @@ class TestResultResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()->with(['validatorPersonel', 'analystPersonel', 'testMethod', 'sample.labJobItem', 'parameter', 'testResultHistories.personel',    'testResultApprovals' => fn($query) => $query
-            ->where('status', TestResultApprovalStatusEnum::Pending->value)
             ->orderBy('approval_level')
             ->orderByDesc('id'),]);
         $user = Auth::user();

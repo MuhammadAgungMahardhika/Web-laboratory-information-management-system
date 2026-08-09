@@ -58,7 +58,7 @@ class SampleResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('collectedByPersonel', 'receivedByPersonel', 'labJobItem.labJob');
+        return parent::getEloquentQuery()->with(['collectedByPersonel', 'receivedByPersonel', 'labJobItem.labJob',]);
     }
 
     public static function table(Table $table): Table
