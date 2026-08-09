@@ -192,7 +192,7 @@ class LabJobService
                 ->isNotEmpty();
 
             $hasAnalysisNotCompleted = $labJob->status === JobStatusEnum::AnalysisCompleted->value;
-            if ($hasAnalysisNotCompleted) {
+            if (!$hasAnalysisNotCompleted) {
                 throw new Exception("Status pekerjaan harus 'Selesai Analisis' sebelum menandai pekerjaan sebagai 'Selesai Job'.");
             }
             if ($hasUnvalidatedSamples) {
