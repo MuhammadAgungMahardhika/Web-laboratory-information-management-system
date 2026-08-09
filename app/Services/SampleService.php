@@ -93,7 +93,7 @@ class SampleService
                         "Status sampel tidak dapat diubah menjadi Received."
                     );
                 }
-                if ($sample->labJobItem->labJob->status !== JobStatusEnum::InProgress->value) {
+                if ($sample->labJobItem->labJob->status !== JobStatusEnum::Sampling->value) {
                     throw new Exception(
                         "Status Job belum Belum Progres."
                     );

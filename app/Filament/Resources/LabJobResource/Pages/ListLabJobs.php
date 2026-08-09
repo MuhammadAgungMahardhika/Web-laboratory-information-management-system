@@ -22,16 +22,20 @@ class ListLabJobs extends ListRecords
         ];
     }
 
-    // public function getDefaultActiveTab(): string|int|null
-    // {
-    //     return JobStatusEnum::PendingStart->value; // Menggunakan enum untuk mendapatkan status default
-    // }
     public function getTabs(): array
     {
         $counts = LabJob::query()
             ->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
+
+        $workflowStatuses = [
+            JobStatusEnum::Draft,
+            JobStatusEnum::Sampling,
+            JobStatusEnum::SamplingCompleted,
+            JobStatusEnum::AnalysisCompleted,
+            JobStatusEnum::JobCompleted,
+        ];
 
         $tabs = [
             'all' => Tab::make('all')
@@ -40,7 +44,7 @@ class ListLabJobs extends ListRecords
                 ->badgeColor('gray'),
         ];
 
-        foreach (JobStatusEnum::cases() as $status) {
+        foreach ($workflowStatuses as $status) {
             $count = $counts[$status->value] ?? 0;
 
             $tabs[$status->value] = Tab::make($status->value)
@@ -49,10 +53,13 @@ class ListLabJobs extends ListRecords
                 ->badgeColor(
                     $count > 0
                         ? JobStatusEnum::color($status->value)
-                        : 'success'
+                        : 'gray'
                 )
                 ->modifyQueryUsing(
-                    fn(Builder $query) => $query->where('status', $status->value)
+                    fn(Builder $query) => $query->where(
+                        'status',
+                        $status->value
+                    )
                 );
         }
 

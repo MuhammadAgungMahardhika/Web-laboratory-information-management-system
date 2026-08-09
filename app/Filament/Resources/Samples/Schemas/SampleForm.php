@@ -84,7 +84,7 @@ class SampleForm
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')
-                            ->label('PENGAMBILAN SAMPEL OLEH PPC')
+                            ->label('PENGAMBILAN SAMPEL')
                             ->columnSpanFull()
                             ->columns(2)
                             ->inlineLabel()
@@ -121,7 +121,7 @@ class SampleForm
                                     && SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ),
                         Tab::make('penerimaan')
-                            ->label('PENERIMAAN SAMPEL OLEH ADMIN')
+                            ->label('PENERIMAAN SAMPEL')
                             ->icon(Heroicon::OutlinedInbox)
                             ->columnSpanFull()
                             ->columns(2)

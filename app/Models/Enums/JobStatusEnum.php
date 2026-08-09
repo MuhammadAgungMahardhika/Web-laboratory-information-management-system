@@ -7,8 +7,8 @@ use Filament\Support\Colors\Color;
 enum JobStatusEnum: int
 {
 
-    case PendingStart = 1;
-    case InProgress = 2;
+    case Draft = 1;
+    case Sampling = 2;
     case SamplingCompleted = 3;
     case AnalysisCompleted = 4;
     case JobCompleted = 5;
@@ -26,8 +26,8 @@ enum JobStatusEnum: int
     public static function labels(): array
     {
         return [
-            self::PendingStart->value => 'Draf',
-            self::InProgress->value => 'Proses Sampling',
+            self::Draft->value => 'Draft',
+            self::Sampling->value => 'Proses Sampling',
             self::SamplingCompleted->value => 'Proses Analisis',
             self::AnalysisCompleted->value => 'Selesai Analisis',
             self::JobCompleted->value => 'Selesai Job',
@@ -56,12 +56,15 @@ enum JobStatusEnum: int
     public static function color(int $status): string
     {
         return match ($status) {
-            self::PendingStart->value, self::OnHold->value => 'gray',
-            self::InProgress->value, self::Invoiced->value  => 'warning',
-            self::SamplingCompleted->value, self::AnalysisCompleted->value => 'info',
-            self::JobCompleted->value => 'success',
-            self::Paid->value => 'success',
-            self::Cancelled->value => 'danger',
+            self::Draft->value => 'gray',          // Draf
+            self::Sampling->value => 'warning',         // Proses Sampling
+            self::SamplingCompleted->value => 'info',     // Proses Analisis
+            self::AnalysisCompleted->value => 'primary',  // Selesai Analisis
+            self::JobCompleted->value => 'success',       // Selesai Job
+            self::Invoiced->value => 'warning',           // Proses Tagihan
+            self::Paid->value => 'success',               // Lunas
+            self::Cancelled->value => 'danger',           // Dibatalkan
+            self::OnHold->value => 'gray',                // Ditunda
             default => 'gray',
         };
     }
@@ -75,11 +78,15 @@ enum JobStatusEnum: int
     public static function cssColor(int $status): string
     {
         return match ($status) {
-            self::PendingStart->value, self::OnHold->value => '#6B7280',
-            self::InProgress->value => '#F59E0B',
-            self::SamplingCompleted->value, self::AnalysisCompleted->value,  => '#3B82F6',
-            self::JobCompleted->value, self::Paid->value => '#10B981',
-            self::Cancelled->value => '#EF4444',
+            self::Draft->value => '#6B7280',        // Draf
+            self::Sampling->value => '#F59E0B',          // Proses Sampling
+            self::SamplingCompleted->value => '#3B82F6',   // Proses Analisis
+            self::AnalysisCompleted->value => '#8B5CF6',   // Selesai Analisis
+            self::JobCompleted->value => '#10B981',        // Selesai Job
+            self::Invoiced->value => '#F97316',            // Proses Tagihan
+            self::Paid->value => '#059669',                // Lunas
+            self::Cancelled->value => '#EF4444',           // Dibatalkan
+            self::OnHold->value => '#64748B',              // Ditunda
             default => '#6B7280',
         };
     }
@@ -91,6 +98,6 @@ enum JobStatusEnum: int
      */
     public static function default(): self
     {
-        return self::PendingStart;
+        return self::Draft;
     }
 }

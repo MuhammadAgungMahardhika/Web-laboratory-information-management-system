@@ -60,7 +60,7 @@ class SampleAction
         return  Action::make('Diterima')
             ->icon(Heroicon::CheckCircle)
             ->color(fn(Sample $record) => SampleStatusEnum::color($record->status))
-            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Collected->value &&  $authorized && $record->labJob()->status === JobStatusEnum::InProgress->value)
+            ->authorize(fn(Sample $record) => $record->status === SampleStatusEnum::Collected->value &&  $authorized && $record->labJob()->status === JobStatusEnum::Sampling->value)
             ->after(
                 function (RelationManager $livewire) {
                     $livewire->dispatch('refresh');
@@ -196,7 +196,7 @@ class SampleAction
             ->requiresConfirmation()
             ->after(fn(RelationManager $livewire) => $livewire->dispatch('refresh'))
             ->authorize(
-                $labJob->status === JobStatusEnum::InProgress->value
+                $labJob->status === JobStatusEnum::Sampling->value
                     && static::isAuthorized(static::PERMISSION_PREPARE)
             )
             ->action(function (Collection $records) use ($sampleService) {

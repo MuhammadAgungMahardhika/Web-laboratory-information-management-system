@@ -23,7 +23,7 @@ enum QuotationStatusEnum: int
     public static function labels(): array
     {
         return [
-            self::Draft->value => 'Draf',
+            self::Draft->value => 'Draft',
             self::Submitted->value => 'Dikirim',
             self::Accepted->value => 'Disetujui',
             self::Revised->value => 'Direvisi',
@@ -61,29 +61,16 @@ enum QuotationStatusEnum: int
      */
     public static function color(int $status): string
     {
-        // Handle null input gracefully for robustness, similar to ParameterStatusEnum
-        if ($status === null) {
-            return 'gray'; // Default color for null status
-        }
-
-        switch ($status) {
-            case self::Draft->value:
-                return 'gray';    // Drafts are often neutral/gray
-            case self::Submitted->value:
-                return 'warning'; // Pending needs attention
-            case self::Accepted->value:
-                return 'success'; // Successfully accepted
-            case self::Revised->value:
-                return 'info';    // Revised implies ongoing process
-            case self::Rejected->value:
-                return 'danger';  // Rejected is a negative outcome
-            case self::Expired->value:
-                return 'danger';  // Expired is also a negative/final state
-            case self::Cancelled->value:
-                return 'danger';    // Cancelled is a neutral/final state
-            default:
-                return 'gray'; // Fallback for any unexpected status string
-        }
+        return match ($status) {
+            self::Draft->value => 'gray',          // Draf
+            self::Submitted->value => 'warning',   // Dikirim / menunggu respons
+            self::Accepted->value => 'success',    // Disetujui
+            self::Revised->value => 'info',        // Direvisi
+            self::Expired->value => 'warning',     // Kadaluarsa
+            self::Rejected->value => 'danger',     // Ditolak
+            self::Cancelled->value => 'gray',      // Dibatalkan
+            default => 'gray',
+        };
     }
 
 
@@ -95,19 +82,15 @@ enum QuotationStatusEnum: int
      */
     public static function cssColor(int $status): string
     {
-        if ($status === null) {
-            return '#6B7280'; // Default gray
-        }
-
         return match ($status) {
-            self::Draft->value => '#6B7280', // Gray
-            self::Submitted->value => '#F59E0B', // Orange (warning)
-            self::Accepted->value => '#10B981', // Green (success)
-            self::Rejected->value => '#EF4444', // Red (danger)
-            self::Revised->value => '#3B82F6', // Blue (info)
-            self::Expired->value => '#EF4444', // Red (danger)
-            self::Cancelled->value => '#6B7280', // Gray
-            default => '#6B7280', // Fallback
+            self::Draft->value => '#6B7280',       // Abu-abu - Draf
+            self::Submitted->value => '#F59E0B',   // Kuning - Dikirim
+            self::Accepted->value => '#10B981',    // Hijau - Disetujui
+            self::Revised->value => '#3B82F6',     // Biru - Direvisi
+            self::Expired->value => '#F97316',     // Oranye - Kadaluarsa
+            self::Rejected->value => '#EF4444',    // Merah - Ditolak
+            self::Cancelled->value => '#64748B',   // Slate - Dibatalkan
+            default => '#6B7280',
         };
     }
 }

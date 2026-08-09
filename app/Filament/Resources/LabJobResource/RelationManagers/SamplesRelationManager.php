@@ -58,11 +58,11 @@ class SamplesRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return $this->ownerRecord->status !== JobStatusEnum::InProgress->value;
+        return $this->ownerRecord->status !== JobStatusEnum::Sampling->value;
     }
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
-        return $ownerRecord->status !== JobStatusEnum::PendingStart->value;
+        return $ownerRecord->status !== JobStatusEnum::Draft->value;
     }
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
     {
@@ -133,7 +133,7 @@ class SamplesRelationManager extends RelationManager
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('pengambilan')
-                            ->label('PENGAMBILAN SAMPEL OLEH PPC')
+                            ->label('PENGAMBILAN SAMPEL')
                             ->columnSpanFull()
                             ->columns(2)
                             ->inlineLabel()
@@ -171,7 +171,7 @@ class SamplesRelationManager extends RelationManager
                                     && SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ),
                         Tab::make('penerimaan')
-                            ->label('PENERIMAAN SAMPEL OLEH ADMIN')
+                            ->label('PENERIMAAN SAMPEL')
                             ->icon(Heroicon::OutlinedInbox)
                             ->columnSpanFull()
                             ->columns(2)
@@ -257,7 +257,7 @@ class SamplesRelationManager extends RelationManager
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
                     }
-                )->authorize(fn() =>  $ownerStatus === JobStatusEnum::InProgress->value),
+                )->authorize(fn() =>  $ownerStatus === JobStatusEnum::Sampling->value),
                 LinkAction::make()->label('Detail')->url(fn(Sample $record) => SampleResource::getUrl('view', ['record' => $record->id]))->authorize(static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE) && static::isAuthorized(SampleAction::PERMISSION_COLLECTING_SAMPLE))->icon(HeroIcon::ArrowRightEndOnRectangle)->openUrlInNewTab(),
             ], position: RecordActionsPosition::BeforeColumns)
             ->toolbarActions([
@@ -266,7 +266,7 @@ class SamplesRelationManager extends RelationManager
                         function (RelationManager $livewire) {
                             $livewire->dispatch('refresh');
                         }
-                    )->authorize(fn() =>  $ownerStatus === JobStatusEnum::InProgress->value),
+                    )->authorize(fn() =>  $ownerStatus === JobStatusEnum::Sampling->value),
                     BulkAction::make("Diterima")
                         ->icon(Heroicon::OutlinedDocumentCheck)
                         ->color('info')
@@ -274,7 +274,7 @@ class SamplesRelationManager extends RelationManager
                         ->after(function (RelationManager $livewire) {
                             $livewire->dispatch('refresh');
                         })
-                        ->authorize($this->ownerRecord->status === JobStatusEnum::InProgress->value && static::isAuthorized(SampleAction::PERMISSION_PREPARE))
+                        ->authorize($this->ownerRecord->status === JobStatusEnum::Sampling->value && static::isAuthorized(SampleAction::PERMISSION_PREPARE))
                         ->action(function (Collection $records)  use ($sampleService) {
                             $successCount = 0;
                             $failedCount = 0;

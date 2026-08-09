@@ -269,14 +269,14 @@ class LabJobItemsRelationManager extends RelationManager
                 ViewAction::make()->slideOver(),
                 EditAction::make()
                     ->slideOver()
-                    ->authorize(fn() =>  $ownerStatus === JobStatusEnum::PendingStart->value)
+                    ->authorize(fn() =>  $ownerStatus === JobStatusEnum::Draft->value)
                     ->after(function (LabJobItem $record, array $data) {
                         // Inisialisasi service
                         $LabJobItemService = new LabJobItemService();
                         $LabJobItemService->syncParameterLabJobItems($record);
                     })->databaseTransaction(),
                 DeleteAction::make()
-                    ->authorize(fn() =>  $ownerStatus === JobStatusEnum::PendingStart->value)
+                    ->authorize(fn() =>  $ownerStatus === JobStatusEnum::Draft->value)
                     ->using(function (DeleteAction $action, LabJobItem $record) {
                         return DB::transaction(function () use ($action, $record) {
                             try {
@@ -298,7 +298,7 @@ class LabJobItemsRelationManager extends RelationManager
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->authorize(fn() =>  $ownerStatus === JobStatusEnum::PendingStart->value)
+                        ->authorize(fn() =>  $ownerStatus === JobStatusEnum::Draft->value)
                         ->using(function (DeleteBulkAction $action, Collection $records) {
                             return DB::transaction(function () use ($action, $records) {
                                 try {

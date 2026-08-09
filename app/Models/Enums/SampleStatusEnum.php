@@ -48,12 +48,12 @@ enum SampleStatusEnum: int
     public static function color(int $status): string
     {
         return match ($status) {
-            self::Collected->value => 'info',
-            self::Received->value => 'info',
-            self::Prepared->value => 'warning',
-            self::AnalysisCompleted->value => 'success',
-            self::Invalid->value => 'danger',
-            self::Archived->value => 'gray',
+            self::Collected->value => 'gray',       // Diambil
+            self::Received->value => 'info',        // Diterima
+            self::Prepared->value => 'warning',     // Proses Analisis
+            self::AnalysisCompleted->value => 'success', // Selesai Analisis
+            self::Invalid->value => 'danger',       // Tidak Valid
+            self::Archived->value => 'primary',     // Diarsipkan
             default => 'gray',
         };
     }
@@ -66,18 +66,14 @@ enum SampleStatusEnum: int
      */
     public static function cssColor(int $status): string
     {
-        if ($status === null) {
-            return '#6B7280'; // Default gray
-        }
-
         return match ($status) {
-            self::Collected->value => '#6B7280',
-            self::Received->value => '#10B981',
-            self::Prepared->value => '#F59E0B',
-            self::AnalysisCompleted->value =>  '#10B981',
-            self::Invalid->value => '#EF4444',
-            self::Archived->value => '#6B7280',
-            default => '#6B7280', // Fallback
+            self::Collected->value => '#6B7280',          // Abu-abu - Diambil
+            self::Received->value => '#3B82F6',           // Biru - Diterima
+            self::Prepared->value => '#F59E0B',           // Oranye - Proses Analisis
+            self::AnalysisCompleted->value => '#10B981',  // Hijau - Selesai Analisis
+            self::Invalid->value => '#EF4444',             // Merah - Tidak Valid
+            self::Archived->value => '#8B5CF6',            // Ungu - Diarsipkan
+            default => '#6B7280',
         };
     }
 }

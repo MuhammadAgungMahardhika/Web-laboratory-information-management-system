@@ -58,7 +58,7 @@ class LabJobStatusAction
             ->icon(Heroicon::DocumentDuplicate)
             ->slideOver()
             ->disabled(fn($record) => $record->labJobPersonels->isEmpty())
-            ->authorize(fn(LabJob $record) => $record->status !== JobStatusEnum::PendingStart->value && $authorized)
+            ->authorize(fn(LabJob $record) => $record->status !== JobStatusEnum::Draft->value && $authorized)
             ->modalHeading('Pratinjau Surat Tugas')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Tutup Pratinjau')
@@ -97,7 +97,7 @@ class LabJobStatusAction
             ->icon('heroicon-o-document-arrow-down')
             ->color('primary')
             // Hanya tampil jika pekerjaan sudah dimulai
-            ->authorize(fn(LabJob $record) => $record->job_status !== JobStatusEnum::PendingStart->value && $authorized)
+            ->authorize(fn(LabJob $record) => $record->job_status !== JobStatusEnum::Draft->value && $authorized)
             ->url(fn(LabJob $record): string => route(static::$taskLetterDownloadUrl, $record))
             ->openUrlInNewTab();
     }
@@ -108,7 +108,7 @@ class LabJobStatusAction
             ->icon('heroicon-o-play')
             ->color('success')
             ->authorize(function (LabJob $record, LabJobService $labJobService) use ($authorized) {
-                return $record->status === JobStatusEnum::PendingStart->value
+                return $record->status === JobStatusEnum::Draft->value
                     && $authorized
                     && $labJobService->canStartJob($record);
             })
@@ -181,7 +181,7 @@ class LabJobStatusAction
 
                     DB::transaction(function () use ($record, $labJobService, $data) {
                         // Update status dan tanggal menggunakan service
-                        $labJobService->updateLabJobStatus($record, JobStatusEnum::InProgress, $data);
+                        $labJobService->updateLabJobStatus($record, JobStatusEnum::Sampling, $data);
                     });
 
                     Notification::make()->title('Lab Job telah dimulai.')->success()->send();
@@ -205,7 +205,7 @@ class LabJobStatusAction
             ->icon('heroicon-o-clipboard-document-check')
             ->color('info')
             ->authorize(function (LabJob $record, LabJobService $labJobService) use ($authorized) {
-                return $record->status === JobStatusEnum::InProgress->value
+                return $record->status === JobStatusEnum::Sampling->value
                     && $authorized
                     && $labJobService->canCompleteSampling($record);
             })
@@ -334,7 +334,7 @@ class LabJobStatusAction
         return  Action::make('Batalkan Lab Job')
             ->icon('heroicon-o-x-circle')
             ->color('danger')
-            ->authorize(fn(LabJob $record) =>  $record->status == JobStatusEnum::InProgress->value &&  $authorized)
+            ->authorize(fn(LabJob $record) =>  $record->status == JobStatusEnum::Sampling->value &&  $authorized)
             ->requiresConfirmation()
             ->action(function (LabJob $record, LabJobService $labJobService) {
                 try {
@@ -458,7 +458,7 @@ class LabJobStatusAction
             })
             ->visible(function (RelationManager $livewire) use ($labJob) {
                 return ! $livewire->isReadOnly()
-                    && $labJob->status === JobStatusEnum::PendingStart->value;
+                    && $labJob->status === JobStatusEnum::Draft->value;
             });
     }
     public static function downloadAnalystTestReport(): Action

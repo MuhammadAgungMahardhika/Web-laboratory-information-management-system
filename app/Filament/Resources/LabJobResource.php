@@ -51,7 +51,7 @@ class LabJobResource extends Resource
     {
         return static::$draftCount ??=
             static::getEloquentQuery()
-            ->where('status', JobStatusEnum::PendingStart->value)
+            ->where('status', JobStatusEnum::Draft->value)
             ->count();
     }
 
@@ -250,6 +250,16 @@ class LabJobResource extends Resource
                     ->relationship('quotation.customer', 'name')
                     ->searchable()
                     ->preload(),
+                SelectFilter::make('status')
+                    ->label('Status Lainnya')
+                    ->options([
+                        JobStatusEnum::Invoiced->value => 'Proses Tagihan',
+                        JobStatusEnum::Paid->value => 'Lunas',
+                        JobStatusEnum::OnHold->value => 'Ditunda',
+                        JobStatusEnum::Cancelled->value => 'Dibatalkan',
+                    ]),
+
+
 
             ], layout: FiltersLayout::AboveContent)
             ->recordActions([

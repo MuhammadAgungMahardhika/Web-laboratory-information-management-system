@@ -21,7 +21,7 @@ enum InvoiceStatusEnum: int
     public static function labels(): array
     {
         return [
-            self::Draft->value         => 'Draf',
+            self::Draft->value         => 'Draft',
             self::Sent->value          => 'Terkirim',
             self::PartiallyPaid->value => 'Dibayar Sebagian', // Label
             self::Paid->value          => 'Lunas',
@@ -49,16 +49,34 @@ enum InvoiceStatusEnum: int
     public static function color(int $status): string
     {
         return match ($status) {
-            self::Draft->value     => 'gray',
-            self::Sent->value      => 'info',
-            self::PartiallyPaid->value => 'warning', // Kuning/Oranye untuk menandai masih ada saldo
-            self::Paid->value      => 'success',
-            self::Overdue->value   => 'danger', // Overdue tetap merah agar mendesak
-            self::Void->value, self::Void->value => 'danger',
+            self::Draft->value => 'gray',             // Draft
+            self::Sent->value => 'info',              // Terkirim
+            self::PartiallyPaid->value => 'warning',  // Dibayar Sebagian
+            self::Paid->value => 'success',           // Lunas
+            self::Overdue->value => 'danger',         // Jatuh Tempo
+            self::Void->value => 'gray',              // Batal Permanen
             default => 'gray',
         };
     }
 
+    /**
+     * Menyediakan kode warna CSS heksadesimal untuk styling kustom.
+     *
+     * @param int $status
+     * @return string
+     */
+    public static function cssColor(int $status): string
+    {
+        return match ($status) {
+            self::Draft->value => '#6B7280',            // Abu-abu
+            self::Sent->value => '#3B82F6',             // Biru
+            self::PartiallyPaid->value => '#F59E0B',    // Kuning/Oranye
+            self::Paid->value => '#10B981',             // Hijau
+            self::Overdue->value => '#EF4444',          // Merah
+            self::Void->value => '#64748B',             // Slate
+            default => '#6B7280',
+        };
+    }
     /**
      * Mendapatkan status default untuk faktur baru.
      *

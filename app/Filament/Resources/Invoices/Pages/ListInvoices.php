@@ -42,9 +42,8 @@ class ListInvoices extends ListRecords
                 ->label(strtoupper($status->label()))
                 ->badge($count)
                 ->badgeColor(
-                    $count > 0
-                        ? InvoiceStatusEnum::color($status->value)
-                        : 'success'
+                    InvoiceStatusEnum::color($status->value)
+
                 )
                 ->modifyQueryUsing(
                     fn(Builder $query) => $query->where('status', $status->value)

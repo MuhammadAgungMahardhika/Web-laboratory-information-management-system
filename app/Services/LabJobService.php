@@ -40,7 +40,7 @@ class LabJobService
         $labJob = LabJob::create([
             'quotation_id' => $quotation->id,
             'code' => $this->generateLabJobNumber(),
-            'status' => JobStatusEnum::PendingStart->value, // Menggunakan kolom yang benar
+            'status' => JobStatusEnum::Draft->value, // Menggunakan kolom yang benar
         ]);
         // 2. Salin rincian item penawaran (snapshot) ke rincian pekerjaan lab
         $quotation->load(['quotationItems' => fn($query) => $query->where('group', 'A'), 'quotationItems.parameterQuotationItems']);
@@ -149,7 +149,7 @@ class LabJobService
         // Perbarui status penawaran
         // mulai job
         $isSuccessed  = false;
-        if ($newStatus === JobStatusEnum::InProgress) {
+        if ($newStatus === JobStatusEnum::Sampling) {
             $labJob->start_date = $data['start_date'] ?? $labJob->start_date;
             $labJob->end_date = $data['end_date'] ?? $labJob->end_date;
             $labJob->status = $newStatus->value;
