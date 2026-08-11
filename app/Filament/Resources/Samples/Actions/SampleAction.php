@@ -184,38 +184,32 @@ class SampleAction
     }
 
     // bulk
-    public static function bulkReceived(LabJob $labJob): BulkAction
-    {
-        $sampleService = app(SampleService::class);
 
-        return BulkAction::make('Diterima')
+    public static function bulkReceived(?JobStatusEnum $jobStatus = null): BulkAction
+    {
+        return   BulkAction::make("Diterima")
             ->icon(Heroicon::OutlinedDocumentCheck)
             ->color('info')
             ->requiresConfirmation()
-            ->after(fn(RelationManager $livewire) => $livewire->dispatch('refresh'))
             ->authorize(
-                $labJob->status === JobStatusEnum::Sampling->value
-                    && static::isAuthorized(static::PERMISSION_PREPARE)
+                static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE)
+                    && ($jobStatus === null || $jobStatus === JobStatusEnum::Sampling)
             )
-            ->action(function (Collection $records) use ($sampleService) {
+            ->action(function (Collection $records, SampleService  $sampleService) {
                 $successCount = 0;
                 $failedCount = 0;
 
                 foreach ($records as $record) {
                     try {
                         DB::transaction(function () use ($sampleService, $record) {
-                            $sampleService->updateSampleStatus(
-                                $record,
-                                SampleStatusEnum::Received
-                            );
+                            $sampleService->updateSampleStatus($record, SampleStatusEnum::Received);
                         });
 
                         $successCount++;
-                    } catch (\Throwable $e) {
+                    } catch (\Exception $e) {
                         $failedCount++;
                     }
                 }
-
                 static::sendBulkNotification(
                     $successCount,
                     $failedCount,
@@ -226,7 +220,7 @@ class SampleAction
             ->deselectRecordsAfterCompletion();
     }
 
-    public static function bulkPrepare(LabJob $labJob): BulkAction
+    public static function bulkPrepare(?JobStatusEnum $jobStatus = null): BulkAction
     {
         $sampleService = app(SampleService::class);
 
@@ -234,10 +228,9 @@ class SampleAction
             ->icon(Heroicon::OutlinedDocumentCheck)
             ->color('info')
             ->requiresConfirmation()
-            ->after(fn(RelationManager $livewire) => $livewire->dispatch('refresh'))
             ->authorize(
-                $labJob->status === JobStatusEnum::SamplingCompleted->value
-                    && static::isAuthorized(static::PERMISSION_PREPARE)
+                static::isAuthorized(SampleAction::PERMISSION_PREPARE)
+                    && ($jobStatus === null || $jobStatus === JobStatusEnum::SamplingCompleted)
             )
             ->action(function (Collection $records) use ($sampleService) {
                 $successCount = 0;
