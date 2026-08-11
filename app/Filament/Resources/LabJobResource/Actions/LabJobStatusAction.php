@@ -431,7 +431,6 @@ class LabJobStatusAction
             ->modalHeading('Kembalikan Rincian Lab Job?')
             ->modalDescription('Ini akan menghapus semua rincian pekerjaan saat ini dan menggantinya dengan rincian dari penawaran awal.')
             ->modalSubmitActionLabel('Ya, Kembalikan')
-
             ->action(function (LabJobService $labJobService) use ($labJob) {
                 try {
 

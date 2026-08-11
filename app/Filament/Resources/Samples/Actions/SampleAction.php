@@ -156,19 +156,17 @@ class SampleAction
 
                 try {
 
-                    DB::transaction(function () use ($record, $sampleService, $data) {
-                        $sampleService->updateSampleStatus(
-                            $record,
-                            SampleStatusEnum::Prepared,
-                        );
-                    });
+                    $sampleService->reopen(
+                        $record,
+                        $data['reason'],
+                    );
 
                     Notification::make()
                         ->title('Sampel berhasil direopen.')
+                        ->body('Sampel dikembalikan ke proses analisa.')
                         ->success()
                         ->send();
                 } catch (Exception $e) {
-
                     Notification::make()
                         ->title('Gagal Reopen Sampel')
                         ->body($e->getMessage())

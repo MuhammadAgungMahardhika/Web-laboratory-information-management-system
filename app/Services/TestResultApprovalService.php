@@ -60,15 +60,30 @@ class TestResultApprovalService
      * Cari approval yang statusnya pending untuk sebuah test result.
      * Bisa dibatasi ke level tertentu, kalau tidak diisi ambil level pending paling rendah.
      */
-    public function getPendingApproval(TestResult $testResult, ?int $level = null): ?TestResultApproval
-    {
-        $approvals = $testResult->testResultApprovals;
+    public function getPendingApproval(
+        TestResult $testResult,
+        ?int $level = null
+    ): ?TestResultApproval {
+
+        $approvals = $testResult->testResultApprovals
+            ->where(
+                'status',
+                TestResultApprovalStatusEnum::Pending->value
+            );
 
         if ($level !== null) {
-            $approvals = $approvals->where('approval_level', $level);
+            $approvals = $approvals->where(
+                'approval_level',
+                $level
+            );
         }
 
-        return $approvals->first();
+        return $approvals
+            ->sortBy([
+                ['approval_level', 'asc'],
+                ['id', 'asc'],
+            ])
+            ->first();
     }
 
     /**
@@ -168,7 +183,6 @@ class TestResultApprovalService
                 ->exists();
 
             if (! $hasPending) {
-
                 app(SampleService::class)->updateSampleStatus(
                     $sample,
                     SampleStatusEnum::AnalysisCompleted

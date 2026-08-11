@@ -169,4 +169,31 @@ class SampleService
 
         return false;
     }
+
+    public function reopen(
+        Sample $sample,
+        string $reason,
+    ): bool {
+        return DB::transaction(function () use ($sample, $reason) {
+            $testResultService = app(TestResultService::class);
+            if ($sample->status !== SampleStatusEnum::AnalysisCompleted->value) {
+                throw new Exception("Hanya sampel dengan status Analysis Completed yang dapat direopen.");
+            }
+
+
+
+            if ($sample->labJobItem->labJob->status !== JobStatusEnum::AnalysisCompleted->value) {
+                throw new Exception("Job belum berada pada status Selesai Analisis.");
+            }
+
+
+            $testResultService->reopenTestResultsFromSample($sample);
+            $sample->status = SampleStatusEnum::Prepared->value;
+
+            // Kalau sudah ada kolom reason:
+            // $sample->reopen_reason = $reason;
+
+            return $sample->save();
+        });
+    }
 }
