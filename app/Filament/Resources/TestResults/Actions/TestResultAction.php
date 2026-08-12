@@ -9,9 +9,13 @@ use App\Services\TestResultApprovalService;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\View;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
@@ -105,109 +109,425 @@ class TestResultAction
      * Satu tombol Validasi, otomatis nyesuaikan Level 1 / Level 2
      * berdasarkan permission user yang login dan approval yang sedang pending.
      */
+    /**
+     * Satu tombol Validasi, otomatis menyesuaikan Level 1 / Level 2
+     * berdasarkan approval yang sedang pending untuk user yang login.
+     */
     public static function validate($url = null): Action
     {
         return Action::make('Validasi')
             ->icon(Heroicon::Check)
+            ->slideOver()
+            ->modalWidth('6xl')
             ->color('success')
-            ->visible(fn(TestResult $record, TestResultApprovalService $service) =>
-            (bool) $service->getPendingApprovalForCurrentUser($record))
-            ->schema(function (TestResult $record, TestResultApprovalService $service) {
-                $pending = $service->getPendingApprovalForCurrentUser($record);
+            ->visible(
+                fn(
+                    TestResult $record,
+                    TestResultApprovalService $service
+                ) => (bool) $service->getPendingApprovalForCurrentUser($record)
+            )
+            ->schema(
+                function (
+                    TestResult $record,
+                    TestResultApprovalService $service
+                ) {
+                    $pending = $service->getPendingApprovalForCurrentUser($record);
 
-                // Hanya Level 1 yang menentukan sesuai/tidak sesuai BML
-                if ($pending && $pending->approval_level === 1) {
+                    /*
+                 * =====================================================
+                 * INFORMASI PENGUJIAN
+                 * =====================================================
+                 *
+                 * Bagian ini read-only.
+                 * Approver menggunakan informasi ini sebagai dasar
+                 * menentukan hasil validasi.
+                 */
+                    $information = [
+                        Placeholder::make('job')
+                            ->label('Lab Job')
+                            ->content(
+                                data_get(
+                                    $record,
+                                    'sample.labJobItem.labJob.code',
+                                    '-'
+                                )
+                            ),
+                        Placeholder::make('product')
+                            ->label('Produk Uji')
+                            ->content(
+                                data_get(
+                                    $record,
+                                    'sample.labJobItem.description_code',
+                                    '-'
+                                )
+                            ),
+
+                        Placeholder::make('sample')
+                            ->label('Nomor Sampel')
+                            ->content(
+                                data_get(
+                                    $record,
+                                    'sample.code',
+                                    '-'
+                                )
+                            ),
+
+                        Placeholder::make('parameter')
+                            ->label('Parameter')
+                            ->content(
+                                data_get(
+                                    $record,
+                                    'parameter.code',
+                                    '-'
+                                )
+                            ),
+
+                        Placeholder::make('test_method')
+                            ->label('Metode Uji')
+                            ->content(
+                                data_get(
+                                    $record,
+                                    'testMethod.name',
+                                    '-'
+                                )
+                            ),
+
+                        Placeholder::make('test_date')
+                            ->label('Tanggal Uji')
+                            ->content(
+                                $record->test_date
+                                    ? \Carbon\Carbon::parse(
+                                        $record->test_date
+                                    )->format('d/m/Y')
+                                    : '-'
+                            ),
+
+                        Placeholder::make('analyst')
+                            ->label('Analis')
+                            ->content(
+                                data_get(
+                                    $record,
+                                    'analystPersonel.fullname',
+                                    '-'
+                                )
+                            ),
+                    ];
+
+                    /*
+                 * =====================================================
+                 * HASIL PENGUJIAN
+                 * =====================================================
+                 *
+                 * Ini yang menjadi dasar perbandingan dengan BML.
+                 */
+
+                    $testResultInformation = [
+
+                        Placeholder::make('tested_value')
+                            ->label('Nilai Hasil')
+                            ->content(
+                                $record->tested_value ?? '-'
+                            ),
+
+                        Placeholder::make('unit')
+                            ->label('Satuan')
+                            ->content(
+                                data_get(
+                                    $record,
+                                    'unit.name',
+                                    $record->unit ?? '-'
+                                )
+                            ),
+                    ];
+
+                    /*
+                 * =====================================================
+                 * APPROVAL LEVEL 1
+                 * =====================================================
+                 */
+                    if ($pending && $pending->approval_level === 1) {
+
+                        return [
+                            Section::make('Informasi Pengujian')
+                                ->description(
+                                    'Informasi hasil pengujian yang menjadi dasar validasi.'
+                                )
+                                ->schema([
+                                    Grid::make([
+                                        'default' => 1,
+                                        'md' => 2,
+                                        'xl' => 3,
+                                    ])
+                                        ->schema($information),
+                                ]),
+
+                            Section::make('Hasil & Validasi')
+                                ->description(
+                                    'Bandingkan nilai hasil pengujian dengan Baku Mutu (BML).'
+                                )
+                                ->schema([
+
+                                    Grid::make([
+                                        'default' => 1,
+                                        'md' => 2,
+                                        'xl' => 3,
+                                    ])
+                                        ->schema([
+                                            Placeholder::make('value')
+                                                ->label('Nilai Hasil')
+                                                ->content(
+                                                    $record->tested_value
+                                                        ?? '-'
+                                                ),
+
+                                            Placeholder::make('unit')
+                                                ->label('Satuan')
+                                                ->content(
+                                                    data_get(
+                                                        $record,
+                                                        'unit.name',
+                                                        $record->unit ?? '-'
+                                                    )
+                                                ),
+
+                                            TextInput::make('standard_notes_ref')
+                                                ->label('Baku Mutu (BML)')
+                                                ->default(
+                                                    $record->standard_notes_ref
+                                                )
+                                                ->placeholder(
+                                                    'Masukkan atau verifikasi baku mutu'
+                                                )
+                                                ->helperText(
+                                                    'Baku mutu yang digunakan sebagai dasar penilaian.'
+                                                )
+                                                ->required()
+                                                ->maxLength(255),
+                                        ]),
+
+                                    Radio::make('evaluation_status')
+                                        ->label('Status Pengujian')
+                                        ->options([
+                                            1 => 'Sesuai Baku Mutu',
+                                            2 => 'Tidak Sesuai Baku Mutu',
+                                        ])
+                                        ->default($record->evaluation_status)
+                                        ->live()
+                                        ->required()
+                                        ->afterStateUpdated(
+                                            function ($state, callable $set) {
+                                                if ((int) $state === 1) {
+                                                    $set(
+                                                        'non_compliance_type',
+                                                        null
+                                                    );
+
+                                                    $set(
+                                                        'test_notes',
+                                                        'Pengujian memenuhi baku mutu.'
+                                                    );
+                                                } else {
+                                                    $set(
+                                                        'test_notes',
+                                                        ''
+                                                    );
+                                                }
+                                            }
+                                        ),
+
+                                    Radio::make('non_compliance_type')
+                                        ->label('Jenis Ketidaksesuaian')
+                                        ->options([
+                                            'below' => 'Di bawah baku mutu',
+                                            'above' => 'Di atas baku mutu',
+                                        ])
+                                        ->visible(
+                                            fn(callable $get) =>
+                                            (int) $get('evaluation_status') === 2
+                                        )
+                                        ->live()
+                                        ->dehydrated(false)
+                                        ->required(
+                                            fn(callable $get) =>
+                                            (int) $get('evaluation_status') === 2
+                                        )
+                                        ->afterStateUpdated(
+                                            function ($state, callable $set) {
+                                                $notes = [
+                                                    'below' =>
+                                                    'Pengujian berada di bawah baku mutu.',
+                                                    'above' =>
+                                                    'Pengujian berada di atas baku mutu.',
+                                                ];
+
+                                                $set(
+                                                    'test_notes',
+                                                    $notes[$state] ?? ''
+                                                );
+                                            }
+                                        ),
+
+                                    Textarea::make('test_notes')
+                                        ->label('Catatan Pengujian')
+                                        ->default(
+                                            $record->test_notes
+                                        )
+                                        ->rows(3)
+                                        ->required(),
+
+                                ]),
+                        ];
+                    }
+
+                    /*
+                 * =====================================================
+                 * APPROVAL LEVEL 2
+                 * =====================================================
+                 *
+                 * Level 2 hanya melihat hasil yang sudah ditentukan
+                 * oleh Level 1.
+                 */
+
                     return [
-                        Radio::make('evaluation_status')
-                            ->label('Status Pengujian')
-                            ->options([
-                                1 => 'Sesuai Baku Mutu',
-                                2 => 'Tidak Sesuai Baku Mutu',
-                            ])
-                            ->default($record->evaluation_status ?? 1)
-                            ->live()
-                            ->required()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                if ($state == 1) {
-                                    // Langsung isi catatan jika sesuai baku mutu
-                                    $set('non_compliance_type', null);
-                                    $set('test_notes', 'Pengujian memenuhi baku mutu.');
-                                } else {
-                                    // Kosongkan saat berubah ke tidak sesuai
-                                    $set('test_notes', '');
-                                }
-                            }),
 
-                        Radio::make('non_compliance_type')
-                            ->label('Jenis Ketidaksesuaian')
-                            ->options([
-                                'below' => 'Di bawah baku mutu',
-                                'above' => 'Di atas baku mutu',
-                            ])
-                            ->visible(fn(callable $get) => $get('evaluation_status') == 2)
-                            ->live()
-                            ->dehydrated(false) // tidak disimpan ke database
-                            ->afterStateUpdated(function ($state, callable $set) {
+                        Section::make('Informasi Pengujian')
+                            ->schema([
+                                Grid::make(2)
+                                    ->schema($information),
+                            ]),
 
-                                $notes = [
-                                    'below' => 'Pengujian berada di bawah baku mutu.',
-                                    'above' => 'Pengujian berada di atas baku mutu.',
-                                ];
+                        Section::make('Hasil Pengujian')
+                            ->schema([
+                                Grid::make(2)
+                                    ->schema([
+                                        ...$testResultInformation,
 
-                                $set('test_notes', $notes[$state] ?? '');
-                            }),
+                                        Placeholder::make('bml')
+                                            ->label('Baku Mutu (BML)')
+                                            ->content(
+                                                $record->standard_notes_ref
+                                                    ?? '-'
+                                            ),
 
-                        Textarea::make('test_notes')
-                            ->label('Catatan Pengujian')
-                            ->default('Pengujian memenuhi baku mutu.')
-                            ->rows(3)
-                            ->required(),
+                                        Placeholder::make(
+                                            'evaluation_status'
+                                        )
+                                            ->label('Status Pengujian')
+                                            ->content(
+                                                match ((int) $record->evaluation_status) {
+                                                    1 =>
+                                                    'Sesuai Baku Mutu',
+
+                                                    2 =>
+                                                    'Tidak Sesuai Baku Mutu',
+
+                                                    default =>
+                                                    'Belum Ditentukan',
+                                                }
+                                            ),
+                                    ]),
+                            ]),
+
+                        Section::make('Hasil Validasi Level 1')
+                            ->schema([
+                                Placeholder::make('validator')
+                                    ->label('Validator Level 1')
+                                    ->content(
+                                        data_get(
+                                            $record,
+                                            'validatorPersonel.name',
+                                            '-'
+                                        )
+                                    ),
+
+                                Placeholder::make('validation_notes')
+                                    ->label('Catatan Pengujian')
+                                    ->content(
+                                        $record->test_notes ?? '-'
+                                    ),
+                            ]),
                     ];
                 }
+            )
 
-                // Level 2+ cukup catatan pengesahan, tidak ubah evaluation_status lagi
-                return [
-                    // Textarea::make('comment')
-                    //     ->required()
-                    //     ->label('Catatan Pengujian')
-                    //     ->rows(3),
-                ];
-            })
             ->requiresConfirmation()
-            ->action(function (TestResult $record, array $data, TestResultApprovalService $service) use ($url) {
-                try {
-                    $personel = $service->getPersonelFromAuth();
-                    if (!$personel) {
-                        throw new Exception('Data personel untuk user ini tidak ditemukan.');
-                    }
 
-                    $result = null;
-                    DB::transaction(function () use ($service, $record, $personel, $data, &$result) {
-                        $result = $service->accept($record, $personel->id, null, $data);
-                        if (!$result['success']) {
-                            throw new Exception($result['message']);
+            ->action(
+                function (
+                    TestResult $record,
+                    array $data,
+                    TestResultApprovalService $service
+                ) use ($url) {
+
+                    try {
+
+                        $personel = $service->getPersonelFromAuth();
+
+                        if (!$personel) {
+                            throw new Exception(
+                                'Data personel untuk user ini tidak ditemukan.'
+                            );
                         }
-                    });
 
-                    Notification::make()->title($result['message'] ?? "")->success()->send();
+                        $result = null;
 
-                    if ($url) {
-                        return redirect()->to($url);
+                        DB::transaction(
+                            function () use (
+                                $service,
+                                $record,
+                                $personel,
+                                $data,
+                                &$result
+                            ) {
+
+                                $result = $service->accept(
+                                    $record,
+                                    $personel->id,
+                                    null,
+                                    $data
+                                );
+
+                                if (!$result['success']) {
+                                    throw new Exception(
+                                        $result['message']
+                                    );
+                                }
+                            }
+                        );
+
+                        Notification::make()
+                            ->title(
+                                $result['message']
+                                    ?? 'Validasi berhasil.'
+                            )
+                            ->success()
+                            ->send();
+
+                        if ($url) {
+                            return redirect()->to($url);
+                        }
+                    } catch (Exception $e) {
+
+                        Notification::make()
+                            ->title('Gagal validasi hasil uji')
+                            ->body(
+                                'Terjadi kesalahan: '
+                                    . $e->getMessage()
+                            )
+                            ->danger()
+                            ->send();
+
+                        Log::error(
+                            'Gagal validasi hasil uji',
+                            [
+                                'test_result_id' => $record->id,
+                                'error' => $e->getMessage(),
+                                'user_id' => Auth::id(),
+                            ]
+                        );
                     }
-                } catch (Exception $e) {
-                    Notification::make()
-                        ->title('Gagal validasi hasil uji')
-                        ->body('Terjadi kesalahan: ' . $e->getMessage())
-                        ->danger()
-                        ->send();
-
-                    Log::error('Gagal validasi hasil uji', [
-                        'test_result_id' => $record->id,
-                        'error' => $e->getMessage(),
-                        'user_id' => Auth::id(),
-                    ]);
                 }
-            });
+            );
     }
     /**
      * Perlu Revisi.

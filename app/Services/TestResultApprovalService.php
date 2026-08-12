@@ -79,10 +79,7 @@ class TestResultApprovalService
         }
 
         return $approvals
-            ->sortBy([
-                ['approval_level', 'asc'],
-                ['id', 'asc'],
-            ])
+
             ->first();
     }
 
@@ -160,7 +157,22 @@ class TestResultApprovalService
         // Keputusan "sesuai/tidak sesuai BML" hanya diambil di Level 1
         // (level penentuan hasil), level berikutnya cuma pengesahan berjenjang.
         if ($currentLevel === 1) {
+            if (!filled($data['standard_notes_ref'] ?? null)) {
+                return $this->response(
+                    false,
+                    'Baku Mutu (BML) wajib diisi atau diverifikasi.'
+                );
+            }
+
+            // Status evaluasi wajib dipilih.
+            if (!isset($data['evaluation_status'])) {
+                return $this->response(
+                    false,
+                    'Status pengujian wajib ditentukan.'
+                );
+            }
             $testResult->update([
+                'standard_notes_ref' => $data['standard_notes_ref'],
                 'validator_personel_id' => $approverPersonelId,
                 'evaluation_status' => $data['evaluation_status'] ?? $testResult->evaluation_status,
                 'test_notes' =>  $data['test_notes'] ?? ""
