@@ -435,7 +435,7 @@ class TestResultAction
                                     ->content(
                                         data_get(
                                             $record,
-                                            'validatorPersonel.name',
+                                            'validatorPersonel.fullname',
                                             '-'
                                         )
                                     ),
