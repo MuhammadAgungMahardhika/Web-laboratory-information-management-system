@@ -23,7 +23,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\HtmlString;
 
 class TestResultAction
 {
@@ -153,7 +153,7 @@ class TestResultAction
                                 )
                             ),
                         Placeholder::make('product')
-                            ->label('Produk Uji')
+                            ->label('Produk Uji / Matrik')
                             ->content(
                                 data_get(
                                     $record,
@@ -173,15 +173,32 @@ class TestResultAction
                             ),
 
                         Placeholder::make('parameter')
-                            ->label('Parameter')
-                            ->content(
-                                data_get(
-                                    $record,
-                                    'parameter.code',
-                                    '-'
-                                )
-                            ),
+                            ->label('Parameter Uji')
+                            ->content(function () use ($record) {
+                                $code = data_get($record, 'parameter.code', '-');
 
+                                $name = data_get(
+                                    $record,
+                                    'parameter.long_name_standard_notes',
+                                    '-'
+                                );
+
+                                return new HtmlString(
+                                    '<span>
+                <span style="
+                    display: inline-block;
+                    padding: 2px 7px;
+                    border-radius: 6px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    background: #e0f2fe;
+                    color: #0369a1;
+                    margin-right: 6px;
+                ">' . e($code) . '</span>'
+                                        . e($name) .
+                                        '</span>'
+                                );
+                            }),
                         Placeholder::make('test_method')
                             ->label('Metode Uji')
                             ->content(
