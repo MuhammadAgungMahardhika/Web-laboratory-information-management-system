@@ -51,7 +51,7 @@ class QuotationResource extends Resource
     protected static ?string $label = 'Penawaran';
     protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedDocumentDuplicate;
     protected static ?int $navigationSort = 1;
-    protected static ?string $recordTitleAttribute = 'quotation_number';
+    protected static ?string $recordTitleAttribute = 'code';
     protected static int $globalSearchResultsLimit = 20;
     protected static ?int $draftCount = null;
 
@@ -78,18 +78,18 @@ class QuotationResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['quotation_number', 'quotation_name', 'customer.name'];
+        return ['code', 'name', 'customer.name'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
     {
-        return $record->quotation_number;
+        return $record->code;
     }
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Nomor' => $record->quotation_number,
-            'Judul' => $record->quotation_name,
+            'Nomor' => $record->code,
+            'Judul' => $record->name,
             'Klien' => $record->customer->name,
         ];
     }
@@ -112,7 +112,7 @@ class QuotationResource extends Resource
             ])
             ->components([
                 Section::make([
-                    DatePicker::make('quotation_date')
+                    DatePicker::make('date')
                         ->label('Tanggal penawaran')
                         ->default(now())
                         ->displayFormat('d/m/Y')
@@ -120,11 +120,11 @@ class QuotationResource extends Resource
                         ->required()
                         ->reactive() // <-- Tambahkan ini agar perubahan memicu update field lain
                         ->afterStateUpdated(function ($state, Set $set) use ($defaultQuotationExpiryDays) { // <-- Tambahkan ini
-                            // Jika quotation_date diisi, set valid_until_date menjadi 30 hari setelahnya
+                            // Jika date diisi, set valid_until_date menjadi 30 hari setelahnya
                             if ($state) {
                                 $set('valid_until_date', Carbon::parse($state)->addDays($defaultQuotationExpiryDays));
                             } else {
-                                // Jika quotation_date dikosongkan, kosongkan juga valid_until_date
+                                // Jika date dikosongkan, kosongkan juga valid_until_date
                                 $set('valid_until_date', null);
                             }
                         }),
@@ -134,12 +134,12 @@ class QuotationResource extends Resource
                         ->displayFormat('d/m/Y')
                         ->native(false)
                         ->minDate(function (Get $get) {
-                            $quotationDate = $get('quotation_date');
+                            $quotationDate = $get('date');
                             return $quotationDate ? Carbon::parse($quotationDate)->addDay() : null;
                         })
                         ->required()
                         ->helperText(fn() => "Default {$defaultQuotationExpiryDays} hari"),
-                    TextInput::make('quotation_number')
+                    TextInput::make('code')
                         ->label('Nomor penawaran')
                         ->required()
                         ->default($quoatationService->generateQuotationNumber())
@@ -147,7 +147,7 @@ class QuotationResource extends Resource
                     Select::make('request_id')
                         ->label('Nomor permohonan (jika ada)')
                         ->relationship('request', 'request_number'),
-                    TextInput::make('quotation_name')
+                    TextInput::make('name')
                         ->label('Judul penawaran')
                         ->columnSpan(2)
                         ->required(),
@@ -372,21 +372,21 @@ class QuotationResource extends Resource
                 //     ->label('Nomor permohonan')
                 //     ->searchable()
                 //     ->sortable(),
-                TextColumn::make('quotation_number')
+                TextColumn::make('code')
                     ->label('Penawaran')
                     ->html()
                     ->sortable()
                     ->searchable(
                         query: function (Builder $query, string $search): Builder {
                             return $query->where(function ($q) use ($search) {
-                                $q->where('quotation_number', 'like', "%{$search}%")
-                                    ->orWhere('quotation_name', 'like', "%{$search}%");
+                                $q->where('code', 'like', "%{$search}%")
+                                    ->orWhere('name', 'like', "%{$search}%");
                             });
                         }
                     )->formatStateUsing(function ($state, $record) {
 
-                        $quotationDate = $record->quotation_date
-                            ? Carbon::parse($record->quotation_date)->format('d M Y')
+                        $quotationDate = $record->date
+                            ? Carbon::parse($record->date)->format('d M Y')
                             : '-';
 
                         $validUntil = $record->valid_until_date
@@ -396,11 +396,11 @@ class QuotationResource extends Resource
                         return new \Illuminate\Support\HtmlString("
         <div style='line-height:1.45'>
             <div style='font-weight:700;color:#2563eb'>
-                {$record->quotation_number}
+                {$record->code}
             </div>
 
             <div style='font-size:12px;color:#6b7280'>
-                {$record->quotation_name}
+                {$record->name}
             </div>
 
             <div style='font-size:12px;margin-top:6px'>
@@ -560,7 +560,7 @@ class QuotationResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // --- Filter Tanggal Penawaran (quotation_date) ---
+                // --- Filter Tanggal Penawaran (date) ---
                 Filter::make('quotation_date_range')
                     ->schema([
                         DatePicker::make('from')
@@ -576,11 +576,11 @@ class QuotationResource extends Resource
                         return $query
                             ->when(
                                 $data['from'],
-                                fn(Builder $query, $date) => $query->where('quotation_date', '>=', Carbon::parse($date)->startOfDay()),
+                                fn(Builder $query, $date) => $query->where('date', '>=', Carbon::parse($date)->startOfDay()),
                             )
                             ->when(
                                 $data['until'],
-                                fn(Builder $query, $date) => $query->where('quotation_date', '<=', Carbon::parse($date)->endOfDay()),
+                                fn(Builder $query, $date) => $query->where('date', '<=', Carbon::parse($date)->endOfDay()),
                             );
                     })
                     ->indicateUsing(function (array $data): array {

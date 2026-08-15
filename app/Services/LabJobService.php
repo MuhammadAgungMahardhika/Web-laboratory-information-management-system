@@ -77,7 +77,7 @@ class LabJobService
             }
         }
 
-        Log::info("Lab Job #{$labJob->code} and its items created from Quotation #{$quotation->quotation_number}.");
+        Log::info("Lab Job #{$labJob->code} and its items created from Quotation #{$quotation->code}.");
         return $labJob;
     }
 
@@ -134,7 +134,7 @@ class LabJobService
                 }
             }
         }
-        Log::info("Lab Job #{$labJob->code} have been reset from Quotation #{$quotation->quotation_number}.");
+        Log::info("Lab Job #{$labJob->code} have been reset from Quotation #{$quotation->code}.");
         return $labJob;
     }
     /**

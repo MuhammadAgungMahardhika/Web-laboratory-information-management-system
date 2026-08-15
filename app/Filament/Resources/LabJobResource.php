@@ -68,7 +68,7 @@ class LabJobResource extends Resource
     }
     public static function getGloballySearchableAttributes(): array
     {
-        return ['code', 'quotation.quotation_number', 'quotation.quotation_name', 'quotation.customer.name'];
+        return ['code', 'quotation.code', 'quotation.name', 'quotation.customer.name'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
@@ -81,7 +81,7 @@ class LabJobResource extends Resource
     {
         return [
             'Nomor job' => $record->code,
-            'Nomor penawaran' => $record->quotation->quotation_number,
+            'Nomor penawaran' => $record->quotation->code,
             'Klien' => $record->quotation->customer->name,
             'Tanggal' => Carbon::parse($record->start_date)->format('d M y')   . " - " .  Carbon::parse($record->end_date)->format('d M y')
         ];
@@ -128,7 +128,7 @@ class LabJobResource extends Resource
                         Select::make('quotation_id')
                             ->label('Nomor Penawaran')
                             ->disabledOn('edit')
-                            ->relationship('quotation', 'quotation_number', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value)->when(
+                            ->relationship('quotation', 'code', modifyQueryUsing: fn(Builder $query) => $query->where('status', QuotationStatusEnum::Accepted->value)->when(
                                 ! $schema->getRecord(), // Hanya terapkan filter ini saat CREATE
                                 fn($q) => $q->whereDoesntHave('labJob')
                             ))
@@ -209,7 +209,7 @@ class LabJobResource extends Resource
                     ->sortable()
                     ->color(fn($state) => JobStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
-                TextColumn::make('quotation.quotation_number')
+                TextColumn::make('quotation.code')
                     ->label('Nomor Penawaran')
                     ->sortable()
                     ->searchable(),
@@ -240,9 +240,9 @@ class LabJobResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('quotation.quotation_number')
+                SelectFilter::make('quotation.code')
                     ->label('Nomor Penawaran')
-                    ->relationship('quotation', 'quotation_number')
+                    ->relationship('quotation', 'code')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('customer')

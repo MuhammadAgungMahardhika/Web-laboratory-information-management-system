@@ -99,13 +99,13 @@
         </tr>
         <tr>
             <td class="label">Penawaran Ref.</td>
-            <td>: {{ $labJob->quotation->quotation_number ?? '-' }}</td>
+            <td>: {{ $labJob->quotation->code ?? '-' }}</td>
         </tr>
     </table>
 
     <p>Kepada Tim PPC yang ditugaskan, dengan ini kami memberikan surat tugas untuk melaksanakan pekerjaan:</p>
 
-    <p><strong>Nama Pekerjaan:</strong> {{ $labJob->quotation->quotation_name ?? '-' }}</p>
+    <p><strong>Nama Pekerjaan:</strong> {{ $labJob->quotation->name ?? '-' }}</p>
 
     <h3>Tim yang Ditugaskan:</h3>
     <table class="personnel-table">

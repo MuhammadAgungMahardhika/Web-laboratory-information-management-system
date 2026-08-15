@@ -23,7 +23,7 @@ class QuotationPdfController extends Controller
         ]);
         // --------------------------------------------------------
         $pdf = Pdf::loadView('pdfs.quotation', compact('quotation', 'company'));
-        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->quotation_number);
+        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->code);
         return $pdf->stream('Penawaran-' . $safeFileName . '.pdf');
     }
 
@@ -39,7 +39,7 @@ class QuotationPdfController extends Controller
             'personel'
         ]);
         $pdf = Pdf::loadView('pdfs.quotation', compact('quotation', 'company'));
-        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->quotation_number);
+        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->code);
         return $pdf->download('Penawaran-' . $safeFileName . '.pdf');
     }
 }

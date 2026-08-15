@@ -69,7 +69,7 @@
                 <td><strong>Quotation Letter</strong></td>
             </tr>
             <tr>
-                <td>No.Quo: {{ $quotation->quotation_number }}</td>
+                <td>No.Quo: {{ $quotation->code }}</td>
             </tr>
             <tr>
                 <td><strong>{{ $quotation->customer->name }}</strong></td>

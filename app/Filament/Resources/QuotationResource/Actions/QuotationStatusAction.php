@@ -58,7 +58,7 @@ class QuotationStatusAction
             ->modalContent(function (Quotation $record) {
                 // Ini adalah cara untuk me-render Blade view di dalam modal
                 // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
-                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);
+                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->code);
                 $pdfUrl = route(static::$quotationPreviewUrl, $record);
                 $downloadUrl = route(static::$quotationDownloadUrl, $record);
 
@@ -125,8 +125,8 @@ class QuotationStatusAction
                         ->columnSpanFull()
                         ->default(function (Quotation $record) {
                             $customerName = $record->customer->name ?? 'Pelanggan';
-                            $quotationNumber = $record->quotation_number ?? 'N/A';
-                            $quotationName = ucfirst($record->quotation_name) ?? 'N/A';
+                            $quotationNumber = $record->code ?? 'N/A';
+                            $quotationName = ucfirst($record->name) ?? 'N/A';
                             $companyName = config('app.name');
 
                             return "<p>Yth. Bapak/Ibu {$customerName},</p>
@@ -178,7 +178,7 @@ class QuotationStatusAction
                     $company = Auth::user()->personel?->company;
                     $pdf = Pdf::loadView('pdfs.quotation', ['quotation' => $record, 'company' => $company]); // Hanya meneruskan quotation
                     $pdfContent = $pdf->output();
-                    $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->quotation_number);
+                    $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->code);
                     $base64PdfContent = base64_encode($pdfContent);
 
                     $publicPdfUrl = route(static::$quotationDownloadUrl, $record);
@@ -187,7 +187,7 @@ class QuotationStatusAction
                         // --- Inisialisasi WhatsApp Service ---
                         $whatsAppService = new WhatsAppService();
                         // LOGIKA KIRIM VIA WHATSAPP LANGSUNG (buka link wa.me)
-                        $whatsappMessage = "Yth. Bapak/Ibu {$record->customer->name},\n\nTerlampir adalah Penawaran Harga Nomor: *{$record->quotation_number}* dari kami.";
+                        $whatsappMessage = "Yth. Bapak/Ibu {$record->customer->name},\n\nTerlampir adalah Penawaran Harga Nomor: *{$record->code}* dari kami.";
                         // Remove HTML tags from the message
                         $cleanedMessage = strip_tags($data['message']);
 
@@ -201,7 +201,7 @@ class QuotationStatusAction
                         Notification::make()
                             ->success()
                             ->title('Siap Kirim Penawaran via WhatsApp!')
-                            ->body(new HtmlString("Klik <a href='{$directWaLink}' target='_blank' class='underline font-bold'>link ini</a> untuk mengirim Penawaran #{$record->quotation_number} melalui Wa ke nomor {$data['customer_whatsapp']}."))
+                            ->body(new HtmlString("Klik <a href='{$directWaLink}' target='_blank' class='underline font-bold'>link ini</a> untuk mengirim Penawaran #{$record->code} melalui Wa ke nomor {$data['customer_whatsapp']}."))
                             ->duration(10000) // Tampilkan lebih lama
                             ->broadcast(Auth::user())
                             ->sendToDatabase(Auth::user())
@@ -210,15 +210,15 @@ class QuotationStatusAction
 
                     if ($data['send_email']) {
                         try {
-                            $quotationName = ucfirst($record->quotation_name);
+                            $quotationName = ucfirst($record->name);
                             Mail::to($data['customer_email'])->send(new DocumentMail(
-                                subject: 'Penawaran Harga #' . $record->quotation_number,
+                                subject: 'Penawaran Harga #' . $record->code,
                                 markdownView: 'emails.document',
                                 mailData: [
                                     'title' => "Penawaran {$quotationName} untuk {$record->customer->name}",
                                     'message' => $data['message'],
                                     'customerName' => $record->customer->name ?? 'Pelanggan',
-                                    'quotationNumber' => $record->quotation_number, // Tambahkan data spesifik untuk template
+                                    'quotationNumber' => $record->code, // Tambahkan data spesifik untuk template
                                     'downloadUrl' => route(static::$quotationDownloadUrl, $record),
                                 ],
                                 attachmentsData: [
@@ -233,7 +233,7 @@ class QuotationStatusAction
                             Notification::make()
                                 ->success()
                                 ->title('Proses pengiriman via Email')
-                                ->body("Penawaran #{$record->quotation_number} dalam proses pengiriman ke {$data['customer_email']}.")
+                                ->body("Penawaran #{$record->code} dalam proses pengiriman ke {$data['customer_email']}.")
                                 ->send();
                         } catch (Exception $e) {
                             Notification::make()
@@ -248,7 +248,7 @@ class QuotationStatusAction
                         Notification::make()
                             ->success()
                             ->title('Status Penawaran diupdate menjadi Terkirim')
-                            ->body("Status Penawaran #{$record->quotation_number} berhasil diupdate menjadi Terkirim.")
+                            ->body("Status Penawaran #{$record->code} berhasil diupdate menjadi Terkirim.")
                             ->send();
                     }
                 });

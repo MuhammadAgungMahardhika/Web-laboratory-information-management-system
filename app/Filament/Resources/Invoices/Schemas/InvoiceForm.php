@@ -29,7 +29,7 @@ class InvoiceForm
             ->components([
                 Section::make('Informasi Tagihan')
                     ->components([
-                        DatePicker::make('invoice_date')
+                        DatePicker::make('date')
                             ->label('Tanggal Tagihan')
                             ->required()
                             ->default(now())
@@ -47,7 +47,7 @@ class InvoiceForm
                             ->required()
                             ->helperText('Otomatis diatur ke 30 hari setelah Tanggal Tagihan')
                             ->default(now()->addDays(30)) // <-- Default awal tetap berguna
-                            ->afterOrEqual('invoice_date'),
+                            ->afterOrEqual('date'),
                         Select::make('lab_job_id')
                             ->label('Nomor Lab Job')
                             ->disabledOn(['view', 'edit'])
@@ -68,9 +68,9 @@ class InvoiceForm
                                 if ($state) {
                                     $labJob = LabJob::find($state);
                                     $invoiceNumber = $invoiceService->generateInvoiceNumber($labJob);
-                                    $set('invoice_number', $invoiceNumber);
+                                    $set('code', $invoiceNumber);
                                 } else {
-                                    $set('invoice_number', null);
+                                    $set('code', null);
                                 }
                             }),
                         Checkbox::make('manual_invoice_confirmation')
@@ -79,7 +79,7 @@ class InvoiceForm
                             ->inline()
                             ->visibleOn('create')
                             ->label('Manual Input Nomor Tagihan'),
-                        TextInput::make('invoice_number')
+                        TextInput::make('code')
                             ->label('Nomor Tagihan')
                             ->required()
                             ->live()

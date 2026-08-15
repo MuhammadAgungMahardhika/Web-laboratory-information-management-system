@@ -18,7 +18,7 @@ class InvoicesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordTitle(fn($record) => $record->invoice_number)
+            ->recordTitle(fn($record) => $record->code)
             ->columns([
                 TextColumn::make('labJob.code')
                     ->label('Nomor Lab Job')
@@ -31,11 +31,11 @@ class InvoicesTable
                     )
                     ->openUrlInNewTab()
                     ->tooltip(fn($record) => $record->labJob ? 'Lihat Lab Job' : 'Tidak ada Lab Job terkait'),
-                TextColumn::make('invoice_number')
+                TextColumn::make('code')
                     ->label('Nomor Tagihan')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('invoice_date')
+                TextColumn::make('date')
                     ->label('Tanggal Tagihan')
                     ->date()
                     ->sortable(),

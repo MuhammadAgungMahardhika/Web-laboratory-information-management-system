@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Penawaran - {{ $quotation->quotation_number }}</title>
+    <title>Penawaran - {{ $quotation->code }}</title>
     <style>
         * {
             box-sizing: border-box;
@@ -356,13 +356,13 @@
                 <td><strong>PIC</strong></td>
                 <td>: {{ $quotation->personel->fullname ?? '-' }}</td>
                 <td><strong>Tanggal</strong></td>
-                <td>: {{ \Carbon\Carbon::parse($quotation->quotation_date)->format('d F Y') }}</td>
+                <td>: {{ \Carbon\Carbon::parse($quotation->date)->format('d F Y') }}</td>
             </tr>
             <tr>
                 <td><strong>Telp</strong></td>
                 <td>: {{ $quotation->personel->phone_number ?? '-' }}</td>
                 <td><strong>Reff</strong></td>
-                <td>: {{ $quotation->quotation_number ?? '-' }}</td>
+                <td>: {{ $quotation->code ?? '-' }}</td>
             </tr>
             <tr>
                 <td><strong>Email</strong></td>
@@ -375,7 +375,7 @@
         <div class="intro-text">
             Terima kasih sudah memberi kepercayaan kepada {{ $company->name ?? 'Laboratorium Kami' }}.
             Menindaklanjuti permintaan dari <strong>{{ $quotation->customer->name ?? '-' }}</strong>
-            perihal {{ $quotation->quotation_name ?? 'pengujian laboratorium' }},
+            perihal {{ $quotation->name ?? 'pengujian laboratorium' }},
             maka harga yang kami tawarkan adalah sebesar
             <span class="price-highlight">
                 Rp
@@ -426,7 +426,7 @@
 
         <div class="section-title">
             DAFTAR RINCIAN, JUMLAH DAN HARGA BARANG/PEKERJAAN<br>
-            {{ strtoupper($quotation->quotation_name ?? 'PENAWARAN') }}
+            {{ strtoupper($quotation->name ?? 'PENAWARAN') }}
         </div>
 
         <div class="table-wrapper">

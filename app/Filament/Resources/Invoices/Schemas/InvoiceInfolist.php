@@ -13,8 +13,8 @@ class InvoiceInfolist
             ->components([
                 TextEntry::make('lab_job_id')
                     ->numeric(),
-                TextEntry::make('invoice_number'),
-                TextEntry::make('invoice_date')
+                TextEntry::make('code'),
+                TextEntry::make('date')
                     ->date(),
                 TextEntry::make('due_date')
                     ->date(),

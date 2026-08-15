@@ -9,4 +9,11 @@ class Payment extends Model
 {
     /** @use HasFactory<\Database\Factories\PaymentFactory> */
     use HasFactory;
+    protected $casts = [
+        'status' => 'integer',
+    ];
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
 }

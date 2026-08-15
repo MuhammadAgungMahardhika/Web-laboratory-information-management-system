@@ -46,11 +46,11 @@ class InvoiceService
         // 1. Buat record Invoice
         $invoice = Invoice::create([
             'lab_job_id' => $labJob->id,
-            'invoice_date' => $data['invoice_date'],
+            'date' => $data['date'],
             'due_date' => $data['due_date'],
             'discount' => $data['discount'] ?? 0,
             'tax_rate' => $data['tax_rate'] ?? 0,
-            'invoice_number' => $this->generateInvoiceNumber($labJob), // <-- Panggil generator di sini
+            'code' => $this->generateInvoiceNumber($labJob), // <-- Panggil generator di sini
         ]);
 
         // 2. Salin Item Tipe A dari LabJobItem

@@ -64,7 +64,7 @@ class QuotationWkhtmlPdfController extends Controller
 
     public function preview(Quotation $quotation)
     {
-        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->quotation_number);
+        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->code);
 
         return $this->buildPdf($quotation)
             ->inline('Penawaran-' . $safeFileName . '.pdf');
@@ -72,7 +72,7 @@ class QuotationWkhtmlPdfController extends Controller
 
     public function download(Quotation $quotation)
     {
-        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->quotation_number);
+        $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $quotation->code);
 
         return $this->buildPdf($quotation)
             ->download('Penawaran-' . $safeFileName . '.pdf');

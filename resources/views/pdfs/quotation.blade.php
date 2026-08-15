@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Penawaran - {{ $quotation->quotation_number }}</title>
+    <title>Penawaran - {{ $quotation->code }}</title>
     <style>
         /* =============================================
            RESET & BASE
@@ -547,7 +547,7 @@
                 <td><strong>Quotation Letter</strong></td>
             </tr>
             <tr>
-                <td>No.Quo: {{ $quotation->quotation_number }}</td>
+                <td>No.Quo: {{ $quotation->code }}</td>
             </tr>
             <tr>
                 <td><strong>{{ $quotation->customer->name }}</strong></td>
@@ -562,13 +562,13 @@
                 <td class="label-col">PIC</td>
                 <td>: {{ $quotation->personel->fullname ?? '-' }}</td>
                 <td class="label-col">Tanggal</td>
-                <td>: {{ \Carbon\Carbon::parse($quotation->quotation_date)->isoFormat('D MMMM Y') }}</td>
+                <td>: {{ \Carbon\Carbon::parse($quotation->date)->isoFormat('D MMMM Y') }}</td>
             </tr>
             <tr>
                 <td class="label-col">Telp</td>
                 <td>: {{ $quotation->personel->phone_number ?? '-' }}</td>
                 <td class="label-col">Reff</td>
-                <td>: {{ $quotation->quotation_number ?? '-' }}</td>
+                <td>: {{ $quotation->code ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="label-col">Email</td>
@@ -589,7 +589,7 @@
         <div class="intro-text">
             Terima kasih sudah memberi kepercayaan kepada {{ $company->name ?? 'Laboratorium Kami' }}.
             Menindaklanjuti permintaan dari <strong>{{ $quotation->customer->name ?? '-' }}</strong>
-            perihal {{ $quotation->quotation_name ?? 'pengujian laboratorium' }},
+            perihal {{ $quotation->name ?? 'pengujian laboratorium' }},
             maka harga yang kami tawarkan adalah sebesar
             <span class="price-highlight">Rp {{ number_format($totalHarga, 0, ',', '.') }},-</span>
             <span class="price-inword">({{ rupiahInWords($totalHarga) }})</span>
@@ -637,7 +637,7 @@
     <div class="page page-break">
         <div class="section-title">
             DAFTAR RINCIAN, JUMLAH DAN HARGA JASA/PEKERJAAN<br>
-            {{ strtoupper($quotation->quotation_name ?? 'PENAWARAN') }}
+            {{ strtoupper($quotation->name ?? 'PENAWARAN') }}
         </div>
 
         @php

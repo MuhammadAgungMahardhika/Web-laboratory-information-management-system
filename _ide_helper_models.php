@@ -166,8 +166,8 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $lab_job_id
- * @property string $invoice_number
- * @property string $invoice_date
+ * @property string $code
+ * @property string $date
  * @property string $due_date
  * @property string|null $subtotal
  * @property string $discount
@@ -181,6 +181,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceItems
  * @property-read int|null $invoice_items_count
  * @property-read \App\Models\LabJob $labJob
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
+ * @property-read int|null $payments_count
  * @method static \Database\Factories\InvoiceFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newQuery()
@@ -264,11 +266,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereEndDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereJobNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereQuotationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereStartDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJob whereStatus($value)
@@ -281,6 +283,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $code
  * @property int $lab_job_id
  * @property int|null $quotation_item_id
  * @property int|null $test_package_id
@@ -296,6 +299,7 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $description_code
  * @property-read float $item_total
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceItems
  * @property-read int|null $invoice_items_count
@@ -313,9 +317,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereDescriptionCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LabJobItem whereLabJobId($value)
@@ -726,9 +732,9 @@ namespace App\Models{
  * @property int|null $request_id
  * @property int|null $customer_id
  * @property int|null $personel_id
- * @property string $quotation_name
- * @property string $quotation_number
- * @property string $quotation_date
+ * @property string $name
+ * @property string $code
+ * @property string $start_date
  * @property string $valid_until_date
  * @property string $discount_percentage
  * @property string $ppn_percentage
@@ -1010,13 +1016,15 @@ namespace App\Models{
  * @property string|null $latitude
  * @property string|null $longitude
  * @property string|null $container_type
- * @property int $container_quantity
+ * @property int|null $container_quantity
  * @property string|null $sample_volume
  * @property string|null $preservation_method
  * @property string|null $collection_notes
  * @property string|null $received_date
  * @property string|null $received_time
  * @property string|null $received_condition_notes
+ * @property string|null $analyzed_start_date
+ * @property string|null $analyzed_end_date
  * @property int $collection_type
  * @property int $status
  * @property string|null $created_by
@@ -1033,6 +1041,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereAnalyzedEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereAnalyzedStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectedByPersonelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereCollectionLocationDesc($value)
@@ -1052,7 +1063,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedConditionNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereReceivedTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereSampleVolume($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereUpdatedAt($value)
@@ -1302,6 +1312,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereDescription($value)
@@ -1310,7 +1321,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereRegulationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereSampleMatricCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestPackage whereUpdatedBy($value)
  */
@@ -1414,30 +1424,23 @@ namespace App\Models{
  * @property int $id
  * @property int $personel_id
  * @property int $test_result_id
- * @property int $old_status
- * @property int $new_status
- * @property string|null $old_tested_value
- * @property string|null $new_tested_value
- * @property string|null $comment
+ * @property \App\Models\Enums\TestResultHistoryActionEnum $action
+ * @property array<array-key, mixed>|null $changes
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property mixed $action
  * @property-read \App\Models\Personel $personel
  * @property-read \App\Models\TestResult $testResult
  * @method static \Database\Factories\TestResultHistoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereAction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereChanges($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereNewStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereNewTestedValue($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereOldStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereOldTestedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory wherePersonelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereTestResultId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TestResultHistory whereUpdatedAt($value)

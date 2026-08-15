@@ -18,9 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('personel_id')->nullable();
 
             // Quotation details
-            $table->string('quotation_name', 255);
-            $table->string('quotation_number', 50)->unique();
-            $table->date('quotation_date');
+            $table->string('name', 255);
+            $table->string('code', 50)->unique();
+            $table->date('date');
             $table->date('valid_until_date');
             $table->decimal('discount_percentage', 5, 2)->default(0);
             $table->decimal('ppn_percentage', 5, 2)->default(0);
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->string('updated_by', 255)->nullable();
             $table->timestamps();
 
-            $table->index('quotation_number');
+            $table->index('code');
             $table->index('status');
         });
     }

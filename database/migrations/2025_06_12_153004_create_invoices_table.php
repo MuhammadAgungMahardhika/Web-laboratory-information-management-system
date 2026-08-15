@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('lab_job_id'); // Mencegah Lab Job dihapus jika sudah ditagih (Audit trail)
 
             // Snapshot Data
-            $table->string('invoice_number')->unique();
-            $table->date('invoice_date');
+            $table->string('code')->unique();
+            $table->date('date');
             $table->date('due_date');
 
             // Financial Summaries
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Index
-            $table->index('invoice_number');
+            $table->index('code');
             $table->index('status');
         });
     }
