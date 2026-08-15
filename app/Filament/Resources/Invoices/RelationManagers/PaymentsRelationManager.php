@@ -41,7 +41,7 @@ class PaymentsRelationManager extends RelationManager
                     ->maxLength(50)
                     ->readOnly(),
 
-                DatePicker::make('payment_date')
+                DatePicker::make('date')
                     ->label('Tanggal Pembayaran')
                     ->required()
                     ->default(now())
@@ -119,7 +119,7 @@ class PaymentsRelationManager extends RelationManager
                     ->sortable()
                     ->copyable(),
 
-                TextColumn::make('payment_date')
+                TextColumn::make('date')
                     ->label('Tanggal')
                     ->date('d M Y')
                     ->sortable(),

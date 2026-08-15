@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('invoice_id'); // Jika invoice dihapus, record pembayaran ikut dihapus
 
             // Detail Transaksi
-            $table->date('payment_date');
+            $table->date('date');
             $table->decimal('amount_paid', 15, 2);
             $table->string('payment_method', 50); // Ex: 'Transfer', 'Cash', 'Credit Card'
             $table->string('reference_number', 255)->nullable(); // Nomor referensi bank/transaksi

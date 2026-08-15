@@ -559,7 +559,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $invoice_id
- * @property string $payment_date
+ * @property string $date
  * @property string $amount_paid
  * @property string $payment_method
  * @property string|null $reference_number
