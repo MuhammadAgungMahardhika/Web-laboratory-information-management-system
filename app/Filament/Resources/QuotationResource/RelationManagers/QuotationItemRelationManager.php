@@ -31,6 +31,7 @@ use App\Services\QuotationItemService;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Radio;
 use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Grouping\Group;
@@ -43,8 +44,8 @@ class QuotationItemRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
     protected static string $relationship = 'quotationItems';
-    protected static ?string $label = 'Detail penawaran';
-    protected static ?string $title = "Detail penawaran";
+    protected static ?string $label = 'Rincian penawaran';
+    protected static ?string $title = "Rincian penawaran";
 
     public function form(Schema $schema): Schema
     {
@@ -287,7 +288,8 @@ class QuotationItemRelationManager extends RelationManager
                         // Inisialisasi service
                         $quotationItemService = new QuotationItemService();
                         $quotationItemService->syncParameterQuotationItems($record);
-                    })->databaseTransaction(),
+                    })->databaseTransaction()->label('Tambah Rincian Penawaran')
+                    ->icon(Heroicon::OutlinedPlus),
             ])
             ->recordActions([
                 EditAction::make()

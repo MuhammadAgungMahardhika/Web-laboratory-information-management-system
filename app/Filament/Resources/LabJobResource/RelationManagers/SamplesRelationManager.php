@@ -216,7 +216,6 @@ class SamplesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         $ownerStatus =  $this->ownerRecord->status;
-        $sampleService  = app(SampleService::class);
         return SampleResource::table($table)
             ->modifyQueryUsing(function ($query) {
                 return $query->with('collectedByPersonel', 'receivedByPersonel', 'labJobItem.labJob');
@@ -235,7 +234,8 @@ class SamplesRelationManager extends RelationManager
                     function (RelationManager $livewire) {
                         $livewire->dispatch('refresh');
                     }
-                )->slideOver(),
+                )->slideOver()->label('Tambah Sampel')
+                    ->icon(Heroicon::OutlinedPlus),
             ])
             ->recordActions([
                 ActionGroup::make([
