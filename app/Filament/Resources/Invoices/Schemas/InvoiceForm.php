@@ -377,6 +377,7 @@ class InvoiceForm
                             ->default(0),
                     ])
                     ->columns(4)
+                    ->visibleOn(['edit', 'view'])
                     ->columnSpanFull()
             ]);
     }
