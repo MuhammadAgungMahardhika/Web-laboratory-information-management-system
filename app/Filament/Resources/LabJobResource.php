@@ -211,34 +211,25 @@ class LabJobResource extends Resource
                     ->sortable()
                     ->color(fn($state) => JobStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
+                TextColumn::make('code')
+                    ->label('Nomor Lab Job')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('reference_codes')
                     ->label('Referensi')
                     ->state(fn($record) => $record)
                     ->formatStateUsing(function ($record): HtmlString {
                         $html = '<div style="
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            white-space: nowrap;
-        ">';
-
-                        // Lab Job — tidak clickable
-                        if ($record->code) {
-                            $html .= sprintf(
-                                '<span style="
-                                    display: block;
-                                    line-height: 1.4;
-                                    color: inherit;
-                                    text-decoration: none;
-                                ">%s</span>',
-                                e($record->code)
-                            );
-                        }
+                            display: flex;
+                            flex-direction: column;
+                            gap: 4px;
+                            white-space: nowrap;
+                        ">';
 
                         // Quotation — clickable
                         if ($record->quotation?->code) {
                             $url = QuotationResource::getUrl(
-                                'edit',
+                                'view',
                                 ['record' => $record->quotation]
                             );
 
@@ -250,7 +241,7 @@ class LabJobResource extends Resource
                         white-space: nowrap;
                         text-decoration: none;
                     ">
-                    %s
+                    Nomor Penawaran : %s
                 </a>',
                                 e($url),
                                 e($record->quotation->code)
@@ -259,21 +250,21 @@ class LabJobResource extends Resource
 
                         // Invoice — clickable
                         if ($record->invoice?->code) {
-                            $url = \App\Filament\Resources\Invoices\InvoiceResource::getUrl(
-                                'edit',
+                            $url = InvoiceResource::getUrl(
+                                'view',
                                 ['record' => $record->invoice]
                             );
 
                             $html .= sprintf(
                                 '<a href="%s"
-                    style="
-                        display: block;
-                        line-height: 1.4;
-                        white-space: nowrap;
-                        text-decoration: none;
-                    ">
-                    %s
-                </a>',
+                                style="
+                                    display: block;
+                                    line-height: 1.4;
+                                    white-space: nowrap;
+                                    text-decoration: none;
+                                ">
+                                Nomor Invoice : %s
+                            </a>',
                                 e($url),
                                 e($record->invoice->code)
                             );
@@ -288,7 +279,6 @@ class LabJobResource extends Resource
                     ->searchable(query: function (Builder $query, string $search): Builder {
                         return $query->where(function (Builder $query) use ($search) {
                             $query
-                                ->where('code', 'like', "%{$search}%")
                                 ->orWhereHas(
                                     'quotation',
                                     fn(Builder $q) =>
@@ -301,10 +291,6 @@ class LabJobResource extends Resource
                                 );
                         });
                     }),
-                TextColumn::make('code')
-                    ->label('Nomor Lab Job')
-                    ->searchable()
-                    ->sortable(),
                 TextColumn::make('start_date')
                     ->label('Tanggal Mulai')
                     ->date('d M Y')
@@ -331,6 +317,11 @@ class LabJobResource extends Resource
                 SelectFilter::make('quotation.code')
                     ->label('Nomor Penawaran')
                     ->relationship('quotation', 'code')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('invoice.code')
+                    ->label('Nomor Invoice')
+                    ->relationship('invoice', 'code')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('customer')
