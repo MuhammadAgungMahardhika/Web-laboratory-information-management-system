@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Invoices\InvoiceResource;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
@@ -35,6 +36,7 @@ use Filament\Tables\Enums\RecordActionsPosition;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\HtmlString;
 
 class LabJobResource extends Resource
 {
@@ -209,10 +211,96 @@ class LabJobResource extends Resource
                     ->sortable()
                     ->color(fn($state) => JobStatusEnum::color($state))
                     ->formatStateUsing(fn($state) => JobStatusEnum::labels()[$state]),
-                TextColumn::make('quotation.code')
-                    ->label('Nomor Penawaran')
-                    ->sortable()
-                    ->searchable(),
+                TextColumn::make('reference_codes')
+                    ->label('Referensi')
+                    ->state(fn($record) => $record)
+                    ->formatStateUsing(function ($record): HtmlString {
+                        $html = '<div style="
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            white-space: nowrap;
+        ">';
+
+                        // Lab Job — tidak clickable
+                        if ($record->code) {
+                            $html .= sprintf(
+                                '<span style="
+                                    display: block;
+                                    line-height: 1.4;
+                                    color: inherit;
+                                    text-decoration: none;
+                                ">%s</span>',
+                                e($record->code)
+                            );
+                        }
+
+                        // Quotation — clickable
+                        if ($record->quotation?->code) {
+                            $url = QuotationResource::getUrl(
+                                'edit',
+                                ['record' => $record->quotation]
+                            );
+
+                            $html .= sprintf(
+                                '<a href="%s"
+                    style="
+                        display: block;
+                        line-height: 1.4;
+                        white-space: nowrap;
+                        text-decoration: none;
+                    ">
+                    %s
+                </a>',
+                                e($url),
+                                e($record->quotation->code)
+                            );
+                        }
+
+                        // Invoice — clickable
+                        if ($record->invoice?->code) {
+                            $url = \App\Filament\Resources\Invoices\InvoiceResource::getUrl(
+                                'edit',
+                                ['record' => $record->invoice]
+                            );
+
+                            $html .= sprintf(
+                                '<a href="%s"
+                    style="
+                        display: block;
+                        line-height: 1.4;
+                        white-space: nowrap;
+                        text-decoration: none;
+                    ">
+                    %s
+                </a>',
+                                e($url),
+                                e($record->invoice->code)
+                            );
+                        }
+
+                        $html .= '</div>';
+
+                        return new HtmlString($html);
+                    })
+                    ->html()
+                    ->wrap(false)
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->where(function (Builder $query) use ($search) {
+                            $query
+                                ->where('code', 'like', "%{$search}%")
+                                ->orWhereHas(
+                                    'quotation',
+                                    fn(Builder $q) =>
+                                    $q->where('code', 'like', "%{$search}%")
+                                )
+                                ->orWhereHas(
+                                    'invoice',
+                                    fn(Builder $q) =>
+                                    $q->where('code', 'like', "%{$search}%")
+                                );
+                        });
+                    }),
                 TextColumn::make('code')
                     ->label('Nomor Lab Job')
                     ->searchable()

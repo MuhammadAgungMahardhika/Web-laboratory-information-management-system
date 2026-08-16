@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class InvoiceForm
 {
@@ -246,34 +247,117 @@ class InvoiceForm
                         Placeholder::make('subtotal_display')
                             ->label('Subtotal')
                             ->content(
-                                fn(Get $get): string =>
-                                self::formatMoney($get('subtotal'))
-                            ),
+                                fn(Get $get): HtmlString => new HtmlString(
+                                    '
+                                        <div style="
+                                            padding: 14px 18px;
+                                            border: 1px solid #e5e7eb;
+                                            border-radius: 8px;
+                                            background: #f9fafb;
+                                        ">
+                                            <div style="
+                                                font-size: 13px;
+                                                color: #6b7280;
+                                                margin-bottom: 4px;
+                                            ">
+                                                Subtotal
+                                            </div>
 
+                                            <div style="
+                                                font-size: 20px;
+                                                font-weight: 600;
+                                                line-height: 1.4;
+                                                color: #111827;
+                                            ">
+                                                ' . self::formatMoney($get('subtotal')) . '
+                                            </div>
+                                        </div>
+                                        '
+                                )
+                            )
+                            ->columnSpan(1),
 
                         Placeholder::make('total_display')
-                            ->label('Total Tagihan (DPP + PPN - Diskon)')
+                            ->label('Total Tagihan')
                             ->content(
-                                fn(Get $get): string =>
-                                self::formatMoney(
-                                    $get('total_amount')
+                                fn(Get $get): HtmlString => new HtmlString(
+                                    '
+                                    <div style="
+                                        padding: 16px 20px;
+                                        border: 1px solid #d1d5db;
+                                        border-radius: 8px;
+                                        background: #f3f4f6;
+                                    ">
+                                        <div style="
+                                            font-size: 13px;
+                                            color: #6b7280;
+                                            margin-bottom: 5px;
+                                        ">
+                                            Total Tagihan
+                                        </div>
+
+                                        <div style="
+                                            font-size: 26px;
+                                            font-weight: 700;
+                                            line-height: 1.3;
+                                            color: #111827;
+                                        ">
+                                            ' . self::formatMoney($get('total_amount')) . '
+                                        </div>
+
+                                        <div style="
+                                            font-size: 11px;
+                                            color: #6b7280;
+                                            margin-top: 5px;
+                                        ">
+                                            DPP + PPN
+                                        </div>
+                                    </div>
+                                    '
                                 )
                             )
-                            ->extraAttributes([
-                                'class' => 'font-bold text-lg',
-                            ]),
+                            ->columnSpan(1),
 
                         Placeholder::make('net_display')
-                            ->label('Total Bersih (Total Tagihan - PPH 23)')
+                            ->label('Total Bersih')
                             ->content(
-                                fn(Get $get): string =>
-                                self::formatMoney(
-                                    $get('net_amount')
+                                fn(Get $get): HtmlString => new HtmlString(
+                                    '
+                                    <div style="
+                                        padding: 16px 20px;
+                                        border: 1px solid #d1d5db;
+                                        border-radius: 8px;
+                                        background: #f9fafb;
+                                    ">
+                                        <div style="
+                                            font-size: 13px;
+                                            color: #6b7280;
+                                            margin-bottom: 5px;
+                                        ">
+                                            Total Bersih
+                                        </div>
+
+                                        <div style="
+                                            font-size: 26px;
+                                            font-weight: 700;
+                                            line-height: 1.3;
+                                            color: #111827;
+                                        ">
+                                            ' . self::formatMoney($get('net_amount')) . '
+                                        </div>
+
+                                        <div style="
+                                            font-size: 11px;
+                                            color: #6b7280;
+                                            margin-top: 5px;
+                                        ">
+                                            Total Tagihan - PPh 23
+                                        </div>
+                                    </div>
+                                    '
                                 )
                             )
-                            ->extraAttributes([
-                                'class' => 'font-bold',
-                            ]),
+                            ->columnSpan(1),
 
                         // =========================
                         // HIDDEN VALUES
