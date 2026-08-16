@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Observers\InvoiceItemObserver;
 use App\Traits\Blameable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
+#[ObservedBy([InvoiceItemObserver::class])]
 class InvoiceItem extends Model
 {
     /** @use HasFactory<\Database\Factories\InvoiceItemFactory> */

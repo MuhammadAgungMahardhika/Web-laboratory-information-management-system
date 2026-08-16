@@ -26,6 +26,7 @@ use Livewire\Attributes\On;
 class EditLabJob extends EditRecord
 {
     protected static string $resource = LabJobResource::class;
+    protected $listeners = ['refresh'];
     protected function getHeaderActions(): array
     {
         return [

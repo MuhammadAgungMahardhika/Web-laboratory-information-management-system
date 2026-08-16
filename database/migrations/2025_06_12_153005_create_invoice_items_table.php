@@ -18,8 +18,10 @@ return new class extends Migration
 
             // Snapshot Data
             $table->string('description');
-            $table->integer('quantity');
-            $table->decimal('price', 15, 2);
+            $table->decimal('quantity', 15, 2)->default(1);
+            $table->decimal('price', 15, 2)->default(0);
+            $table->decimal('subtotal', 15, 2)->default(0);
+
 
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

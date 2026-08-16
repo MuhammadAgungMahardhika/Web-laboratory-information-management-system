@@ -19,11 +19,14 @@ class CreateInvoice extends CreateRecord
     }
     protected function handleRecordCreation(array $data): Model
     {
-        return DB::transaction(function () use ($data) {
-            $labJob = LabJob::findOrFail($data['lab_job_id']);
-            $invoiceService = app(InvoiceService::class);
-            $invoice = $invoiceService->createInvoiceFromLabJob($labJob, $data);
-            return $invoice;
-        });
+        $labJob = LabJob::findOrFail(
+            $data['lab_job_id']
+        );
+
+        return app(InvoiceService::class)
+            ->createInvoiceFromLabJob(
+                $labJob,
+                $data
+            );
     }
 }

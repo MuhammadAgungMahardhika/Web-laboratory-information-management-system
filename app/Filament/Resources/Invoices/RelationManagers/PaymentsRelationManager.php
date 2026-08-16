@@ -22,13 +22,10 @@ use Filament\Tables\Table;
 class PaymentsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
-
     protected static string $relationship = 'payments';
-
     protected static ?string $label = 'Pembayaran';
-
     protected static ?string $title = 'Riwayat Pembayaran';
-
+    protected $listeners = ['refresh'];
     public function form(Schema $schema): Schema
     {
         return $schema

@@ -21,10 +21,17 @@ return new class extends Migration
             $table->date('due_date');
 
             // Financial Summaries
-            $table->decimal('subtotal', 10, 2)->nullable();
-            $table->decimal('discount', 10, 2)->default(0);
-            $table->decimal('tax_rate', 5, 2)->default(0); // Misal: 11%
-            $table->decimal('total_amount', 10, 2)->nullable();
+
+            $table->decimal('subtotal', 15, 2)->default(0);
+            $table->decimal('discount_percentage', 5, 2)->default(0);
+            $table->decimal('discount_amount', 15, 2)->default(0);
+            $table->decimal('dpp_amount', 15, 2)->default(0);
+            $table->decimal('ppn_percentage', 5, 2)->default(0);
+            $table->decimal('ppn_amount', 15, 2)->default(0);
+            $table->decimal('pph_percentage', 5, 2)->default(0);
+            $table->decimal('pph_amount', 15, 2)->default(0);
+            $table->decimal('total_amount', 15, 2)->default(0);
+            $table->decimal('net_amount', 15, 2)->default(0);
 
             // Status (Misal: Draft, Sent, Paid, Void)
             $table->tinyInteger('status')->default(1);

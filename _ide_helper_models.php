@@ -173,6 +173,7 @@ namespace App\Models{
  * @property string $discount
  * @property string $tax_rate
  * @property string|null $total_amount
+ * @property string|null $tax_amount
  * @property int $status
  * @property string|null $created_by
  * @property string|null $updated_by
@@ -187,16 +188,17 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDiscount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDueDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereInvoiceDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereInvoiceNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereLabJobId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereSubtotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedAt($value)
@@ -284,6 +286,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $code
+ * @property string|null $description_code
  * @property int $lab_job_id
  * @property int|null $quotation_item_id
  * @property int|null $test_package_id
@@ -299,7 +302,6 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $description_code
  * @property-read float $item_total
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceItems
  * @property-read int|null $invoice_items_count
@@ -558,6 +560,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $code
  * @property int $invoice_id
  * @property string $date
  * @property string $amount_paid
@@ -567,22 +570,26 @@ namespace App\Models{
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property string|null $attachment_path
+ * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Invoice $invoice
  * @method static \Database\Factories\PaymentFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereAmountPaid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereAttachmentPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereNotes($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment wherePaymentDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment wherePaymentMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereReferenceNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereUpdatedBy($value)
  */
@@ -734,7 +741,7 @@ namespace App\Models{
  * @property int|null $personel_id
  * @property string $name
  * @property string $code
- * @property string $start_date
+ * @property string $date
  * @property string $valid_until_date
  * @property string $discount_percentage
  * @property string $ppn_percentage
@@ -763,17 +770,17 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereAdditionalDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereApprovedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereApprovedByPersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereDiscountPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation wherePersonelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation wherePphPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation wherePpnPercentage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereQuotationDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereQuotationName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereQuotationNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereRequestId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereTotalAmount($value)
@@ -1006,23 +1013,23 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $code
  * @property int $lab_job_item_id
  * @property int|null $collected_by_personel_id
  * @property int|null $received_by_personel_id
- * @property string $code
  * @property string|null $collection_date
  * @property string|null $collection_time
  * @property string|null $collection_location_desc
  * @property string|null $latitude
  * @property string|null $longitude
- * @property string|null $container_type
- * @property int|null $container_quantity
- * @property string|null $sample_volume
  * @property string|null $preservation_method
  * @property string|null $collection_notes
  * @property string|null $received_date
  * @property string|null $received_time
  * @property string|null $received_condition_notes
+ * @property string|null $container_type
+ * @property int|null $container_quantity
+ * @property string|null $sample_volume
  * @property string|null $analyzed_start_date
  * @property string|null $analyzed_end_date
  * @property int $collection_type

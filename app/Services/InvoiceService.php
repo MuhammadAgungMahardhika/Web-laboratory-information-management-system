@@ -13,78 +13,312 @@ use Illuminate\Support\Facades\DB;
 class InvoiceService
 {
     /**
-     * Menghasilkan nomor faktur baru yang unik dan berurutan per bulan.
-     * Format: INV-YYMM-XXX
+     * Generate nomor invoice.
+     *
+     * Format:
+     * INV-{LAB_JOB_CODE}-{YYMM}-{SEQUENCE}
+     *
+     * Contoh:
+     * INV-LJ-001-2608-001
      */
     public function generateInvoiceNumber(LabJob $labJob): string
     {
-        // 1. Ambil code sebagai informasi
         $jobNumber = $labJob->code;
 
-        // 2. Ambil format tanggal
-        $currentYearMonth = Carbon::now()->format('ym'); // Contoh: 2510
+        $year = now()->year;
+        $month = now()->month;
 
-        // 3. Hitung urutan berdasarkan SEMUA invoice di bulan ini (Logika yang Benar)
-        $count = Invoice::whereYear('created_at', now()->year)
-            ->whereMonth('created_at', now()->month)
+        $currentYearMonth = now()->format('ym');
+
+        $count = Invoice::query()
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
             ->count();
 
-        // 4. Buat nomor urut 3 digit
-        $sequence = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+        $sequence = str_pad(
+            $count + 1,
+            3,
+            '0',
+            STR_PAD_LEFT
+        );
 
-        // 5. Gabungkan semuanya menjadi format yang informatif
         return "INV-{$jobNumber}-{$currentYearMonth}-{$sequence}";
     }
 
     /**
-     * Membuat Invoice lengkap dari LabJob menggunakan transaksi database.
+     * Membuat invoice lengkap berdasarkan Lab Job.
+     *
+     * Data quotation seperti diskon, PPN dan PPh
+     * disimpan sebagai snapshot pada invoice.
      */
-    public function createInvoiceFromLabJob(LabJob $labJob, array $data): Invoice
-    {
-        // Gunakan transaksi untuk memastikan semua data tersimpan dengan aman
+    public function createInvoiceFromLabJob(
+        LabJob $labJob,
+        array $data
+    ): Invoice {
+        return DB::transaction(function () use ($labJob, $data) {
 
-        // 1. Buat record Invoice
-        $invoice = Invoice::create([
-            'lab_job_id' => $labJob->id,
-            'date' => $data['date'],
-            'due_date' => $data['due_date'],
-            'discount' => $data['discount'] ?? 0,
-            'tax_rate' => $data['tax_rate'] ?? 0,
-            'code' => $this->generateInvoiceNumber($labJob), // <-- Panggil generator di sini
+            $labJob->loadMissing([
+                'quotation',
+                'labJobItems',
+            ]);
+
+            $quotation = $labJob->quotation;
+
+            /*
+             * Snapshot financial configuration
+             * dari quotation.
+             */
+            $discountPercentage = (float) (
+                $quotation?->discount_percentage ?? 0
+            );
+
+            $ppnPercentage = (float) (
+                $quotation?->ppn_percentage ?? 0
+            );
+
+            $pphPercentage = (float) (
+                $quotation?->pph_percentage ?? 0
+            );
+
+            /*
+             * Buat invoice terlebih dahulu.
+             *
+             * Semua nilai financial akan dihitung
+             * setelah InvoiceItem selesai dibuat.
+             */
+            $invoice = Invoice::create([
+                'lab_job_id' => $labJob->id,
+
+                'date' => $data['date'],
+                'due_date' => $data['due_date'],
+
+                'code' => $this->generateInvoiceNumber($labJob),
+
+                'subtotal' => 0,
+
+                'discount_percentage' => $discountPercentage,
+                'discount_amount' => 0,
+
+                'dpp_amount' => 0,
+
+                'ppn_percentage' => $ppnPercentage,
+                'ppn_amount' => 0,
+
+                'pph_percentage' => $pphPercentage,
+                'pph_amount' => 0,
+
+                'total_amount' => 0,
+                'net_amount' => 0,
+
+                'status' => 1,
+            ]);
+
+            /*
+             * ==========================================
+             * ITEM LAB JOB
+             * ==========================================
+             */
+            foreach ($labJob->labJobItems as $jobItem) {
+                $this->createInvoiceItem(
+                    invoice: $invoice,
+                    source: $jobItem
+                );
+            }
+
+            /*
+             * ==========================================
+             * ITEM QUOTATION B & C
+             * ==========================================
+             */
+            if ($quotation) {
+                $quotationItems = $quotation
+                    ->quotationItems()
+                    ->whereIn('group', ['B', 'C'])
+                    ->get();
+
+                foreach ($quotationItems as $quotationItem) {
+                    $this->createInvoiceItem(
+                        invoice: $invoice,
+                        source: $quotationItem
+                    );
+                }
+            }
+
+            /*
+             * ==========================================
+             * HITUNG TOTAL
+             * ==========================================
+             */
+            $this->recalculateTotals($invoice);
+
+            return $invoice->fresh();
+        });
+    }
+
+    /**
+     * Membuat InvoiceItem dari sumber tertentu.
+     *
+     * Digunakan untuk:
+     * - LabJobItem
+     * - QuotationItem
+     */
+    protected function createInvoiceItem(
+        Invoice $invoice,
+        LabJobItem|QuotationItem $source
+    ): InvoiceItem {
+        $quantity = (float) $source->quantity;
+        $price = (float) $source->price;
+
+        return InvoiceItem::create([
+            'invoice_id' => $invoice->id,
+
+            'source_type' => $source::class,
+            'source_id' => $source->id,
+
+            'description' => $source->description,
+            'quantity' => $quantity,
+            'price' => $price,
+
+            'subtotal' => round(
+                $quantity * $price,
+                2
+            ),
+        ]);
+    }
+
+    /**
+     * Menghitung ulang seluruh financial invoice.
+     *
+     * Method ini menjadi single source of truth
+     * untuk perhitungan invoice.
+     */
+    public function recalculateTotals(
+        Invoice $invoice
+    ): Invoice {
+        /*
+         * Hitung subtotal berdasarkan snapshot
+         * InvoiceItem.
+         */
+        $subtotal = (float) $invoice
+            ->invoiceItems()
+            ->sum(DB::raw('quantity * price'));
+
+        /*
+         * Ambil persentase dari invoice.
+         */
+        $discountPercentage = (float) ($invoice->discount_percentage ?? 0);
+        $ppnPercentage = (float) ($invoice->ppn_percentage ?? 0);
+        $pphPercentage = (float) ($invoice->pph_percentage ?? 0);
+
+        /*
+         * Pastikan persentase valid.
+         */
+        $discountPercentage = min(max($discountPercentage, 0), 100);
+        $ppnPercentage = min(max($ppnPercentage, 0), 100);
+        $pphPercentage = min(max($pphPercentage, 0),  100);
+
+        /*
+         * ==========================================
+         * DISCOUNT
+         * ==========================================
+         */
+        $discountAmount =  $subtotal *  ($discountPercentage / 100);
+
+        /*
+         * ==========================================
+         * DPP
+         * ==========================================
+         */
+        $dppAmount = max($subtotal - $discountAmount, 0);
+
+        /*
+         * ==========================================
+         * PPN
+         * ==========================================
+         */
+        $ppnAmount = $dppAmount * ($ppnPercentage / 100);
+
+        /*
+         * ==========================================
+         * PPH
+         * ==========================================
+         */
+        $pphAmount = $dppAmount * ($pphPercentage / 100);
+
+        /*
+         * ==========================================
+         * TOTAL INVOICE
+         * ==========================================
+         *
+         * PPh tidak mengurangi nilai invoice.
+         */
+        $totalAmount = $dppAmount +  $ppnAmount;
+
+        /*
+         * ==========================================
+         * NET PAYMENT
+         * ==========================================
+         *
+         * PPh merupakan withholding tax
+         * yang dipotong saat pembayaran.
+         */
+        $netAmount = max($totalAmount - $pphAmount,  0);
+
+        /*
+         * ==========================================
+         * SIMPAN
+         * ==========================================
+         */
+        $invoice->update([
+            'subtotal'            => round($subtotal, 2),
+            'discount_percentage' => round($discountPercentage, 2),
+            'discount_amount'     => round($discountAmount, 2),
+            'dpp_amount'          => round($dppAmount, 2),
+            'ppn_percentage'      => round($ppnPercentage, 2),
+            'ppn_amount'          => round($ppnAmount, 2),
+            'pph_percentage'      => round($pphPercentage, 2),
+            'pph_amount'          => round($pphAmount, 2),
+            'total_amount'        => round($totalAmount, 2),
+            'net_amount'          => round($netAmount, 2),
         ]);
 
-        // 2. Salin Item Tipe A dari LabJobItem
-        foreach ($labJob->labJobItems as $jobItem) {
-            InvoiceItem::create([
-                'invoice_id' => $invoice->id,
-                'source_type' => LabJobItem::class,
-                'source_id' => $jobItem->id,
-                'description' => $jobItem->description,
-                'price' => $jobItem->price,
-                'quantity' => $jobItem->quantity,
-            ]);
-        }
+        return $invoice->fresh();
+    }
 
-        // 3. Salin Item Tipe B & C dari Quotation
-        if ($labJob->quotation) { // Pastikan relasi quotation ada
-            $otherItems = $labJob->quotation->quotationItems()
-                ->whereIn('group', ['B', 'C'])
-                ->get();
+    /**
+     * Menghitung nilai financial tanpa menyimpan ke database.
+     *
+     * Digunakan oleh Form Filament untuk preview kalkulasi.
+     */
+    public function calculateTotals(
+        float $subtotal,
+        float $discountPercentage = 0,
+        float $ppnPercentage = 0,
+        float $pphPercentage = 0,
+    ): array {
+        $discountPercentage = min(max($discountPercentage, 0), 100);
+        $ppnPercentage = min(max($ppnPercentage, 0), 100);
+        $pphPercentage = min(max($pphPercentage, 0),  100);
 
-            foreach ($otherItems as $quotationItem) {
-                InvoiceItem::create([
-                    'invoice_id' => $invoice->id,
-                    'source_type' => QuotationItem::class,
-                    'source_id' => $quotationItem->id,
-                    'description' => $quotationItem->description,
-                    'price' => $quotationItem->price,
-                    'quantity' => $quotationItem->quantity,
-                ]);
-            }
-        }
+        $discountAmount =  $subtotal * ($discountPercentage / 100);
+        $dppAmount = max($subtotal - $discountAmount, 0);
+        $ppnAmount = $dppAmount * ($ppnPercentage / 100);
+        $pphAmount =  $dppAmount * ($pphPercentage / 100);
+        $totalAmount = $dppAmount + $ppnAmount;
 
-        // Anda bisa menambahkan logika untuk menghitung total_amount di sini
-        // $invoice->recalculateTotals();
-        return $invoice;
+        $netAmount = max($totalAmount - $pphAmount, 0);
+
+        return [
+            'subtotal' => round($subtotal, 2),
+            'discount_percentage' => round($discountPercentage, 2),
+            'discount_amount' => round($discountAmount,  2),
+            'dpp_amount' => round($dppAmount, 2),
+            'ppn_percentage' => round($ppnPercentage, 2),
+            'ppn_amount' => round($ppnAmount, 2),
+            'pph_percentage' => round($pphPercentage, 2),
+            'pph_amount' => round($pphAmount, 2),
+            'total_amount' => round($totalAmount, 2),
+            'net_amount' => round($netAmount,  2),
+        ];
     }
 }

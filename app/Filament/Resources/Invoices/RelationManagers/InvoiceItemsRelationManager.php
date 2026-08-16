@@ -2,16 +2,16 @@
 
 namespace App\Filament\Resources\Invoices\RelationManagers;
 
+use App\Models\InvoiceItem;
 use App\Models\LabJobItem;
 use App\Models\QuotationItem;
-use Filament\Actions\AssociateAction;
+use App\Services\InvoiceService;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\DissociateAction;
-use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\MorphToSelect\Type;
 use Filament\Forms\Components\Textarea;
@@ -25,140 +25,392 @@ use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceItemsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
+
     protected static string $relationship = 'invoiceItems';
+
     protected static ?string $label = 'Rincian Tagihan';
-    protected static ?string $title = "Rincian Tagihan";
+
+    protected static ?string $title = 'Rincian Tagihan';
+
+    /**
+     * ==========================================
+     * FORM
+     * ==========================================
+     */
     public function form(Schema $schema): Schema
     {
-        $ownerRecord =  $this->ownerRecord;
+        $ownerRecord = $this->ownerRecord;
+
         return $schema
             ->components([
+
+                /*
+                 * ==========================================
+                 * MODE INPUT
+                 * ==========================================
+                 */
                 Toggle::make('manual_input_mode')
-                    ->label('Input Manual (Non-Source Item)')
-                    ->live()
+                    ->label('Input Manual')
+                    ->helperText(
+                        'Aktifkan jika item tidak berasal dari Lab Job atau Penawaran.'
+                    )
+                    ->live(onBlur: true)
                     ->dehydrated(false)
-                    ->default(fn(Get $get) => filled($get('source_id')) ? true : false),
+                    ->default(
+                        fn(Get $get): bool =>
+                        filled($get('source_id'))
+                    )
+                    ->columnSpanFull(),
+
+                /*
+                 * ==========================================
+                 * SUMBER ITEM
+                 * ==========================================
+                 */
                 MorphToSelect::make('source')
                     ->label('Sumber Item')
                     ->searchable()
                     ->preload()
-                    ->required(fn(Get $get) => !$get('manual_input_mode'))
-                    ->visible(fn(Get $get) => !$get('manual_input_mode'))
+                    ->required(
+                        fn(Get $get): bool =>
+                        ! $get('manual_input_mode')
+                    )
+                    ->visible(
+                        fn(Get $get): bool =>
+                        ! $get('manual_input_mode')
+                    )
                     ->types([
+
+                        /*
+                         * ==================================
+                         * LAB JOB ITEM
+                         * ==================================
+                         */
                         Type::make(LabJobItem::class)
                             ->label('Lab Job')
                             ->titleAttribute('description')
-                            // Logika filter LabJobItem...
-                            ->modifyOptionsQueryUsing(function (Builder $query, $record) use ($ownerRecord) {
-                                // Di Relation Manager, kita harus mengakses ID LabJob dari Invoice induk (ownerRecord)
-                                $invoiceItemId = $record->id ?? null;
-                                $labJobId = $ownerRecord->lab_job_id ?? null;
-                                // Jika Lab Job ditemukan, filter LabJobItem berdasarkan ID tersebut
-                                if ($labJobId) {
-                                    return $query->where('lab_job_id', $labJobId)
-                                        ->whereDoesntHave('invoiceItems', fn($q) => $q->where('id', '!=',  $invoiceItemId));
-                                }
-                                return $query->whereRaw('1 = 0'); // Tampilkan hasil kosong jika Lab Job tidak diketahui
-                            }),
+                            ->modifyOptionsQueryUsing(
+                                function (
+                                    Builder $query,
+                                    $record
+                                ) use (
+                                    $ownerRecord
+                                ) {
+                                    $invoiceItemId =
+                                        $record?->id;
 
-                        // --- Tipe 2: QuotationItem (Tipe B & C) ---
+                                    $labJobId =
+                                        $ownerRecord?->lab_job_id;
+
+                                    if (! $labJobId) {
+                                        return $query
+                                            ->whereRaw(
+                                                '1 = 0'
+                                            );
+                                    }
+
+                                    return $query
+                                        ->where(
+                                            'lab_job_id',
+                                            $labJobId
+                                        )
+                                        ->whereDoesntHave(
+                                            'invoiceItems',
+                                            function ($q) use (
+                                                $invoiceItemId
+                                            ) {
+                                                if (
+                                                    $invoiceItemId
+                                                ) {
+                                                    $q->where(
+                                                        'id',
+                                                        '!=',
+                                                        $invoiceItemId
+                                                    );
+                                                }
+                                            }
+                                        );
+                                }
+                            ),
+
+                        /*
+                         * ==================================
+                         * QUOTATION ITEM
+                         * ==================================
+                         */
                         Type::make(QuotationItem::class)
                             ->label('Penawaran')
                             ->titleAttribute('description')
-                            ->modifyOptionsQueryUsing(function (Builder $query, $record) use ($ownerRecord) {
-                                // Mendapatkan ID Quotation dari Invoice induk
-                                $invoiceItemId = $record->id ?? null;
-                                $quotationId = $ownerRecord->labJob->quotation_id ?? null;
+                            ->modifyOptionsQueryUsing(
+                                function (
+                                    Builder $query,
+                                    $record
+                                ) use (
+                                    $ownerRecord
+                                ) {
+                                    $invoiceItemId =
+                                        $record?->id;
 
-                                // Hanya tampilkan item Tipe B/C yang belum pernah di-invoice
-                                return $query
-                                    ->where('quotation_id', $quotationId) // Hanya dari Quotation ini
-                                    ->whereIn('group', ['B', 'C']) // Hanya Tipe B dan C
-                                    // Mencegah duplikasi: Item yang sudah di-snapshot di tabel InvoiceItem manapun
-                                    ->whereDoesntHave('invoiceItems', fn($q) => $q->where('id', '!=',  $invoiceItemId));
-                            }),
-                    ])
-                    ->live() // <-- Wajib untuk memicu update otomatis
-                    ->columnSpanFull()
-                    ->afterStateUpdated(function ($set, $state) {
-                        // Jika sumber dipilih, ambil data harga dan kuantitas dari sumber tersebut
-                        if ($state['source_type'] && $state['source_id']) {
-                            $set('price', null);
-                            $set('quantity', null);
-                            $set('description', null);
-                            $source = $state['source_type']::find($state['source_id']);
-                            if ($source) {
-                                if ($state['source_type'] == LabJobItem::class) {
-                                    $description = $source->description;
-                                    $price = $source->price;
-                                    $quantity = $source->quantity;
+                                    $quotationId =
+                                        $ownerRecord
+                                        ?->labJob
+                                        ?->quotation_id;
 
-                                    $set('description', $description);
-                                    $set('price', $price);
-                                    $set('quantity', $quantity);
-                                } else if ($state['source_type'] == QuotationItem::class) {
-                                    $description = $source->description;
-                                    $price = $source->price;
-                                    $quantity = $source->quantity;
+                                    if (! $quotationId) {
+                                        return $query
+                                            ->whereRaw(
+                                                '1 = 0'
+                                            );
+                                    }
 
-                                    $set('description', $description);
-                                    $set('price', $price);
-                                    $set('quantity', $quantity);
+                                    return $query
+                                        ->where(
+                                            'quotation_id',
+                                            $quotationId
+                                        )
+                                        ->whereIn(
+                                            'group',
+                                            ['B', 'C']
+                                        )
+                                        ->whereDoesntHave(
+                                            'invoiceItems',
+                                            function ($q) use (
+                                                $invoiceItemId
+                                            ) {
+                                                if (
+                                                    $invoiceItemId
+                                                ) {
+                                                    $q->where(
+                                                        'id',
+                                                        '!=',
+                                                        $invoiceItemId
+                                                    );
+                                                }
+                                            }
+                                        );
                                 }
-                            }
-                        }
-                    }),
+                            ),
+                    ])
+                    ->live(onBlur: true)
+                    ->columnSpanFull()
+                    ->afterStateUpdated(
+                        function (
+                            Set $set,
+                            ?array $state
+                        ): void {
 
+                            if (
+                                ! $state ||
+                                empty($state['source_type']) ||
+                                empty($state['source_id'])
+                            ) {
+                                return;
+                            }
+
+                            $sourceType =
+                                $state['source_type'];
+
+                            $sourceId =
+                                $state['source_id'];
+
+                            $source =
+                                $sourceType::find(
+                                    $sourceId
+                                );
+
+                            if (! $source) {
+                                return;
+                            }
+
+                            /*
+                             * Snapshot source ke InvoiceItem.
+                             */
+                            $quantity =
+                                (float) (
+                                    $source->quantity ?? 1
+                                );
+
+                            $price =
+                                (float) (
+                                    $source->price ?? 0
+                                );
+
+                            $set(
+                                'description',
+                                $source->description
+                            );
+
+                            $set(
+                                'quantity',
+                                $quantity
+                            );
+
+                            $set(
+                                'price',
+                                $price
+                            );
+
+                            self::setItemSubtotal(
+                                $set,
+                                $quantity,
+                                $price
+                            );
+                        }
+                    ),
+
+                /*
+                 * ==========================================
+                 * DESKRIPSI
+                 * ==========================================
+                 */
                 Textarea::make('description')
                     ->label('Deskripsi')
                     ->required()
-                    ->disabled(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->disabled(
+                        fn(Get $get): bool =>
+                        ! $get('manual_input_mode')
+                    )
                     ->dehydrated()
+                    ->rows(3)
                     ->columnSpanFull(),
 
+                /*
+                 * ==========================================
+                 * QUANTITY
+                 * ==========================================
+                 */
                 TextInput::make('quantity')
                     ->label('Kuantitas')
                     ->numeric()
                     ->required()
-
-                    ->disabled(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->minValue(0.01)
+                    ->disabled(
+                        fn(Get $get): bool =>
+                        ! $get('manual_input_mode')
+                    )
                     ->dehydrated()
-                    ->minValue(1),
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(
+                        function (
+                            Get $get,
+                            Set $set
+                        ): void {
+                            self::setItemSubtotal(
+                                $set,
+                                (float) (
+                                    $get('quantity') ?? 0
+                                ),
+                                (float) (
+                                    $get('price') ?? 0
+                                )
+                            );
+                        }
+                    ),
 
+                /*
+                 * ==========================================
+                 * HARGA
+                 * ==========================================
+                 */
                 TextInput::make('price')
                     ->label('Harga Satuan')
                     ->numeric()
                     ->required()
-                    ->disabled(fn(Get $get) =>  !$get('manual_input_mode'))
+                    ->minValue(0)
+                    ->disabled(
+                        fn(Get $get): bool =>
+                        ! $get('manual_input_mode')
+                    )
                     ->dehydrated()
-                    ->prefix('Rp'),
+                    ->prefix('Rp')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(
+                        function (
+                            Get $get,
+                            Set $set
+                        ): void {
+                            self::setItemSubtotal(
+                                $set,
+                                (float) (
+                                    $get('quantity') ?? 0
+                                ),
+                                (float) (
+                                    $get('price') ?? 0
+                                )
+                            );
+                        }
+                    ),
+
+                /*
+                 * ==========================================
+                 * SUBTOTAL ITEM
+                 * ==========================================
+                 */
+                TextInput::make('subtotal')
+                    ->label('Subtotal')
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->disabled()
+                    ->dehydrated()
+                    ->default(0)
+                    ->columnSpanFull(),
             ]);
     }
 
+    /**
+     * Hitung subtotal InvoiceItem.
+     */
+    protected static function setItemSubtotal(
+        Set $set,
+        float $quantity,
+        float $price
+    ): void {
+        $subtotal =
+            $quantity * $price;
+
+        $set(
+            'subtotal',
+            round(
+                $subtotal,
+                2
+            )
+        );
+    }
+
+    /**
+     * ==========================================
+     * TABLE
+     * ==========================================
+     */
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('description')
+            ->recordTitleAttribute(
+                'description'
+            )
             ->columns([
+
                 TextColumn::make('description')
                     ->label('Deskripsi')
-                    ->searchable(),
+                    ->searchable()
+                    ->wrap(),
 
                 TextColumn::make('quantity')
-                    ->label('Kuantitas')
-                    ->numeric()
+                    ->label('Qty')
+                    ->numeric(
+                        decimalPlaces: 2
+                    )
                     ->alignEnd(),
 
                 TextColumn::make('price')
-                    ->label('Harga Satuan')
-                    ->money('IDR') // <-- Format sebagai mata uang
+                    ->label('Harga')
+                    ->money('IDR')
                     ->alignEnd()
                     ->sortable(),
 
@@ -166,31 +418,104 @@ class InvoiceItemsRelationManager extends RelationManager
                     ->label('Subtotal')
                     ->money('IDR')
                     ->alignEnd()
+                    ->sortable()
                     ->summarize(
                         Summarizer::make()
-                            ->label('Total:')
-                            // --- PERBAIKAN DI SINI: Gunakan closure kustom untuk menjumlahkan ---
+                            ->label('Total')
                             ->using(
-                                fn(QueryBuilder $query): string =>
-                                // Hitung total dari kuantitas * harga satuan untuk semua item yang difilter
-                                $query->sum(DB::raw('quantity * price'))
+                                fn(
+                                    QueryBuilder $query
+                                ): float =>
+                                (float) $query->sum(
+                                    DB::raw(
+                                        'quantity * price'
+                                    )
+                                )
                             )
                             ->money('IDR')
                     ),
             ])
-            ->filters([
-                //
-            ])
+
+            /*
+             * ==========================================
+             * CREATE
+             * ==========================================
+             */
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->after(
+                        function (): void {
+                            app(InvoiceService::class)
+                                ->recalculateTotals(
+                                    $this->ownerRecord
+                                );
+
+                            $this->dispatch(
+                                'invoice-updated'
+                            );
+                        }
+                    ),
             ])
+
+            /*
+             * ==========================================
+             * EDIT / DELETE
+             * ==========================================
+             */
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+
+                EditAction::make()
+                    ->after(
+                        function (): void {
+                            app(InvoiceService::class)
+                                ->recalculateTotals(
+                                    $this->ownerRecord
+                                );
+
+                            $this->dispatch(
+                                'invoice-updated'
+                            );
+                        }
+                    ),
+
+                DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->after(
+                        function (): void {
+                            app(InvoiceService::class)
+                                ->recalculateTotals(
+                                    $this->ownerRecord
+                                );
+
+                            $this->dispatch(
+                                'invoice-updated'
+                            );
+                        }
+                    ),
             ])
+
+            /*
+             * ==========================================
+             * BULK DELETE
+             * ==========================================
+             */
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+
+                    DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->after(
+                            function (): void {
+                                app(InvoiceService::class)
+                                    ->recalculateTotals(
+                                        $this->ownerRecord
+                                    );
+
+                                $this->dispatch(
+                                    'invoice-updated'
+                                );
+                            }
+                        ),
                 ]),
             ]);
     }

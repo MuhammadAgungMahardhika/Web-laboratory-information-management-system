@@ -59,7 +59,7 @@ class LabJobItemsRelationManager extends RelationManager
     protected static string $relationship = 'labJobItems';
     protected static ?string $label = 'Produk Uji';
     protected static ?string $title = "Produk Uji";
-
+    protected $listeners = ['refresh'];
 
     public static function canCreateForRecord(Model $ownerRecord, string $pageClass): bool
     {
