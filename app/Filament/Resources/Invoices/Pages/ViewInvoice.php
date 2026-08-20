@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Invoices\Pages;
 
+use App\Filament\Resources\InvoiceResource\Actions\InvoiceStatusAction;
 use App\Filament\Resources\Invoices\InvoiceResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
@@ -29,6 +30,8 @@ class ViewInvoice extends ViewRecord
     {
         return [
             EditAction::make(),
+            InvoiceStatusAction::preview(),
+            InvoiceStatusAction::download(),
         ];
     }
 }

@@ -167,13 +167,18 @@ namespace App\Models{
  * @property int $id
  * @property int $lab_job_id
  * @property string $code
- * @property string $date
- * @property string $due_date
- * @property string|null $subtotal
- * @property string $discount
- * @property string $tax_rate
- * @property string|null $total_amount
- * @property string|null $tax_amount
+ * @property \Illuminate\Support\Carbon $date
+ * @property \Illuminate\Support\Carbon $due_date
+ * @property string $subtotal
+ * @property string $discount_percentage
+ * @property string $discount_amount
+ * @property string $dpp_amount
+ * @property string $ppn_percentage
+ * @property string $ppn_amount
+ * @property string $pph_percentage
+ * @property string $pph_amount
+ * @property string $total_amount
+ * @property string $net_amount
  * @property int $status
  * @property string|null $created_by
  * @property string|null $updated_by
@@ -192,14 +197,19 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDiscountPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDppAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereDueDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereLabJobId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereNetAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePphAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePphPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePpnAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice wherePpnPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereSubtotal($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTaxRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedBy($value)
@@ -214,13 +224,13 @@ namespace App\Models{
  * @property string|null $source_type
  * @property int|null $source_id
  * @property string $description
- * @property int $quantity
+ * @property string $quantity
  * @property string $price
+ * @property float $subtotal
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read float $subtotal
  * @property-read \App\Models\Invoice $invoice
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent|null $source
  * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
@@ -236,6 +246,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSourceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSourceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSubtotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedBy($value)
  */

@@ -6,6 +6,7 @@ use App\Http\Controllers\ReportPdfController;
 use App\Http\Controllers\SamplePdfController;
 use App\Http\Middleware\RedirectIfLoggedIn;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InvoicePdfController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -20,6 +21,17 @@ Route::get('/quotations/{quotation}/download', [QuotationPdfController::class, '
 Route::get('/lab_jobs/{labJob}/preview', [LabJobPdfController::class, 'previewTaskLetter'])->name('task_letters.preview');
 Route::get('/lab_jobs/{labJob}/download', [LabJobPdfController::class, 'downloadTaskLetter'])->name('task_letters.download');
 
+
+// Invoice
+Route::get(
+    '/invoices/{invoice}/pdf/preview',
+    [InvoicePdfController::class, 'preview']
+)->name('invoices.preview_pdf');
+
+Route::get(
+    '/invoices/{invoice}/pdf/download',
+    [InvoicePdfController::class, 'download']
+)->name('invoices.download_pdf');
 // sample label
 Route::get('/sample/{sample}/download', [SamplePdfController::class, 'downloadLabel'])
     ->name('sample_labels.download');
