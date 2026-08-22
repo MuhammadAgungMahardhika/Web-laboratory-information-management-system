@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Invoices\Pages;
 
-use App\Filament\Resources\InvoiceResource\Actions\InvoiceStatusAction;
+use App\Filament\Resources\Invoices\Actions\InvoiceStatusAction;
 use App\Filament\Resources\Invoices\InvoiceResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
