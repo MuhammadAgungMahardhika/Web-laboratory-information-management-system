@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\InvoiceResource\Actions;
+namespace App\Filament\Resources\Invoices\Actions;
 
-use App\Filament\Resources\InvoiceResource;
 use App\Models\Invoice;
-use App\Models\Enums\InvoiceStatusEnum;
 use Auth;
 use Filament\Actions\Action;
 use Filament\Support\Colors\Color;
