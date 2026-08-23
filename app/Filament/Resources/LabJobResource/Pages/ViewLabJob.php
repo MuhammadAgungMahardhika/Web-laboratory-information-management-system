@@ -19,8 +19,8 @@ class ViewLabJob extends ViewRecord
             EditAction::make(),
             ActionGroup::make([
                 LabJobStatusAction::previewAnalystTestReport(),
-                LabJobStatusAction::previewFinalReport(),
                 LabJobStatusAction::previewTaskLetter(),
+                LabJobStatusAction::previewLhp(),
             ])->label('Dokumen')
                 ->button()
                 ->icon(Heroicon::DocumentArrowDown)

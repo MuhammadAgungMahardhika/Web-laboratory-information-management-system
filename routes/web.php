@@ -20,7 +20,8 @@ Route::get('/quotations/{quotation}/download', [QuotationPdfController::class, '
 // labjob 
 Route::get('/lab_jobs/{labJob}/preview', [LabJobPdfController::class, 'previewTaskLetter'])->name('task_letters.preview');
 Route::get('/lab_jobs/{labJob}/download', [LabJobPdfController::class, 'downloadTaskLetter'])->name('task_letters.download');
-
+Route::get('/lab_jobs/{labJob}/lhp/preview', [LabJobPdfController::class, 'previewLhp'])->name('lhp.preview');
+Route::get('/lab_jobs/{labJob}/lhp/download', [LabJobPdfController::class, 'downloadLhp'])->name('lhp.download');
 
 // Invoice
 Route::get(

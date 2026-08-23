@@ -4,8 +4,6 @@ namespace App\Filament\Resources\Samples\Tables;
 
 use App\Filament\Resources\Samples\Actions\SampleAction;
 use App\Models\Enums\SampleStatusEnum;
-use App\Models\Sample;
-use App\Services\SampleService;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -35,7 +33,7 @@ class SamplesTable
     }
     public static function configure(Table $table): Table
     {
-        $sampleService  = app(SampleService::class);
+
         return $table
             ->selectCurrentPageOnly()
             ->groups([

@@ -23,9 +23,11 @@ use Illuminate\Support\Facades\Auth;
 
 class LabJobStatusAction
 {
-    protected static string $previewFinalReport = 'final_reports.preview';
-    protected static string $downloadFinalReport = 'final_reports.download';
+    // lhp
+    protected static string $previewLhpUrl = 'lhp.preview';
+    protected static string $downloadLhpUrl = 'lhp.download';
 
+    // task letter
     protected static string $previewAnalystTestResultUrl = 'analyst_reports.preview';
     protected static string $downloadAnalystTestResultUrl = 'analyst_reports.download';
 
@@ -356,41 +358,6 @@ class LabJobStatusAction
                 }
             });
     }
-    public static function previewFinalReport(): Action
-    {
-        return  Action::make('Final Report')
-            ->icon(Heroicon::DocumentChartBar)
-            ->slideOver()
-            ->modalHeading('Pratinjau Laporan Pengujian') // Judul modal
-            ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
-            ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
-            ->modalWidth('6xl') // Atur lebar modal (misal: '7xl' atau 'full')
-            ->modalContent(function (LabJob $record) {
-                // Ini adalah cara untuk me-render Blade view di dalam modal
-                // Gunakan blade view khusus untuk iframe atau langsung iframe di sini
-                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->code);
-                $pdfUrl = route(static::$previewFinalReport, $record);
-                $downloadUrl = route(static::$downloadFinalReport, $record);
-
-                return view('pdfs.preview', [
-                    'pdfUrl' => $pdfUrl,
-                    'safeFileName' => $safeFileName, // Opsional, jika perlu di view modal
-                    'downloadUrl' => $downloadUrl, // Opsional, jika perlu di view modal
-                ]);
-            })->modalFooterActions([
-                static::downloadFinalReport(),
-                // static::sendReport(),
-            ])->modalFooterActionsAlignment('right');
-    }
-    public static function downloadFinalReport(): Action
-    {
-        return  Action::make('Download Final Report')
-            ->url(fn(LabJob $record): string => route(static::$downloadFinalReport, $record))
-            ->icon(Heroicon::OutlinedPrinter)
-            ->outlined()
-            // ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::ReportApproved->value)
-            ->openUrlInNewTab();
-    }
 
     public static function previewAnalystTestReport(): Action
     {
@@ -468,6 +435,48 @@ class LabJobStatusAction
             ->color(Color::Gray)
             ->outlined()
             // ->authorize(fn(LabJob $record) => $record->status === JobStatusEnum::ReportApproved->value)
+            ->openUrlInNewTab();
+    }
+
+
+    // lhp
+    public static function previewLhp(): Action
+    {
+        $authorized = static::isAuthorized(static::PERMISSION_GENERATE_LAB_JOB_REPORT);
+        return  Action::make('Lhp')
+            ->label('LHP')
+            ->icon(Heroicon::DocumentCheck)
+            ->slideOver()
+            ->authorize(fn(LabJob $record) => $authorized)
+            ->modalHeading('Pratinjau LHP') // Judul modal
+            ->modalSubmitAction(false) // Sembunyikan tombol submit (kita hanya preview)
+            ->modalCancelActionLabel('Tutup Pratinjau') // Ubah label tombol cancel
+            ->modalWidth('6xl') // Atur lebar modal (misal: '7xl' atau 'full')
+            ->modalContent(function (LabJob $record) {
+                $safeFileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $record->code);
+                $pdfUrl = route(static::$previewLhpUrl, $record);
+                $downloadUrl = route(static::$downloadLhpUrl, $record);
+
+                return view('pdfs.preview', [
+                    'pdfUrl' => $pdfUrl,
+                    'safeFileName' => $safeFileName,
+                    'downloadUrl' => $downloadUrl,
+                ]);
+            })->modalFooterActions([
+                static::downloadLhp(),
+            ])->modalFooterActionsAlignment('right');
+    }
+
+    public static function downloadLhp(): Action
+    {
+        $authorized = static::isAuthorized(static::PERMISSION_GENERATE_LAB_JOB_REPORT);
+        return  Action::make('Download Lhp')
+            ->label('Download LHP')
+            ->url(fn(LabJob $record): string => route(static::$downloadLhpUrl, $record))
+            ->icon(Heroicon::OutlinedPrinter)
+            ->color(Color::Gray)
+            ->outlined()
+            ->authorize(fn(LabJob $record) => $authorized)
             ->openUrlInNewTab();
     }
 }

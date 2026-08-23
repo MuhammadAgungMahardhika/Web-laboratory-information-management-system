@@ -79,4 +79,41 @@ class LabJobPdfController extends Controller
         $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
         return $pdf->download("LPA-{$safeJobNumber}.pdf");
     }
+    public function previewLhp(LabJob $labJob)
+    {
+        $labJob->load([
+            'quotation.customer',
+            'labJobPersonels.personel',
+            'labJobItems' => fn($q) => $q->where('group', 'A'),
+            'labJobItems.samples.testResults.parameter.testMethod',
+            // TODO: tambahkan relasi kategori parameter jika ada, mis:
+            // 'labJobItems.samples.testResults.parameter.category',
+        ]);
+
+        $company = Auth::user()?->personel?->company;
+
+        $pdf = Pdf::loadView('pdfs.lhp', compact('labJob', 'company'))
+            ->setPaper('a4', 'portrait')
+            ->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
+        return $pdf->stream("LHP-{$safeJobNumber}.pdf");
+    }
+
+    public function downloadLhp(LabJob $labJob)
+    {
+        $labJob->load([
+            'quotation.customer',
+            'labJobPersonels.personel',
+            'labJobItems' => fn($q) => $q->where('group', 'A'),
+            'labJobItems.samples.testResults.parameter.testMethod',
+        ]);
+
+        $company = Auth::user()?->personel?->company;
+
+        $pdf = Pdf::loadView('pdfs.lhp', compact('labJob', 'company'));
+
+        $safeJobNumber = Str::of($labJob->code)->replace('/', '-');
+        return $pdf->download("LHP-{$safeJobNumber}.pdf");
+    }
 }

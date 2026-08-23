@@ -11,6 +11,12 @@ class Sample extends Model
 {
     protected $casts = [
         'status' => 'integer',
+        'collection_date' => 'date',
+        'collection_time' => 'datetime:H:i',
+        'received_date'   => 'date',
+        'received_time'   => 'datetime:H:i',
+        'analyzed_start_date' => 'date',
+        'analyzed_end_date'   => 'date',
     ];
     /** @use HasFactory<\Database\Factories\SampleFactory> */
     use HasFactory;
