@@ -75,7 +75,7 @@
         }
 
         .page {
-            margin: 135px 40px 55px 40px;
+            margin: 36mm 11mm 15mm 11mm;
         }
 
         .page-break {
@@ -83,8 +83,32 @@
         }
 
         /* =============================================
-           HALAMAN 1 — COVER LHP
+           HALAMAN 1 — COVER LHP (dgn background dekoratif)
         ============================================= */
+        .page-cover {
+            position: relative;
+        }
+
+        .cover-page-wrapper {
+            position: relative;
+        }
+
+        .cover-bg-image {
+            position: absolute;
+            top: -36mm;
+            left: -11mm;
+            width: 210mm;
+            height: 297mm;
+            object-fit: cover;
+            opacity: 0.16;
+            background-color: #1a5f9e;
+        }
+
+
+        .cover-content {
+            position: relative;
+        }
+
         .lhp-title {
             text-align: center;
             margin-bottom: 18px;
@@ -156,15 +180,14 @@
         ============================================= */
         .section-title {
             text-align: center;
-            font-weight: bolder;
-            font-size: 12pt;
+            font-weight: bold;
+            font-size: 11pt;
             text-decoration: underline;
             margin-bottom: 2px;
         }
 
         .section-subtitle {
             text-align: center;
-            font-weight: bold;
             font-size: 8.5pt;
             font-style: italic;
             margin-bottom: 10px;
@@ -337,129 +360,166 @@
          HALAMAN 1 — COVER LHP
     ================================================ --}}
     <div class="page page-break">
-        <div class="lhp-title">
-            <h1>LAPORAN HASIL PENGUJIAN</h1>
-            <h2>CERTIFICATE OF ANALYSIS</h2>
-            <h3>{{ $labJob->code }}</h3>
-        </div>
+        <div class="cover-page-wrapper">
+            {{-- Background dekoratif cover, dari file gambar (bukan CSS/SVG manual).
+                 Simpan file di public/images/cover-bg.jpg, atau sesuaikan path/
+                 sumbernya (mis. dari setting company) di bawah ini. --}}
+            @php
+                // TODO: sesuaikan sumber file background cover, mis. dari setting company:
+                // $coverBgPath = $company->active_setting?->cover_background_path
+                //     ? public_path('storage/' . $company->active_setting->cover_background_path)
+                //     : public_path('images/cover-bg.jpg');
+                $coverBgPath = public_path('images/cover-bg.jpg');
+                $coverBgBase64 = '';
+                if (file_exists($coverBgPath)) {
+                    $coverBgData = file_get_contents($coverBgPath);
+                    $coverBgType = pathinfo($coverBgPath, PATHINFO_EXTENSION);
+                    $coverBgBase64 = 'data:image/' . $coverBgType . ';base64,' . base64_encode($coverBgData);
+                }
+            @endphp
+            @if ($coverBgBase64)
+                <img src="{{ $coverBgBase64 }}" class="cover-bg-image" alt="">
+            @endif
 
-        @php
-            // Hanya lab_job_items group A yang relevan utk LHP
-            $reportItems = $labJob->labJobItems->where('group', 'A');
-            $totalSamples = $reportItems->flatMap->samples->count();
-            $customer = $labJob->quotation->customer;
-        @endphp
+            <div class="cover-content">
+                <div class="lhp-title">
+                    <h1>LAPORAN HASIL PENGUJIAN</h1>
+                    <h2>CERTIFICATE OF ANALYSIS</h2>
+                    <h3>{{ $labJob->code }}</h3>
+                </div>
 
-        <table class="cover-info-table">
-            <tr>
-                <td class="label">Nama Pelanggan/<br><i>Customer</i></td>
-                <td class="colon">:</td>
-                <td class="value">{{ strtoupper($customer->name ?? '-') }}</td>
-            </tr>
-            <tr>
-                <td class="label">Personil Penghubung/<br><i>Contact Person</i></td>
-                <td class="colon">:</td>
-                <td class="value">{{ $customer->contact_person_name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Alamat Lengkap/<br><i>Address</i></td>
-                <td class="colon">:</td>
-                <td class="value">{{ $customer->full_address ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Nama Kegiatan/<br><i>Project Name</i></td>
-                <td class="colon">:</td>
-                {{-- TODO: sesuaikan sumber nama kegiatan, mis. $labJob->quotation->name --}}
-                <td class="value">{{ $labJob->quotation->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Jumlah Contoh Uji/<br><i>Samples</i></td>
-                <td class="colon">:</td>
-                <td class="value">{{ $totalSamples }}</td>
-            </tr>
-        </table>
+                @php
+                    // Hanya lab_job_items group A yang relevan utk LHP
+                    $reportItems = $labJob->labJobItems->where('group', 'A');
+                    $totalSamples = $reportItems->flatMap->samples->count();
+                    $customer = $labJob->quotation->customer;
+                @endphp
 
-        <div class="cover-signature">
-            <p>{{ $company->city->name ?? 'Jambi' }}, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
-            <div class="sig-space"></div>
-            {{-- TODO: sesuaikan relasi personil kepala lab yang menandatangani --}}
-            <p><strong><u>{{ $labJob->labJobPersonels->first()?->personel?->fullname ?? 'Kepala Laboratorium' }}</u></strong>
-            </p>
-            <p>Kepala Laboratorium</p>
-        </div>
+                <table class="cover-info-table">
+                    <tr>
+                        <td class="label">Nama Pelanggan/<br><i>Customer</i></td>
+                        <td class="colon">:</td>
+                        <td class="value">{{ strtoupper($customer->name ?? '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Personil Penghubung/<br><i>Contact Person</i></td>
+                        <td class="colon">:</td>
+                        <td class="value">{{ $customer->contact_person_name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Alamat Lengkap/<br><i>Address</i></td>
+                        <td class="colon">:</td>
+                        <td class="value">{{ $customer->full_address ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Nama Kegiatan/<br><i>Project Name</i></td>
+                        <td class="colon">:</td>
+                        {{-- TODO: sesuaikan sumber nama kegiatan, mis. $labJob->quotation->name --}}
+                        <td class="value">{{ $labJob->quotation->name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Jumlah Contoh Uji/<br><i>Samples</i></td>
+                        <td class="colon">:</td>
+                        <td class="value">{{ $totalSamples }}</td>
+                    </tr>
+                </table>
 
-        <div class="cover-disclaimer">
-            Laporan ini dibuat berdasarkan hasil observasi yang objektif dan independen terhadap sampel pelanggan
-            yang bersifat khusus dan rahasia. Data hasil pengujian, interpretasi, dan pendapat-pendapat yang ada di
-            dalamnya mewakili penilaian terbaik dari {{ $company->name ?? '-' }}. Dalam hal penggunaan laporan ini,
-            {{ $company->name ?? '-' }} tidak membuat jaminan secara tersirat maupun tersurat dan tidak
-            bertanggung jawab terhadap produktivitas, kegiatan operasional, ataupun kerugian lainnya yang bersifat
-            material maupun imaterial. Laporan ini tidak diperbolehkan untuk digandakan, kecuali secara utuh
-            keseluruhannya dan atas persetujuan tertulis dari {{ $company->name ?? '-' }}.
-        </div>
+                <div class="cover-signature">
+                    <p>{{ $company->city ?? 'Jambi' }}, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
+                    <div class="sig-space"></div>
+                    {{-- TODO: sesuaikan relasi personil kepala lab yang menandatangani --}}
+                    <p><strong><u>{{ $labJob->labJobPersonels->first()?->personel?->fullname ?? 'Kepala Laboratorium' }}</u></strong>
+                    </p>
+                    <p>Kepala Laboratorium</p>
+                </div>
+
+                <div class="cover-disclaimer">
+                    Laporan ini dibuat berdasarkan hasil observasi yang objektif dan independen terhadap sampel
+                    pelanggan
+                    yang bersifat khusus dan rahasia. Data hasil pengujian, interpretasi, dan pendapat-pendapat yang ada
+                    di
+                    dalamnya mewakili penilaian terbaik dari {{ $company->name ?? '-' }}. Dalam hal penggunaan laporan
+                    ini,
+                    {{ $company->name ?? '-' }} tidak membuat jaminan secara tersirat maupun tersurat dan tidak
+                    bertanggung jawab terhadap produktivitas, kegiatan operasional, ataupun kerugian lainnya yang
+                    bersifat
+                    material maupun imaterial. Laporan ini tidak diperbolehkan untuk digandakan, kecuali secara utuh
+                    keseluruhannya dan atas persetujuan tertulis dari {{ $company->name ?? '-' }}.
+                </div>
+            </div><!-- /.cover-content -->
+        </div><!-- /.cover-page-wrapper -->
     </div>
 
     {{-- ================================================
          HALAMAN 2 — INFORMASI CONTOH UJI
     ================================================ --}}
     <div class="page page-break">
-        <div class="section-title">INFORMASI CONTOH UJI</div>
-        <div class="section-subtitle">SAMPLE INFORMATION</div>
+        <div class="cover-page-wrapper">
+            @if ($coverBgBase64)
+                <img src="{{ $coverBgBase64 }}" class="cover-bg-image" alt="">
+            @endif
+            <div class="section-title">INFORMASI CONTOH UJI</div>
+            <div class="section-subtitle">SAMPLE INFORMATION</div>
 
-        <table class="job-meta-table">
-            <tr>
-                <td class="label">Nomor Pekerjaan/<i>Job Number</i></td>
-                <td>: {{ $labJob->code }}</td>
-            </tr>
-            <tr>
-                <td class="label">Nama Pelanggan/<i>Customer</i></td>
-                <td>: {{ $customer->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Personil Penghubung/<i>Contact Person</i></td>
-                <td>: {{ $customer->contact_person_name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Tanggal Dilaporkan/<i>Reported Date</i></td>
-                <td>: {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
-            </tr>
-        </table>
-
-        <table class="sample-info-table">
-            <thead>
+            <table class="job-meta-table">
                 <tr>
-                    <th>Identifikasi Lab/<br><i>Lab ID</i></th>
-                    <th>Identifikasi Sampel/<br><i>Sample ID</i></th>
-                    <th>Matriks/<br><i>Matrix</i></th>
-                    <th>Tgl. Pengambilan/<br><i>Sampling Date</i></th>
-                    <th>Waktu/<br><i>Time</i></th>
-                    <th>Tgl. Diterima/<br><i>Received Date</i></th>
-                    <th>Koordinat/<br><i>Coordinate</i></th>
+                    <td class="label">Nomor Pekerjaan/<i>Job Number</i></td>
+                    <td>: {{ $labJob->code }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($reportItems as $item)
-                    @foreach ($item->samples as $sample)
-                        <tr>
-                            <td>{{ $labJob->code }}-{{ $loop->parent->index + 1 }}/{{ $reportItems->count() }}</td>
-                            <td>{{ $sample->code }} ({{ $item->location ?? $item->description }})</td>
-                            {{-- Matriks diambil dari description lab_job_item --}}
-                            <td>{{ $item->description }}</td>
-                            <td>{{ $sample->collection_date?->format('d/m/Y') ?? '-' }}</td>
-                            <td>{{ $sample->collection_time ?? '-' }}</td>
-                            <td>{{ $sample->received_date?->format('d/m/Y') ?? '-' }}</td>
-                            <td>
-                                @if ($sample->latitude && $sample->longitude)
-                                    LS: {{ $sample->latitude }} / BT: {{ $sample->longitude }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
+                <tr>
+                    <td class="label">Nama Pelanggan/<i>Customer</i></td>
+                    <td>: {{ $customer->name ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Personil Penghubung/<i>Contact Person</i></td>
+                    <td>: {{ $customer->contact_person_name ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Tanggal Dilaporkan/<i>Reported Date</i></td>
+                    <td>: {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
+                </tr>
+            </table>
+
+            <table class="sample-info-table">
+                <thead>
+                    <tr>
+                        <th>Identifikasi Lab/<br><i>Lab ID</i></th>
+                        <th>Identifikasi Sampel/<br><i>Sample ID</i></th>
+                        <th>Matriks/<br><i>Matrix</i></th>
+                        <th>Tgl. Pengambilan/<br><i>Sampling Date</i></th>
+                        <th>Waktu/<br><i>Time</i></th>
+                        <th>Tgl. Diterima/<br><i>Received Date</i></th>
+                        <th>Koordinat/<br><i>Coordinate</i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($reportItems as $item)
+                        @foreach ($item->samples as $sample)
+                            <tr>
+                                <td>{{ $labJob->code }}-{{ $loop->parent->index + 1 }}/{{ $reportItems->count() }}
+                                </td>
+                                <td>{{ $sample->code }} ({{ $item->location ?? $item->description }})</td>
+                                {{-- Matriks diambil dari description lab_job_item --}}
+                                <td>{{ $item->description }}</td>
+                                <td>{{ $sample->collection_date ? \Carbon\Carbon::parse($sample->collection_date)->format('d/m/Y') : '-' }}
+                                </td>
+                                <td>{{ $sample->collection_time ? \Carbon\Carbon::parse($sample->collection_time)->format('H:i') : '-' }}
+                                </td>
+                                <td>{{ $sample->received_date ? \Carbon\Carbon::parse($sample->received_date)->format('d/m/Y') : '-' }}
+                                </td>
+                                <td>
+                                    @if ($sample->latitude && $sample->longitude)
+                                        LS: {{ $sample->latitude }} / BT: {{ $sample->longitude }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                     @endforeach
-                @endforeach
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     {{-- ================================================
@@ -501,61 +561,67 @@
 
         @foreach ($sampleChunks as $chunkIndex => $samplesChunk)
             <div class="page @if (!$loop->last || !$loop->parent->last) page-break @endif">
-                <div class="section-title">LAPORAN HASIL PENGUJIAN</div>
-                <div class="section-subtitle">CERTIFICATE OF ANALYSIS — {{ $labJob->code }}</div>
+                <div class="cover-page-wrapper">
+                    @if ($coverBgBase64)
+                        <img src="{{ $coverBgBase64 }}" class="cover-bg-image" alt="">
+                    @endif
+                    <div class="section-title">LAPORAN HASIL PENGUJIAN</div>
+                    <div class="section-subtitle">CERTIFICATE OF ANALYSIS — {{ $labJob->code }}</div>
 
-                <table class="lhp-header-block">
-                    <tr>
-                        <td class="label">Identifikasi Contoh Uji/<br><i>Sample Identification</i></td>
-                        <td>
-                            @foreach ($samplesChunk as $s)
-                                {{ $s->code }}@if (!$loop->last)
-                                    ,
-                                @endif
-                            @endforeach
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="matrix-title">{{ strtoupper($categoryName) }}</div>
-
-                <table class="results-table">
-                    <thead>
+                    <table class="lhp-header-block">
                         <tr>
-                            <th rowspan="2" class="no">No</th>
-                            <th rowspan="2">Parameter</th>
-                            <th colspan="{{ $samplesChunk->count() }}">Hasil/<i>Result</i></th>
-                            <th rowspan="2">BML/<br>EQS*</th>
-                            <th rowspan="2">Satuan/<br><i>Unit</i></th>
-                            <th rowspan="2">Metode/<br><i>Method</i></th>
-                        </tr>
-                        <tr>
-                            @foreach ($samplesChunk as $s)
-                                <th>{{ $s->code }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($paramList as $i => $param)
-                            <tr>
-                                <td class="no">{{ $i + 1 }}</td>
-                                <td class="param-name">{{ $param->name ?? $param->parameter_code }}</td>
+                            <td class="label">Identifikasi Contoh Uji/<br><i>Sample Identification</i></td>
+                            <td>
                                 @foreach ($samplesChunk as $s)
-                                    @php
-                                        $tr = $resultsInCategory->first(
-                                            fn($r) => $r->sampleRef->id === $s->id && $r->parameter_id === $param->id,
-                                        );
-                                    @endphp
-                                    <td class="result">{{ $tr->tested_value ?? '-' }}</td>
+                                    {{ $s->code }}@if (!$loop->last)
+                                        ,
+                                    @endif
                                 @endforeach
-                                {{-- TODO: sesuaikan sumber nilai BML/EQS aktual --}}
-                                <td class="bml">{{ $param->standard_notes ?? '-' }}</td>
-                                <td class="unit">{{ $param->unit ?? '-' }}</td>
-                                <td class="method">{{ $param->testMethod?->name ?? '-' }}</td>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="matrix-title">{{ strtoupper($categoryName) }}</div>
+
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="no">No</th>
+                                <th rowspan="2">Parameter</th>
+                                <th colspan="{{ $samplesChunk->count() }}">Hasil/<i>Result</i></th>
+                                <th rowspan="2">BML/<br>EQS*</th>
+                                <th rowspan="2">Satuan/<br><i>Unit</i></th>
+                                <th rowspan="2">Metode/<br><i>Method</i></th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                            <tr>
+                                @foreach ($samplesChunk as $s)
+                                    <th>{{ $s->code }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($paramList as $i => $param)
+                                <tr>
+                                    <td class="no">{{ $i + 1 }}</td>
+                                    <td class="param-name">{{ $param->name ?? $param->parameter_code }}</td>
+                                    @foreach ($samplesChunk as $s)
+                                        @php
+                                            $tr = $resultsInCategory->first(
+                                                fn($r) => $r->sampleRef->id === $s->id &&
+                                                    $r->parameter_id === $param->id,
+                                            );
+                                        @endphp
+                                        <td class="result">{{ $tr->tested_value ?? '-' }}</td>
+                                    @endforeach
+                                    {{-- TODO: sesuaikan sumber nilai BML/EQS aktual --}}
+                                    <td class="bml">{{ $param->standard_notes ?? '-' }}</td>
+                                    <td class="unit">{{ $param->unit ?? '-' }}</td>
+                                    <td class="method">{{ $param->testMethod?->name ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @endforeach
     @endforeach
@@ -565,14 +631,19 @@
          seperti pada contoh asli — bisa dipecah per section)
     ================================================ --}}
     <div class="page">
-        <div class="notes-block">
-            <p><strong>Keterangan/Note:</strong></p>
-            <p>(*) BML adalah Baku Mutu Lingkungan Sesuai Peraturan Pemerintah RI No. 22 Tahun 2021 Tentang
-                Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup.</p>
-            <p>&lt; Menunjukkan nilai terkecil dari pengukuran yang didapatkan berdasarkan metode yang berlaku.</p>
-            <p>Hasil hanya berhubungan dengan contoh yang diuji dan laporan ini tidak boleh digandakan kecuali
-                seluruhnya. <i>The result relate only to the samples tested and this report shall not be reproduced
-                    except in full.</i></p>
+        <div class="cover-page-wrapper">
+            @if ($coverBgBase64)
+                <img src="{{ $coverBgBase64 }}" class="cover-bg-image" alt="">
+            @endif
+            <div class="notes-block">
+                <p><strong>Keterangan/Note:</strong></p>
+                <p>(*) BML adalah Baku Mutu Lingkungan Sesuai Peraturan Pemerintah RI No. 22 Tahun 2021 Tentang
+                    Penyelenggaraan Perlindungan dan Pengelolaan Lingkungan Hidup.</p>
+                <p>&lt; Menunjukkan nilai terkecil dari pengukuran yang didapatkan berdasarkan metode yang berlaku.</p>
+                <p>Hasil hanya berhubungan dengan contoh yang diuji dan laporan ini tidak boleh digandakan kecuali
+                    seluruhnya. <i>The result relate only to the samples tested and this report shall not be reproduced
+                        except in full.</i></p>
+            </div>
         </div>
     </div>
 
