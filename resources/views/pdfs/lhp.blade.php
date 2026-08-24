@@ -101,7 +101,7 @@
             height: 297mm;
             object-fit: cover;
             opacity: 0.16;
-            background-color: #1a5f9e;
+
         }
 
 
@@ -425,7 +425,7 @@
                 </table>
 
                 <div class="cover-signature">
-                    <p>{{ $company->city ?? 'Jambi' }}, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
+                    <p>{{ $company->city->name ?? 'Jambi' }}, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
                     <div class="sig-space"></div>
                     {{-- TODO: sesuaikan relasi personil kepala lab yang menandatangani --}}
                     <p><strong><u>{{ $labJob->labJobPersonels->first()?->personel?->fullname ?? 'Kepala Laboratorium' }}</u></strong>
@@ -603,7 +603,7 @@
                             @foreach ($paramList as $i => $param)
                                 <tr>
                                     <td class="no">{{ $i + 1 }}</td>
-                                    <td class="param-name">{{ $param->name ?? $param->parameter_code }}</td>
+                                    <td class="param-name">{{ $param->long_name ?? '-' }}</td>
                                     @foreach ($samplesChunk as $s)
                                         @php
                                             $tr = $resultsInCategory->first(
