@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Models\Enums\TestResultStatusEnum;
+use App\Observers\SampleObserver;
 use App\Traits\Blameable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([SampleObserver::class])]
 class Sample extends Model
 {
     protected $casts = [

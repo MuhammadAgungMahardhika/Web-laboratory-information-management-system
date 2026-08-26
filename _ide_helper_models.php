@@ -184,6 +184,7 @@ namespace App\Models{
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Enums\InvoiceStatusEnum $status_enum
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceItems
  * @property-read int|null $invoice_items_count
  * @property-read \App\Models\LabJob $labJob
@@ -1028,21 +1029,21 @@ namespace App\Models{
  * @property int $lab_job_item_id
  * @property int|null $collected_by_personel_id
  * @property int|null $received_by_personel_id
- * @property string|null $collection_date
- * @property string|null $collection_time
+ * @property \Illuminate\Support\Carbon|null $collection_date
+ * @property \Illuminate\Support\Carbon|null $collection_time
  * @property string|null $collection_location_desc
  * @property string|null $latitude
  * @property string|null $longitude
  * @property string|null $preservation_method
  * @property string|null $collection_notes
- * @property string|null $received_date
- * @property string|null $received_time
+ * @property \Illuminate\Support\Carbon|null $received_date
+ * @property \Illuminate\Support\Carbon|null $received_time
  * @property string|null $received_condition_notes
  * @property string|null $container_type
  * @property int|null $container_quantity
  * @property string|null $sample_volume
- * @property string|null $analyzed_start_date
- * @property string|null $analyzed_end_date
+ * @property \Illuminate\Support\Carbon|null $analyzed_start_date
+ * @property \Illuminate\Support\Carbon|null $analyzed_end_date
  * @property int $collection_type
  * @property int $status
  * @property string|null $created_by
@@ -1087,6 +1088,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sample whereUpdatedBy($value)
  */
 	class Sample extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Database\Factories\SampleHistoryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory query()
+ */
+	class SampleHistory extends \Eloquent {}
 }
 
 namespace App\Models{

@@ -87,6 +87,19 @@ return new class extends Migration
                 ->onDelete('restrict');
         });
 
+        Schema::table('sample_histories', function (Blueprint $table) {
+            $table->foreign('personel_id', 'fk_sample_histories_personel')
+                ->references('id')
+                ->on('personels')
+                ->onUpdate('cascade')
+                ->onDelete('no action');
+            $table->foreign('sample_id', 'fk_sample_histories_sample')
+                ->references('id')
+                ->on('samples')
+                ->onUpdate('cascade')
+                ->onDelete('no action');
+        });
+
 
         Schema::table('parameters', function (Blueprint $table) {
             $table->foreign('code', 'fk_parameters_params')
@@ -333,12 +346,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('personels')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onDelete('no action');
             $table->foreign('test_result_id', 'fk_test_result_histories_test_result')
                 ->references('id')
                 ->on('test_results')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onDelete('no action');
         });
         Schema::table('personel_specializations', function (Blueprint $table) {
             $table->foreign('personel_id', 'fk_personel_specializations_personel')
