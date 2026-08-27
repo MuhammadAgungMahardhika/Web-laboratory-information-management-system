@@ -36,6 +36,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Support\Icons\Heroicon;
@@ -205,6 +206,12 @@ class SamplesRelationManager extends RelationManager
                                     ->maxLength(50)
                                     ->nullable(),
                             ])->visible(fn() => static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE)),
+                        Tab::make('Riwayat')
+                            ->icon(Heroicon::Clock)
+                            ->schema([
+                                View::make('components.history-timeline'),
+                            ])
+                            ->visibleOn(['view', 'edit']),
                     ])
                     ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected

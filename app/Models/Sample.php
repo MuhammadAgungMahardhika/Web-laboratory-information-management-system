@@ -62,4 +62,9 @@ class Sample extends Model
     {
         return $this->belongsTo(Personel::class, 'received_by_personel_id');
     }
+
+    public function sampleHistories()
+    {
+        return $this->hasMany(SampleHistory::class);
+    }
 }

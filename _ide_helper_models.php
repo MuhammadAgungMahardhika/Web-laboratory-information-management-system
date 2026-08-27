@@ -1053,6 +1053,8 @@ namespace App\Models{
  * @property-read \App\Models\Personel|null $collectedByPersonel
  * @property-read \App\Models\LabJobItem $labJobItem
  * @property-read \App\Models\Personel|null $receivedByPersonel
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SampleHistory> $sampleHistories
+ * @property-read int|null $sample_histories_count
  * @property-read \App\Models\SampleMatric|null $sampleMatric
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResult> $testResults
  * @property-read int|null $test_results_count
@@ -1092,10 +1094,30 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property int $personel_id
+ * @property int $sample_id
+ * @property int $action
+ * @property string|null $changes
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Personel $personel
+ * @property-read \App\Models\Sample $sample
  * @method static \Database\Factories\SampleHistoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereAction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereChanges($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory wherePersonelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereSampleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SampleHistory whereUpdatedBy($value)
  */
 	class SampleHistory extends \Eloquent {}
 }

@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
@@ -155,6 +156,13 @@ class SampleForm
                                     ->maxLength(50)
                                     ->nullable(),
                             ])->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
+
+                        Tab::make('Riwayat')
+                            ->icon(Heroicon::Clock)
+                            ->schema([
+                                View::make('components.sample-history-timeline'),
+                            ])
+                            ->visibleOn(['view', 'edit']),
                     ])
                     ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('code')))->activeTab(function (Get $get) {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
