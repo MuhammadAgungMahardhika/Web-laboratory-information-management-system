@@ -12,49 +12,51 @@ enum SampleHistoryActionEnum: int
     case Archived = 6;
     case Updated = 7;
 
-    public static function labels(): array
-    {
-        return [
-            self::Created->value => 'Dibuat',
-            self::Received->value => 'Diterima',
-            self::Prepared->value => 'Proses Analisis',
-            self::AnalysisCompleted->value => 'Selesai Analisis',
-            self::Invalid->value => 'Tidak Valid',
-            self::Archived->value => 'Diarsipkan',
-            self::Updated->value => 'Diperbarui',
-        ];
-    }
-
     public function label(): string
     {
-        return self::labels()[$this->value];
-    }
-
-    public static function color(int $action): string
-    {
-        return match ($action) {
-            self::Created->value => 'gray',
-            self::Received->value => 'info',
-            self::Prepared->value => 'warning',
-            self::AnalysisCompleted->value => 'success',
-            self::Invalid->value => 'danger',
-            self::Archived->value => 'primary',
-            self::Updated->value => 'gray',
-            default => 'gray',
+        return match ($this) {
+            self::Created => 'Dibuat',
+            self::Received => 'Diterima',
+            self::Prepared => 'Proses Analisis',
+            self::AnalysisCompleted => 'Selesai Analisis',
+            self::Invalid => 'Tidak Valid',
+            self::Archived => 'Diarsipkan',
+            self::Updated => 'Diperbarui',
         };
     }
 
-    public static function cssColor(int $action): string
+    public function icon(): string
     {
-        return match ($action) {
-            self::Created->value => '#6B7280',
-            self::Received->value => '#3B82F6',
-            self::Prepared->value => '#F59E0B',
-            self::AnalysisCompleted->value => '#10B981',
-            self::Invalid->value => '#EF4444',
-            self::Archived->value => '#8B5CF6',
-            self::Updated->value => '#6B7280',
-            default => '#6B7280',
+        return match ($this) {
+            self::Created => '➕',
+            self::Received => '📥',
+            self::Prepared => '🔬',
+            self::AnalysisCompleted => '✅',
+            self::Invalid => '❌',
+            self::Archived => '📦',
+            self::Updated => '✏️',
         };
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::Created => '#6B7280',
+            self::Received => '#3B82F6',
+            self::Prepared => '#F59E0B',
+            self::AnalysisCompleted => '#10B981',
+            self::Invalid => '#EF4444',
+            self::Archived => '#8B5CF6',
+            self::Updated => '#6B7280',
+        };
+    }
+
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn(self $case) => [
+                $case->value => $case->label(),
+            ])
+            ->toArray();
     }
 }

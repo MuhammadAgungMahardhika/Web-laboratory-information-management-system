@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class RecordSampleHistoryJob implements ShouldQueue
 {
@@ -25,7 +26,7 @@ class RecordSampleHistoryJob implements ShouldQueue
      */
     public function handle(): void
     {
-        \Log::info('RecordTestResultHistoryJob dijalankan');
+        Log::info('RecordTestResultHistoryJob dijalankan');
         SampleHistory::create($this->history);
     }
 }

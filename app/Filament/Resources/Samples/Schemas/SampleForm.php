@@ -157,7 +157,7 @@ class SampleForm
                                     ->nullable(),
                             ])->visible(fn() => static::isAuthorized(static::PERMISSION_RECEIVING_SAMPLE)),
 
-                        Tab::make('Riwayat')
+                        Tab::make('RIWAYAT PERUBAHAN')
                             ->icon(Heroicon::Clock)
                             ->schema([
                                 View::make('components.sample-history-timeline'),

@@ -61,6 +61,7 @@ class SamplesRelationManager extends RelationManager
     {
         return $this->ownerRecord->status !== JobStatusEnum::Sampling->value;
     }
+
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
         return $ownerRecord->status !== JobStatusEnum::Draft->value;
@@ -206,10 +207,10 @@ class SamplesRelationManager extends RelationManager
                                     ->maxLength(50)
                                     ->nullable(),
                             ])->visible(fn() => static::isAuthorized(SampleAction::PERMISSION_RECEIVING_SAMPLE)),
-                        Tab::make('Riwayat')
+                        Tab::make('RIWAYAT PERUBAHAN')
                             ->icon(Heroicon::Clock)
                             ->schema([
-                                View::make('components.history-timeline'),
+                                View::make('components.sample-history-timeline'),
                             ])
                             ->visibleOn(['view', 'edit']),
                     ])
@@ -225,7 +226,7 @@ class SamplesRelationManager extends RelationManager
         $ownerStatus =  $this->ownerRecord->status;
         return SampleResource::table($table)
             ->modifyQueryUsing(function ($query) {
-                return $query->with('collectedByPersonel', 'receivedByPersonel', 'labJobItem.labJob');
+                return $query->with('collectedByPersonel', 'receivedByPersonel', 'labJobItem.labJob', 'sampleHistories.personel');
             })
             ->filters([
                 SelectFilter::make('lab_job_item_id')

@@ -1097,8 +1097,8 @@ namespace App\Models{
  * @property int $id
  * @property int $personel_id
  * @property int $sample_id
- * @property int $action
- * @property string|null $changes
+ * @property mixed $action
+ * @property array<array-key, mixed>|null $changes
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property \Illuminate\Support\Carbon|null $created_at
