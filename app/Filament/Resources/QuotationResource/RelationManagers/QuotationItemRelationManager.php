@@ -166,6 +166,7 @@ class QuotationItemRelationManager extends RelationManager
                     TextInput::make('location')
                         ->label('Lokasi Pengambilan Sampel')
                         ->maxLength(100)
+                        ->placeholder('contoh : didepan halaman kantor')
                         ->nullable(),
                 ])->columnSpanFull()->columns(3)->visible(fn(Get $get) => $get('group') === 'A'),
                 Section::make([

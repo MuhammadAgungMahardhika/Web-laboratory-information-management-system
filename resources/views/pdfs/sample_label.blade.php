@@ -22,7 +22,7 @@
             justify-content: center;
             align-items: flex-start;
             padding: 8px;
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', sans-serif;
             font-size: 8px;
             line-height: 1.2;
             border: 1px solid #0000;
@@ -48,13 +48,19 @@
 <body>
     <div class="label">
         <p class="title">PT. Jambi Lestari International</p>
-        <p class="field">Tanggal pengambilan: {{ $sample->received_date ?? '-' }}</p>
-        <p class="field">Tanggal penerimaan: {{ $sample->collection_date ?? '-' }}</p>
+        <p class="field">
+            Tanggal pengambilan:
+            {{ $sample->collection_date ? \Carbon\Carbon::parse($sample->collection_date)->format('d/m/Y') : '-' }}
+        </p>
+        <p class="field">
+            Tanggal penerimaan:
+            {{ $sample->received_date ? \Carbon\Carbon::parse($sample->received_date)->format('d/m/Y') : '-' }}
+        </p>
         <p class="field">Nomor Job: {{ $sample->labJobItem->labJob->code ?? '-' }}</p>
         <p class="field">Nomor Sampel: {{ $sample->code ?? '-' }}</p>
         <p class="field">Deskripsi Item: {{ $sample->labJobItem->description ?? '-' }}</p>
 
-        {{-- Barcode (aktifkan kalau sudah pakai milon/barcode) --}}
+        {{-- Barcode (aktifkan kalau sudah pakai library barcode) --}}
         {{-- 
             <div class="barcode">
                 {!! DNS1D::getBarcodeHTML($sample->code, 'C39', 1, 40) !!}

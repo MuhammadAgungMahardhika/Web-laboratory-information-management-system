@@ -12,6 +12,7 @@ use App\Models\LabJobItem;
 use App\Models\Sample;
 use App\Services\SampleService;
 use Exception;
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -31,7 +32,9 @@ use Filament\Forms\Components\RichEditor\Actions\LinkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -160,8 +163,16 @@ class SamplesRelationManager extends RelationManager
                                 TextInput::make('preservation_method')
                                     ->label('Metode Preservasi')
                                     ->maxLength(255),
-                                TextInput::make('latitude'),
-                                TextInput::make('longitude'),
+                                ViewField::make('get_location')
+                                    ->view('filament.forms.get-location')
+                                    ->dehydrated(false)->columnSpanFull(),
+                                TextInput::make('latitude')
+                                    ->label('Latitude'),
+
+                                TextInput::make('longitude')
+                                    ->label('Longitude'),
+
+
 
                                 Textarea::make('collection_location_desc')
                                     ->label('Lokasi Pengambilan'),
