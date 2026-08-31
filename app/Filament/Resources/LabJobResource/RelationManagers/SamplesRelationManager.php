@@ -165,7 +165,7 @@ class SamplesRelationManager extends RelationManager
                                     ->maxLength(255),
                                 ViewField::make('get_location')
                                     ->view('filament.forms.get-location')
-                                    ->dehydrated(false)->columnSpanFull(),
+                                    ->dehydrated(false)->columnSpanFull()->visibleOn(['create', 'edit']),
                                 TextInput::make('latitude')
                                     ->label('Latitude'),
 
