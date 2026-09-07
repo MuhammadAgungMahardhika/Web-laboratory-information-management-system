@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Invoices\RelationManagers;
 
 use App\Models\Enums\PaymentStatusEnum;
+use App\Services\PaymentService;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -28,13 +29,14 @@ class PaymentsRelationManager extends RelationManager
     protected $listeners = ['refresh'];
     public function form(Schema $schema): Schema
     {
+        $paymentService = app(PaymentService::class);
         return $schema
             ->components([
                 TextInput::make('code')
                     ->label('Kode Pembayaran')
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->default(fn() => 'PAY-' . now()->format('YmdHis'))
+                    ->default(fn() => $paymentService->generatePaymentCode())
                     ->maxLength(50)
                     ->readOnly(),
 
