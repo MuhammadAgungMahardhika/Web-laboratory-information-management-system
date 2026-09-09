@@ -4,6 +4,9 @@ namespace App\Filament\Resources\Invoices\RelationManagers;
 
 use App\Models\Enums\PaymentStatusEnum;
 use App\Services\PaymentService;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -14,6 +17,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -39,6 +43,7 @@ class PaymentsRelationManager extends RelationManager
                     ->default(fn() => $paymentService->generatePaymentCode())
                     ->maxLength(50)
                     ->readOnly(),
+
 
                 DatePicker::make('date')
                     ->label('Tanggal Pembayaran')
@@ -176,6 +181,41 @@ class PaymentsRelationManager extends RelationManager
                     ->icon(Heroicon::OutlinedPlus),
             ])
             ->recordActions([
+                ActionGroup::make(
+                    collect(PaymentStatusEnum::cases())
+                        ->map(
+                            fn(PaymentStatusEnum $status) => Action::make('setStatus' . $status->value)
+                                ->label($status->label())
+                                ->color(PaymentStatusEnum::color($status->value))
+                                ->icon(Heroicon::OutlinedCheckCircle)
+                                ->visible(fn($record) => $record?->status !== $status->value)
+                                ->requiresConfirmation()
+                                ->modalHeading('Ubah Status Pembayaran')
+                                ->modalDescription(fn($record) => "Ubah status pembayaran \"{$record?->code}\" menjadi \"{$status->label()}\"?")
+                                ->action(function ($record) use ($status) {
+                                    try {
+                                        app(PaymentService::class)->updateStatus($record, $status);
+
+                                        Notification::make()
+                                            ->title('Status pembayaran berhasil diubah')
+                                            ->success()
+                                            ->send();
+                                    } catch (\Exception $e) {
+                                        Notification::make()
+                                            ->title('Gagal mengubah status')
+                                            ->body($e->getMessage())
+                                            ->danger()
+                                            ->send();
+                                    }
+                                })
+                        )
+                        ->all() // <-- ganti dari ->toArray()
+                )
+                    ->label('Ubah Status')
+                    ->icon(Heroicon::OutlinedChevronDown)
+                    ->color('gray')
+                    ->button(),
+
                 EditAction::make()
                     ->label('Ubah'),
 

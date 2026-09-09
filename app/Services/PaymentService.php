@@ -136,19 +136,19 @@ class PaymentService
         return DB::transaction(function () use ($payment, $status) {
 
             /*
-             * ==========================================
-             * COMPLETED
-             * ==========================================
-             */
+         * ==========================================
+         * COMPLETED
+         * ==========================================
+         */
             if ($status === PaymentStatusEnum::Completed) {
 
                 /*
-                 * Kalau sebelumnya belum Completed,
-                 * validasi jumlah pembayaran.
-                 */
+             * Kalau sebelumnya belum Completed,
+             * validasi jumlah pembayaran.
+             */
                 if (
                     $payment->status !==
-                    PaymentStatusEnum::Completed
+                    PaymentStatusEnum::Completed->value
                 ) {
                     $this->validatePaymentAmount(
                         invoice: $payment->invoice,
@@ -157,24 +157,24 @@ class PaymentService
                     );
                 }
 
-                $payment->status = $status;
+                $payment->status = $status->value;
 
                 /*
-                 * Isi paid_at hanya sekali.
-                 */
+             * Isi paid_at hanya sekali.
+             */
                 $payment->paid_at ??= now();
 
                 /*
-                 * Generate kuitansi hanya sekali.
-                 */
+             * Generate kuitansi hanya sekali.
+             */
                 $payment->receipt_number ??=
                     $this->generateReceiptNumber();
 
                 $payment->save();
 
                 /*
-                 * Update status invoice.
-                 */
+             * Update status invoice.
+             */
                 $this->updateInvoiceStatus(
                     $payment->invoice
                 );
@@ -183,17 +183,17 @@ class PaymentService
             }
 
             /*
-             * ==========================================
-             * STATUS LAIN
-             * ==========================================
-             */
+         * ==========================================
+         * STATUS LAIN
+         * ==========================================
+         */
 
-            $payment->status = $status;
+            $payment->status = $status->value;
 
             /*
-             * Kalau pembayaran tidak Completed,
-             * jangan dianggap sebagai pembayaran sah.
-             */
+         * Kalau pembayaran tidak Completed,
+         * jangan dianggap sebagai pembayaran sah.
+         */
             if (
                 $status !== PaymentStatusEnum::Completed
             ) {
@@ -204,8 +204,8 @@ class PaymentService
             $payment->save();
 
             /*
-             * Status invoice ikut dihitung ulang.
-             */
+         * Status invoice ikut dihitung ulang.
+         */
             $this->updateInvoiceStatus(
                 $payment->invoice
             );
@@ -306,13 +306,13 @@ class PaymentService
         $netAmount = (float) $invoice->net_amount;
 
         if ($totalPaid <= 0) {
-            $status = InvoiceStatusEnum::Sent;
+            $status = InvoiceStatusEnum::Sent->value;
         } elseif ($totalPaid < $netAmount) {
 
-            $status = InvoiceStatusEnum::PartiallyPaid;
+            $status = InvoiceStatusEnum::PartiallyPaid->value;
         } else {
 
-            $status = InvoiceStatusEnum::Paid;
+            $status = InvoiceStatusEnum::Paid->value;
         }
 
         $invoice->update([

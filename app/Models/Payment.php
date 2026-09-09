@@ -12,6 +12,8 @@ class Payment extends Model
     protected $casts = [
         'status' => 'integer',
     ];
+
+
     public function invoice()
     {
         return $this->belongsTo(Invoice::class);
