@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Blameable;
 
 class Payment extends Model
 {
@@ -14,6 +15,7 @@ class Payment extends Model
     ];
 
 
+    use Blameable;
     public function invoice()
     {
         return $this->belongsTo(Invoice::class);
