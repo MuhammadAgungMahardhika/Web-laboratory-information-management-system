@@ -42,8 +42,26 @@ class PaymentsRelationManager extends RelationManager
     public function form(Schema $schema): Schema
     {
         $paymentService = app(PaymentService::class);
+        $ownerRecord = $this->ownerRecord;
+        $alreadyPaid = $ownerRecord->payments()
+            ->sum('amount_paid');
+        $remainingAmount = max(
+            0,
+            ($ownerRecord->net_amount ?? 0) - $alreadyPaid
+        );
         return $schema
             ->components([
+                TextEntry::make('invoice_code')
+                    ->label('Kode Invoice')
+                    ->state(fn() => $ownerRecord->code),
+                TextEntry::make('invoice_total')
+                    ->label('Total Tagihan')
+                    ->state(fn() =>  $ownerRecord->net_amount)
+                    ->copyable()
+                    ->formatStateUsing(
+                        fn($state) => 'Rp ' . number_format($state, 0, ',', '.')
+                    )
+                    ->disabled(),
                 TextInput::make('code')
                     ->label('Kode Pembayaran')
                     ->required()
@@ -65,8 +83,49 @@ class PaymentsRelationManager extends RelationManager
                     ->numeric()
                     ->prefix('Rp')
                     ->minValue(0)
-                    ->inputMode('decimal'),
+                    ->inputMode('decimal')
+                    ->aboveContent([
+                        Action::make('dp20')
+                            ->label('20%')
+                            ->icon(Heroicon::OutlinedCalculator)
+                            ->action(function ($set) use ($ownerRecord) {
+                                $totalAmount = $ownerRecord->net_amount ?? 0;
+                                $set('amount_paid', round($totalAmount * 0.20));
+                            }),
+                        Action::make('dp40')
+                            ->label('40%')
+                            ->icon(Heroicon::OutlinedCalculator)
+                            ->action(function ($set) use ($ownerRecord) {
+                                $totalAmount = $ownerRecord->net_amount ?? 0;
+                                $set('amount_paid', round($totalAmount * 0.40));
+                            }),
+                        Action::make('full')
+                            ->label('100%')
+                            ->icon(Heroicon::OutlinedCalculator)
+                            ->action(function ($set) use ($ownerRecord) {
+                                $totalAmount = $ownerRecord->net_amount ?? 0;
+                                $set('amount_paid', round($totalAmount));
+                            }),
 
+                    ])
+                    ->belowContent([
+                        TextEntry::make('amount_paid_formatted')
+                            ->label('Total Tagihan')
+                            ->state(fn() => $ownerRecord->net_amount !== null ? 'Rp ' . number_format($ownerRecord->net_amount, 0, ',', '.') : '')
+                            ->copyAbleState(fn() => $ownerRecord->net_amount !== null ? $ownerRecord->net_amount : 0)
+                            ->disabled(),
+                        TextEntry::make('already_paid')
+                            ->label('Total Sudah Dibayar')
+                            ->state(fn() => $ownerRecord->payments()->sum('amount_paid') !== null ? 'Rp ' . number_format($ownerRecord->payments()->sum('amount_paid'), 0, ',', '.') : '')
+                            ->copyAbleState(fn() => $ownerRecord->payments()->sum('amount_paid') !== null ? $ownerRecord->payments()->sum('amount_paid') : 0)
+                            ->disabled(),
+                        TextEntry::make('remaining_amount')
+                            ->label('Sisa Tagihan')
+                            ->state(fn() => $ownerRecord->net_amount !== null ? 'Rp ' . number_format($ownerRecord->net_amount - $ownerRecord->payments()->sum('amount_paid'), 0, ',', '.') : '')
+                            ->disabled()
+                            ->copyable()
+                            ->copyAbleState(fn() => $ownerRecord->net_amount !== null ? $ownerRecord->net_amount - $ownerRecord->payments()->sum('amount_paid') : 0),
+                    ]),
 
 
                 TextInput::make('reference_number')
