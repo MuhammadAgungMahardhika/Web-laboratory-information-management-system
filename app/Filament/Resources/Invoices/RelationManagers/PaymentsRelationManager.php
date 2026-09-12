@@ -468,15 +468,16 @@ class PaymentsRelationManager extends RelationManager
                                                 ->send();
                                         }
                                     })
+                                    ->after(
+                                        function (): void
+                                        {
+                                            $this->dispatch(
+                                                'invoice-updated'
+                                            );
+                                        }
+                                    )
                             )
                             ->all()
-                    )->after(
-                        function (): void
-                        {
-                            $this->dispatch(
-                                'invoice-updated'
-                            );
-                        }
                     ),
                 EditAction::make()
                     ->label('Ubah')
