@@ -38,12 +38,13 @@ class PaymentsRelationManager extends RelationManager
     protected static string $relationship = 'payments';
     protected static ?string $label = 'Pembayaran';
     protected static ?string $title = 'Riwayat Pembayaran';
-    protected $listeners = ['refresh'];
+
     public function form(Schema $schema): Schema
     {
         $paymentService = app(PaymentService::class);
         $ownerRecord = $this->ownerRecord;
         $alreadyPaid = $ownerRecord->payments()
+            ->where('status', PaymentStatusEnum::Completed->value)
             ->sum('amount_paid');
         $remainingAmount = max(
             0,
@@ -53,11 +54,13 @@ class PaymentsRelationManager extends RelationManager
             ->components([
                 TextEntry::make('invoice_code')
                     ->label('Kode Invoice')
+                    ->color('primary')
                     ->state(fn() => $ownerRecord->code),
                 TextEntry::make('invoice_total')
                     ->label('Total Tagihan')
                     ->state(fn() =>  $ownerRecord->net_amount)
                     ->copyable()
+                    ->color('primary')
                     ->formatStateUsing(
                         fn($state) => 'Rp ' . number_format($state, 0, ',', '.')
                     )
@@ -88,25 +91,41 @@ class PaymentsRelationManager extends RelationManager
                         Action::make('dp20')
                             ->label('20%')
                             ->icon(Heroicon::OutlinedCalculator)
-                            ->action(function ($set) use ($ownerRecord) {
-                                $totalAmount = $ownerRecord->net_amount ?? 0;
-                                $set('amount_paid', round($totalAmount * 0.20));
+                            ->color('gray')
+                            ->action(function ($set) use ($remainingAmount)
+                            {
+                                $set(
+                                    'amount_paid',
+                                    round($remainingAmount * 0.20)
+                                );
+                                $set('notes', 'Pembayaran 20% dari total tagihan');
                             }),
+
                         Action::make('dp40')
                             ->label('40%')
                             ->icon(Heroicon::OutlinedCalculator)
-                            ->action(function ($set) use ($ownerRecord) {
-                                $totalAmount = $ownerRecord->net_amount ?? 0;
-                                $set('amount_paid', round($totalAmount * 0.40));
-                            }),
-                        Action::make('full')
-                            ->label('100%')
-                            ->icon(Heroicon::OutlinedCalculator)
-                            ->action(function ($set) use ($ownerRecord) {
-                                $totalAmount = $ownerRecord->net_amount ?? 0;
-                                $set('amount_paid', round($totalAmount));
+                            ->color('warning')
+                            ->action(function ($set) use ($remainingAmount)
+                            {
+                                $set(
+                                    'amount_paid',
+                                    round($remainingAmount * 0.40)
+                                );
+                                $set('notes', 'Pembayaran 40% dari total tagihan');
                             }),
 
+                        Action::make('full')
+                            ->label('100%')
+                            ->icon(Heroicon::OutlinedCheckCircle)
+                            ->color('success')
+                            ->action(function ($set) use ($remainingAmount)
+                            {
+                                $set(
+                                    'amount_paid',
+                                    round($remainingAmount)
+                                );
+                                $set('notes', 'Pelunasan tagihan');
+                            }),
                     ])
                     ->belowContent([
                         TextEntry::make('amount_paid_formatted')
@@ -116,15 +135,15 @@ class PaymentsRelationManager extends RelationManager
                             ->disabled(),
                         TextEntry::make('already_paid')
                             ->label('Total Sudah Dibayar')
-                            ->state(fn() => $ownerRecord->payments()->sum('amount_paid') !== null ? 'Rp ' . number_format($ownerRecord->payments()->sum('amount_paid'), 0, ',', '.') : '')
-                            ->copyAbleState(fn() => $ownerRecord->payments()->sum('amount_paid') !== null ? $ownerRecord->payments()->sum('amount_paid') : 0)
+                            ->state(fn() => $alreadyPaid  !== null ? 'Rp ' . number_format($alreadyPaid, 0, ',', '.') : '')
+                            ->copyAbleState(fn() => $alreadyPaid !== null ? $alreadyPaid : 0)
                             ->disabled(),
                         TextEntry::make('remaining_amount')
                             ->label('Sisa Tagihan')
-                            ->state(fn() => $ownerRecord->net_amount !== null ? 'Rp ' . number_format($ownerRecord->net_amount - $ownerRecord->payments()->sum('amount_paid'), 0, ',', '.') : '')
+                            ->state(fn() => $ownerRecord->net_amount !== null ? 'Rp ' . number_format($ownerRecord->net_amount - $alreadyPaid, 0, ',', '.') : '')
                             ->disabled()
                             ->copyable()
-                            ->copyAbleState(fn() => $ownerRecord->net_amount !== null ? $ownerRecord->net_amount - $ownerRecord->payments()->sum('amount_paid') : 0),
+                            ->copyAbleState(fn() => $ownerRecord->net_amount !== null ? $ownerRecord->net_amount - $alreadyPaid  : 0),
                     ]),
 
 
@@ -200,7 +219,8 @@ class PaymentsRelationManager extends RelationManager
                 TextColumn::make('payment_codes')
                     ->label('Kode')
                     ->state(fn($record) => $record)
-                    ->formatStateUsing(function ($record): HtmlString {
+                    ->formatStateUsing(function ($record): HtmlString
+                    {
                         $html = '<div style="
                             display: flex;
                             flex-direction: column;
@@ -214,7 +234,8 @@ class PaymentsRelationManager extends RelationManager
                             </div>',
                             e($record->code)
                         );
-                        if ($record->reference_number) {
+                        if ($record->reference_number)
+                        {
                             $html .= sprintf(
                                 '<div style="
                                     line-height: 1.4;
@@ -226,7 +247,8 @@ class PaymentsRelationManager extends RelationManager
                                 e($record->reference_number)
                             );
                         }
-                        if ($record->receipt_number) {
+                        if ($record->receipt_number)
+                        {
                             $html .= sprintf(
                                 '<div style="
                                     line-height: 1.4;
@@ -245,8 +267,10 @@ class PaymentsRelationManager extends RelationManager
                     })
                     ->html()
                     ->wrap(false)
-                    ->searchable(query: function (Builder $query, string $search): Builder {
-                        return $query->where(function (Builder $query) use ($search) {
+                    ->searchable(query: function (Builder $query, string $search): Builder
+                    {
+                        return $query->where(function (Builder $query) use ($search)
+                        {
                             $query
                                 ->where('code', 'like', "%{$search}%")
                                 ->orWhere('reference_number', 'like', "%{$search}%")
@@ -262,8 +286,10 @@ class PaymentsRelationManager extends RelationManager
                 TextColumn::make('payment_details')
                     ->label('Pembayaran')
                     ->state(fn($record) => $record)
-                    ->formatStateUsing(function ($record): HtmlString {
-                        $paymentMethod = match ($record->payment_method) {
+                    ->formatStateUsing(function ($record): HtmlString
+                    {
+                        $paymentMethod = match ($record->payment_method)
+                        {
                             'cash' => 'Tunai',
                             'qris' => 'QRIS',
                             'transfer' => 'Transfer Bank',
@@ -278,28 +304,61 @@ class PaymentsRelationManager extends RelationManager
                             '.'
                         );
 
+                        // Maksimal 40 karakter
+                        $notes = $record->notes
+                            ? trim($record->notes)
+                            : null;
+
+                        $shortNotes = $notes
+                            ? \Illuminate\Support\Str::limit($notes, 40)
+                            : null;
+
+                        $notesHtml = $shortNotes
+                            ? sprintf(
+                                '<div
+                    style="
+                        line-height: 1.4;
+                        color: #6b7280;
+                        font-size: 0.75rem;
+                        max-width: 250px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    "
+                    title="%s"
+                >
+                    %s
+                </div>',
+                                e($notes),
+                                e($shortNotes)
+                            )
+                            : '';
+
                         $html = sprintf(
                             '<div style="
-                            display: flex;
-                            flex-direction: column;
-                            gap: 3px;
-                            white-space: nowrap;
-                        ">
-                            <div style="line-height: 1.4;">
-                                <span style="color: #6b7280;"></span> %s
-                            </div>
-                            <div style="
-                                line-height: 1.4;
-                                color: #10B981;
-                                font-weight: 600;
-                                font-size: 1rem;
-                            ">
-                                <span></span> %s
-                            </div>
-                        </div>',
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+                white-space: nowrap;
+            ">
+                <div style="line-height: 1.4;">
+                    %s
+                </div>
+
+                <div style="
+                    line-height: 1.4;
+                    color: #10B981;
+                    font-weight: 600;
+                    font-size: 1rem;
+                ">
+                    %s
+                </div>
+
+                    %s
+                </div>',
                             e($paymentMethod),
                             e($amount),
-
+                            $notesHtml,
                         );
 
                         return new HtmlString($html);
@@ -310,7 +369,8 @@ class PaymentsRelationManager extends RelationManager
                 TextColumn::make('record_information')
                     ->label('Audit')
                     ->state(fn($record) => $record)
-                    ->formatStateUsing(function ($record): HtmlString {
+                    ->formatStateUsing(function ($record): HtmlString
+                    {
                         $createdAt = $record->created_at
                             ? $record->created_at->format('d M Y H:i')
                             : '-';
@@ -362,7 +422,7 @@ class PaymentsRelationManager extends RelationManager
                 ViewAction::make()
                     ->label('Lihat')
                     ->icon(Heroicon::OutlinedEye)
-                    ->authorize(fn($record) => $record?->status === PaymentStatusEnum::Completed->value)
+                    ->authorize(fn($record) => in_array($record?->status, [PaymentStatusEnum::Completed->value, PaymentStatusEnum::Cancelled->value]))
                     ->extraModalFooterActions(
                         collect(PaymentStatusEnum::cases())
                             ->map(
@@ -382,8 +442,10 @@ class PaymentsRelationManager extends RelationManager
                                         "Ubah status pembayaran \"{$record?->code}\" "
                                             . "menjadi \"{$status->label()}\"?"
                                     )
-                                    ->action(function ($record, $livewire) use ($status) {
-                                        try {
+                                    ->action(function ($record, $livewire) use ($status)
+                                    {
+                                        try
+                                        {
                                             app(PaymentService::class)
                                                 ->updateStatus($record, $status);
 
@@ -396,7 +458,9 @@ class PaymentsRelationManager extends RelationManager
 
                                             // Tutup ViewAction parent
                                             $livewire->unmountAction('view');
-                                        } catch (\Throwable $e) {
+                                        }
+                                        catch (\Throwable $e)
+                                        {
                                             Notification::make()
                                                 ->title('Gagal mengubah status')
                                                 ->body($e->getMessage())
@@ -406,12 +470,19 @@ class PaymentsRelationManager extends RelationManager
                                     })
                             )
                             ->all()
+                    )->after(
+                        function (): void
+                        {
+                            $this->dispatch(
+                                'invoice-updated'
+                            );
+                        }
                     ),
                 EditAction::make()
                     ->label('Ubah')
                     ->authorize(
                         fn($record) =>
-                        $record?->status !== PaymentStatusEnum::Completed->value
+                        $record?->receipt_number === null || $record?->status === PaymentStatusEnum::Pending->value
                     )->extraModalFooterActions(
                         collect(PaymentStatusEnum::cases())
                             ->map(
@@ -431,8 +502,10 @@ class PaymentsRelationManager extends RelationManager
                                         "Ubah status pembayaran \"{$record?->code}\" "
                                             . "menjadi \"{$status->label()}\"?"
                                     )
-                                    ->action(function ($record, $livewire) use ($status) {
-                                        try {
+                                    ->action(function ($record, $livewire) use ($status)
+                                    {
+                                        try
+                                        {
                                             app(PaymentService::class)
                                                 ->updateStatus($record, $status);
 
@@ -445,20 +518,44 @@ class PaymentsRelationManager extends RelationManager
 
                                             // Tutup ViewAction parent
                                             $livewire->unmountAction('view');
-                                        } catch (\Throwable $e) {
+                                        }
+                                        catch (\Throwable $e)
+                                        {
                                             Notification::make()
                                                 ->title('Gagal mengubah status')
                                                 ->body($e->getMessage())
                                                 ->danger()
                                                 ->send();
                                         }
-                                    })
+                                    })->after(
+                                        function (): void
+                                        {
+                                            $this->dispatch(
+                                                'invoice-updated'
+                                            );
+                                        }
+                                    )
                             )
                             ->all()
+                    )->after(
+                        function (): void
+                        {
+                            $this->dispatch(
+                                'invoice-updated'
+                            );
+                        }
                     ),
                 DeleteAction::make()
                     ->label('Hapus')
-                    ->authorize(fn($record) => $record?->status !== PaymentStatusEnum::Completed->value),
+                    ->authorize(fn($record) => $record?->status !== PaymentStatusEnum::Completed->value)
+                    ->after(
+                        function (): void
+                        {
+                            $this->dispatch(
+                                'invoice-updated'
+                            );
+                        }
+                    ),
             ])
             ->toolbarActions([]);
     }

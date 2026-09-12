@@ -24,6 +24,7 @@ class ViewInvoice extends ViewRecord
             'pph_amount' => $this->record->pph_amount,
             'total_amount' => $this->record->total_amount,
             'net_amount' => $this->record->net_amount,
+            'status' => $this->record->status,
         ]);
     }
     protected function getHeaderActions(): array
