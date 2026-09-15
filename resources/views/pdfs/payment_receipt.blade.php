@@ -456,72 +456,64 @@
             };
         @endphp
 
-        <table class="info-table">
+        <div class="box-title">Diterima Dari:</div>
+        <table class="info-table-flat">
             <tr>
-                <td class="customer-box">
-                    <div class="box-title">Diterima Dari:</div>
-                    <table class="info-table">
-                        <tr>
-                            <td class="label">Nama</td>
-                            <td class="separator">:</td>
-                            <td>{{ $customer?->name ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Alamat</td>
-                            <td class="separator">:</td>
-                            <td>{{ $customer?->full_address ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">PIC</td>
-                            <td class="separator">:</td>
-                            <td>{{ $customer->contact_person_name ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Telp</td>
-                            <td class="separator">:</td>
-                            <td>{{ $customer->contact_phone_number ?? '-' }}</td>
-                        </tr>
-                    </table>
-                </td>
+                <td class="label">Nama</td>
+                <td class="separator">:</td>
+                <td class="value">{{ $customer?->name ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Alamat</td>
+                <td class="separator">:</td>
+                <td class="value">{{ $customer?->full_address ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">PIC</td>
+                <td class="separator">:</td>
+                <td class="value">{{ $customer->contact_person_name ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Telp</td>
+                <td class="separator">:</td>
+                <td class="value">{{ $customer->contact_phone_number ?? '-' }}</td>
+            </tr>
+        </table>
 
-                <td class="receipt-box">
-                    <div class="box-title">Informasi Pembayaran:</div>
-                    <table class="info-table">
-                        <tr>
-                            <td class="label">No. Invoice</td>
-                            <td class="separator">:</td>
-                            <td>{{ $invoice->code }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Kode Bayar</td>
-                            <td class="separator">:</td>
-                            <td>{{ $payment->code }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Tanggal</td>
-                            <td class="separator">:</td>
-                            <td>{{ \Carbon\Carbon::parse($payment->date)->isoFormat('D MMMM Y') }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Metode</td>
-                            <td class="separator">:</td>
-                            <td>{{ $paymentMethodLabel }}</td>
-                        </tr>
-                        @if ($payment->reference_number)
-                            <tr>
-                                <td class="label">No. Referensi</td>
-                                <td class="separator">:</td>
-                                <td>{{ $payment->reference_number }}</td>
-                            </tr>
-                        @endif
-                        <tr>
-                            <td class="label">Status</td>
-                            <td class="separator">:</td>
-                            <td><span
-                                    class="status">{{ \App\Models\Enums\PaymentStatusEnum::from($payment->status)->label() }}</span>
-                            </td>
-                        </tr>
-                    </table>
+        <div class="box-title" style="margin-top: 8px;">Informasi Pembayaran:</div>
+        <table class="info-table-flat">
+            <tr>
+                <td class="label">No. Invoice</td>
+                <td class="separator">:</td>
+                <td class="value">{{ $invoice->code }}</td>
+            </tr>
+            <tr>
+                <td class="label">Kode Bayar</td>
+                <td class="separator">:</td>
+                <td class="value">{{ $payment->code }}</td>
+            </tr>
+            <tr>
+                <td class="label">Tanggal</td>
+                <td class="separator">:</td>
+                <td class="value">{{ \Carbon\Carbon::parse($payment->date)->isoFormat('D MMMM Y') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Metode</td>
+                <td class="separator">:</td>
+                <td class="value">{{ $paymentMethodLabel }}</td>
+            </tr>
+            @if ($payment->reference_number)
+                <tr>
+                    <td class="label">No. Referensi</td>
+                    <td class="separator">:</td>
+                    <td class="value">{{ $payment->reference_number }}</td>
+                </tr>
+            @endif
+            <tr>
+                <td class="label">Status</td>
+                <td class="separator">:</td>
+                <td class="value"><span
+                        class="status">{{ \App\Models\Enums\PaymentStatusEnum::from($payment->status)->label() }}</span>
                 </td>
             </tr>
         </table>
@@ -547,7 +539,8 @@
                 <tr>
                     <td class="text-center">1</td>
                     <td>Pembayaran atas Invoice
-                        <strong>{{ $invoice->code }}</strong>{{ $payment->notes ? ' — ' . $payment->notes : '' }}</td>
+                        <strong>{{ $invoice->code }}</strong>{{ $payment->notes ? ' — ' . $payment->notes : '' }}
+                    </td>
                     <td class="text-right">{{ number_format($payment->amount_paid, 0, ',', '.') }}</td>
                 </tr>
             </tbody>
@@ -614,9 +607,11 @@
             <table class="signature-table">
                 <tr>
                     <td class="signature-left">
+                        <br>
                         <strong>Pembayar,</strong>
                         <div class="signature-space"></div>
-                        <div>Nama: __________________________</div>
+                        <div class="signature-name"></div>
+                        <div>Jabatan : </div>
                     </td>
 
                     <td class="signature-right">

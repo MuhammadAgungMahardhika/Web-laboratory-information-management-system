@@ -633,6 +633,7 @@
             $customer = $invoice->labJob?->quotation?->customer ?? '-';
             $personel = $invoice->labJob?->quotation?->personel?->fullname ?? '-';
         @endphp
+
         <table class="info-table">
             <tr>
                 <td class="customer-box">
@@ -881,38 +882,28 @@
         {{-- =================================================
              PAYMENT HISTORY
         ================================================== --}}
-
         @if ($invoice->payments->isNotEmpty())
-
             @php
                 $totalPaid = $invoice->payments->sum('amount_paid');
-                $remaining = max(0, $invoice->total_amount - $totalPaid);
+                $remaining = max(0, $invoice->net_amount - $totalPaid);
             @endphp
 
             <div class="payment-history">
-
                 <div class="payment-history-title">
                     Riwayat Pembayaran
                 </div>
-
                 <table class="payment-table">
-
                     <thead>
-
                         <tr>
-
                             <th width="15%">
                                 Tanggal
                             </th>
-
                             <th width="20%">
                                 Kode
                             </th>
-
                             <th width="20%">
                                 Metode
                             </th>
-
                             <th width="25%">
                                 Referensi
                             </th>
