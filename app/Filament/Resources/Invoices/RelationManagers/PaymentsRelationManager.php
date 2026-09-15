@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Invoices\RelationManagers;
 
+use App\Filament\Resources\Invoices\Actions\PaymentStatusAction;
 use App\Filament\Resources\Invoices\InvoiceResource;
 use App\Models\Enums\PaymentStatusEnum;
 use App\Services\PaymentService;
@@ -90,6 +91,7 @@ class PaymentsRelationManager extends RelationManager
                     ->aboveContent([
                         Action::make('dp20')
                             ->label('20%')
+                            ->disabled(fn() => 'view' === $this->getMountedAction()?->getName())
                             ->icon(Heroicon::OutlinedCalculator)
                             ->color('gray')
                             ->action(function ($set) use ($remainingAmount)
@@ -103,6 +105,7 @@ class PaymentsRelationManager extends RelationManager
 
                         Action::make('dp40')
                             ->label('40%')
+                            ->disabled(fn() => 'view' === $this->getMountedAction()?->getName())
                             ->icon(Heroicon::OutlinedCalculator)
                             ->color('warning')
                             ->action(function ($set) use ($remainingAmount)
@@ -116,6 +119,7 @@ class PaymentsRelationManager extends RelationManager
 
                         Action::make('full')
                             ->label('100%')
+                            ->disabled(fn() => 'view' === $this->getMountedAction()?->getName())
                             ->icon(Heroicon::OutlinedCheckCircle)
                             ->color('success')
                             ->action(function ($set) use ($remainingAmount)
@@ -419,6 +423,7 @@ class PaymentsRelationManager extends RelationManager
                     ->icon(Heroicon::OutlinedPlus),
             ])
             ->recordActions([
+                PaymentStatusAction::preview(),
                 ViewAction::make()
                     ->label('Lihat')
                     ->icon(Heroicon::OutlinedEye)

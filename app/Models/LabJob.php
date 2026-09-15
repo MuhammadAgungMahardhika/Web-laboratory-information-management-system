@@ -43,10 +43,16 @@ class LabJob extends Model
     }
     protected function getTotalPriceAttribute(): float
     {
-        return (float) $this->labJobItems()->sum(function ($item) {
+        return (float) $this->labJobItems()->sum(function ($item)
+        {
             // Access the totalPrice accessor from the QuotationItem model
             return (float) $item->item_total;
         });
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     public function invoice()
