@@ -634,7 +634,62 @@
             <p>Kuitansi ini diterbitkan oleh {{ $company->name ?? 'Laboratorium' }}.</p>
             <p>&copy; {{ date('Y') }} {{ $company->name ?? 'Laboratorium' }}. Hak Cipta Dilindungi.</p>
         </div>
+        {{-- =================================================
+             BUKTI PEMBAYARAN (HALAMAN 2)
+        ================================================== --}}
 
+        @php
+            $attachmentBase64 = null;
+            $attachmentIsPdf = false;
+
+            if ($payment->attachment_path) {
+                $attachmentFullPath = public_path('storage/' . $payment->attachment_path);
+
+                if (file_exists($attachmentFullPath)) {
+                    $attachmentExt = strtolower(pathinfo($attachmentFullPath, PATHINFO_EXTENSION));
+
+                    if (in_array($attachmentExt, ['jpg', 'jpeg', 'png'])) {
+                        $mime = $attachmentExt === 'png' ? 'image/png' : 'image/jpeg';
+                        $attachmentBase64 =
+                            'data:' . $mime . ';base64,' . base64_encode(file_get_contents($attachmentFullPath));
+                    } elseif ($attachmentExt === 'pdf') {
+                        $attachmentIsPdf = true;
+                    }
+                }
+            }
+        @endphp
+
+        @if ($attachmentBase64)
+            <div class="attachment-page">
+                <table class="receipt-title">
+                    <tr>
+                        <td class="title" style="font-size: 12pt;">BUKTI PEMBAYARAN</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-code">No. Kuitansi: {{ $payment->receipt_number }} &nbsp;|&nbsp; Invoice:
+                            {{ $invoice->code }}</td>
+                    </tr>
+                </table>
+                <div class="attachment-box">
+                    <img src="{{ $attachmentBase64 }}" class="attachment-image" alt="Bukti Pembayaran">
+                </div>
+                <div class="attachment-caption">Dilampirkan sebagai bukti pembayaran sebesar Rp
+                    {{ number_format($payment->amount_paid, 0, ',', '.') }} pada
+                    {{ \Carbon\Carbon::parse($payment->date)->isoFormat('D MMMM Y') }}.</div>
+            </div>
+        @elseif ($attachmentIsPdf)
+            <div class="attachment-page">
+                <table class="receipt-title">
+                    <tr>
+                        <td class="title" style="font-size: 12pt;">BUKTI PEMBAYARAN</td>
+                    </tr>
+                </table>
+                <div class="attachment-box">
+                    <div class="attachment-caption">Bukti pembayaran dilampirkan dalam berkas PDF terpisah dan tidak
+                        dapat ditampilkan di halaman ini.</div>
+                </div>
+            </div>
+        @endif
     </div>
 
 </body>
