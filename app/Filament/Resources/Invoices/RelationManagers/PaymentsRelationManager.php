@@ -88,6 +88,7 @@ class PaymentsRelationManager extends RelationManager
                     ->disk('public')
                     ->directory('payments')
                     ->visibility('public')
+                    ->previewable()
                     ->acceptedFileTypes([
                         'image/jpeg',
                         'image/png',
