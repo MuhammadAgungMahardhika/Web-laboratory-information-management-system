@@ -7,8 +7,10 @@ use App\Http\Controllers\SamplePdfController;
 use App\Http\Middleware\RedirectIfLoggedIn;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoicePdfController;
+use App\Http\Controllers\PaymentReceiptController;
 
-Route::get('/', function () {
+Route::get('/', function ()
+{
     return view('auth.login');
 })->middleware(RedirectIfLoggedIn::class)->name('home');
 
@@ -48,3 +50,10 @@ Route::get('/lab_jobs/{labJob}/analyst-report/preview', [LabJobPdfController::cl
     ->name('analyst_reports.preview');
 Route::get('/lab_jobs/{labJob}/analyst-report/download', [LabJobPdfController::class, 'downloadAnalystTestReport'])
     ->name('analyst_reports.download');
+
+// payment receipt pdf
+// payment receipt
+Route::get('/payments/{payment}/receipt/preview', [PaymentReceiptController::class, 'previewReceipt'])
+    ->name('payments.receipt.preview');
+Route::get('/payments/{payment}/receipt/download', [PaymentReceiptController::class, 'downloadReceipt'])
+    ->name('payments.receipt.download');

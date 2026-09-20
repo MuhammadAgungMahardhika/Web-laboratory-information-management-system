@@ -108,7 +108,7 @@
 
         /* Hanya tampilkan nomor halaman tanpa total */
         .footer-page-cell::after {
-            content: "Hal " counter(page);
+            content: counter(page);
         }
 
         /* =============================================
@@ -365,15 +365,23 @@
             padding: 4px;
         }
 
-        /* KIRI = BOX */
+        /* KIRI = kotak dengan border */
         .client-box {
             border: 1px solid #333;
-            padding: 6px;
-            padding-right: 12px;
+            padding: 10px;
         }
 
         .company-box {
             padding-left: 12px;
+        }
+
+        /* Blok judul di atas garis tanda tangan.
+           Tinggi disamakan antara kiri & kanan supaya garis
+           tanda tangan + Nama/Jabatan di kedua kolom sejajar.
+           Kanan = 3 baris x (8pt font x line-height 1.2) = 28.8pt,
+           jadi tinggi kiri & kanan dipatok sama persis di situ. */
+        .sig-title {
+            height: 29pt;
         }
 
         /* Signature line */
@@ -383,6 +391,14 @@
             border-bottom: 1px solid #000;
             margin: 6px 0 4px 0;
             position: relative;
+        }
+
+        /* Ruang kosong untuk cap/ttd di kolom perusahaan —
+           tanpa garis, tinggi sama dengan .sig-box supaya
+           baris Nama/Jabatan tetap sejajar dengan kolom kiri */
+        .sig-space {
+            height: 50px;
+            margin: 6px 0 4px 0;
         }
 
         /* Placeholder */
@@ -790,12 +806,20 @@
              seluruh blok ini ke halaman berikutnya sehingga
              tanda tangan selalu tampil utuh tepat di bawah
              tabel penawaran, berapapun jumlah item.
+
+             CATATAN: kolom kiri & kanan dibungkus dengan
+             .sig-title (min-height sama) supaya garis tanda
+             tangan dan baris Nama/Jabatan di kedua kolom
+             selalu sejajar, meskipun jumlah baris teks judul
+             berbeda (kiri 1 baris, kanan 3 baris).
         ================================================ --}}
         <div class="signature-section">
             <table class="signature-table">
                 <tr>
                     <td class="client-box">
-                        <strong>Persetujuan biaya yang kami tawarkan</strong><br>
+                        <div class="sig-title">
+                            <strong>Persetujuan biaya yang kami tawarkan</strong>
+                        </div>
                         <div class="sig-box">
                             <p class="placeholder">Tanda tangan &amp; cap perusahaan</p>
                         </div>
@@ -803,11 +827,14 @@
                         <p>Jabatan: ...............................</p>
                     </td>
                     <td class="company-box">
-                        <strong>Hormat Kami,</strong><br>
-                        <strong>Jalint Lab</strong><br>
-                        <strong>A.n Kepala Laboratorium</strong>
+                        <div class="sig-title">
+                            {{ $company->city->name ?? 'Jambi' }},
+                            {{ \Carbon\Carbon::parse($quotation->date)->isoFormat('D MMMM Y') }}.<br>
+                            Hormat Kami<br>
+                            <strong>{{ $company->name ?? 'Jalint Lab' }}</strong>
+                        </div>
 
-                        <div class="sig-box"></div>
+                        <div class="sig-space"></div>
 
                         <p class="sig-name">{{ $quotation->personel->fullname ?? 'Nama Personil' }}</p>
                         <p class="sig-position">{{ $quotation->personel->position->name ?? 'Marketing' }}</p>
@@ -871,17 +898,7 @@
                 </div>
             @endif
 
-            <div class="end-marker">
-                <p>-------End-------</p>
-            </div>
 
-            <div class="footer-note">
-                <p>Untuk informasi Sertifikat Akreditasi Laboratorium, Ruang Lingkup Akreditasi,</p>
-                <p>Registrasi KLHK, SKP PJK3, serta Company Profile {{ $company->name ?? 'Laboratorium' }}</p>
-                <p>dapat menghubungi kami atau mengunjungi website resmi.</p>
-                <p style="margin-top: 8px;">&copy; {{ date('Y') }} {{ $company->name ?? 'Laboratorium' }}.
-                    Hak Cipta Dilindungi.</p>
-            </div>
         </div>
     </div>
 

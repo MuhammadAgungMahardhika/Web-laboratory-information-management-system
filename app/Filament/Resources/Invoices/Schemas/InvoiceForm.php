@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Invoices\Schemas;
 
+use App\Models\Enums\InvoiceStatusEnum;
 use App\Models\LabJob;
 use App\Services\InvoiceService;
 use Carbon\Carbon;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -256,14 +258,6 @@ class InvoiceForm
                                             background: #f9fafb;
                                         ">
                                             <div style="
-                                                font-size: 13px;
-                                                color: #6b7280;
-                                                margin-bottom: 4px;
-                                            ">
-                                                Subtotal
-                                            </div>
-
-                                            <div style="
                                                 font-size: 20px;
                                                 font-weight: 600;
                                                 line-height: 1.4;
@@ -288,14 +282,6 @@ class InvoiceForm
                                         border-radius: 8px;
                                         background: #f3f4f6;
                                     ">
-                                        <div style="
-                                            font-size: 13px;
-                                            color: #6b7280;
-                                            margin-bottom: 5px;
-                                        ">
-                                            Total Tagihan
-                                        </div>
-
                                         <div style="
                                             font-size: 26px;
                                             font-weight: 700;
@@ -330,14 +316,6 @@ class InvoiceForm
                                         background: #f9fafb;
                                     ">
                                         <div style="
-                                            font-size: 13px;
-                                            color: #6b7280;
-                                            margin-bottom: 5px;
-                                        ">
-                                            Total Bersih
-                                        </div>
-
-                                        <div style="
                                             font-size: 26px;
                                             font-weight: 700;
                                             line-height: 1.3;
@@ -356,6 +334,69 @@ class InvoiceForm
                                     </div>
                                     '
                                 )
+                            )
+                            ->columnSpan(1),
+                        Placeholder::make('status_display')
+                            ->label('Status')
+                            ->content(
+                                function (Get $get): HtmlString {
+                                    $status = $get('status');
+
+                                    if ($status === null) {
+                                        return new HtmlString(
+                                            '
+                    <div style="
+                        padding: 16px 20px;
+                        border: 1px solid #d1d5db;
+                        border-radius: 8px;
+                        background: #f9fafb;
+                    ">
+                    
+                        <div style="
+                            font-size: 26px;
+                            font-weight: 700;
+                            line-height: 1.3;
+                            color: #6b7280;
+                        ">
+                            -
+                        </div>
+                    </div>
+                    '
+                                        );
+                                    }
+
+                                    $statusEnum = InvoiceStatusEnum::from((int) $status);
+
+                                    $statusLabel = $statusEnum->label();
+
+                                    $statusColor = InvoiceStatusEnum::cssColor(
+                                        (int) $status
+                                    );
+
+                                    return new HtmlString(
+                                        sprintf(
+                                            '
+                    <div style="
+                        padding: 16px 20px;
+                        border: 1px solid #d1d5db;
+                        border-radius: 8px;
+                        background: #f9fafb;
+                    ">
+                        <div style="
+                            font-size: 26px;
+                            font-weight: 700;
+                            line-height: 1.3;
+                            color: %s;
+                        ">
+                            %s
+                        </div>
+                    </div>
+                    ',
+                                            e($statusColor),
+                                            e($statusLabel),
+                                        )
+                                    );
+                                }
                             )
                             ->columnSpan(1),
 

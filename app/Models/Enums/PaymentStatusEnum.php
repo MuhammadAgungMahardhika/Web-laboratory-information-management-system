@@ -6,8 +6,7 @@ enum PaymentStatusEnum: int
 {
     case Pending = 1;
     case Completed = 2;
-    case Failed = 3;
-    case Cancelled = 4;
+    case Cancelled = 3;
 
     /**
      * Menyediakan label yang mudah dibaca untuk setiap status pembayaran.
@@ -18,9 +17,8 @@ enum PaymentStatusEnum: int
     {
         return [
             self::Pending->value   => 'Draft',
-            self::Completed->value => 'Berhasil',
-            self::Failed->value    => 'Gagal',
-            self::Cancelled->value => 'Dibatalkan',
+            self::Completed->value => 'Selesai',
+            self::Cancelled->value => 'Batal',
         ];
     }
 
@@ -38,10 +36,9 @@ enum PaymentStatusEnum: int
     public static function color(int $status): string
     {
         return match ($status) {
-            self::Pending->value   => 'warning',
+            self::Pending->value   => 'gray',
             self::Completed->value => 'success',
-            self::Failed->value    => 'danger',
-            self::Cancelled->value => 'gray',
+            self::Cancelled->value => 'danger',
             default                => 'gray',
         };
     }
@@ -52,10 +49,9 @@ enum PaymentStatusEnum: int
     public static function cssColor(int $status): string
     {
         return match ($status) {
-            self::Pending->value   => '#F59E0B', // Kuning/Oranye
+            self::Pending->value   => '#6B7280', // Kuning/Oranye
             self::Completed->value => '#10B981', // Hijau
-            self::Failed->value    => '#EF4444', // Merah
-            self::Cancelled->value => '#64748B', // Slate
+            self::Cancelled->value => '#EF4444', // Slate
             default                => '#6B7280',  // Abu-abu
         };
     }

@@ -31,11 +31,8 @@ use Illuminate\Support\Facades\DB;
 class InvoiceItemsRelationManager extends RelationManager
 {
     protected static bool $isLazy = false;
-
     protected static string $relationship = 'invoiceItems';
-
     protected static ?string $label = 'Rincian Tagihan';
-
     protected static ?string $title = 'Rincian Tagihan';
 
     /**
@@ -49,12 +46,6 @@ class InvoiceItemsRelationManager extends RelationManager
 
         return $schema
             ->components([
-
-                /*
-                 * ==========================================
-                 * MODE INPUT
-                 * ==========================================
-                 */
                 Toggle::make('manual_input_mode')
                     ->label('Input Manual')
                     ->helperText(
@@ -86,12 +77,6 @@ class InvoiceItemsRelationManager extends RelationManager
                         ! $get('manual_input_mode')
                     )
                     ->types([
-
-                        /*
-                         * ==================================
-                         * LAB JOB ITEM
-                         * ==================================
-                         */
                         Type::make(LabJobItem::class)
                             ->label('Lab Job')
                             ->titleAttribute('description')
@@ -101,14 +86,16 @@ class InvoiceItemsRelationManager extends RelationManager
                                     $record
                                 ) use (
                                     $ownerRecord
-                                ) {
+                                )
+                                {
                                     $invoiceItemId =
                                         $record?->id;
 
                                     $labJobId =
                                         $ownerRecord?->lab_job_id;
 
-                                    if (! $labJobId) {
+                                    if (! $labJobId)
+                                    {
                                         return $query
                                             ->whereRaw(
                                                 '1 = 0'
@@ -116,18 +103,13 @@ class InvoiceItemsRelationManager extends RelationManager
                                     }
 
                                     return $query
-                                        ->where(
-                                            'lab_job_id',
-                                            $labJobId
-                                        )
+                                        ->where('lab_job_id',  $labJobId)
                                         ->whereDoesntHave(
                                             'invoiceItems',
-                                            function ($q) use (
-                                                $invoiceItemId
-                                            ) {
-                                                if (
-                                                    $invoiceItemId
-                                                ) {
+                                            function ($q) use ($invoiceItemId)
+                                            {
+                                                if ($invoiceItemId)
+                                                {
                                                     $q->where(
                                                         'id',
                                                         '!=',
@@ -148,21 +130,16 @@ class InvoiceItemsRelationManager extends RelationManager
                             ->label('Penawaran')
                             ->titleAttribute('description')
                             ->modifyOptionsQueryUsing(
-                                function (
-                                    Builder $query,
-                                    $record
-                                ) use (
-                                    $ownerRecord
-                                ) {
-                                    $invoiceItemId =
-                                        $record?->id;
-
+                                function (Builder $query,  $record) use ($ownerRecord)
+                                {
+                                    $invoiceItemId = $record?->id;
                                     $quotationId =
                                         $ownerRecord
                                         ?->labJob
                                         ?->quotation_id;
 
-                                    if (! $quotationId) {
+                                    if (! $quotationId)
+                                    {
                                         return $query
                                             ->whereRaw(
                                                 '1 = 0'
@@ -170,22 +147,14 @@ class InvoiceItemsRelationManager extends RelationManager
                                     }
 
                                     return $query
-                                        ->where(
-                                            'quotation_id',
-                                            $quotationId
-                                        )
-                                        ->whereIn(
-                                            'group',
-                                            ['B', 'C']
-                                        )
+                                        ->where('quotation_id', $quotationId)
+                                        ->whereIn('group', ['B', 'C'])
                                         ->whereDoesntHave(
                                             'invoiceItems',
-                                            function ($q) use (
-                                                $invoiceItemId
-                                            ) {
-                                                if (
-                                                    $invoiceItemId
-                                                ) {
+                                            function ($q) use ($invoiceItemId)
+                                            {
+                                                if ($invoiceItemId)
+                                                {
                                                     $q->where(
                                                         'id',
                                                         '!=',
@@ -200,51 +169,29 @@ class InvoiceItemsRelationManager extends RelationManager
                     ->live(onBlur: true)
                     ->columnSpanFull()
                     ->afterStateUpdated(
-                        function (
-                            Set $set,
-                            ?array $state
-                        ): void {
-
-                            if (
-                                ! $state ||
-                                empty($state['source_type']) ||
-                                empty($state['source_id'])
-                            ) {
+                        function (Set $set, ?array $state): void
+                        {
+                            if (! $state || empty($state['source_type']) || empty($state['source_id']))
+                            {
                                 return;
                             }
 
-                            $sourceType =
-                                $state['source_type'];
 
-                            $sourceId =
-                                $state['source_id'];
-
-                            $source =
-                                $sourceType::find(
-                                    $sourceId
-                                );
-
-                            if (! $source) {
+                            $sourceType = $state['source_type'];
+                            $sourceId =  $state['source_id'];
+                            $source = $sourceType::find($sourceId);
+                            if (! $source)
+                            {
                                 return;
                             }
 
                             /*
                              * Snapshot source ke InvoiceItem.
                              */
-                            $quantity =
-                                (float) (
-                                    $source->quantity ?? 1
-                                );
+                            $quantity = (float) ($source->quantity ?? 1);
+                            $price = (float) ($source->price ?? 0);
 
-                            $price =
-                                (float) (
-                                    $source->price ?? 0
-                                );
-
-                            $set(
-                                'description',
-                                $source->description
-                            );
+                            $set('description',  $source->description);
 
                             $set(
                                 'quantity',
@@ -300,7 +247,8 @@ class InvoiceItemsRelationManager extends RelationManager
                         function (
                             Get $get,
                             Set $set
-                        ): void {
+                        ): void
+                        {
                             self::setItemSubtotal(
                                 $set,
                                 (float) (
@@ -334,7 +282,8 @@ class InvoiceItemsRelationManager extends RelationManager
                         function (
                             Get $get,
                             Set $set
-                        ): void {
+                        ): void
+                        {
                             self::setItemSubtotal(
                                 $set,
                                 (float) (
@@ -370,7 +319,8 @@ class InvoiceItemsRelationManager extends RelationManager
         Set $set,
         float $quantity,
         float $price
-    ): void {
+    ): void
+    {
         $subtotal =
             $quantity * $price;
 
@@ -444,7 +394,8 @@ class InvoiceItemsRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()
                     ->after(
-                        function (): void {
+                        function (): void
+                        {
                             app(InvoiceService::class)
                                 ->recalculateTotals(
                                     $this->ownerRecord
@@ -466,7 +417,8 @@ class InvoiceItemsRelationManager extends RelationManager
 
                 EditAction::make()
                     ->after(
-                        function (): void {
+                        function (): void
+                        {
                             app(InvoiceService::class)
                                 ->recalculateTotals(
                                     $this->ownerRecord
@@ -481,7 +433,8 @@ class InvoiceItemsRelationManager extends RelationManager
                 DeleteAction::make()
                     ->requiresConfirmation()
                     ->after(
-                        function (): void {
+                        function (): void
+                        {
                             app(InvoiceService::class)
                                 ->recalculateTotals(
                                     $this->ownerRecord
@@ -505,7 +458,8 @@ class InvoiceItemsRelationManager extends RelationManager
                     DeleteBulkAction::make()
                         ->requiresConfirmation()
                         ->after(
-                            function (): void {
+                            function (): void
+                            {
                                 app(InvoiceService::class)
                                     ->recalculateTotals(
                                         $this->ownerRecord

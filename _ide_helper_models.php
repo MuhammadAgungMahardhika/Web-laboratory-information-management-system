@@ -573,6 +573,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $code
+ * @property string|null $receipt_number
  * @property int $invoice_id
  * @property string $date
  * @property string $amount_paid
@@ -582,7 +583,8 @@ namespace App\Models{
  * @property string|null $created_by
  * @property string|null $updated_by
  * @property string|null $attachment_path
- * @property int $status
+ * @property string|null $paid_at
+ * @property mixed $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Invoice $invoice
@@ -599,7 +601,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment wherePaidAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereReceiptNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereReferenceNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Payment whereUpdatedAt($value)
@@ -1097,7 +1101,7 @@ namespace App\Models{
  * @property int $id
  * @property int $personel_id
  * @property int $sample_id
- * @property mixed $action
+ * @property \App\Models\Enums\SampleHistoryActionEnum $action
  * @property array<array-key, mixed>|null $changes
  * @property string|null $created_by
  * @property string|null $updated_by

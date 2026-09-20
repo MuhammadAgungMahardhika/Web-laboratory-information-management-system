@@ -119,11 +119,15 @@ class QuotationResource extends Resource
                         ->native(false)
                         ->required()
                         ->reactive() // <-- Tambahkan ini agar perubahan memicu update field lain
-                        ->afterStateUpdated(function ($state, Set $set) use ($defaultQuotationExpiryDays) { // <-- Tambahkan ini
+                        ->afterStateUpdated(function ($state, Set $set) use ($defaultQuotationExpiryDays)
+                        { // <-- Tambahkan ini
                             // Jika date diisi, set valid_until_date menjadi 30 hari setelahnya
-                            if ($state) {
+                            if ($state)
+                            {
                                 $set('valid_until_date', Carbon::parse($state)->addDays($defaultQuotationExpiryDays));
-                            } else {
+                            }
+                            else
+                            {
                                 // Jika date dikosongkan, kosongkan juga valid_until_date
                                 $set('valid_until_date', null);
                             }
@@ -133,7 +137,8 @@ class QuotationResource extends Resource
                         ->default(now()->addDays(30)) // Default awal saat form dibuka
                         ->displayFormat('d/m/Y')
                         ->native(false)
-                        ->minDate(function (Get $get) {
+                        ->minDate(function (Get $get)
+                        {
                             $quotationDate = $get('date');
                             return $quotationDate ? Carbon::parse($quotationDate)->addDay() : null;
                         })
@@ -157,7 +162,8 @@ class QuotationResource extends Resource
                         ->relationship('customer', 'name')
                         ->preload()
                         ->searchable()
-                        ->createOptionForm(function (Get $get) {
+                        ->createOptionForm(function (Get $get)
+                        {
                             return [
                                 Section::make([
                                     TextInput::make('name')
@@ -183,14 +189,16 @@ class QuotationResource extends Resource
                                         ->label('Provinsi')
                                         ->relationship('province', 'name')
                                         ->reactive()
-                                        ->afterStateUpdated(function (Get $get, Set $set) {
+                                        ->afterStateUpdated(function (Get $get, Set $set)
+                                        {
                                             $set('city_id', null);
                                         })
                                         ->searchable()
                                         ->preload(),
                                     Select::make('city_id')
                                         ->label('Kota')
-                                        ->relationship('city', 'name', modifyQueryUsing: function (Get $get, $query) {
+                                        ->relationship('city', 'name', modifyQueryUsing: function (Get $get, $query)
+                                        {
                                             $provinceId = $get('province_id');
                                             $query->where('province_id', $provinceId);
                                         })
@@ -227,11 +235,14 @@ class QuotationResource extends Resource
                                     Select::make('user_id')
                                         ->label('Akun pelanggan')
                                         ->unique(ignoreRecord: true)
-                                        ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get) {
-                                            $query->where(function ($query) use ($get) {
+                                        ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get)
+                                        {
+                                            $query->where(function ($query) use ($get)
+                                            {
                                                 $query->whereDoesntHave('customer')
                                                     ->whereDoesntHave('personel')
-                                                    ->orWhereHas('customer', function ($subQuery) use ($get) {
+                                                    ->orWhereHas('customer', function ($subQuery) use ($get)
+                                                    {
                                                         $subQuery->where('id', '=', $get('id'));
                                                     });
                                             });
@@ -272,7 +283,8 @@ class QuotationResource extends Resource
                     Section::make([
                         Select::make('template_selector')
                             ->label('Pilih Template')
-                            ->options(function () {
+                            ->options(function ()
+                            {
                                 $options = TermTemplate::query()
                                     ->where('is_active', true)
                                     ->pluck('name', 'id') // Mengambil 'name' sebagai label dan 'id' sebagai value
@@ -285,25 +297,35 @@ class QuotationResource extends Resource
                             // -------------------------------------------------------------------------
                             ->placeholder('Atau tulis manual di bawah')
                             ->reactive()
-                            ->afterStateUpdated(function (?string $state, Get $get, Set $set) {
-                                if ($state === 'kosong') {
+                            ->afterStateUpdated(function (?string $state, Get $get, Set $set)
+                            {
+                                if ($state === 'kosong')
+                                {
                                     $set('additional_description', null); // Kosongkan jika 'kosong' dipilih
-                                } elseif ($state) {
+                                }
+                                elseif ($state)
+                                {
                                     // --- Mengambil KONTEN template dari database berdasarkan ID yang dipilih ---
                                     $template = TermTemplate::find($state);
-                                    if ($template) {
+                                    if ($template)
+                                    {
                                         $set('additional_description', $template->content);
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         // Fallback jika template tidak ditemukan (misal: ID tidak valid)
                                         $set('additional_description', null);
                                     }
-                                } else {
+                                }
+                                else
+                                {
                                     // Jika pilihan dikosongkan tanpa memilih 'kosong'
                                     $set('additional_description', null);
                                 }
                             })
                             ->dehydrated(false)
-                            ->createOptionForm(function (Get $get, Set $set) {
+                            ->createOptionForm(function (Get $get, Set $set)
+                            {
                                 return [
                                     TextInput::make('name')
                                         ->label('Nama Template')
@@ -332,7 +354,8 @@ class QuotationResource extends Resource
                                         ->required()
                                         ->default(true),
                                 ];
-                            })->createOptionUsing(function (array $data): string {
+                            })->createOptionUsing(function (array $data): string
+                            {
                                 // Logika ini akan membuat record baru di database
                                 $template = TermTemplate::create($data);
                                 return (string) $template->id; // Mengembalikan ID dari record yang baru dibuat
@@ -377,14 +400,16 @@ class QuotationResource extends Resource
                     ->html()
                     ->sortable()
                     ->searchable(
-                        query: function (Builder $query, string $search): Builder {
-                            return $query->where(function ($q) use ($search) {
+                        query: function (Builder $query, string $search): Builder
+                        {
+                            return $query->where(function ($q) use ($search)
+                            {
                                 $q->where('code', 'like', "%{$search}%")
                                     ->orWhere('name', 'like', "%{$search}%");
                             });
                         }
-                    )->formatStateUsing(function ($state, $record) {
-
+                    )->formatStateUsing(function ($state, $record)
+                    {
                         $quotationDate = $record->date
                             ? Carbon::parse($record->date)->format('d M Y')
                             : '-';
@@ -394,59 +419,64 @@ class QuotationResource extends Resource
                             : '-';
 
                         return new \Illuminate\Support\HtmlString("
-        <div style='line-height:1.45'>
-            <div style='font-weight:700;color:#2563eb'>
-                {$record->code}
-            </div>
+                            <div style='line-height:1.45'>
+                                <div style='font-weight:700;color:#2563eb'>
+                                    {$record->code}
+                                </div>
 
-            <div style='font-size:12px;color:#6b7280'>
-                {$record->name}
-            </div>
+                                <div style='font-size:12px;color:#6b7280'>
+                                    {$record->name}
+                                </div>
 
-            <div style='font-size:12px;margin-top:6px'>
-                {$quotationDate}
-                &nbsp;&rarr;&nbsp;
-                {$validUntil}
-            </div>
-        </div>
-    ");
+                                <div style='font-size:12px;margin-top:6px'>
+                                    {$quotationDate}
+                                    &nbsp;&rarr;&nbsp;
+                                    {$validUntil}
+                                </div>
+                            </div>
+                        ");
                     }),
                 TextColumn::make('customer.name')
                     ->label('Klien')
                     ->html()
                     ->sortable()
                     ->searchable(
-                        query: function (Builder $query, string $search): Builder {
-                            return $query->where(function ($q) use ($search) {
+                        query: function (Builder $query, string $search): Builder
+                        {
+                            return $query->where(function ($q) use ($search)
+                            {
 
-                                $q->whereHas('customer', function ($sub) use ($search) {
+                                $q->whereHas('customer', function ($sub) use ($search)
+                                {
                                     $sub->where('name', 'like', "%{$search}%");
                                 })
-                                    ->orWhereHas('personel', function ($sub) use ($search) {
+                                    ->orWhereHas('personel', function ($sub) use ($search)
+                                    {
                                         $sub->where('fullname', 'like', "%{$search}%");
                                     });
                             });
                         }
                     )
-                    ->formatStateUsing(function ($state, $record): string {
+                    ->formatStateUsing(function ($state, $record): string
+                    {
 
                         return "
-            <div>
-                <div class='font-semibold'>
-                    {$record->customer?->name}
-                </div>
-
-                <div class='text-xs text-gray-500'>
-                    {$record->personel?->fullname}
-                </div>
-            </div>
-        ";
+                            <div>
+                                <div class='font-semibold'>
+                                    {$record->customer?->name}
+                                </div>
+                                <div class='text-xs text-gray-500'>
+                                    {$record->personel?->fullname}
+                                </div>
+                            </div>
+                        ";
                     }),
                 TextColumn::make('total_price')
                     ->label('Nominal')
                     ->html()
                     ->sortable(
-                        query: function (Builder $query, string $direction) {
+                        query: function (Builder $query, string $direction)
+                        {
 
                             return $query->orderBy(
                                 QuotationItem::selectRaw('COALESCE(SUM(quantity * price),0)')
@@ -459,8 +489,10 @@ class QuotationResource extends Resource
                         }
                     )
                     ->searchable(
-                        query: function (Builder $query, string $search): Builder {
-                            return $query->whereExists(function ($sub) use ($search) {
+                        query: function (Builder $query, string $search): Builder
+                        {
+                            return $query->whereExists(function ($sub) use ($search)
+                            {
                                 $sub->selectRaw(1)
                                     ->from('quotation_items')
                                     ->whereColumn('quotation_items.quotation_id', 'quotations.id')
@@ -473,24 +505,25 @@ class QuotationResource extends Resource
                         }
                     )
                     ->alignEnd()
-                    ->formatStateUsing(function ($state, $record) {
+                    ->formatStateUsing(function ($state, $record)
+                    {
 
                         $total = number_format($record->total_price, 0, ',', '.');
 
                         return "
-        <div style='text-align:right;line-height:1.45'>
-            <div style='font-size:15px;font-weight:700;color:#16a34a'>
-                Rp {$total}
-            </div>
+                            <div style='text-align:right;line-height:1.45'>
+                                <div style='font-size:15px;font-weight:700;color:#16a34a'>
+                                    Rp {$total}
+                                </div>
 
-            <div style='font-size:12px;color:#6b7280'>
-                Diskon {$record->discount_percentage}%
-            </div>
+                                <div style='font-size:12px;color:#6b7280'>
+                                    Diskon {$record->discount_percentage}%
+                                </div>
 
-            <div style='font-size:12px;color:#6b7280'>
-                PPN {$record->ppn_percentage}% &nbsp;|&nbsp; PPh {$record->pph_percentage}%
-            </div>
-        </div>";
+                                <div style='font-size:12px;color:#6b7280'>
+                                    PPN {$record->ppn_percentage}% &nbsp;|&nbsp; PPh {$record->pph_percentage}%
+                                </div>
+                            </div>";
                     }),
 
                 TextColumn::make('approvedByPersonel.fullname')
@@ -498,7 +531,8 @@ class QuotationResource extends Resource
                     ->html()
                     ->sortable()
                     ->searchable(
-                        query: function (Builder $query, string $search): Builder {
+                        query: function (Builder $query, string $search): Builder
+                        {
 
                             return $query->whereHas(
                                 'approvedByPersonel',
@@ -506,49 +540,53 @@ class QuotationResource extends Resource
                             );
                         }
                     )
-                    ->formatStateUsing(function ($state, $record): string {
+                    ->formatStateUsing(function ($state, $record): string
+                    {
 
                         $tanggal = optional($record->approved_at)->format('d M Y H:i');
 
                         return "
-            <div>
-                <div class='font-semibold'>
-                    " . ($record->approvedByPersonel?->fullname ?? '-') . "
-                </div>
+                                <div>
+                                    <div class='font-semibold'>
+                                        " . ($record->approvedByPersonel?->fullname ?? '-') . "
+                                    </div>
 
-                <div class='text-xs text-gray-500'>
-                    {$tanggal}
-                </div>
-            </div>
-        ";
+                                    <div class='text-xs text-gray-500'>
+                                        {$tanggal}
+                                    </div>
+                                </div>
+                            ";
                     }),
                 TextColumn::make('created_by')
                     ->label('Audit')
                     ->html()
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->searchable(
-                        query: function (Builder $query, string $search): Builder {
+                        query: function (Builder $query, string $search): Builder
+                        {
 
-                            return $query->where(function ($q) use ($search) {
+                            return $query->where(function ($q) use ($search)
+                            {
 
                                 $q->where('created_by', 'like', "%{$search}%")
                                     ->orWhere('updated_by', 'like', "%{$search}%");
                             });
                         }
                     )
-                    ->formatStateUsing(function ($state, $record): string {
+                    ->formatStateUsing(function ($state, $record): string
+                    {
 
                         return "
-            <div>
-                <div>
-                    <strong>Create :</strong> {$record->created_by}
-                </div>
+                                <div>
+                                    <div>
+                                        <strong>Create :</strong> {$record->created_by}
+                                    </div>
 
-                <div class='text-xs text-gray-500'>
-                    Update : {$record->updated_by}
-                </div>
-            </div>
-        ";
+                                    <div class='text-xs text-gray-500'>
+                                        Update : {$record->updated_by}
+                                    </div>
+                                </div>
+                            ";
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -572,7 +610,8 @@ class QuotationResource extends Resource
 
                     ])
                     ->columns(2)
-                    ->query(function (Builder $query, array $data): Builder {
+                    ->query(function (Builder $query, array $data): Builder
+                    {
                         return $query
                             ->when(
                                 $data['from'],
@@ -583,12 +622,15 @@ class QuotationResource extends Resource
                                 fn(Builder $query, $date) => $query->where('date', '<=', Carbon::parse($date)->endOfDay()),
                             );
                     })
-                    ->indicateUsing(function (array $data): array {
+                    ->indicateUsing(function (array $data): array
+                    {
                         $indicators = [];
-                        if ($data['from'] ?? null) {
+                        if ($data['from'] ?? null)
+                        {
                             $indicators['from'] = 'Penawaran dari ' . Carbon::parse($data['from'])->format('d M Y');
                         }
-                        if ($data['until'] ?? null) {
+                        if ($data['until'] ?? null)
+                        {
                             $indicators['until'] = 'Penawaran sampai ' . Carbon::parse($data['until'])->format('d M Y');
                         }
                         return $indicators;

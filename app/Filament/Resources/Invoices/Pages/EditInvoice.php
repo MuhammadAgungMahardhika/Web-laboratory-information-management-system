@@ -45,6 +45,8 @@ class EditInvoice extends EditRecord
 
         $this->data['net_amount'] =
             $this->record->net_amount;
+        $this->data['status'] =
+            $this->record->status;
     }
     protected function getHeaderActions(): array
     {

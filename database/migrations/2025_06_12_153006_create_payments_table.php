@@ -16,6 +16,7 @@ return new class extends Migration
 
             // Relasi ke Invoice (Wajib ada)
             $table->string('code')->unique();
+            $table->string('receipt_number')->unique()->nullable(); // Nomor kuitansi, hanya diisi jika status Completed
             $table->unsignedBigInteger('invoice_id'); // Jika invoice dihapus, record pembayaran ikut dihapus
 
             // Detail Transaksi
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->string('attachment_path')->nullable(); // Path ke file bukti pembayaran
+            $table->dateTime('paid_at')->nullable(); // Tanggal pembayaran diterima, hanya diisi jika status Completed
             // Status (Misal: Draft, Sent, Paid, Void)
             $table->tinyInteger('status')->default(1);
             // Audit

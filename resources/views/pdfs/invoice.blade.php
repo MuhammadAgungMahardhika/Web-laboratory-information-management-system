@@ -635,208 +635,92 @@
         @endphp
 
         <table class="info-table">
-
             <tr>
-
                 <td class="customer-box">
-
-                    <div class="box-title">
-                        Ditagihkan Kepada:
-                    </div>
-
+                    <div class="box-title">Ditagihkan Kepada:</div>
                     <table class="info-table">
-
                         <tr>
-                            <td class="label">
-                                Nama
-                            </td>
-
+                            <td class="label">Nama</td>
                             <td class="separator">:</td>
-
-                            <td>
-                                {{ $customer?->name ?? '-' }}
-                            </td>
+                            <td>{{ $customer?->name ?? '-' }}</td>
                         </tr>
-
                         <tr>
-                            <td class="label">
-                                Alamat
-                            </td>
-
+                            <td class="label">Alamat</td>
                             <td class="separator">:</td>
-
-                            <td>
-                                {{ $customer?->full_address ?? '-' }}
-                            </td>
-
+                            <td>{{ $customer?->full_address ?? '-' }}</td>
                         </tr>
-
                         <tr>
-                            <td class="label">
-                                PIC
-                            </td>
-
+                            <td class="label">PIC</td>
                             <td class="separator">:</td>
-
-                            <td>
-                                {{ $customer->contact_person_name ?? '-' }}
-                            </td>
+                            <td>{{ $customer->contact_person_name ?? '-' }}</td>
                         </tr>
-
                         <tr>
-                            <td class="label">
-                                Telp
-                            </td>
-
+                            <td class="label">Telp</td>
                             <td class="separator">:</td>
-
-                            <td>
-                                {{ $customer->contact_phone_number ?? '-' }}
-                            </td>
+                            <td>{{ $customer->contact_phone_number ?? '-' }}</td>
                         </tr>
-
                         <tr>
-                            <td class="label">
-                                Email
-                            </td>
-
+                            <td class="label">Email</td>
                             <td class="separator">:</td>
-
-                            <td>
-                                {{ $customer->contact_email ?? '-' }}
-                            </td>
+                            <td>{{ $customer->contact_email ?? '-' }}</td>
                         </tr>
-
                     </table>
-
                 </td>
-
-
                 <td class="invoice-box">
-
                     <div class="box-title">
                         Informasi Invoice:
                     </div>
-
                     <table class="info-table">
-
                         <tr>
-
-                            <td class="label">
-                                No. Invoice
-                            </td>
-
+                            <td class="label">No. Invoice</td>
                             <td class="separator">:</td>
-
-                            <td>
-                                {{ $invoice->code }}
-                            </td>
-
+                            <td>{{ $invoice->code }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Tanggal</td>
+                            <td class="separator">:</td>
+                            <td>{{ \Carbon\Carbon::parse($invoice->date)->isoFormat('D MMMM Y') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Jatuh Tempo</td>
+                            <td class="separator">:</td>
+                            <td>{{ \Carbon\Carbon::parse($invoice->due_date)->isoFormat('D MMMM Y') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Lab Job</td>
+                            <td class="separator">:</td>
+                            <td>{{ $invoice->labJob?->code ?? '-' }}</td>
                         </tr>
 
                         <tr>
-
-                            <td class="label">
-                                Tanggal
-                            </td>
-
+                            <td class="label">Status</td>
                             <td class="separator">:</td>
-
-                            <td>
-                                {{ \Carbon\Carbon::parse($invoice->date)->isoFormat('D MMMM Y') }}
-                            </td>
-
+                            <td> <span class="status"> {{ $invoice->status_enum->label() }}</span></td>
                         </tr>
-
-                        <tr>
-
-                            <td class="label">
-                                Jatuh Tempo
-                            </td>
-
-                            <td class="separator">:</td>
-
-                            <td>
-                                {{ \Carbon\Carbon::parse($invoice->due_date)->isoFormat('D MMMM Y') }}
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td class="label">
-                                Lab Job
-                            </td>
-
-                            <td class="separator">:</td>
-
-                            <td>
-                                {{ $invoice->labJob?->code ?? '-' }}
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td class="label">
-                                Status
-                            </td>
-
-                            <td class="separator">:</td>
-
-                            <td>
-                                <span class="status">
-                                    {{ $invoice->status_enum->label() }}
-                                </span>
-                            </td>
-
-                        </tr>
-
                     </table>
-
                 </td>
-
             </tr>
-
         </table>
-
 
         {{-- =================================================
              ITEMS
         ================================================== --}}
-
         <table class="items-table">
-
             <colgroup>
-
                 <col class="col-no">
-
                 <col class="col-description">
-
                 <col class="col-qty">
-
                 <col class="col-price">
-
                 <col class="col-total">
-
             </colgroup>
-
             <thead>
-
                 <tr>
-
                     <th>No</th>
-
                     <th>Deskripsi</th>
-
                     <th>Qty</th>
-
                     <th>Harga Satuan (Rp)</th>
-
                     <th>Jumlah (Rp)</th>
-
                 </tr>
-
             </thead>
 
             <tbody>
@@ -888,128 +772,60 @@
         <div class="summary-wrapper">
 
             <table class="summary-table">
-
                 <tr>
-
                     <td class="summary-left">
-
                         <div class="terbilang-box">
-
                             <div class="terbilang-title">
                                 Terbilang:
                             </div>
-
                             <div class="terbilang-text">
-
                                 {{ rupiahInWords($invoice->net_amount) }}
-
-                                rupiah.
-
                             </div>
-
                         </div>
-
                         <div class="notes">
-
                             <div class="notes-title">
                                 Catatan:
                             </div>
-
                             Pembayaran dilakukan sesuai dengan jumlah
                             dan tanggal jatuh tempo yang tercantum
                             pada invoice ini.
-
                         </div>
-
                     </td>
-
-
                     <td class="summary-right">
-
                         <table class="summary-table-inner">
-
                             <tr>
-
                                 <td class="summary-label">
                                     Subtotal
                                 </td>
-
                                 <td class="summary-value">
                                     Rp
                                     {{ number_format($invoice->subtotal, 0, ',', '.') }}
                                 </td>
-
                             </tr>
-
-
                             @if ($invoice->discount_percentage > 0)
                                 <tr>
-
-                                    <td class="summary-label">
-
-                                        Diskon
-                                        ({{ number_format($invoice->discount_percentage, 2, ',', '.') }}%)
-
-                                    </td>
-
-                                    <td class="summary-value">
-
-                                        - Rp
-                                        {{ number_format($invoice->discount_amount, 0, ',', '.') }}
-
-                                    </td>
-
+                                    <td class="summary-label">Diskon
+                                        ({{ number_format($invoice->discount_percentage, 2, ',', '.') }}%)</td>
+                                    <td class="summary-value">- Rp
+                                        {{ number_format($invoice->discount_amount, 0, ',', '.') }}</td>
                                 </tr>
                             @endif
-
-
                             <tr>
-
-                                <td class="summary-label">
-                                    DPP
+                                <td class="summary-label">DPP</td>
+                                <td class="summary-value">Rp {{ number_format($invoice->dpp_amount, 0, ',', '.') }}
                                 </td>
-
-                                <td class="summary-value">
-
-                                    Rp
-                                    {{ number_format($invoice->dpp_amount, 0, ',', '.') }}
-
-                                </td>
-
                             </tr>
-
-
                             @if ($invoice->ppn_percentage > 0)
                                 <tr>
-
-                                    <td class="summary-label">
-
-                                        PPN
-                                        ({{ number_format($invoice->ppn_percentage, 2, ',', '.') }}%)
-
+                                    <td class="summary-label">PPN
+                                        ({{ number_format($invoice->ppn_percentage, 2, ',', '.') }}%)</td>
+                                    <td class="summary-value">Rp {{ number_format($invoice->ppn_amount, 0, ',', '.') }}
                                     </td>
-
-                                    <td class="summary-value">
-
-                                        Rp
-                                        {{ number_format($invoice->ppn_amount, 0, ',', '.') }}
-
-                                    </td>
-
                                 </tr>
                             @endif
-
-
                             <tr class="grand-total">
-
-                                <td class="summary-label">
-                                    TOTAL TAGIHAN
-                                </td>
-
-                                <td class="summary-value">
-
-                                    Rp
-                                    {{ number_format($invoice->total_amount, 0, ',', '.') }}
+                                <td class="summary-label">TOTAL TAGIHAN</td>
+                                <td class="summary-value">Rp {{ number_format($invoice->total_amount, 0, ',', '.') }}
 
                                 </td>
 
@@ -1066,38 +882,28 @@
         {{-- =================================================
              PAYMENT HISTORY
         ================================================== --}}
-
         @if ($invoice->payments->isNotEmpty())
-
             @php
                 $totalPaid = $invoice->payments->sum('amount_paid');
-                $remaining = max(0, $invoice->total_amount - $totalPaid);
+                $remaining = max(0, $invoice->net_amount - $totalPaid);
             @endphp
 
             <div class="payment-history">
-
                 <div class="payment-history-title">
                     Riwayat Pembayaran
                 </div>
-
                 <table class="payment-table">
-
                     <thead>
-
                         <tr>
-
                             <th width="15%">
                                 Tanggal
                             </th>
-
                             <th width="20%">
                                 Kode
                             </th>
-
                             <th width="20%">
                                 Metode
                             </th>
-
                             <th width="25%">
                                 Referensi
                             </th>
