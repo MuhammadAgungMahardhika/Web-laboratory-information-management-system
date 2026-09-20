@@ -87,7 +87,7 @@ class PaymentsRelationManager extends RelationManager
                     ->label('Bukti Pembayaran')
                     ->disk('public')
                     ->directory('payments')
-                    ->visibility('private')
+                    ->visibility('public')
                     ->acceptedFileTypes([
                         'image/jpeg',
                         'image/png',
@@ -129,7 +129,8 @@ class PaymentsRelationManager extends RelationManager
                 TextColumn::make('payment_method')
                     ->label('Metode Pembayaran')
                     ->formatStateUsing(
-                        fn(?string $state): string => match ($state) {
+                        fn(?string $state): string => match ($state)
+                        {
                             'cash' => 'Tunai',
                             'transfer' => 'Transfer Bank',
                             'debit' => 'Kartu Debit',
