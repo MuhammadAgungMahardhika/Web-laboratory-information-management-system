@@ -374,6 +374,42 @@
             font-size: 7pt;
             font-style: italic;
         }
+
+        /* =====================================================
+   ATTACHMENT / BUKTI PEMBAYARAN
+===================================================== */
+
+        .attachment-page {
+            page-break-before: always;
+            margin-top: 10px;
+        }
+
+        .attachment-box {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .attachment-image {
+            max-width: 100%;
+            max-height: 650px;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .attachment-caption {
+            margin-top: 8px;
+            font-size: 8pt;
+            text-align: center;
+            font-style: italic;
+            color: #333;
+        }
     </style>
 </head>
 
