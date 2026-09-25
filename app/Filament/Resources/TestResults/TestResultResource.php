@@ -76,12 +76,15 @@ class TestResultResource extends Resource
     }
     protected static function isApprover(User $user): bool
     {
-        if (!$user) {
+        if (!$user)
+        {
             return false;
         }
 
-        foreach (TestResultApprovalService::LEVEL_PERMISSIONS as $permission) {
-            if ($user->can($permission)) {
+        foreach (TestResultApprovalService::LEVEL_PERMISSIONS as $permission)
+        {
+            if ($user->can($permission))
+            {
                 return true;
             }
         }
@@ -91,13 +94,15 @@ class TestResultResource extends Resource
 
     protected static function pendingCount(): int
     {
-        if (static::$pendingCount !== null) {
+        if (static::$pendingCount !== null)
+        {
             return static::$pendingCount;
         }
 
         $user = Auth::user();
 
-        if (static::isApprover($user)) {
+        if (static::isApprover($user))
+        {
             // Badge buat approver = jumlah record yang punya approval pending
             // di level yang dia punya izinnya.
             $myLevels = collect(TestResultApprovalService::LEVEL_PERMISSIONS)
@@ -105,7 +110,8 @@ class TestResultResource extends Resource
                 ->keys();
 
             return static::$pendingCount = static::getEloquentQuery()
-                ->whereHas('testResultApprovals', function ($q) use ($myLevels) {
+                ->whereHas('testResultApprovals', function ($q) use ($myLevels)
+                {
                     $q->where('status', TestResultApprovalStatusEnum::Pending->value)
                         ->whereIn('approval_level', $myLevels);
                 })
@@ -132,7 +138,8 @@ class TestResultResource extends Resource
 
         // Approver: lihat semua record (tidak dibatasi specialization),
         // karena hak lihat/approve ditentukan permission, bukan keahlian teknis.
-        if (static::isApprover($user)) {
+        if (static::isApprover($user))
+        {
             return $query;
         }
 

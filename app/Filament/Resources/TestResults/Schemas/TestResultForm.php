@@ -33,12 +33,15 @@ class TestResultForm
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (!$user)
+        {
             return false;
         }
 
-        foreach (TestResultApprovalService::LEVEL_PERMISSIONS as $permission) {
-            if ($user->can($permission)) {
+        foreach (TestResultApprovalService::LEVEL_PERMISSIONS as $permission)
+        {
+            if ($user->can($permission))
+            {
                 return true;
             }
         }
@@ -101,8 +104,10 @@ class TestResultForm
                                     ->inlineLabel()
                                     ->disabled() // read-only murni, keputusan ada di tombol Validasi/Revisi/Tolak
                                     ->dehydrated(false)
-                                    ->heading(function ($record) {
-                                        if (!$record?->evaluation_status) {
+                                    ->heading(function ($record)
+                                    {
+                                        if (!$record?->evaluation_status)
+                                        {
                                             return new HtmlString(
                                                 'Status Pengujian -> <span style="color:#6B7280;font-weight:700">Belum Divalidasi</span>'
                                             );
@@ -149,13 +154,16 @@ class TestResultForm
                                         ->label('Tanggal Uji')
                                         ->minDate(fn(?TestResult $record) => $record ? null : now()->toDateString())
                                         ->required()
-                                        ->afterStateHydrated(function ($state, callable $set, string $operation) {
-                                            if ($operation === 'edit') {
+                                        ->afterStateHydrated(function ($state, callable $set, string $operation)
+                                        {
+                                            if ($operation === 'edit')
+                                            {
                                                 if (empty($state))
                                                     $set('test_date', now()->toDateString());
                                             }
 
-                                            if ($operation === 'create' && blank($state)) {
+                                            if ($operation === 'create' && blank($state))
+                                            {
                                                 $set('test_date', now()->toDateString());
                                             }
                                         }),
@@ -163,14 +171,17 @@ class TestResultForm
                                     Select::make('analyst_personel_id')
                                         ->label('Analis')
                                         ->default(Auth::user()->personel_id)
-                                        ->relationship('analystPersonel', 'fullname', modifyQueryUsing: fn($query) => !static::isApprover() ? $query->where('id', Auth::user()->personel->id) : $query)
+                                        ->relationship('analystPersonel', 'fullname')
                                         ->searchable()
                                         ->preload()
                                         ->disabled()
                                         ->dehydrated()
-                                        ->afterStateHydrated(function ($state, callable $set, string $operation) {
-                                            if ($operation === 'edit') {
-                                                if (empty($state)) {
+                                        ->afterStateHydrated(function ($state, callable $set, string $operation)
+                                        {
+                                            if ($operation === 'edit')
+                                            {
+                                                if (empty($state))
+                                                {
                                                     $set('analyst_personel_id', Auth::user()->personel_id);
                                                 }
                                             }
@@ -196,8 +207,10 @@ class TestResultForm
                                         ->live()
                                         ->required(),
 
-                                ])->columns(1)->inlineLabel()->heading(function ($record) {
-                                    if (!$record?->status) {
+                                ])->columns(1)->inlineLabel()->heading(function ($record)
+                                {
+                                    if (!$record?->status)
+                                    {
                                         return new HtmlString(
                                             'Status Pengujian -> <span style="color:#6B7280;font-weight:600">Belum Diuji</span>'
                                         );
