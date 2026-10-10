@@ -9,8 +9,21 @@
     </title>
 
     <style>
+        /* JANGAN pakai "* { margin:0; padding:0 }" -> DomPDF jadi mengabaikan @page margin */
         * {
             box-sizing: border-box;
+        }
+
+        body,
+        div,
+        p,
+        table,
+        tr,
+        td,
+        th,
+        img,
+        strong,
+        span {
             margin: 0;
             padding: 0;
         }
@@ -24,21 +37,20 @@
             color: #333;
         }
 
+        /* Margin halaman = ruang untuk header & footer di SETIAP halaman */
         @page {
             size: A4 portrait;
-            margin: 0;
+            margin: 95px 50px 62px 50px;
         }
 
         /* ===================== HEADER ===================== */
 
         .header-fixed {
             position: fixed;
-            top: 0;
+            top: -88px;
             left: 0;
             right: 0;
-            padding: 8px 50px 6px 50px;
             background: white;
-            z-index: 1000;
         }
 
         .kop-surat {
@@ -51,11 +63,10 @@
 
         .footer-fixed {
             position: fixed;
-            bottom: 0;
+            bottom: -58px;
             left: 0;
             right: 0;
             height: 44px;
-            padding: 0 50px;
             background: white;
             border-top: 1px solid #ccc;
             display: table;
@@ -95,7 +106,7 @@
         /* ===================== PAGE ===================== */
 
         .page {
-            margin: 90px 50px 60px 50px;
+            margin: 0;
         }
 
         /* ===================== TITLE ===================== */
@@ -164,6 +175,14 @@
             padding: 4px;
             vertical-align: top;
             word-wrap: break-word;
+        }
+
+        .items-table thead {
+            display: table-header-group;
+        }
+
+        .items-table tr {
+            page-break-inside: avoid;
         }
 
         .items-table th {
@@ -316,12 +335,16 @@
 
         .signature-section {
             margin-top: 18px;
-            page-break-inside: avoid;
         }
 
         .signature-table {
             width: 100%;
             border-collapse: collapse;
+            page-break-inside: avoid;
+        }
+
+        .signature-table tr {
+            page-break-inside: avoid;
         }
 
         .signature-table td {
