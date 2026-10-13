@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\ViewField;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -41,7 +42,8 @@ class SampleForm
                 Section::make([
                     Select::make('lab_job_item_id')
                         ->label('Produk Uji')
-                        ->relationship('labJobItem', 'description_code', modifyQueryUsing: function ($query) {
+                        ->relationship('labJobItem', 'description_code', modifyQueryUsing: function ($query)
+                        {
                             return $query
                                 ->where('group', 'A');
                         })
@@ -49,13 +51,17 @@ class SampleForm
                         ->searchable()
                         ->preload()
                         ->live()
-                        ->afterStateUpdated(function ($state,  $set) use ($sampleService) {
-                            if ($state) {
+                        ->afterStateUpdated(function ($state,  $set) use ($sampleService)
+                        {
+                            if ($state)
+                            {
                                 // Inisialisasi service
                                 $labJobItem = LabJobItem::find($state);
                                 $sampleCode = $sampleService->generateSampleCode($labJobItem);
                                 $set('code', $sampleCode);
-                            } else {
+                            }
+                            else
+                            {
                                 $set('code', null);
                             }
                         }),
@@ -109,6 +115,9 @@ class SampleForm
                                 TextInput::make('preservation_method')
                                     ->label('Metode Preservasi')
                                     ->maxLength(255),
+                                ViewField::make('get_location')
+                                    ->view('filament.forms.get-location')
+                                    ->dehydrated(false)->columnSpanFull()->visibleOn(['create', 'edit']),
                                 TextInput::make('latitude'),
                                 TextInput::make('longitude'),
 
@@ -164,7 +173,8 @@ class SampleForm
                             ])
                             ->visibleOn(['view', 'edit']),
                     ])
-                    ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('code')))->activeTab(function (Get $get) {
+                    ->columnSpanFull()->visible(fn(Get $get) => !is_null($get('code')))->activeTab(function (Get $get)
+                    {
                         return SampleCollectionTypeEnum::tryFrom($get('collection_type')) === SampleCollectionTypeEnum::Collected
                             ? 1 : 2;
                     }),
