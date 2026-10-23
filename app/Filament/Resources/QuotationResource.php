@@ -16,7 +16,6 @@ use App\Filament\Resources\QuotationResource\Pages\ViewQuotation;
 use App\Filament\Resources\QuotationResource\Pages\EditQuotation;
 use App\Filament\Resources\QuotationResource\RelationManagers\QuotationItemRelationManager;
 use App\Models\Enums\QuotationStatusEnum;
-use App\Models\Enums\RoleEnum;
 use App\Models\Quotation;
 use App\Models\QuotationItem;
 use App\Models\TermTemplate;
@@ -28,7 +27,6 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -37,12 +35,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Support\Enums\TextSize;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\RecordActionsPosition;
-use Illuminate\Support\HtmlString;
 
 class QuotationResource extends Resource
 {
@@ -100,284 +98,292 @@ class QuotationResource extends Resource
     }
     public static function form(Schema $schema): Schema
     {
-        $user = Auth::user();
-        $setting  =   $user->personel->company->active_setting;
-        $personelId =   $user->personel->id ?? null;
-        $defaultQuotationExpiryDays = (int) $setting->default_quotation_expiry_days;
-        $quoatationService = app(QuotationService::class);
+        $personel   = Auth::user()?->personel;
+        $expiryDays = (int) ($personel?->company?->active_setting?->default_quotation_expiry_days ?? 30);
+
         return $schema
-            ->columns([
-                'default' => 1,
-                'lg' => 2,
-            ])
+            ->columns(1)
             ->components([
-                Section::make([
-                    DatePicker::make('date')
-                        ->label('Tanggal penawaran')
-                        ->default(now())
-                        ->displayFormat('d/m/Y')
-                        ->native(false)
-                        ->required()
-                        ->reactive() // <-- Tambahkan ini agar perubahan memicu update field lain
-                        ->afterStateUpdated(function ($state, Set $set) use ($defaultQuotationExpiryDays)
-                        { // <-- Tambahkan ini
-                            // Jika date diisi, set valid_until_date menjadi 30 hari setelahnya
-                            if ($state)
-                            {
-                                $set('valid_until_date', Carbon::parse($state)->addDays($defaultQuotationExpiryDays));
-                            }
-                            else
-                            {
-                                // Jika date dikosongkan, kosongkan juga valid_until_date
-                                $set('valid_until_date', null);
-                            }
-                        }),
-                    DatePicker::make('valid_until_date')
-                        ->label('Tanggal berakhir penawaran')
-                        ->default(now()->addDays(30)) // Default awal saat form dibuka
-                        ->displayFormat('d/m/Y')
-                        ->native(false)
-                        ->minDate(function (Get $get)
-                        {
-                            $quotationDate = $get('date');
-                            return $quotationDate ? Carbon::parse($quotationDate)->addDay() : null;
-                        })
-                        ->required()
-                        ->helperText(fn() => "Default {$defaultQuotationExpiryDays} hari"),
-                    TextInput::make('code')
-                        ->label('Nomor penawaran')
-                        ->required()
-                        ->default($quoatationService->generateQuotationNumber())
-                        ->maxLength(50),
-                    Select::make('request_id')
-                        ->label('Nomor permohonan (jika ada)')
-                        ->relationship('request', 'request_number'),
-                    TextInput::make('name')
-                        ->label('Judul penawaran')
-                        ->columnSpan(2)
-                        ->required(),
-                    Select::make('customer_id')
-                        ->label('Klien')
-                        ->required()
-                        ->relationship('customer', 'name')
-                        ->preload()
-                        ->searchable()
-                        ->createOptionForm(function (Get $get)
-                        {
-                            return [
-                                Section::make([
-                                    TextInput::make('name')
-                                        ->label('Nama klien')
-                                        ->unique(ignoreRecord: true)
-                                        ->required()
-                                        ->maxLength(255),
-                                    Select::make('customer_type_id')
-                                        ->required()
-                                        ->label('Jenis klien')
-                                        ->relationship('customerType', 'name')
-                                        ->searchable()
-                                        ->preload(),
 
-                                    Hidden::make('registration_date')
-                                        ->default(now()),
+                // Badge status, hanya muncul saat penawaran sudah ada
+                TextEntry::make('status_badge')
+                    ->hiddenLabel()
+                    ->badge()
+                    ->state(fn($record) => QuotationStatusEnum::labels()[$record->status] ?? null)
+                    ->color(fn($record) => $record?->status ? QuotationStatusEnum::color($record->status) : 'gray')
+                    ->icon(Heroicon::DocumentCheck)
+                    ->visible(fn($record) => filled($record?->status)),
 
-                                    Hidden::make('status')
-                                        ->default(QuotationStatusEnum::default()),
-                                ])->columns(2)->collapsible()->heading('Identitas')->iconColor('primary')->icon('heroicon-s-building-office'),
-                                Section::make([
-                                    Select::make('province_id')
-                                        ->label('Provinsi')
-                                        ->relationship('province', 'name')
-                                        ->reactive()
-                                        ->afterStateUpdated(function (Get $get, Set $set)
+                Tabs::make()
+                    ->persistTabInQueryString()
+                    ->columnSpanFull()
+                    ->tabs([
+
+                        /* ───────────── Tab 1: Penawaran ───────────── */
+                        Tab::make('Penawaran')
+                            ->icon(Heroicon::DocumentDuplicate)
+                            ->schema([
+                                Grid::make(['default' => 2, 'lg' => 12])->schema([
+
+                                    TextInput::make('code')
+                                        ->label('Nomor')
+                                        ->prefixIcon(Heroicon::Hashtag)
+                                        ->default(fn() => app(QuotationService::class)->generateQuotationNumber())
+                                        ->required()
+                                        ->maxLength(50)
+                                        ->columnSpan(['default' => 2, 'lg' => 4]),
+
+                                    DatePicker::make('date')
+                                        ->label('Tanggal')
+                                        ->prefixIcon(Heroicon::CalendarDays)
+                                        ->default(now())
+                                        ->native(false)
+                                        ->displayFormat('d/m/Y')
+                                        ->required()
+                                        ->live()
+                                        ->afterStateUpdated(fn($state, Set $set) => $set(
+                                            'valid_until_date',
+                                            $state ? Carbon::parse($state)->addDays($expiryDays) : null
+                                        ))
+                                        ->columnSpan(['default' => 1, 'lg' => 4]),
+
+                                    DatePicker::make('valid_until_date')
+                                        ->label('Berlaku sampai')
+                                        ->prefixIcon(Heroicon::Clock)
+                                        ->default(now()->addDays($expiryDays))
+                                        ->native(false)
+                                        ->displayFormat('d/m/Y')
+                                        ->minDate(fn(Get $get) => $get('date')
+                                            ? Carbon::parse($get('date'))->addDay()
+                                            : null)
+                                        ->required()
+                                        ->live()
+                                        // Hint singkat: berapa hari masa berlaku penawaran
+                                        ->hint(function (Get $get): ?string
                                         {
-                                            $set('city_id', null);
-                                        })
-                                        ->searchable()
-                                        ->preload(),
-                                    Select::make('city_id')
-                                        ->label('Kota')
-                                        ->relationship('city', 'name', modifyQueryUsing: function (Get $get, $query)
-                                        {
-                                            $provinceId = $get('province_id');
-                                            $query->where('province_id', $provinceId);
-                                        })
-                                        ->searchable()
-                                        ->preload(),
-                                    TextInput::make('full_address')
-                                        ->label('Alamat lengkap')
-                                        ->maxLength(255),
-                                    TextInput::make('postal_code')
-                                        ->label('Kode pos')
-                                        ->maxLength(255),
-                                ])->columns(4)->collapsible()->heading('Alamat')->iconColor('primary')->icon('heroicon-s-map-pin'),
-
-                                Section::make([
-                                    TextInput::make('contact_person_name')
-                                        ->label('Nama')
-                                        ->required()
-                                        ->maxLength(255),
-                                    TextInput::make('contact_phone_number')
-                                        ->label('Nomor hp')
-                                        ->required()
-                                        ->tel()
-                                        ->maxLength(255),
-                                    TextInput::make('contact_person_title')
-                                        ->label('Jabatan')
-                                        ->maxLength(255),
-
-                                    TextInput::make('contact_email')
-                                        ->label('Email')
-                                        ->email(),
-                                    TextInput::make('npwp')
-                                        ->label('Npwp')
-                                        ->maxLength(255),
-                                    Select::make('user_id')
-                                        ->label('Akun pelanggan')
-                                        ->unique(ignoreRecord: true)
-                                        ->relationship('user', 'name',  modifyQueryUsing: function ($query, Get $get)
-                                        {
-                                            $query->where(function ($query) use ($get)
+                                            if (! $get('date') || ! $get('valid_until_date'))
                                             {
-                                                $query->whereDoesntHave('customer')
-                                                    ->whereDoesntHave('personel')
-                                                    ->orWhereHas('customer', function ($subQuery) use ($get)
-                                                    {
-                                                        $subQuery->where('id', '=', $get('id'));
-                                                    });
-                                            });
+                                                return null;
+                                            }
+
+                                            $days = Carbon::parse($get('date'))
+                                                ->startOfDay()
+                                                ->diffInDays(Carbon::parse($get('valid_until_date'))->startOfDay());
+
+                                            return $days . ' hari';
                                         })
+                                        ->hintColor('gray')
+                                        ->columnSpan(['default' => 1, 'lg' => 4]),
+
+                                    TextInput::make('name')
+                                        ->label('Judul')
+                                        ->placeholder('Judul penawaran')
+                                        ->required()
+                                        ->columnSpanFull(),
+
+                                    Select::make('customer_id')
+                                        ->label('Klien')
+                                        ->prefixIcon(Heroicon::BuildingOffice)
+                                        ->relationship('customer', 'name')
                                         ->searchable()
-                                        ->preload(),
-                                ])->columns(4)->collapsible()->heading('Narahubung')->iconColor('primary')->icon('heroicon-s-user'),
-                            ];
-                        })->createOptionModalHeading('Buat Klien Baru'),
-                    Select::make('personel_id')
-                        ->label('Petugas')
-                        ->required()
-                        ->relationship('personel', 'fullname')
-                        ->default($personelId ?? null)
+                                        ->preload()
+                                        ->required()
+                                        ->createOptionModalHeading('Klien baru')
+                                        ->createOptionForm(self::customerFields())
+                                        ->columnSpan(['default' => 2, 'lg' => 6]),
+
+                                    Select::make('personel_id')
+                                        ->label('Petugas')
+                                        ->prefixIcon(Heroicon::UserCircle)
+                                        ->relationship('personel', 'fullname')
+                                        ->default($personel?->id)
+                                        ->searchable()
+                                        ->preload()
+                                        ->required()
+                                        ->columnSpan(['default' => 2, 'lg' => 3]),
+
+                                    Select::make('request_id')
+                                        ->label('No. permohonan')
+                                        ->prefixIcon(Heroicon::ClipboardDocumentList)
+                                        ->relationship('request', 'request_number')
+                                        ->searchable()
+                                        ->preload()
+                                        ->placeholder('Opsional')
+                                        ->columnSpan(['default' => 2, 'lg' => 3]),
+
+                                    // Potongan: selalu 3 kolom, angka kecil jadi muat di mobile
+                                    Grid::make(3)
+                                        ->columnSpanFull()
+                                        ->schema([
+                                            self::percentageInput('discount_percentage', 'Diskon', 0, Heroicon::ReceiptPercent),
+                                            self::percentageInput('ppn_percentage', 'PPN', 11, Heroicon::Calculator),
+                                            self::percentageInput('pph_percentage', 'PPh', 2, Heroicon::Scissors),
+                                        ]),
+                                ]),
+                            ]),
+
+                        /* ───────────── Tab 2: Syarat & ketentuan ───────────── */
+                        Tab::make('Syarat & Ketentuan')
+                            ->icon(Heroicon::DocumentText)
+                            ->schema([
+                                Select::make('template_selector')
+                                    ->hiddenLabel()
+                                    ->prefixIcon(Heroicon::Sparkles)
+                                    ->placeholder('Gunakan template (opsional)')
+                                    ->options(fn() => TermTemplate::query()
+                                        ->where('is_active', true)
+                                        ->pluck('name', 'id')
+                                        ->toArray())
+                                    ->searchable()
+                                    ->live()
+                                    ->dehydrated(false)
+                                    ->afterStateUpdated(function (?string $state, Set $set)
+                                    {
+                                        if ($state && ($template = TermTemplate::find($state)))
+                                        {
+                                            $set('additional_description', $template->content);
+                                        }
+                                    })
+                                    ->createOptionForm([
+                                        TextInput::make('name')
+                                            ->label('Nama template')
+                                            ->required()
+                                            ->unique(TermTemplate::class)
+                                            ->maxLength(255),
+                                        RichEditor::make('content')
+                                            ->label('Isi')
+                                            ->required()
+                                            ->toolbarButtons([
+                                                'bold',
+                                                'italic',
+                                                'underline',
+                                                'strike',
+                                                'h2',
+                                                'h3',
+                                                'bulletList',
+                                                'orderedList',
+                                                'blockquote',
+                                                'link',
+                                            ]),
+                                        Hidden::make('is_active')->default(true),
+                                    ])
+                                    ->createOptionUsing(fn(array $data) => (string) TermTemplate::create($data)->id),
+
+                                RichEditor::make('additional_description')
+                                    ->hiddenLabel()
+                                    ->required(),
+                            ]),
+                    ]),
+            ]);
+    }
+
+    protected static function percentageInput(string $name, string $label, int $default, $icon): TextInput
+    {
+        return TextInput::make($name)
+            ->label($label)
+            ->prefixIcon($icon)
+            ->numeric()
+            ->default($default)
+            ->minValue(0)
+            ->maxValue(100)
+            ->suffix('%')
+            ->required();
+    }
+
+    /**
+     * Form klien baru (modal): field wajib di atas, detail tambahan dilipat.
+     */
+    protected static function customerFields(): array
+    {
+        return [
+            Grid::make(['default' => 1, 'sm' => 2])->schema([
+                TextInput::make('name')
+                    ->label('Nama klien')
+                    ->prefixIcon(Heroicon::BuildingOffice)
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+
+                Select::make('customer_type_id')
+                    ->label('Jenis')
+                    ->relationship('customerType', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
+                TextInput::make('contact_person_name')
+                    ->label('Narahubung')
+                    ->prefixIcon(Heroicon::User)
+                    ->required()
+                    ->maxLength(255),
+
+                TextInput::make('contact_phone_number')
+                    ->label('No. HP')
+                    ->prefixIcon(Heroicon::Phone)
+                    ->tel()
+                    ->required()
+                    ->maxLength(255),
+
+                TextInput::make('contact_email')
+                    ->label('Email')
+                    ->prefixIcon(Heroicon::Envelope)
+                    ->email(),
+
+                Hidden::make('registration_date')->default(now()),
+                Hidden::make('status')->default(QuotationStatusEnum::default()),
+            ]),
+
+            Section::make('Detail lainnya')
+                ->icon(Heroicon::MapPin)
+                ->compact()
+                ->collapsible()
+                ->collapsed()
+                ->columns(['default' => 1, 'sm' => 2])
+                ->schema([
+                    TextInput::make('contact_person_title')->label('Jabatan')->maxLength(255),
+                    TextInput::make('npwp')->label('NPWP')->maxLength(255),
+
+                    Select::make('province_id')
+                        ->label('Provinsi')
+                        ->relationship('province', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->live()
+                        ->afterStateUpdated(fn(Set $set) => $set('city_id', null)),
+
+                    Select::make('city_id')
+                        ->label('Kota')
+                        ->relationship(
+                            'city',
+                            'name',
+                            modifyQueryUsing: fn($query, Get $get) => $query->where('province_id', $get('province_id'))
+                        )
                         ->searchable()
                         ->preload(),
 
-                    Section::make([
-                        TextInput::make('discount_percentage')
-                            ->label('Diskon (%)')
-                            ->required()
-                            ->numeric()
-                            ->default(0),
-                        TextInput::make('ppn_percentage')
-                            ->label('Ppn (%)')
-                            ->required()
-                            ->numeric()
-                            ->default(11),
-                        TextInput::make('pph_percentage')
-                            ->label('Pph (%)')
-                            ->required()
-                            ->numeric()
-                            ->default(2),
-                    ])->columns([
-                        'default' => 1,
-                        'md' => 3,
-                    ])->collapsible()->heading('Potongan')->icon(Heroicon::ReceiptPercent),
-                    Section::make([
-                        Select::make('template_selector')
-                            ->label('Pilih Template')
-                            ->options(function ()
-                            {
-                                $options = TermTemplate::query()
-                                    ->where('is_active', true)
-                                    ->pluck('name', 'id') // Mengambil 'name' sebagai label dan 'id' sebagai value
-                                    ->toArray();
-                                // Tambahkan opsi "Kosongkan" secara manual
-                                $options['kosong'] = 'Kosongkan';
-                                return $options;
-                            })
-                            ->searchable()
-                            // -------------------------------------------------------------------------
-                            ->placeholder('Atau tulis manual di bawah')
-                            ->reactive()
-                            ->afterStateUpdated(function (?string $state, Get $get, Set $set)
-                            {
-                                if ($state === 'kosong')
-                                {
-                                    $set('additional_description', null); // Kosongkan jika 'kosong' dipilih
-                                }
-                                elseif ($state)
-                                {
-                                    // --- Mengambil KONTEN template dari database berdasarkan ID yang dipilih ---
-                                    $template = TermTemplate::find($state);
-                                    if ($template)
-                                    {
-                                        $set('additional_description', $template->content);
-                                    }
-                                    else
-                                    {
-                                        // Fallback jika template tidak ditemukan (misal: ID tidak valid)
-                                        $set('additional_description', null);
-                                    }
-                                }
-                                else
-                                {
-                                    // Jika pilihan dikosongkan tanpa memilih 'kosong'
-                                    $set('additional_description', null);
-                                }
-                            })
-                            ->dehydrated(false)
-                            ->createOptionForm(function (Get $get, Set $set)
-                            {
-                                return [
-                                    TextInput::make('name')
-                                        ->label('Nama Template')
-                                        ->required()
-                                        ->unique(TermTemplate::class)
-                                        ->maxLength(255),
-                                    RichEditor::make('content')
-                                        ->label('Isi Template')
-                                        ->required()
-                                        ->columnSpanFull()
-                                        ->toolbarButtons([ // Atur toolbar RichEditor
-                                            'blockquote',
-                                            'bold',
-                                            'bulletList',
-                                            'codeBlock',
-                                            'h2',
-                                            'h3',
-                                            'italic',
-                                            'link',
-                                            'orderedList',
-                                            'strike',
-                                            'underline',
-                                        ]),
-                                    Hidden::make('is_active')
-                                        ->label('Aktif ?')
-                                        ->required()
-                                        ->default(true),
-                                ];
-                            })->createOptionUsing(function (array $data): string
-                            {
-                                // Logika ini akan membuat record baru di database
-                                $template = TermTemplate::create($data);
-                                return (string) $template->id; // Mengembalikan ID dari record yang baru dibuat
-                            }),
+                    TextInput::make('full_address')
+                        ->label('Alamat')
+                        ->maxLength(255)
+                        ->columnSpan(['default' => 1, 'sm' => 2]),
 
-                        RichEditor::make('additional_description')
-                            ->label('')
-                            ->required()
-                            ->autofocus()
-                            ->columnSpanFull(),
-                    ])->columns(1)->collapsible()->collapsed()->heading('Syarat & Ketentuan')->icon(Heroicon::DocumentText)->iconColor('success')->description('Pilih template atau tulis syarat & ketentuan secara manual.'),
+                    TextInput::make('postal_code')->label('Kode pos')->maxLength(255),
 
-
-                ])->columns([
-                    'default' => 1,
-                    'lg' => 2,
-                ])
-                    ->columnSpanFull()->heading(fn($record) => $record && $record->status ?  'Status -> ' . QuotationStatusEnum::labels()[$record->status] : 'Buat Penawaran Baru')
-                    ->collapsible()->iconColor(fn($record) =>  $record && $record->status ? QuotationStatusEnum::color($record->status) : 'primary')->icon('heroicon-s-document-duplicate'),
-
-            ]);
+                    Select::make('user_id')
+                        ->label('Akun pelanggan')
+                        ->relationship(
+                            'user',
+                            'name',
+                            modifyQueryUsing: fn($query) => $query
+                                ->whereDoesntHave('customer')
+                                ->whereDoesntHave('personel')
+                        )
+                        ->searchable()
+                        ->preload(),
+                ]),
+        ];
     }
+
 
     public static function table(Table $table): Table
     {

@@ -13,10 +13,15 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
@@ -26,403 +31,306 @@ class InvoiceForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
-            ->columns([
-                'default' => 1,
-                'lg' => 2,
-            ])
+            ->columns(1)
             ->components([
-                Section::make('Informasi Tagihan')
-                    ->schema([
-                        DatePicker::make('date')
-                            ->label('Tanggal')
-                            ->required()
-                            ->default(now())
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(
-                                function (Set $set, ?string $state): void {
-                                    if (! $state) {
-                                        return;
-                                    }
-                                    $set(
-                                        'due_date',
-                                        Carbon::parse($state)->addDays(30)
-                                            ->format('Y-m-d')
-                                    );
-                                }
-                            ),
-
-                        DatePicker::make('due_date')
-                            ->label('Jatuh Tempo')
-                            ->required()
-                            ->default(
-                                now()->addDays(30)
-                            )
-                            ->afterOrEqual('date')
-                            ->helperText(
-                                'Otomatis 30 hari setelah tanggal tagihan.'
-                            ),
-
-                        Select::make('lab_job_id')
-                            ->label('Lab Job')
-                            ->relationship(
-                                'labJob',
-                                'code',
-                                modifyQueryUsing: function (Builder $query, $record) {
-                                    $currentInvoiceId = $record?->id;
-
-                                    return $query->whereDoesntHave(
-                                        'invoice',
-                                        function (Builder $q) use ($currentInvoiceId) {
-                                            if ($currentInvoiceId) {
-                                                $q->where('id', '!=', $currentInvoiceId);
-                                            }
-                                        }
-                                    );
-                                }
-                            )
-                            ->disabledOn(['view', 'edit'])
-                            ->required()
-                            ->searchable()
-                            ->preload()
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(
-                                function (?string $state, Set $set): void {
-                                    if (! $state) {
-                                        $set('code', null);
-                                        $set('subtotal', 0);
-                                        self::setCalculatedTotals($set, 0, 0, 0, 0);
-                                        return;
-                                    }
-                                    $labJob = LabJob::with(['labJobItems', 'quotation',])->find($state);
-                                    if (! $labJob) {
-                                        return;
-                                    }
-                                    $invoiceService = app(InvoiceService::class);
-                                    /*
-                                     * Generate nomor invoice
-                                     */
-                                    $set('code', $invoiceService->generateInvoiceNumber($labJob));
-                                    /*
-                                     * Preview subtotal.
-                                     *
-                                     * Nilai final tetap dihitung
-                                     * kembali oleh InvoiceService
-                                     * saat invoice dibuat.
-                                     */
-                                    $subtotal = $labJob
-                                        ->labJobItems
-                                        ->sum(fn($item) => (float) $item->quantity *  (float) $item->price);
-                                    $set('subtotal', round($subtotal, 2));
-                                    /*
-                                     * Ambil tarif dari quotation.
-                                     */
-                                    $quotation = $labJob->quotation;
-                                    $discountPercentage = (float) ($quotation?->discount_percentage ?? 0);
-                                    $ppnPercentage = (float) ($quotation?->ppn_percentage ?? 0);
-                                    $pphPercentage = (float) ($quotation?->pph_percentage ?? 0);
-
-                                    /*
-                                     * Hitung preview financial.
-                                     */
-                                    self::setCalculatedTotals(
-                                        $set,
-                                        $subtotal,
-                                        $discountPercentage,
-                                        $ppnPercentage,
-                                        $pphPercentage
-                                    );
-                                }
-                            )
-                            ->columnSpan(1),
-
-                        TextInput::make('code')
-                            ->label('Nomor Tagihan')
-                            ->required()
-                            ->unique(
-                                ignoreRecord: true
-                            )
-                            ->disabled(
-                                fn(Get $get): bool => ! $get('manual_invoice_confirmation')
-                            ),
-
-                        Checkbox::make('manual_invoice_confirmation')
-                            ->label('Input nomor tagihan manual')
-                            ->dehydrated(false)
-                            ->live(onBlur: true)
-                            ->inline()
-                            ->visibleOn('create')
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(1)
-                    ->columnSpanFull()->inlineLabel(),
-
-                /*
-                 * ==========================================
-                 * PERHITUNGAN TAGIHAN
-                 * ==========================================
-                 */
-                Section::make('Perhitungan Tagihan')
-                    ->schema([
-
-                        // =========================
-                        // SUBTOTAL
-                        // =========================
-                        Placeholder::make('dpp_display')
-                            ->label('DPP')
-                            ->content(
-                                fn(Get $get): string =>
-                                self::formatMoney(
-                                    $get('dpp_amount')
-                                )
-                            ),
-
-
-                        // =========================
-                        // DISKON
-                        // =========================
-
-                        TextInput::make('discount_percentage')
-                            ->label('Diskon')
-                            ->numeric()
-                            ->default(0)
-                            ->minValue(0)
-                            ->maxValue(100)
-                            ->suffix(
-                                fn(Get $get): string =>
-                                '% • ' . self::formatMoney(
-                                    $get('discount_amount')
-                                )
-                            )
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(
-                                fn(Get $get, Set $set) =>
-                                self::calculateTotalsFromState($get, $set)
-                            ),
-
-                        // =========================
-                        // PPN
-                        // =========================
-
-                        TextInput::make('ppn_percentage')
-                            ->label('PPN')
-                            ->numeric()
-                            ->default(0)
-                            ->minValue(0)
-                            ->maxValue(100)
-                            ->suffix(
-                                fn(Get $get): string =>
-                                '% • ' . self::formatMoney(
-                                    $get('ppn_amount')
-                                )
-                            )
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(
-                                fn(Get $get, Set $set) =>
-                                self::calculateTotalsFromState($get, $set)
-                            ),
-
-                        // =========================
-                        // PPh 23
-                        // =========================
-
-                        TextInput::make('pph_percentage')
-                            ->label('PPh 23')
-                            ->numeric()
-                            ->default(0)
-                            ->minValue(0)
-                            ->maxValue(100)
-                            ->suffix(
-                                fn(Get $get): string =>
-                                '% • ' . self::formatMoney(
-                                    $get('pph_amount')
-                                )
-                            )
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(
-                                fn(Get $get, Set $set) =>
-                                self::calculateTotalsFromState($get, $set)
-                            ),
-
-                        // =========================
-                        // HASIL KALKULASI
-                        // =========================
-                        Placeholder::make('subtotal_display')
-                            ->label('Subtotal')
-                            ->content(
-                                fn(Get $get): HtmlString => new HtmlString(
-                                    '
-                                        <div style="
-                                            padding: 14px 18px;
-                                            border: 1px solid #e5e7eb;
-                                            border-radius: 8px;
-                                            background: #f9fafb;
-                                        ">
-                                            <div style="
-                                                font-size: 20px;
-                                                font-weight: 600;
-                                                line-height: 1.4;
-                                                color: #111827;
-                                            ">
-                                                ' . self::formatMoney($get('subtotal')) . '
-                                            </div>
-                                        </div>
-                                        '
-                                )
-                            )
-                            ->columnSpan(1),
-
-                        Placeholder::make('total_display')
-                            ->label('Total Tagihan')
-                            ->content(
-                                fn(Get $get): HtmlString => new HtmlString(
-                                    '
-                                    <div style="
-                                        padding: 16px 20px;
-                                        border: 1px solid #d1d5db;
-                                        border-radius: 8px;
-                                        background: #f3f4f6;
-                                    ">
-                                        <div style="
-                                            font-size: 26px;
-                                            font-weight: 700;
-                                            line-height: 1.3;
-                                            color: #111827;
-                                        ">
-                                            ' . self::formatMoney($get('total_amount')) . '
-                                        </div>
-
-                                        <div style="
-                                            font-size: 11px;
-                                            color: #6b7280;
-                                            margin-top: 5px;
-                                        ">
-                                            DPP + PPN
-                                        </div>
-                                    </div>
-                                    '
-                                )
-                            )
-                            ->columnSpan(1),
-
-                        Placeholder::make('net_display')
-                            ->label('Total Bersih')
-                            ->content(
-                                fn(Get $get): HtmlString => new HtmlString(
-                                    '
-                                    <div style="
-                                        padding: 16px 20px;
-                                        border: 1px solid #d1d5db;
-                                        border-radius: 8px;
-                                        background: #f9fafb;
-                                    ">
-                                        <div style="
-                                            font-size: 26px;
-                                            font-weight: 700;
-                                            line-height: 1.3;
-                                            color: #111827;
-                                        ">
-                                            ' . self::formatMoney($get('net_amount')) . '
-                                        </div>
-
-                                        <div style="
-                                            font-size: 11px;
-                                            color: #6b7280;
-                                            margin-top: 5px;
-                                        ">
-                                            Total Tagihan - PPh 23
-                                        </div>
-                                    </div>
-                                    '
-                                )
-                            )
-                            ->columnSpan(1),
-                        Placeholder::make('status_display')
-                            ->label('Status')
-                            ->content(
-                                function (Get $get): HtmlString {
-                                    $status = $get('status');
-
-                                    if ($status === null) {
-                                        return new HtmlString(
-                                            '
-                    <div style="
-                        padding: 16px 20px;
-                        border: 1px solid #d1d5db;
-                        border-radius: 8px;
-                        background: #f9fafb;
-                    ">
-                    
-                        <div style="
-                            font-size: 26px;
-                            font-weight: 700;
-                            line-height: 1.3;
-                            color: #6b7280;
-                        ">
-                            -
-                        </div>
-                    </div>
-                    '
-                                        );
-                                    }
-
-                                    $statusEnum = InvoiceStatusEnum::from((int) $status);
-
-                                    $statusLabel = $statusEnum->label();
-
-                                    $statusColor = InvoiceStatusEnum::cssColor(
-                                        (int) $status
-                                    );
-
-                                    return new HtmlString(
-                                        sprintf(
-                                            '
-                    <div style="
-                        padding: 16px 20px;
-                        border: 1px solid #d1d5db;
-                        border-radius: 8px;
-                        background: #f9fafb;
-                    ">
-                        <div style="
-                            font-size: 26px;
-                            font-weight: 700;
-                            line-height: 1.3;
-                            color: %s;
-                        ">
-                            %s
-                        </div>
-                    </div>
-                    ',
-                                            e($statusColor),
-                                            e($statusLabel),
-                                        )
-                                    );
-                                }
-                            )
-                            ->columnSpan(1),
-
-                        // =========================
-                        // HIDDEN VALUES
-                        // =========================
-
-                        Hidden::make('discount_amount')
-                            ->default(0),
-                        Hidden::make('dpp_amount')
-                            ->default(0),
-                        Hidden::make('ppn_amount')
-                            ->default(0),
-                        Hidden::make('pph_amount')
-                            ->default(0),
-                        Hidden::make('total_amount')
-                            ->default(0),
-                        Hidden::make('net_amount')
-                            ->default(0),
-                    ])
-                    ->columns(4)
-                    ->visibleOn(['edit', 'view'])
+                Grid::make(['default' => 1, 'lg' => 12])
                     ->columnSpanFull()
+                    ->schema([
+
+                        /* ───────────── KIRI: input ───────────── */
+                        Section::make('Tagihan')
+                            ->icon(Heroicon::DocumentText)
+                            ->compact()
+                            ->columns(['default' => 2])
+                            ->columnSpan(['default' => 1, 'lg' => 7])
+                            ->schema([
+
+                                Select::make('lab_job_id')
+                                    ->label('Lab Job')
+                                    ->prefixIcon(Heroicon::Beaker)
+                                    ->relationship(
+                                        'labJob',
+                                        'code',
+                                        modifyQueryUsing: fn(Builder $query, $record) => $query->whereDoesntHave(
+                                            'invoice',
+                                            fn(Builder $q) => $record?->id
+                                                ? $q->where('id', '!=', $record->id)
+                                                : $q
+                                        )
+                                    )
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->disabledOn(['view', 'edit'])
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (?string $state, Set $set): void
+                                    {
+                                        if (! $state)
+                                        {
+                                            $set('code', null);
+                                            $set('subtotal', 0);
+                                            self::setCalculatedTotals($set, 0, 0, 0, 0);
+                                            return;
+                                        }
+
+                                        $labJob = LabJob::with(['labJobItems', 'quotation'])->find($state);
+
+                                        if (! $labJob)
+                                        {
+                                            return;
+                                        }
+
+                                        $set('code', app(InvoiceService::class)->generateInvoiceNumber($labJob));
+
+                                        // Preview saja. Nilai final tetap dihitung ulang oleh InvoiceService.
+                                        $subtotal = $labJob->labJobItems
+                                            ->sum(fn($item) => (float) $item->quantity * (float) $item->price);
+
+                                        $set('subtotal', round($subtotal, 2));
+
+                                        $quotation = $labJob->quotation;
+
+                                        self::setCalculatedTotals(
+                                            $set,
+                                            $subtotal,
+                                            (float) ($quotation?->discount_percentage ?? 0),
+                                            (float) ($quotation?->ppn_percentage ?? 0),
+                                            (float) ($quotation?->pph_percentage ?? 0),
+                                        );
+                                    })
+                                    ->columnSpanFull(),
+
+                                // Nomor + checkbox manual dalam satu kolom
+                                Group::make([
+                                    TextInput::make('code')
+                                        ->label('Nomor')
+                                        ->prefixIcon(Heroicon::Hashtag)
+                                        ->required()
+                                        ->unique(ignoreRecord: true)
+                                        ->disabled(fn(Get $get): bool => ! $get('manual_invoice_confirmation'))
+                                        ->dehydrated(),
+
+                                    Checkbox::make('manual_invoice_confirmation')
+                                        ->label('Isi nomor manual')
+                                        ->dehydrated(false)
+                                        ->live()
+                                        ->visibleOn('create'),
+                                ])->columnSpanFull(),
+
+                                DatePicker::make('date')
+                                    ->label('Tanggal')
+                                    ->prefixIcon(Heroicon::CalendarDays)
+                                    ->default(now())
+                                    ->native(false)
+                                    ->displayFormat('d/m/Y')
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (Set $set, ?string $state): void
+                                    {
+                                        if ($state)
+                                        {
+                                            $set('due_date', Carbon::parse($state)->addDays(30)->format('Y-m-d'));
+                                        }
+                                    }),
+
+                                DatePicker::make('due_date')
+                                    ->label('Jatuh tempo')
+                                    ->prefixIcon(Heroicon::Clock)
+                                    ->default(now()->addDays(30))
+                                    ->native(false)
+                                    ->displayFormat('d/m/Y')
+                                    ->afterOrEqual('date')
+                                    ->required()
+                                    ->live()
+                                    // Peringatan hanya saat edit/view (invoice sudah ada)
+                                    ->hint(fn(Get $get, string $operation): ?string => $operation === 'create'
+                                        ? null
+                                        : self::dueDateHint($get('due_date')))
+                                    ->hintIcon(fn(Get $get, string $operation) => $operation === 'create'
+                                        ? null
+                                        : (self::dueDays($get('due_date')) < 0 ? Heroicon::ExclamationTriangle : null))
+                                    ->hintColor(fn(Get $get) => match (true)
+                                    {
+                                        self::dueDays($get('due_date')) < 0  => 'danger',
+                                        self::dueDays($get('due_date')) <= 3 => 'warning',
+                                        default                              => 'gray',
+                                    }),
+
+                                // Potongan: tampil saat edit/view, 3 kolom sejajar
+                                Grid::make(3)
+                                    ->columnSpanFull()
+                                    ->visibleOn(['edit', 'view'])
+                                    ->schema([
+                                        self::percentageInput('discount_percentage', 'Diskon', Heroicon::ReceiptPercent),
+                                        self::percentageInput('ppn_percentage', 'PPN', Heroicon::Calculator),
+                                        self::percentageInput('pph_percentage', 'PPh 23', Heroicon::Scissors),
+                                    ]),
+                            ]),
+
+                        /* ───────────── KANAN: ringkasan ala struk ───────────── */
+                        Section::make('Ringkasan')
+                            ->icon(Heroicon::Banknotes)
+                            ->iconColor('primary')
+                            ->compact()
+                            ->columnSpan(['default' => 1, 'lg' => 5])
+                            ->schema([
+                                self::summaryRow('subtotal_display', 'Subtotal', 'subtotal'),
+                                self::summaryRow('discount_display', 'Diskon', 'discount_amount', 'danger', '– '),
+                                self::summaryRow('dpp_display', 'DPP', 'dpp_amount'),
+                                self::summaryRow('ppn_display', 'PPN', 'ppn_amount', null, '+ '),
+
+                                // Total = pusat perhatian
+                                TextEntry::make('total_display')
+                                    ->label('Total tagihan')
+                                    ->inlineLabel()
+                                    ->state(fn(Get $get): string => self::formatMoney($get('total_amount')))
+                                    ->size(TextSize::Large)
+                                    ->weight(FontWeight::Bold)
+                                    ->color('primary')
+                                    ->icon(Heroicon::Banknotes),
+
+                                self::summaryRow('pph_display', 'PPh 23', 'pph_amount', 'warning', '– '),
+
+                                TextEntry::make('net_display')
+                                    ->label('Total bersih')
+                                    ->inlineLabel()
+                                    ->state(fn(Get $get): string => self::formatMoney($get('net_amount')))
+                                    ->weight(FontWeight::Bold)
+                                    ->color('success'),
+
+                                TextEntry::make('status_display')
+                                    ->label('Status')
+                                    ->inlineLabel()
+                                    ->badge()
+                                    ->state(fn(Get $get): string => ($status = $get('status')) === null
+                                        ? 'Draft'
+                                        : InvoiceStatusEnum::from((int) $status)->label())
+                                    ->color(fn(Get $get) => self::statusColor($get('status')))
+                                    ->visibleOn(['edit', 'view']),
+
+                                Hidden::make('discount_amount')->default(0),
+                                Hidden::make('dpp_amount')->default(0),
+                                Hidden::make('ppn_amount')->default(0),
+                                Hidden::make('pph_amount')->default(0),
+                                Hidden::make('total_amount')->default(0),
+                                Hidden::make('net_amount')->default(0),
+                            ]),
+                    ]),
             ]);
     }
 
+    protected static function percentageInput(string $name, string $label, $icon): TextInput
+    {
+        return TextInput::make($name)
+            ->label($label)
+            ->prefixIcon($icon)
+            ->numeric()
+            ->default(0)
+            ->minValue(0)
+            ->maxValue(100)
+            ->suffix('%')
+            ->live(onBlur: true)
+            ->afterStateUpdated(fn(Get $get, Set $set) => self::calculateTotalsFromState($get, $set));
+    }
+
+    /** Satu baris ringkasan kecil (label kiri, nilai kanan). */
+    protected static function summaryRow(
+        string $name,
+        string $label,
+        string $key,
+        ?string $color = null,
+        string $prefix = '',
+    ): TextEntry
+    {
+        return TextEntry::make($name)
+            ->label($label)
+            ->inlineLabel()
+            ->state(fn(Get $get): string => $prefix . self::formatMoney($get($key)))
+            ->color($color ?? 'gray');
+    }
+
+    /** Selisih hari ke jatuh tempo (negatif = terlambat). */
+    protected static function dueDays(?string $dueDate): int
+    {
+        if (! $dueDate)
+        {
+            return 999;
+        }
+
+        return (int) now()->startOfDay()->diffInDays(Carbon::parse($dueDate)->startOfDay(), false);
+    }
+
+    protected static function dueDateHint(?string $dueDate): ?string
+    {
+        $days = self::dueDays($dueDate);
+
+        return match (true)
+        {
+            $days === 999 => null,
+            $days < 0     => 'Terlambat ' . abs($days) . ' hari',
+            $days === 0   => 'Jatuh tempo hari ini',
+            $days <= 3    => $days . ' hari lagi',
+            default       => null,
+        };
+    }
+
+    /**
+     * Warna badge status. Memakai getColor() bila enum implement HasColor,
+     * kalau tidak, abu-abu. Sesuaikan dengan enum kamu bila perlu.
+     */
+    protected static function statusColor(mixed $status): string|array
+    {
+        if ($status === null)
+        {
+            return 'gray';
+        }
+
+        $enum = InvoiceStatusEnum::tryFrom((int) $status);
+
+        return $enum instanceof HasColor
+            ? ($enum->getColor() ?? 'gray')
+            : 'gray';
+    }
+
+
+
+    /**
+     * Tampilan nominal tanpa kotak/warna hardcode, jadi otomatis ikut dark mode.
+     */
+    protected static function moneyDisplay(string $name, string $label, string $key, bool $emphasis = false): Placeholder
+    {
+        return Placeholder::make($name)
+            ->label($label)
+            ->content(fn(Get $get): HtmlString => new HtmlString(sprintf(
+                '<span style="font-weight:%d;font-size:%s">%s</span>',
+                $emphasis ? 700 : 500,
+                $emphasis ? '1.125rem' : '1rem',
+                e(self::formatMoney($get($key)))
+            )));
+    }
+
+    protected static function statusDisplay(): Placeholder
+    {
+        return Placeholder::make('status_display')
+            ->label('Status')
+            ->content(function (Get $get): HtmlString
+            {
+                $status = $get('status');
+
+                if ($status === null)
+                {
+                    return new HtmlString('<span style="opacity:.5">-</span>');
+                }
+
+                $enum = InvoiceStatusEnum::from((int) $status);
+
+                return new HtmlString(sprintf(
+                    '<span style="font-weight:700;font-size:1.125rem;color:%s">%s</span>',
+                    e(InvoiceStatusEnum::cssColor((int) $status)),
+                    e($enum->label())
+                ));
+            });
+    }
     /**
      * Hitung ulang nilai financial berdasarkan state form.
      *
@@ -433,7 +341,8 @@ class InvoiceForm
     protected static function calculateTotalsFromState(
         Get $get,
         Set $set
-    ): void {
+    ): void
+    {
         self::setCalculatedTotals(
             $set,
             subtotal: (float) (
@@ -460,7 +369,8 @@ class InvoiceForm
         float $discountPercentage = 0,
         float $ppnPercentage = 0,
         float $pphPercentage = 0,
-    ): void {
+    ): void
+    {
         $totals = app(InvoiceService::class)
             ->calculateTotals(
                 subtotal: $subtotal,
@@ -469,7 +379,8 @@ class InvoiceForm
                 pphPercentage: $pphPercentage,
             );
 
-        foreach ($totals as $key => $value) {
+        foreach ($totals as $key => $value)
+        {
             $set($key, $value);
         }
     }
