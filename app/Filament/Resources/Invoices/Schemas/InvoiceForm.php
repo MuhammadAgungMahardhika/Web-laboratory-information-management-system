@@ -145,15 +145,15 @@ class InvoiceForm
                                     // Peringatan hanya saat edit/view (invoice sudah ada)
                                     ->hint(fn(Get $get, string $operation): ?string => $operation === 'create'
                                         ? null
-                                        : self::dueDateHint($get('due_date')))
+                                        : self::dueDateHint($get('due_date'), $get('status')))
                                     ->hintIcon(fn(Get $get, string $operation) => $operation === 'create'
                                         ? null
-                                        : (self::dueDays($get('due_date')) < 0 ? Heroicon::ExclamationTriangle : null))
+                                        : (self::dueDays($get('due_date'), $get('status')) < 0 ? Heroicon::ExclamationTriangle : null))
                                     ->hintColor(fn(Get $get) => match (true)
                                     {
-                                        self::dueDays($get('due_date')) < 0  => 'danger',
-                                        self::dueDays($get('due_date')) <= 3 => 'warning',
-                                        default                              => 'gray',
+                                        self::dueDays($get('due_date'), $get('status')) < 0  => 'danger',
+                                        self::dueDays($get('due_date'), $get('status')) <= 3 => 'warning',
+                                        default                                              => 'gray',
                                     }),
 
                                 // Potongan: tampil saat edit/view, 3 kolom sejajar
@@ -207,7 +207,7 @@ class InvoiceForm
                                         : InvoiceStatusEnum::from((int) $status)->label())
                                     ->color(fn(Get $get) => self::statusColor($get('status')))
                                     ->visibleOn(['edit', 'view']),
-
+                                Hidden::make('status'),
                                 Hidden::make('discount_amount')->default(0),
                                 Hidden::make('dpp_amount')->default(0),
                                 Hidden::make('ppn_amount')->default(0),
@@ -250,9 +250,10 @@ class InvoiceForm
     }
 
     /** Selisih hari ke jatuh tempo (negatif = terlambat). */
-    protected static function dueDays(?string $dueDate): int
+    /** Selisih hari ke jatuh tempo (negatif = terlambat). 999 = tidak relevan. */
+    protected static function dueDays(?string $dueDate, mixed $status = null): int
     {
-        if (! $dueDate)
+        if (! $dueDate || InvoiceStatusEnum::isClosedValue($status))
         {
             return 999;
         }
@@ -260,9 +261,9 @@ class InvoiceForm
         return (int) now()->startOfDay()->diffInDays(Carbon::parse($dueDate)->startOfDay(), false);
     }
 
-    protected static function dueDateHint(?string $dueDate): ?string
+    protected static function dueDateHint(?string $dueDate, mixed $status = null): ?string
     {
-        $days = self::dueDays($dueDate);
+        $days = self::dueDays($dueDate, $status);
 
         return match (true)
         {
@@ -278,20 +279,12 @@ class InvoiceForm
      * Warna badge status. Memakai getColor() bila enum implement HasColor,
      * kalau tidak, abu-abu. Sesuaikan dengan enum kamu bila perlu.
      */
-    protected static function statusColor(mixed $status): string|array
+    protected static function statusColor(mixed $status): string
     {
-        if ($status === null)
-        {
-            return 'gray';
-        }
-
-        $enum = InvoiceStatusEnum::tryFrom((int) $status);
-
-        return $enum instanceof HasColor
-            ? ($enum->getColor() ?? 'gray')
-            : 'gray';
+        return $status === null
+            ? 'gray'
+            : InvoiceStatusEnum::color((int) $status);
     }
-
 
 
     /**

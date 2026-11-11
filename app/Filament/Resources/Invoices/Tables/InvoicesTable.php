@@ -176,40 +176,42 @@ class InvoicesTable
                             ? Carbon::parse($record->due_date)->format('d M Y')
                             : '-';
 
-                        $remainingDays = null;
+                        // Status yang sudah tidak perlu dihitung keterlambatannya
+                        $status   = InvoiceStatusEnum::tryFrom((int) $record->status);
+                        $isClosed = $status?->isClosed() ?? false;
 
-                        if ($record->due_date)
+                        if ($isClosed)
                         {
-                            $remainingDays = Carbon::today()
-                                ->diffInDays(
-                                    Carbon::parse($record->due_date)->startOfDay(),
-                                    false
-                                );
+                            $remainingText  = $status === InvoiceStatusEnum::Paid ? 'Sudah lunas' : 'Dibatalkan';
+                            $remainingColor = $status === InvoiceStatusEnum::Paid ? '#10B981' : '#6b7280';
                         }
-
-                        if ($remainingDays === null)
+                        elseif (! $record->due_date)
                         {
-                            $remainingText = 'Sisa hari: -';
+                            $remainingText  = 'Sisa hari: -';
                             $remainingColor = '#6b7280';
-                        }
-                        elseif ($remainingDays > 0)
-                        {
-                            $remainingText = "Sisa {$remainingDays} hari";
-                            $remainingColor = $remainingDays <= 3
-                                ? '#d97706'
-                                : '#16a34a';
-                        }
-                        elseif ($remainingDays === 0)
-                        {
-                            $remainingText = 'Jatuh tempo hari ini';
-                            $remainingColor = '#d97706';
                         }
                         else
                         {
-                            $daysLate = abs($remainingDays);
+                            $remainingDays = (int) Carbon::today()->diffInDays(
+                                Carbon::parse($record->due_date)->startOfDay(),
+                                false
+                            );
 
-                            $remainingText = "Terlambat {$daysLate} hari";
-                            $remainingColor = '#dc2626';
+                            if ($remainingDays > 0)
+                            {
+                                $remainingText  = "Sisa {$remainingDays} hari";
+                                $remainingColor = $remainingDays <= 3 ? '#d97706' : '#16a34a';
+                            }
+                            elseif ($remainingDays === 0)
+                            {
+                                $remainingText  = 'Jatuh tempo hari ini';
+                                $remainingColor = '#d97706';
+                            }
+                            else
+                            {
+                                $remainingText  = 'Terlambat ' . abs($remainingDays) . ' hari';
+                                $remainingColor = '#dc2626';
+                            }
                         }
 
                         return new HtmlString("

@@ -48,7 +48,8 @@ enum InvoiceStatusEnum: int
      */
     public static function color(int $status): string
     {
-        return match ($status) {
+        return match ($status)
+        {
             self::Draft->value => 'gray',             // Draft
             self::Sent->value => 'info',              // Terkirim
             self::PartiallyPaid->value => 'warning',  // Dibayar Sebagian
@@ -67,7 +68,8 @@ enum InvoiceStatusEnum: int
      */
     public static function cssColor(int $status): string
     {
-        return match ($status) {
+        return match ($status)
+        {
             self::Draft->value => '#6B7280',            // Abu-abu
             self::Sent->value => '#3B82F6',             // Biru
             self::PartiallyPaid->value => '#F59E0B',    // Kuning/Oranye
@@ -85,5 +87,23 @@ enum InvoiceStatusEnum: int
     public static function default(): self
     {
         return self::Draft;
+    }
+
+    /**
+     * Status final: tagihan tidak lagi punya keterlambatan.
+     */
+    public function isClosed(): bool
+    {
+        return in_array($this, [self::Paid, self::Void], true);
+    }
+
+    /**
+     * Apakah invoice ini masih relevan dihitung keterlambatannya.
+     */
+    public static function isClosedValue(mixed $status): bool
+    {
+        $enum = self::tryFrom((int) $status);
+
+        return $enum?->isClosed() ?? false;
     }
 }
